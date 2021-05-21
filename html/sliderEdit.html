@@ -1,0 +1,51 @@
+<div class="propertiesbarheader label">Slider</div>
+type:
+<div id="numerical_slider_container"><div id="string_input_label">min-value : </div><input type="number" id="new_slider_min_value" value="0.0"></div>
+<div id="numerical_slider_container"><div id="string_input_label">max-value: </div><input type="number" id="new_slider_max_value" value="100.0"></div>
+<div id="numerical_slider_container"><div id="string_input_label">step: </div><input type="number" id="new_slider_step_value" value="1"></div>
+<div id="numerical_slider_container"><div id="string_input_label">current-value: </div><input type="number" id="new_slider_current_value" value="0"></div>
+<hr>
+
+<button id="saveSliderEdit">Save</button>
+<button id="cancelSliderEdit">cancel</button>
+
+
+<script>
+
+
+    var compKey = "{{ comp_key }}"
+    var slider_component = selectComp(compKey);
+
+    
+    $("input#new_slider_min_value").val(slider_component.min);
+    $("input#new_slider_max_value").val(slider_component.max);
+    $("input#new_slider_current_value").val(slider_component.value);
+
+
+    $("button#saveSliderEdit").on("click", function(e)
+    {
+        
+        slider_component.min = parseFloat($("input#new_slider_min_value").val())
+        slider_component.max = parseFloat($("input#new_slider_max_value").val())
+        slider_component.value = parseFloat($("input#new_slider_current_value").val())
+
+        var slider_anchor_slope = (SLIDER_END_POSITION-SLIDER_START_POSITION)/(slider_component.max-slider_component.min);
+        var slider_anchor_y_intersection = (SLIDER_END_POSITION-SLIDER_START_POSITION) - (slider_anchor_slope*slider_component.max); 
+        var slider_anchor_currrent_position = (slider_anchor_slope * slider_component.value) + slider_anchor_y_intersection;
+        console.log(SLIDER_END_POSITION-SLIDER_START_POSITION)
+        console.log("slope : "+ slider_anchor_slope);
+        console.log("y_intersect : " + slider_anchor_y_intersection);
+
+        d3.select("rect#SliderAnchor_" + slider_component.GUID)
+                .attr("transform", function () {
+                    return "translate(" + (slider_anchor_currrent_position).toString() + ",3)";
+                });
+
+                d3.select("#sliderValueText_"+slider_component.GUID.replace("SliderAnchor_",""))
+            .text((slider_component.value).toFixed(6));
+        
+            redrawDependents(slider_component.GUID);
+
+            $("div#propertiesBarContents").html("");
+    })
+</script>

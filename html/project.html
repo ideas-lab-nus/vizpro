@@ -1,0 +1,26 @@
+{% extends "./base.html" %}
+
+{% block title %}Your Projects{% endblock %}
+
+{% block content %}
+
+<h3 style="margin-left:40px;"><b>Your Projects:</b></h3>
+<a href="{%url 'addProject' %}">add new project</a>
+<hr>
+{% for k, v  in projects.items %}
+    <h6 style="margin-left:40px;">{{k}}. {{v}}</h6>
+    <h6 style="margin-left:80px;">api_key : <input onClick="this.select();" style="width:500px" type="text" value="{{v.project_api_key}}"> </input></h6> 
+    <a  style="margin-left:120px; font-size: small" href="{%url  'project_detial' v.project_api_key %}">View Project</a>
+    <h6 style="margin-left:80px;"><b>Models:</b></h6>
+    {% for k2, v2  in simModel.items %}
+        {% if k2 == k %}
+            {% for m in v2 %}
+                <p style="margin-left:120px; font-size: small;line-height: 0.5em;">{{m.model_name}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+    <hr>
+{% endfor %}
+
+
+{% endblock %}
