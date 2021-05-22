@@ -367,25 +367,38 @@ function getlocationFromTransform(trnsformText) {
     });
 } // End of getlocationFromTransform
 
+function GetURLParameter(sParam) {
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) {
+            return sParameterName[1];
+        }
+    }
+}
+
 function HandleDoubleClick() {
     allComp.forEach(element => {
 
         if (element.type == "string") {
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
-                    $("div#propertiesBarContents").load("stringEdit/" + element.GUID);
+                    $("div#propertiesBarContents").load("../html/editString.html?compKey=" + element.GUID);
                     element.outputs[0].value = element.value;
-
                 })
         } else if (element.type == "optionList") {
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
-                    $("div#propertiesBarContents").load("optionList/" + element.GUID);
-
-
+                    $("div#propertiesBarContents").load("../html/editOptionList.html?compKey=" + element.GUID);
                     optionListStarted = true;
                     optionlistRectid = element.GUID;
                 })
+        } else if (element.type == "slider") {
+            d3.select("g#comp-" + element.GUID)
+                .on("dblclick", function() {
+                    $("div#propertiesBarContents").load("../html/editSlider.html?compKey=" + element.GUID);
+                });
         } else if (element.type == "toggle") {
             var currentToggle = selectComp(element.GUID);
             d3.select("g#comp-" + element.GUID)
@@ -419,14 +432,8 @@ function HandleDoubleClick() {
 
                     redrawDependents(currentToggle.GUID);
                 })
-        } else if (element.type == "slider") {
-            d3.select("g#comp-" + element.GUID)
-                .on("dblclick", function() {
-                    $("div#propertiesBarContents").load("sliderEdit/" + element.GUID);
-                });
-        }
+        } 
         //TODO : else if other types than string, then you have to open the properties window.
-
     });
 } // End of HandleDoubleClick
 
