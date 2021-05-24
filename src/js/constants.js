@@ -206,4 +206,7 @@ var fromCircle = addCircle();
 var toCircle = addCircle();
 
 export {currentLeftColWidth, currentTopBarHeight, currentRightColWidth, leftColumnIsSelected, 
-    rightColIsdisplayed, rightColumnIsSelected, leftColIsdisplayed, messageshown};
+    rightColIsdisplayed, rightColumnIsSelected, leftColIsdisplayed, messageshown, 
+    startDrag, StringAnchorclicked, SliderAnchorclicked, edgeStarted,
+    xGrid, yGrid, optionListStarted, mouseInsideOption,
+    components_selection_data};

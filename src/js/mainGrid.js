@@ -24,6 +24,9 @@
  * @since  x.x.x
  */
 
+import {xGrid, yGrid, optionListStarted, mouseInsideOption, startDrag, components_selection_data} from './constants.js';
+var d3 = require("d3");
+
 var selection_box_x = 0;
 var selection_box_y = 0;
 
@@ -78,7 +81,7 @@ var mainGrid = d3.select("#mainGrid")
             console.log("You will delete ")
         }
         if (selectComp(selected_component_id).type == "fileUpload") {
-            if(confirm("Are you sure you want to delete this file from the database? ")) {
+            if (confirm("Are you sure you want to delete this file from the database? ")) {
                 console.log("You should detele the file from the database now... ")
                 deleteComponent(selected_component_id);
             } else {
@@ -484,7 +487,7 @@ function highlightSelection(components_list) {
 function alignComponent(alignment) {
 
     selected_components.forEach(element => {
-        this_comp = selectComp(element);
+        var this_comp = selectComp(element);
         if (alignment == "left") {
 
             this_comp.X = min_selected_x;
@@ -573,3 +576,5 @@ function showVerticalAlignment(selectionBox) {
 
     return vertAlignBox;
 }
+
+export {selection_groud_selected};

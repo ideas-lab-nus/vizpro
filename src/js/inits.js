@@ -16,8 +16,11 @@
 */
 
 
+import $ from "jquery";
+import {startDrag, StringAnchorclicked, SliderAnchorclicked, edgeStarted} from './constants.js';
+import {selection_groud_selected} from './mainGrid.js';
 
-
+var d3 = require("d3");
 var svgContainer = d3.select("svg")
 
 var allContents = svgContainer.append("g")
@@ -49,6 +52,7 @@ svgContainer.call(d3.zoom().filter(function() {
 
     }
 }));
+
 if (RetrievedData != undefined) {
     if (RetrievedData.canvas_transform != undefined) {
         allContents.attr("transform", RetrievedData.canvas_transform.transform);
@@ -102,8 +106,6 @@ try {
 } catch (err) {
     console.log(err);
 }
-
-
 
 $("div#definedComp").html(function() {
     somearr = udo_names;
@@ -209,3 +211,5 @@ function handleEdgeSelection() {
             console.log("hello world")
         })
 }
+
+export {svgContainer};
