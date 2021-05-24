@@ -52,14 +52,14 @@ var componentClickY = 0;
 var initPos = null;
 var startDrag = false;
 
-clickedId = "";
+var clickedId = "";
 var rectType = "";
 var dragX = 0;
 var dragY = 0;
 
-deltaX = 0;
-deltaY = 0;
-clicked = false;
+var deltaX = 0;
+var deltaY = 0;
+var clicked = false;
 
 var edgeStarted = false;
 var targetcircleIN = false;
@@ -97,19 +97,20 @@ var is_component_selected = false;
 var selected_component_id = "";
 
 
-rightColumnIsSelected = false;
-leftColumnIsSelected = false;
-topColumnIsSelected = false;
+var rightColumnIsSelected = false;
+var leftColumnIsSelected = false;
+var topColumnIsSelected = false;
 
-rightColIsdisplayed = true;
-leftColIsdisplayed = true;
+var rightColIsdisplayed = true;
+var leftColIsdisplayed = true;
 
 var is_edge_selected = false;
 
 
-var currentTopBarHeight = 60;
+var currentTopBarHeight = 30;
 var currentLeftColWidth = 225;
 var currentRightColWidth = 50;
+/*
 try {
     if (RetrievedData.currentRightColWidth != undefined) {
         currentRightColWidth = RetrievedData.currentRightColWidth;
@@ -120,6 +121,7 @@ try {
 } catch (error) {
 
 }
+*/
 
 
 
@@ -164,7 +166,7 @@ function uuidv4(ini) {
 }
 
 function addEdge(from, to, fromComp, toComp) {
-    initLink = {
+    var initLink = {
         "GUID": uuidv4("E"),
         "path": null,
         "path_id": "",
@@ -183,7 +185,7 @@ function addEdge(from, to, fromComp, toComp) {
 }
 
 function addCircle() {
-    initCircle = {
+    var initCircle = {
         "GUID": uuidv4("C"),
         "element": null,
         "CX": 0,
@@ -202,3 +204,6 @@ var fromCircle = addCircle();
 
 
 var toCircle = addCircle();
+
+export {currentLeftColWidth, currentTopBarHeight, currentRightColWidth, leftColumnIsSelected, 
+    rightColIsdisplayed, rightColumnIsSelected, leftColIsdisplayed, messageshown};

@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
-    
+
     <link rel="stylesheet" href='./../css/newUIstyle_light.css'>
     <link rel="stylesheet" href='./../css/jsonview.css'>
 
@@ -113,19 +113,17 @@
         </div>
     </div>
 
-    <div id="textAreaBox" style="display:none"><textarea id="TextAreaSelector" style="background-color:rgba(255, 255, 255, 0.48)"></textarea></div>
+    <div id="textAreaBox" style="display:none">
+        <textarea id="TextAreaSelector" style="background-color:rgba(255, 255, 255, 0.48)">
+        </textarea>
+    </div>
 
     <div id="TopPropertiesBar">
-        <div id="topLeftLogo" onclick="returnHome()">&nbsp;</div>
-        <div id="DefName" style="font-family: 'Poppins', sans-serif; font-size:large"><span id="logo">&nbsp;</span><span id="DefenitionMainTitle"><a href="#" onclick="changedefTitle()" id="changeTitleName" guid="{{ def.definition_guid }}">{{ def.definition_name }}</a> </span>-
-            <span style="color: #a7a7a7;font-size: small;"> {{ def.definition_owner }} - {{ def.definition_start_date }}
-                <input type="text" class="additionalData" value="{{ def.definition_guid }}"></span></div>
         <a href="#" id="fileTheDef" class="menubarButtons">File</a>
         <a href="#" id="fileTheDef" class="menubarButtons">Edit</a>
         <a href="#" id="fileTheDef" class="menubarButtons">Help</a>
         <a href="#" id="saveTheDef" class="menubarButtons">Save</a>
 
-        <div id="settingsIcon"><i class="fa fa-cog" aria-hidden="true"></i></div>
         <div id="minimizeUpperBar" style="display:block;" onclick="onMinimizeClick()"><i id="tominimize" class="fa fa-caret-up" aria-hidden="true"></i></div>
         <div id="maximizeUpperBar" style="display:none;" onclick="onMaximizeClick()"><i id="tomaximize" class="fa fa-caret-up" aria-hidden="true" style="transform:rotate(180deg);"></i></div>
     </div>
@@ -367,120 +365,11 @@ Arguments:
             </div>
         </div>
         
-
     </div>
-    <!-- <div id="LeftPropertiesBar">
-        {% for panel in panels %}
-        <div id="leftbarcontainer">
-            <div id="toolbar_container_1" class="toolBarContainer 1">
-                <div id="toolbar_container_1_1" class="toolBarContainer 1 1">
-                    <div id="toolbar_container_1_1_1" class="toolbarTopToggleContainer">
-                        {% for tab in tabs %} {% if tab.tab_panel == panel%} {% if tab.tab_order == 0 %}
-                        <div class="toolbarTopToggleItem 1">
-                            <div class="toptoggleitem {{ panel.panel_guid }} {{ tab.tab_guid }} selected" onclick="showThisPanel('{{ panel.panel_guid }}', '{{ tab.tab_guid }}')"> {{tab.tab_name}}</div>
-                        </div>
-                        {% else %}
-                        <div class="toolbarTopToggleItem 1">
-                            <div class="toptoggleitem {{ panel.panel_guid }} {{ tab.tab_guid }}" onclick="showThisPanel('{{ panel.panel_guid }}', '{{ tab.tab_guid }}')"> {{tab.tab_name}}</div>
-                        </div>
-                        {% endif %} {% endif %} {% endfor %}
-                    </div>
-                </div>
-                {% for tab in tabs %} {% if tab.tab_panel == panel %} {% if tab.tab_order == 0%}
-                <div id="toolbar_container_1_2" class="TabToolBox {{ panel.panel_guid }} {{ tab.tab_guid }}">
-                    {% if tab.tab_toolbox_toggle_direction == 0 %}
-                    <div id="toolbar_container_1_2_2" class="toolbarRightToggleNavigator">
-                        {% for category in tab.tab_toobox_category.all %}
-                        <div class="rightToggleButton 1" style="background-image:url({{category.category_icon_url}})" onclick="setCurrentCagegory('{{panel.panel_guid}}', '{{category.category_guid}}', '{{category.category_name}}')"><span id="hint">{{ category }}</span></div>
-                        {% endfor %}
-                    </div>
-                    {% elif tab.tab_toolbox_toggle_direction == -1 %}
-                    <div id="toolbar_container_1_2_2" class="toolbarRightToggleNavigator">
-                        {{tab.tab_name}}
-                    </div>
-                    {% endif %}
-                    <div id="toolbar_container_1_2_0" class="toolbarbuttonsContainer">
-                        &nbsp; {{tab.tab_name}} > <span class="currentTab {{panel.panel_guid}}">&nbsp;</span> {% comment %} Components > Standard heirarchial tree to be added {% endcomment %}
-                    </div>
-                    {% for cat in tab.tab_toobox_category.all %} {% if cat.category_isdefault %}
-                    <div id="toolbar_container_1_2_1" class="toolbarbuttonsContainer {{panel.panel_guid}} {{ cat.category_guid }} {{cat.category_order}}">
-                        {% if cat.category_name == "Main Inputs" %}
-                        <div id="addSlider" class="mainButtonItem 1 1" style="background-image:url(https://image.flaticon.com/icons/png/512/983/983840.png)">&nbsp;<span id="hint">Slider</span></div>
-                        <div id="addString" class="mainButtonItem 1 1" style="background-image:url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)">&nbsp;<span id="hint">Panel</span></div>
-                        <div id="addToggle" class="mainButtonItem 1 1" style="background-image:url(https://image.flaticon.com/icons/png/512/1465/1465907.png)">&nbsp;<span id="hint">Toggle</span></div>
-                        <div id="addOptionList" class="mainButtonItem 1 1" style="background-image:url(https://image.flaticon.com/icons/png/512/1085/1085805.png)">&nbsp;<span id="hint">Option list</span></div>
-                        <div id="addListView" class="mainButtonItem 1 1" style="background-image:url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)">&nbsp;<span id="hint">List view</span></div>
-                        <div id="addFile" class="mainButtonItem 1 1" style="background-image:url(https://image.flaticon.com/icons/png/512/2329/2329379.png)">&nbsp;<span id="hint">File upload</span></div>
-                        {% else %} {% for ud in udo %} {% if ud.component_category == cat %} {% if ud.component_icon_url == "" %}
-                        <div id="addComp" name="{{ud.component_name}}" shName="{{ ud.component_shortName }}" desc="{{ ud.component_description }}" type="{{ ud.component_type }}" dftype="{{ ud.component_dataflow_type }}" class="mainButtonItem 1 1" style="background-image:url({{ ud.component_icon_url }})">{{ ud }}</div>
-                        {% else %}
-                        <div id="addComp" name="{{ud.component_name}}" shName="{{ ud.component_shortName }}" desc="{{ ud.component_description }}" type="{{ ud.component_type }}" dftype="{{ ud.component_dataflow_type }}" class="mainButtonItem 1 1" style="background-image:url({{ ud.component_icon_url }})">&nbsp;<span id="hint">{{ ud }}</span></div>
-                        {% endif %} {% endif %} {% endfor %} {% endif %}
-                    </div>
-                    {% else %}
-                    <div id="toolbar_container_1_2_1" class="toolbarbuttonsContainer {{panel.panel_guid}} {{ cat.category_guid }} {{cat.category_order}}" style="display:none">
-                        {% for ud in udo %} {% if ud.component_category == cat %} {% if ud.component_icon_url == "" %}
-                        <div id="addComp" name="{{ud.component_name}}" shName="{{ ud.component_shortName }}" desc="{{ ud.component_description }}" type="{{ ud.component_type }}" dftype="{{ ud.component_dataflow_type }}" class="mainButtonItem 1 1" style="background-image:url({{ ud.component_icon_url }})">{{ ud }}</div>
-                        {% else %}
-                        <div id="addComp" name="{{ud.component_name}}" shName="{{ ud.component_shortName }}" desc="{{ ud.component_description }}" type="{{ ud.component_type }}" dftype="{{ ud.component_dataflow_type }}" class="mainButtonItem 1 1" style="background-image:url({{ ud.component_icon_url }})">&nbsp;<span id="hint">{{ ud }}</span></div>
-                        {% endif %} {% endif %} {% endfor %}
-                    </div>
-                    {% endif %} {% endfor %} {% if tab.tab_toolbox_toggle_direction == 1 %}
-                    <div id="toolbar_container_1_2_2" class="toolbarRightToggleNavigator">
-                        {% for category in tab.tab_toobox_category.all %}
-                        <div class="rightToggleButton 1" style="background-image:url({{category.category_icon_url}})" onclick="setCurrentCagegory('{{panel.panel_guid}}', '{{category.category_guid}}', '{{category.category_name}}')"><span id="hint">{{ category }}</span></div>
-                        {% endfor %} {% endif %}
-                    </div>
-                </div>
-
-
-                {% else %}
-                <div id="toolbar_container_1_2" class="TabToolBox {{ panel.panel_guid }} {{ tab.tab_guid }}" style="display:none">
-                    {% if tab.tab_toolbox_toggle_direction == 0 %}
-                    <div id="toolbar_container_1_2_2" class="toolbarRightToggleNavigator">
-                        {% for category in tab.tab_toobox_category.all %}
-                        <div class="rightToggleButton 1" style="background-image:url({{category.category_icon_url}})" onclick="setCurrentCagegory('{{panel.panel_guid}}', '{{category.category_guid}}', '{{category.category_name}}')"><span id="hint">{{ category }}</span></div>
-                        {% endfor %}
-                    </div>
-                    {% elif tab.tab_toolbox_toggle_direction == -1 %}
-                    <div id="toolbar_container_1_2_2" class="toolbarRightToggleNavigator">
-                        {{tab.tab_name}}
-                    </div>
-                    {% endif %}
-                    <div id="toolbar_container_1_2_0" class="toolbarbuttonsContainer">
-                        &nbsp; {{tab.tab_name}} > <span class="currentTab {{panel.panel_guid}}">&nbsp;</span> {% comment %} Components > Standard heirarchial tree to be added {% endcomment %}
-                    </div>
-                    {% for cat in tab.tab_toobox_category.all %} {% if cat.category_isdefault %}
-                    <div id="toolbar_container_1_2_1" class="toolbarbuttonsContainer {{panel.panel_guid}} {{ cat.category_guid }} {{cat.category_order}}">
-                        {% for ud in udo %} {% if ud.component_category == cat %}
-                        <div class="mainButtonItem 1 1">{{ ud }}</div>
-                        {% endif %} {% endfor %}
-
-                    </div>
-                    {% else %}
-                    <div id="toolbar_container_1_2_1" class="toolbarbuttonsContainer {{panel.panel_guid}} {{ cat.category_guid }} {{cat.category_order}}" style="display:none">
-                        {% for ud in udo %} {% if ud.component_category == cat %}
-                        <div class="mainButtonItem 1 1">{{ ud }}</div>
-                        {% endif %} {% endfor %}
-                    </div>
-                    {% endif %} {% endfor %} {% if tab.tab_toolbox_toggle_direction == 1 %}
-                    <div id="toolbar_container_1_2_2" class="toolbarRightToggleNavigator">
-                        {% for category in tab.tab_toobox_category.all %}
-                        <div class="rightToggleButton 1" style="background-image:url({{category.category_icon_url}})"><span id="hint">{{ category }}</span></div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-                {% endif %} {% endif %} {% endfor %}
-            </div>
-        </div>
-        {% endfor %}
-
-    </div> -->
 
     <div id="PropertiesBar" style="width: 50px;
     min-width: 250px;
-    top: 60px;
+    top: 50px;
     padding-left: 5px;
     padding-top: 5px;">
         <div class="componentsCategory">

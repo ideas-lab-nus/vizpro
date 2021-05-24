@@ -23,6 +23,11 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
+import {currentLeftColWidth, currentTopBarHeight, currentRightColWidth, messageshown,
+    leftColumnIsSelected, rightColIsdisplayed, rightColumnIsSelected, leftColIsdisplayed} 
+    from './constants.js';
+import $ from "jquery";
+var d3 = require("d3");
 
 d3.select("div#LeftPropertiesBar").style("width", () => { return currentLeftColWidth + "px" }).style("top", () => { return (currentTopBarHeight).toString() + "px" })
 d3.select("div#LeftPropertiesBarSelector").style("top", () => { return (currentTopBarHeight).toString() + "px" }).style("left", currentLeftColWidth + "px")
@@ -46,7 +51,7 @@ var leftColAnchor = d3.select("div#LeftPropertiesBarSelector")
         leftColumnIsSelected = true;
     });
 
-
+/*
 d3.select("body")
     .on("mousemove", function(evt) {
         d3.select(this).style("cursor", "auto");
@@ -137,6 +142,7 @@ d3.select("body")
         if (leftColumnIsSelected)
             leftColumnIsSelected = false;
     })
+    */
 
 function changedefTitle() {
 
@@ -156,13 +162,13 @@ function changedefTitle() {
             })
         })
         .on("keydown", function() {
-            if (d3.event.keyCode == 13) {
+            if (d3.event.keyCode === 13) {
                 let newText = $("#TitleToBeChangedInput").val();
                 $("span#DefenitionMainTitle").html(() => {
                     editDefName(theguid, newText)
                     return '<a href="#" id="changeTitleName" onclick="changedefTitle()" guid="' + theguid + '">' + newText + '</a> </span>'
                 })
-            } else if (d3.event.keyCode == 27) {
+            } else if (d3.event.keyCode === 27) {
                 $("span#DefenitionMainTitle").html(() => {
                     return '<a href="#" id="changeTitleName" onclick="changedefTitle()" guid="' + theguid + '">' + currentText + '</a> </span>'
                 })
@@ -175,7 +181,6 @@ function editDefName(api_key, newName) {
     $.ajax({
         "type": "POST",
         "dataType": "json",
-        "url": editUrl,
         "data": {
             "guid": api_key,
             "name": newName
@@ -214,6 +219,10 @@ function onMinimizeClick() {
         .duration(200)
         .style("top", "0px");
 
+    d3.select(".canvas_container").transition()
+        .duration(200)
+        .style("top", "0px");
+
     d3.select("#maximizeUpperBar").transition()
         .duration(200)
         .style("right", "300px")
@@ -239,19 +248,23 @@ function onMaximizeClick() {
 
     d3.select("#LeftPropertiesBar").transition()
         .duration(200)
-        .style("top", "60px");
+        .style("top", "30px");
 
     d3.select("#PropertiesBar").transition()
         .duration(200)
-        .style("top", "60px");
+        .style("top", "30px");
 
     d3.select("#LeftPropertiesBarSelector").transition()
         .duration(200)
-        .style("top", "60px");
+        .style("top", "30px");
 
     d3.select("#PropertiesBarSelector").transition()
         .duration(200)
-        .style("top", "60px");
+        .style("top", "30px");
+
+    d3.select(".canvas_container").transition()
+        .duration(200)
+        .style("top", "30px");
 
     d3.select("#maximizeeUpperBar").transition()
         .duration(200)
@@ -261,10 +274,13 @@ function onMaximizeClick() {
     d3.select("#minimizeUpperBar").transition()
         .duration(200)
         .style("right", "0px")
-        .style("top", "38px");
+        .style("top", "0px");
 
     d3.select("i#tomaximize")
         .transition()
         .duration(200)
         .style("transform", "rotate(180deg)");
+
 }
+
+export {onMaximizeClick, onMinimizeClick};
