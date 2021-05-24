@@ -1,12 +1,11 @@
-import Canvas from "./components/Canvas/Canvas"
+import Canvas from "./Canvas"
 import './App.css';
 import TopPropertiesBar from './components/TopPropertiesBar/TopPropertiesBar';
 
 function App() {
   return (
     <div>
-    <TopPropertiesBar/>
-    <Canvas filter_id="a" pattern_id="b"/>
+    <Canvas />
     </div>
   );
 }
