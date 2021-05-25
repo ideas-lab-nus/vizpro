@@ -26,27 +26,30 @@
  */
 
 
+import {udo_inputs, udo_outputs, udo_names, udo_fill, uuidv4, parent_child_matrix, mousex, mousey, rectType, allComp, runDeep,
+    comp_input_edges, comp_output_edges, components_selection_data, IDLE_COLOR, COMPONENT_RADIUS} from './constants.js';
+import {addcomponent, popupMessage, handleTheClickOnAllComponents, handleEdgeInitialization, handleComponentSelection} from './functions.js';
+import {handleEdgeSelection} from './inits.js';
+import {redrawDependents} from './testing.js';
+import $ from "jquery";
 
-
+var d3 = require('d3');
 
 function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
     //local title variables; Those should be later put in the visualization properties table. 
-    one_character_width = 8;
-    padding = 20;
-    titleMargin = 30;
-    titleMarginLeft = 30;
+    var one_character_width = 8;
+    var padding = 20;
+    var titleMargin = 30;
+    var titleMarginLeft = 30;
     if (FromExisting != null) {
         var newcomp = FromExisting;
     } else {
-
-
-        inputdict = {}
-        thoseInputNames = {}
-        thoseOutputNames = {}
-
+        var inputdict = {}
+        var thoseInputNames = {}
+        var thoseOutputNames = {}
 
         for (let i = 0; i < udo_inputs.length; i++) {
-            thisINp = [];
+            var thisINp = [];
             for (var property in udo_inputs[i]) {
                 if (udo_inputs[i].hasOwnProperty(property)) {
                     thisINp.push(udo_inputs[i][property]["name"])
@@ -55,7 +58,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
             thoseInputNames[i] = thisINp;
         }
         for (let i = 0; i < udo_outputs.length; i++) {
-            thisOUt = [];
+            var thisOUt = [];
             for (var property in udo_outputs[i]) {
                 if (udo_outputs[i].hasOwnProperty(property)) {
                     thisOUt.push(udo_outputs[i][property]["name"])
@@ -256,8 +259,8 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
 
     var cirGroup = node.append('g')
         .attr("transform", () => {
-            x = newcomp.width;
-            y = newcomp.height;
+            var x = newcomp.width;
+            var y = newcomp.height;
             return "translate(" + (x).toString() + "," + (y - 10).toString() + ")";
         });
 
@@ -376,14 +379,14 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
         .on("dblclick", () => {})
         .on("mousedown", () => {
             rectType = "component";
-            conosle.log(rectType);
+            console.log(rectType);
         });
 
 
     var icon = node.append("g")
         .attr("transform", "translate(" + (newcomp.width - 20).toString() + ",1)");
 
-    icon_foreing = icon.append("foreignObject")
+    var icon_foreing = icon.append("foreignObject")
         .attr("width", 18)
         .attr("height", 18)
         .attr("style", () => {
@@ -453,3 +456,5 @@ function runDeepFunction(compId) {
     redrawDependents(compId);
     runDeep = false;
 }
+
+export {CreateNewComponent};

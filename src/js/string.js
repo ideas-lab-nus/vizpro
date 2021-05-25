@@ -24,6 +24,9 @@
  * @since  x.x.x
  */
 
+import $ from "jquery";
+var d3 = require('d3');
+
 //TODO : check this for the text overflow : https://bl.ocks.org/mbostock/1424037 
 function CreatenewString(FromExisting = null) {
     if (FromExisting == null) {
@@ -322,3 +325,5 @@ function CreatenewString(FromExisting = null) {
 $("div#addString").on('click', function(e) {
     CreatenewString();
 });
+
+export {CreatenewString};

@@ -2,7 +2,14 @@ import React, { Component } from 'react'
 import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
 // import { ReactComponent as Grid2 } from './img/image.svg';
 import grid2 from './img/grid2.png';
+//import {Helmet} from 'react-helmet';
+//import {svgContainer} from './js/inits.js';
 
+/*
+                                <Helmet>
+                                    <script>svgContainer</script>
+                                </Helmet>
+*/
 export default class Canvas extends Component {
     render() {
         return (

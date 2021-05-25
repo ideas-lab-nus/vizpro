@@ -205,8 +205,25 @@ var fromCircle = addCircle();
 
 var toCircle = addCircle();
 
+let udo_names = [];
+let udo_types = [];
+let udo_desc = [];
+let udo_shortNames = [];
+let udo_inputs = [];
+let udo_outputs = [];
+let udo_fill = [];
+let udo_dftypes = [];
+let udo_cats = [];
+let udo_subcats = [];
+
+let cats = {};
+let scats = {};
+
 export {currentLeftColWidth, currentTopBarHeight, currentRightColWidth, leftColumnIsSelected, 
     rightColIsdisplayed, rightColumnIsSelected, leftColIsdisplayed, messageshown, 
     startDrag, StringAnchorclicked, SliderAnchorclicked, edgeStarted,
-    xGrid, yGrid, optionListStarted, mouseInsideOption,
-    components_selection_data};
+    xGrid, yGrid, optionListStarted, mouseInsideOption, clickedId,
+    components_selection_data, allComp, uuidv4,
+    udo_cats, udo_desc, udo_dftypes, udo_fill, udo_inputs, udo_names, udo_outputs, udo_shortNames, udo_subcats, udo_types,
+    cats, scats, parent_child_matrix, mousex, mousey, rectType, comp_input_edges, comp_output_edges, runDeep,
+    IDLE_COLOR, COMPONENT_RADIUS};
