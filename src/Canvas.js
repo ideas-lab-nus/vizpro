@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
+// import { ReactComponent as Grid2 } from './img/image.svg';
 import grid2 from './img/grid2.png';
 
 export default class Canvas extends Component {
@@ -10,83 +11,120 @@ export default class Canvas extends Component {
                     <div class="canvas_container_inner">
                         <div class="main_canvas_container canvas_body_container">
                             <div class="ui-designer-grid" id="mainGrid">
-                                <svg height="10000" width="10000">
-                                <defs>
-                                    <filter id="f2" x="-40" y="-40" width="150%" height="150%" filterUnits="userSpaceOnUse">
-                                        <feOffset result="offOut" in="SourceGraphics" dx="0" dy="0" />
-                                        <feGaussianBlur result="blurOut" in="offOut" stdDeviation="1" />
-                                        <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-                                    </filter>
+                                {/* <Grid2/> */}
+                                <svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+      <linearGradient id="Gradient1">
+        <stop class="stop1" offset="0%"/>
+        <stop class="stop2" offset="50%"/>
+        <stop class="stop3" offset="100%"/>
+      </linearGradient>
+      <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="red"/>
+        <stop offset="50%" stop-color="black" stop-opacity="0"/>
+        <stop offset="100%" stop-color="blue"/>
+      </linearGradient>
+  </defs>
 
-                                    <pattern id="img122" patternUnits="userSpaceOnUse" width="500" height="500">
-                                        <image src={grid2} alt="gridBackground" x="0" y="0" width="500" height="500" />
-                                    </pattern>
+  <rect id="rect1" x="10" y="10" rx="15" ry="15" width="100" height="100"/>
+  <rect x="10" y="120" rx="15" ry="15" width="100" height="100" fill="url(#Gradient2)"/>
 
+</svg>
+                                {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 841.9 595.3">
+        <g fill="#61DAFB">
+          <path d="M666.3 296.5c0-32.5-40.7-63.3-103.1-82.4 14.4-63.6 8-114.2-20.2-130.4-6.5-3.8-14.1-5.6-22.4-5.6v22.3c4.6 0 8.3.9 11.4 2.6 13.6 7.8 19.5 37.5 14.9 75.7-1.1 9.4-2.9 19.3-5.1 29.4-19.6-4.8-41-8.5-63.5-10.9-13.5-18.5-27.5-35.3-41.6-50 32.6-30.3 63.2-46.9 84-46.9V78c-27.5 0-63.5 19.6-99.9 53.6-36.4-33.8-72.4-53.2-99.9-53.2v22.3c20.7 0 51.4 16.5 84 46.6-14 14.7-28 31.4-41.3 49.9-22.6 2.4-44 6.1-63.6 11-2.3-10-4-19.7-5.2-29-4.7-38.2 1.1-67.9 14.6-75.8 3-1.8 6.9-2.6 11.5-2.6V78.5c-8.4 0-16 1.8-22.6 5.6-28.1 16.2-34.4 66.7-19.9 130.1-62.2 19.2-102.7 49.9-102.7 82.3 0 32.5 40.7 63.3 103.1 82.4-14.4 63.6-8 114.2 20.2 130.4 6.5 3.8 14.1 5.6 22.5 5.6 27.5 0 63.5-19.6 99.9-53.6 36.4 33.8 72.4 53.2 99.9 53.2 8.4 0 16-1.8 22.6-5.6 28.1-16.2 34.4-66.7 19.9-130.1 62-19.1 102.5-49.9 102.5-82.3zm-130.2-66.7c-3.7 12.9-8.3 26.2-13.5 39.5-4.1-8-8.4-16-13.1-24-4.6-8-9.5-15.8-14.4-23.4 14.2 2.1 27.9 4.7 41 7.9zm-45.8 106.5c-7.8 13.5-15.8 26.3-24.1 38.2-14.9 1.3-30 2-45.2 2-15.1 0-30.2-.7-45-1.9-8.3-11.9-16.4-24.6-24.2-38-7.6-13.1-14.5-26.4-20.8-39.8 6.2-13.4 13.2-26.8 20.7-39.9 7.8-13.5 15.8-26.3 24.1-38.2 14.9-1.3 30-2 45.2-2 15.1 0 30.2.7 45 1.9 8.3 11.9 16.4 24.6 24.2 38 7.6 13.1 14.5 26.4 20.8 39.8-6.3 13.4-13.2 26.8-20.7 39.9zm32.3-13c5.4 13.4 10 26.8 13.8 39.8-13.1 3.2-26.9 5.9-41.2 8 4.9-7.7 9.8-15.6 14.4-23.7 4.6-8 8.9-16.1 13-24.1zM421.2 430c-9.3-9.6-18.6-20.3-27.8-32 9 .4 18.2.7 27.5.7 9.4 0 18.7-.2 27.8-.7-9 11.7-18.3 22.4-27.5 32zm-74.4-58.9c-14.2-2.1-27.9-4.7-41-7.9 3.7-12.9 8.3-26.2 13.5-39.5 4.1 8 8.4 16 13.1 24 4.7 8 9.5 15.8 14.4 23.4zM420.7 163c9.3 9.6 18.6 20.3 27.8 32-9-.4-18.2-.7-27.5-.7-9.4 0-18.7.2-27.8.7 9-11.7 18.3-22.4 27.5-32zm-74 58.9c-4.9 7.7-9.8 15.6-14.4 23.7-4.6 8-8.9 16-13 24-5.4-13.4-10-26.8-13.8-39.8 13.1-3.1 26.9-5.8 41.2-7.9zm-90.5 125.2c-35.4-15.1-58.3-34.9-58.3-50.6 0-15.7 22.9-35.6 58.3-50.6 8.6-3.7 18-7 27.7-10.1 5.7 19.6 13.2 40 22.5 60.9-9.2 20.8-16.6 41.1-22.2 60.6-9.9-3.1-19.3-6.5-28-10.2zM310 490c-13.6-7.8-19.5-37.5-14.9-75.7 1.1-9.4 2.9-19.3 5.1-29.4 19.6 4.8 41 8.5 63.5 10.9 13.5 18.5 27.5 35.3 41.6 50-32.6 30.3-63.2 46.9-84 46.9-4.5-.1-8.3-1-11.3-2.7zm237.2-76.2c4.7 38.2-1.1 67.9-14.6 75.8-3 1.8-6.9 2.6-11.5 2.6-20.7 0-51.4-16.5-84-46.6 14-14.7 28-31.4 41.3-49.9 22.6-2.4 44-6.1 63.6-11 2.3 10.1 4.1 19.8 5.2 29.1zm38.5-66.7c-8.6 3.7-18 7-27.7 10.1-5.7-19.6-13.2-40-22.5-60.9 9.2-20.8 16.6-41.1 22.2-60.6 9.9 3.1 19.3 6.5 28.1 10.2 35.4 15.1 58.3 34.9 58.3 50.6-.1 15.7-23 35.6-58.4 50.6zM320.8 78.4z"/>
+          <circle cx="420.9" cy="296.5" r="45.7"/>
+          <path d="M520.5 78.1z"/>
+          <g id="allCanvasContents"><rect fill="url(#img122)" x="-1000" y="-1000" width="6000" height="6000" style={{"cursor": "default"}}></rect><g id="allPaths"></g></g>
+        </g>
+      </svg> */}
+      {/* <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="500.000000pt" height="500.000000pt" viewBox="0 0 500.000000 500.000000"
+ preserveAspectRatio="xMidYMid meet">
+
+<g transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+</g> */}
+{/* </svg> */}
+                                <svg height="1000" width="1000">
+                                
                                     <defs>
-                                        <linearGradient id="grad1ient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                        <stop offset="0%" stop-color="#dddddd" stop-opacity="1" />
-                                        <stop offset="50%" stop-color="#eeeeee" stop-opacity="1" />
-                                        <stop offset="100%" stop-color="dddddd" stop-opacity="1" />
-                                        </linearGradient>
-                                    </defs>
+                                        <filter id={this.props.filter_id} x="-40" y="-40" width="150%" height="150%" filterUnits="userSpaceOnUse">
+                                            <feOffset result="offOut" in="SourceGraphics" dx="0" dy="0" />
+                                            <feGaussianBlur result="blurOut" in="offOut" stdDeviation="1" />
+                                            <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                                        </filter>
 
-                                    <defs>
+                                        <pattern id="img122" patternUnits="userSpaceOnUse" width="100%" height="100%">
+                                            {/* <Grid2/> */}
+                                            <img src={ grid2 } x="0" y="0" width="500" height="500"/>
+                                        </pattern>
+
+                                        <defs>
+                                            <linearGradient id="grad1ient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style={{'stopColour':'#dddddd', 'stopOpacity':'100%'}} />
+                                            <stop offset="50%" style={{"stopColour":"#eeeeee", "stopOpacity":"100%"}} />
+                                            <stop offset="100%" style={{"stopColour":"#dddddd", "stopOpacity":"100%"}} />
+                                            </linearGradient>
+                                        </defs>
+
+                                        <defs>
                                             <linearGradient id="fileUploadGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" stop-color="#344b62" stop-opacity="1" />
-                                            <stop offset="10%" stop-color="#344b62" stop-opacity="1" />
-                                            <stop offset="12%" stop-color="#2b3d50" stop-opacity="1" />
-                                            <stop offset="88%" stop-color="#2b3d50" stop-opacity="1" />
-                                            <stop offset="90%" stop-color="#23364a" stop-opacity="1" />
-                                            <stop offset="100%" stop-color="#23364a" stop-opacity="1" />
+                                            <stop offset="0%" style={{"stopColour":"#344b62", "stopOpacity":"100%"}} />
+                                            <stop offset="10%" style={{"stopColour":"#344b62", "stopOpacity":"100%"}} />
+                                            <stop offset="12%" style={{"stopColour":"#2b3d50", "stopOpacity":"100%"}} />
+                                            <stop offset="88%" style={{"stopColour":"#2b3d50", "stopOpacity":"100%"}} />
+                                            <stop offset="90%" style={{"stopColour":"#23364a", "stopOpacity":"100%"}} />
+                                            <stop offset="100%" style={{"stopColour":"#23364a", "stopOpacity":"100%"}} />
                                             </linearGradient>
-                                    </defs>
+                                        </defs>
 
-                                    <defs>
+                                        <defs>
                                             <linearGradient id="gradientlsider" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" stop-color="#eeeeee" stop-opacity="1" />
-                                            <stop offset="20%" stop-color="#eeeeee" stop-opacity="1" />
-                                            <stop offset="30%" stop-color="#dddddd" stop-opacity="1" />
-                                            <stop offset="70%" stop-color="#dddddd" stop-opacity="1" />
-                                            <stop offset="80%" stop-color="#cccccc" stop-opacity="1" />
-                                            <stop offset="100%" stop-color="#cccccc" stop-opacity="1" />
+                                            <stop offset="0%"  style={{"stopColour":"#eeeeee", "stopOpacity":"100%"}} />
+                                            <stop offset="20%" style={{"stopColour":"#eeeeee", "stopOpacity":"100%"}} />
+                                            <stop offset="30%" style={{"stopColour":"#dddddd", "stopOpacity":"100%"}} />
+                                            <stop offset="70%" style={{"stopColour":"#dddddd", "stopOpacity":"100%"}} />
+                                            <stop offset="80%" style={{"stopColour":"#cccccc", "stopOpacity":"100%"}} />
+                                            <stop offset="100%"style={{"stopColour":"#cccccc", "stopOpacity":"100%"}} />
                                             </linearGradient>
-                                    </defs>
+                                        </defs>
 
-                                    <defs>
-                                        <linearGradient id="gradient2" x1="0%" y1="0%" x2="0%" y2="100%">
-                                        <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
-                                        <stop offset="10%" stop-color="#ffffff" stop-opacity="1" />
-                                        <stop offset="30%" stop-color="#ffffff" stop-opacity="0.6" />
-                                        <stop offset="80%" stop-color="#ffffff" stop-opacity="0.6" />
-                                        </linearGradient>
-                                    </defs>
+                                        <defs>
+                                            <linearGradient id="gradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%"  style={{"stopColour":"#ffffff", "stopOpacity":"100%"}} />
+                                            <stop offset="10%" style={{"stopColour":"#ffffff", "stopOpacity":"100%"}}/>
+                                            <stop offset="30%" style={{"stopColour":"#ffffff", "stopOpacity":"60%"}} />
+                                            <stop offset="80%" style={{"stopColour":"#ffffff", "stopOpacity":"60%"}} />
+                                            </linearGradient>
+                                        </defs>
 
-                                    <defs>
-                                        <linearGradient id="gradient2_2" x1="0%" y1="0%" x2="0%" y2="100%">
-                                        <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
-                                        <stop offset="50%" stop-color="#ffffff" stop-opacity="0.0" />
-                                        <stop offset="70%" stop-color="#ffffff" stop-opacity="0.0" />
-                                        <stop offset="100%" stop-color="#ffffff" stop-opacity="0.3" />
-                                        </linearGradient>
-                                    </defs>
+                                        <defs>
+                                            <linearGradient id="gradient2_2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%"  style={{"stopColour":"#ffffff", "stopOpacity":"100%"}} />
+                                            <stop offset="50%" style={{"stopColour":"#ffffff", "stopOpacity":"0%"}} />
+                                            <stop offset="70%" style={{"stopColour":"#ffffff", "stopOpacity":"0%"}} />
+                                            <stop offset="100%"style={{"stopColour":"#ffffff", "stopOpacity":"30%"}} />
+                                            </linearGradient>
+                                        </defs>
 
-                                    <defs>
-                                        <linearGradient id="gradient3" x1="0%" y1="0%" x2="0%" y2="100%">
-                                        <stop offset="0%" stop-color="#555555" stop-opacity="0" />
-                                        <stop offset="28%" stop-color="#555555" stop-opacity="0.0" />
-                                        <stop offset="30%" stop-color="#555555" stop-opacity="0.2" />
-                                        <stop offset="80%" stop-color="#555555" stop-opacity="0.5" />
-                                        </linearGradient>
-                                    </defs>
+                                        <defs>
+                                            <linearGradient id="gradient3" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%"  style={{"stopColour":"#555555", "stopOpacity":"0%"}} />
+                                            <stop offset="28%" style={{"stopColour":"#555555", "stopOpacity":"0%"}} />
+                                            <stop offset="30%" style={{"stopColour":"#555555", "stopOpacity":"20%"}} />
+                                            <stop offset="80%" style={{"stopColour":"#555555", "stopOpacity":"50%"}} />
+                                            </linearGradient>
+                                        </defs>
 
-                                    <defs>
-                                        <linearGradient id="gradient4" x1="0%" y1="0%" x2="0%" y2="100%">
-                                        <stop offset="0%" stop-color="#373939" stop-opacity="1.0" />
-                                        <stop offset="100%" stop-color="#023939" stop-opacity="1.0" />
-                                        </linearGradient>
-                                    </defs>
-                                </defs>
-    
+                                        <defs>
+                                            <linearGradient id="gradient4" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%"   style={{"stopColour":"#373939", "stopOpacity":"100%"}} />
+                                            <stop offset="100%" style={{"stopColour":"#023939", "stopOpacity":"100%"}} />
+                                            </linearGradient>
+                                        </defs>
+                                    </defs>    
+                                    <g id="allCanvasContents"><rect fill="url(#img122)" x="-1000" y="-1000" width="6000" height="6000" style={{"cursor": "default"}}></rect><g id="allPaths"></g></g>
                                 </svg>
                             </div>
                         </div>
