@@ -27,7 +27,9 @@ import {currentLeftColWidth, currentTopBarHeight, currentRightColWidth, messages
     leftColumnIsSelected, rightColIsdisplayed, rightColumnIsSelected, leftColIsdisplayed} 
     from './constants.js';
 import $ from "jquery";
+// import {event as currentEvent} from 'd3-selection';
 var d3 = require("d3");
+// import * as d3 from 'd3';
 
 d3.select("div#LeftPropertiesBar").style("width", () => { return currentLeftColWidth + "px" }).style("top", () => { return (currentTopBarHeight).toString() + "px" })
 d3.select("div#LeftPropertiesBarSelector").style("top", () => { return (currentTopBarHeight).toString() + "px" }).style("left", currentLeftColWidth + "px")
@@ -283,4 +285,36 @@ function onMaximizeClick() {
 
 }
 
-export {onMaximizeClick, onMinimizeClick};
+function manageCanvas() {
+    var svgContainer = d3.select("svg");
+
+    var allContents = svgContainer.append("g")
+        .attr("id", "allCanvasContents");
+
+    var backgroundRectangle = allContents.append("rect")
+        .attr("fill", "url(#img122)")
+        .attr("x", -1000)
+        .attr("y", -1000)
+        .attr("width", 6000)
+        .attr("height", 6000)
+        .style("cursor", "default")
+
+    allContents.append("g")
+        .attr("id", "allPaths");
+
+    svgContainer.call(d3.zoom().filter(function() {
+        // if (startDrag || StringAnchorclicked || SliderAnchorclicked || edgeStarted || selection_groud_selected) {
+        //     return false;
+        // } else {
+
+        //     return !d3.event.button;
+        // }
+        return true;
+    }).on("zoom", function(event) {
+        // if (!startDrag) {
+            allContents.attr("transform", event.transform)
+        // }
+    }));
+}
+
+export {onMaximizeClick, onMinimizeClick, manageCanvas};

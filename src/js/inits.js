@@ -16,46 +16,47 @@
 */
 
 
-import $ from "jquery";
-import {startDrag, StringAnchorclicked, SliderAnchorclicked, edgeStarted, allComp, 
-    udo_cats, udo_desc, udo_dftypes, udo_fill, udo_names, udo_shortNames, udo_types, cats} from './constants.js';
-import {selection_groud_selected} from './mainGrid.js';
-import {CreateNewComponent} from './component.js';
-import {CreateNewSlider} from './slider.js';
-import {CreatenewString} from './string.js';
+// import $ from "jquery";
+// import {startDrag, StringAnchorclicked, SliderAnchorclicked, edgeStarted, allComp, 
+//     udo_cats, udo_desc, udo_dftypes, udo_fill, udo_names, udo_shortNames, udo_types, cats} from './constants.js';
+// import {selection_groud_selected} from './mainGrid.js';
+// import {CreateNewComponent} from './component.js';
+// import {CreateNewSlider} from './slider.js';
+// import {CreatenewString} from './string.js';
 
 var d3 = require("d3");
-var svgContainer = d3.select("svg");
 
-var allContents = svgContainer.append("g")
-    .attr("id", "allCanvasContents");
+function manageCanvas() {
+    var svgContainer = d3.select("svg");
 
-var backgroundRectangle = allContents.append("rect")
-    .attr("fill", "url(#img122)")
-    .attr("x", -1000)
-    .attr("y", -1000)
-    .attr("width", 6000)
-    .attr("height", 6000)
-    .style("cursor", "default")
+    var allContents = svgContainer.append("g")
+        .attr("id", "allCanvasContents");
 
-allContents.append("g")
-    .attr("id", "allPaths");
+    var backgroundRectangle = allContents.append("rect")
+        .attr("fill", "url(#img122)")
+        .attr("x", -1000)
+        .attr("y", -1000)
+        .attr("width", 6000)
+        .attr("height", 6000)
+        .style("cursor", "default")
 
-var something;
-svgContainer.call(d3.zoom().filter(function() {
-    if (startDrag || StringAnchorclicked || SliderAnchorclicked || edgeStarted || selection_groud_selected) {
-        return false;
-    } else {
+    allContents.append("g")
+        .attr("id", "allPaths");
 
-        return !d3.event.button;
-    }
-}).on("zoom", function() {
-    if (!startDrag) {
+    var something;
+    svgContainer.call(d3.zoom().filter(function() {
+        if (startDrag || StringAnchorclicked || SliderAnchorclicked || edgeStarted || selection_groud_selected) {
+            return false;
+        } else {
 
-        allContents.attr("transform", d3.event.transform)
-
-    }
-}));
+            return !d3.event.button;
+        }
+    }).on("zoom", function() {
+        if (!startDrag) {
+            allContents.attr("transform", d3.event.transform)
+        }
+    }));
+}
 
 /*
 if (RetrievedData != undefined) {
@@ -113,109 +114,109 @@ try {
 }
 */
 
-$("div#definedComp").html(function() {
-    var somearr = udo_names;
-    var text = "";
-    for (const cat in cats) {
-        if (cats.hasOwnProperty(cat)) {
-            text += '<div id="catcard">'
-            text += '<div id="catHead" style="background-color:' + cats[cat] + '">' + cat + '</div>'
-            text += '<div id="catbody">'
-            somearr.forEach(function(element, i) {
+// $("div#definedComp").html(function() {
+//     var somearr = udo_names;
+//     var text = "";
+//     for (const cat in cats) {
+//         if (cats.hasOwnProperty(cat)) {
+//             text += '<div id="catcard">'
+//             text += '<div id="catHead" style="background-color:' + cats[cat] + '">' + cat + '</div>'
+//             text += '<div id="catbody">'
+//             somearr.forEach(function(element, i) {
 
-                if (udo_cats[i] == cat) {
-                    text += '<button id="addComp" name="' + element + '" shName="' + udo_shortNames[i] + '" desc=\'' + udo_desc[i] + '\' type="' + udo_types[i] + '" dftype="' + udo_dftypes[i] + '" class="standardcat button" ><span style="background-color:' + udo_fill[i] + ';color:' + udo_fill[i] + ';border-radius:3px;">||</span> ' + element + '</button>'
+//                 if (udo_cats[i] == cat) {
+//                     text += '<button id="addComp" name="' + element + '" shName="' + udo_shortNames[i] + '" desc=\'' + udo_desc[i] + '\' type="' + udo_types[i] + '" dftype="' + udo_dftypes[i] + '" class="standardcat button" ><span style="background-color:' + udo_fill[i] + ';color:' + udo_fill[i] + ';border-radius:3px;">||</span> ' + element + '</button>'
 
-                }
-            });
-            text += '</div></div>'
-        }
-    }
-    return text;
-});
-
-
+//                 }
+//             });
+//             text += '</div></div>'
+//         }
+//     }
+//     return text;
+// });
 
 
-$("div#addComp").on('click', function(e) {
-    ThisComponentName = $(this).attr("name");
-    ThisComponenShortName = $(this).attr("shName");
-    ThisComponentDfType = $(this).attr("dftype");
-    ThisComponentType = $(this).attr("type");
-    ThisComponentDesc = $(this).attr("desc");
 
-    console.log(ThisComponentDesc)
 
-    if (ThisComponentType == "component") {
-        CreateNewComponent(null, ThisComponentName, {
-            "shortName": ThisComponenShortName,
-            "dfType": ThisComponentDfType
-        });
-    } else if (ThisComponentType == "optionList") {
-        CreateNewOptionList(null, ThisComponentDesc);
-    }
+// $("div#addComp").on('click', function(e) {
+//     ThisComponentName = $(this).attr("name");
+//     ThisComponenShortName = $(this).attr("shName");
+//     ThisComponentDfType = $(this).attr("dftype");
+//     ThisComponentType = $(this).attr("type");
+//     ThisComponentDesc = $(this).attr("desc");
 
-});
+//     console.log(ThisComponentDesc)
 
-$("input#fileUploadFormToTheCloud").on("change", function(e) {
-    var thisFormId = $(this).attr("class");
+//     if (ThisComponentType == "component") {
+//         CreateNewComponent(null, ThisComponentName, {
+//             "shortName": ThisComponenShortName,
+//             "dfType": ThisComponentDfType
+//         });
+//     } else if (ThisComponentType == "optionList") {
+//         CreateNewOptionList(null, ThisComponentDesc);
+//     }
 
-    var this_form_elemnt = $("#form_" + thisFormId);
+// });
 
-    var form_data = new FormData(this_form_elemnt[0]);
-    console.log(form_data)
+// $("input#fileUploadFormToTheCloud").on("change", function(e) {
+//     var thisFormId = $(this).attr("class");
 
-    var fileName = $(this).val();
-    console.log(fileName);
+//     var this_form_elemnt = $("#form_" + thisFormId);
 
-    const thefileuploadajax = $.ajax({
-        "type": "POST",
-        "accepts": "text/json",
-        "url": "../upload/",
-        "data": form_data,
-        processData: false,
-        contentType: false,
-        "beforeSend": function(xhr, settings) {
-            $.ajaxSettings.beforeSend(xhr, settings);
-            d3.select("#fileUpload_status_" + thisFormId)
-                .html("Uploading ..... ")
+//     var form_data = new FormData(this_form_elemnt[0]);
+//     console.log(form_data)
 
-        },
-        "success": function(res) {
-            console.log(res);
-            theCurrentComp = selectComp(thisFormId);
-            theCurrentComp.outputs[0].Name = res.FileName;
-            theCurrentComp.outputs[0].Description = { "Name": res.FileName, "size": res.FileSize, "url": res.publicURL };
-            theCurrentComp.outputs[0].value = res.publicURL;
-            d3.select("#fileUpload_status_" + thisFormId)
-                .html("File Size : " + (res["FileSize"] / (1024 * 1024)).toString() + " MB " + "<a class='open_uploadedFile_link' href='" + res.publicURL + "' target='blank'>open</a>")
+//     var fileName = $(this).val();
+//     console.log(fileName);
 
-            d3.select("#foreignObject_fileUpload" + thisFormId)
-                .html(() => {
-                    return `
-                <div id="TheContainedFile">` + res.FileName + `</div>
-                <div id="TheContainedFile">Size :` + (res.FileSize / (1024 * 1024)).toFixed(4).toString() + ` MB</div>
-            `
-                })
-            redrawDependents(thisFormId);
-        }
+//     const thefileuploadajax = $.ajax({
+//         "type": "POST",
+//         "accepts": "text/json",
+//         "url": "../upload/",
+//         "data": form_data,
+//         processData: false,
+//         contentType: false,
+//         "beforeSend": function(xhr, settings) {
+//             $.ajaxSettings.beforeSend(xhr, settings);
+//             d3.select("#fileUpload_status_" + thisFormId)
+//                 .html("Uploading ..... ")
 
-    });
-}); // End of $("input#fileUploadFormToTheCloud").on("change", function(e) { ...
+//         },
+//         "success": function(res) {
+//             console.log(res);
+//             theCurrentComp = selectComp(thisFormId);
+//             theCurrentComp.outputs[0].Name = res.FileName;
+//             theCurrentComp.outputs[0].Description = { "Name": res.FileName, "size": res.FileSize, "url": res.publicURL };
+//             theCurrentComp.outputs[0].value = res.publicURL;
+//             d3.select("#fileUpload_status_" + thisFormId)
+//                 .html("File Size : " + (res["FileSize"] / (1024 * 1024)).toString() + " MB " + "<a class='open_uploadedFile_link' href='" + res.publicURL + "' target='blank'>open</a>")
 
-function HandleSelectedOption() {
+//             d3.select("#foreignObject_fileUpload" + thisFormId)
+//                 .html(() => {
+//                     return `
+//                 <div id="TheContainedFile">` + res.FileName + `</div>
+//                 <div id="TheContainedFile">Size :` + (res.FileSize / (1024 * 1024)).toFixed(4).toString() + ` MB</div>
+//             `
+//                 })
+//             redrawDependents(thisFormId);
+//         }
 
-    $("select#listviewSelect").on("change", function(e) {
-        console.log("hello world ");
-    });
+//     });
+// }); // End of $("input#fileUploadFormToTheCloud").on("change", function(e) { ...
 
-}
+// function HandleSelectedOption() {
 
-function handleEdgeSelection() {
-    d3.selectAll("path")
-        .on("mousemove", function() {
-            console.log("hello world")
-        })
-}
+//     $("select#listviewSelect").on("change", function(e) {
+//         console.log("hello world ");
+//     });
 
-export {svgContainer, handleEdgeSelection};
+// }
+
+// function handleEdgeSelection() {
+//     d3.selectAll("path")
+//         .on("mousemove", function() {
+//             console.log("hello world")
+//         })
+// }
+
+export { manageCanvas};
