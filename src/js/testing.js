@@ -70,3 +70,5 @@ function redrawDependents(parent) {
         }
     }
 } // End of redrawDependents
+
+export {redrawDependents};

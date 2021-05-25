@@ -17,11 +17,15 @@
 
 
 import $ from "jquery";
-import {startDrag, StringAnchorclicked, SliderAnchorclicked, edgeStarted} from './constants.js';
+import {startDrag, StringAnchorclicked, SliderAnchorclicked, edgeStarted, allComp, 
+    udo_cats, udo_desc, udo_dftypes, udo_fill, udo_names, udo_shortNames, udo_types, cats} from './constants.js';
 import {selection_groud_selected} from './mainGrid.js';
+import {CreateNewComponent} from './component.js';
+import {CreateNewSlider} from './slider.js';
+import {CreatenewString} from './string.js';
 
 var d3 = require("d3");
-var svgContainer = d3.select("svg")
+var svgContainer = d3.select("svg");
 
 var allContents = svgContainer.append("g")
     .attr("id", "allCanvasContents");
@@ -53,6 +57,7 @@ svgContainer.call(d3.zoom().filter(function() {
     }
 }));
 
+/*
 if (RetrievedData != undefined) {
     if (RetrievedData.canvas_transform != undefined) {
         allContents.attr("transform", RetrievedData.canvas_transform.transform);
@@ -106,10 +111,11 @@ try {
 } catch (err) {
     console.log(err);
 }
+*/
 
 $("div#definedComp").html(function() {
-    somearr = udo_names;
-    text = "";
+    var somearr = udo_names;
+    var text = "";
     for (const cat in cats) {
         if (cats.hasOwnProperty(cat)) {
             text += '<div id="catcard">'
@@ -212,4 +218,4 @@ function handleEdgeSelection() {
         })
 }
 
-export {svgContainer};
+export {svgContainer, handleEdgeSelection};

@@ -1,7 +1,14 @@
 import React, { Component } from 'react'
 import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
 import grid2 from './img/grid2.png';
+//import {Helmet} from 'react-helmet';
+//import {svgContainer} from './js/inits.js';
 
+/*
+                                <Helmet>
+                                    <script>svgContainer</script>
+                                </Helmet>
+*/
 export default class Canvas extends Component {
     render() {
         return (
@@ -86,7 +93,7 @@ export default class Canvas extends Component {
                                         </linearGradient>
                                     </defs>
                                 </defs>
-    
+                            
                                 </svg>
                             </div>
                         </div>

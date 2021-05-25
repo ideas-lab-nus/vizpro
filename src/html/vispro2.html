@@ -460,7 +460,6 @@ h5 {
             }
 
             ThisComponentName = $(this).attr("type");
-            //console.log($(this).attr("type"))// somearr[Math.floor(Math.random() * somearr.length)];
             var newcomp = addcomponent(uuidv4("C"), inputdict[ThisComponentName].inputs.length, inputdict[ThisComponentName].outputs.length, inputdict[ThisComponentName].inputs,  inputdict[ThisComponentName].outputs);
 
 
@@ -475,21 +474,7 @@ h5 {
             newcomp.Name = ThisComponentName;
             newcomp.height = titleMargin + (Math.max(newcomp.inputs.length, newcomp.outputs.length + 1)) *padding;
             newcomp.width = (inputdict[ThisComponentName].longestInput.length + inputdict[ThisComponentName].longestOutput.length) * one_character_width + titleMarginLeft;
-            //console.log(inputdict[ThisComponentName].longestInput)
-            // creating the component visualizer .. 
-            // visualizer structure :
-                // 1. svg group
-                //      |_ Component container group <g 
-                //              |_ inputs group <g 
-                //                      |_inputs circles
-                //                      |   |_ <circle 1
-                //                      |   |_ <circle 2 
-                //                      |   |_ ....  
-                //                      |_inputs texts 
-                //                      |   |_ <text 1 
-                //                      |   |_ <text 2
-                //                      |   |_ ....
-                //
+            
             var cont = svgContainer.append("g")
                 .attr("class", "component")
                 .attr("id", newcomp.GUID);

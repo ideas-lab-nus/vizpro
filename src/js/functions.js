@@ -24,7 +24,11 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
+import {clickedId, mousex, mousey} from './constants.js';
+import {CreateNewComponent} from './component.js';
+import $ from "jquery";
 
+var d3 = require('d3');
 
 var is_there_item_copied = false;
 var copiedItem = null;
@@ -125,7 +129,7 @@ $("a#saveTheDef").on("click", function(e) {
 });
 
 function addSlider(guid, min = 0, max = 100, step = 1.0) {
-    initSlider = {
+    var initSlider = {
         "GUID": guid,
         "X": 0,
         "Y": 0,
@@ -156,8 +160,8 @@ function addSlider(guid, min = 0, max = 100, step = 1.0) {
 } //End of addSlider
 
 function addcomponent(guid, n_inputs = 4, n_outputs = 5, inputsIn = 5 * ["input"], outputsIn = 5 * ["output"]) {
-    inputs = []
-    outputs = []
+    var inputs = []
+    var outputs = []
     for (let index = 0; index < n_inputs; index++) {
 
         try {
@@ -220,7 +224,7 @@ function addcomponent(guid, n_inputs = 4, n_outputs = 5, inputsIn = 5 * ["input"
         }
 
     }
-    initComp = {
+    var initComp = {
         "GUID": guid,
         "X": 0,
         "Y": 0,
@@ -1511,3 +1515,5 @@ function moveComponent(id, x, y) {
         });
     handleEdgeMovement(id, x, y);
 } // End of moveComponent
+
+export {addcomponent, popupMessage, handleTheClickOnAllComponents, handleEdgeInitialization, handleComponentSelection};

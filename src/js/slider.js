@@ -24,11 +24,10 @@
  * @since  x.x.x
  */
 
+import $ from "jquery";
+var d3 = require('d3');
 //TODO : save and retrieve the slider values. 
 function CreateNewSlider(FromExisting = null) {
-
-    // const SLIDER_START_POSITION = 60;
-    // const SLIDER_END_POSITION = 184;
 
     if (FromExisting != null) {
         var newSlider = FromExisting;
@@ -238,3 +237,5 @@ function CreateNewSlider(FromExisting = null) {
 $("div#addSlider").on('click', function(e) {
     CreateNewSlider();
 });
+
+export {CreateNewSlider};
