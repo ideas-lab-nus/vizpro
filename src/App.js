@@ -1,6 +1,6 @@
 import Canvas from "./Canvas"
 import './App.css';
-import TopPropertiesBar from './components/TopPropertiesBar/TopPropertiesBar';
+//import TopPropertiesBar from './components/TopPropertiesBar/TopPropertiesBar';
 
 function App() {
   return (
