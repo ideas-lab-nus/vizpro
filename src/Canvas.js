@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {onMaximizeClick, onMinimizeClick, manageCanvas} from './js/layout.js';
-import { ReactComponent as Grid2 } from './img/grid2.svg';
 import grid2 from './img/grid2.png';
 import {setCurrentCagegory, showThisPanel} from './js/insert.js';                             
 
@@ -87,11 +86,6 @@ export default class Canvas extends Component {
                                             </linearGradient>
                                         </defs>
                                 </defs>
-                                
-                                {/* <image className='img-circle' onLoad={manageCanvas} xlinkHref={grid2} x='0' y="0" height="1000" width="1000" fill="" id="juh"/> */}
-                                {/* <ScriptTag type="text/javascript" src="./js/resource.js"></ScriptTag> */}
-                                {/* <g id="allCanvasContents"><rect  fill="url(#img122)" x="-1000" y="-1000" width="6000" height="6000" 
-                                    style={{"cursor": "default"}}></rect><g id="allPaths"></g></g> */}
                             </svg>   
                                 
                             </div>
