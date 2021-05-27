@@ -24,7 +24,7 @@
  * @since  x.x.x
  */
 import {currentLeftColWidth, currentTopBarHeight, currentRightColWidth, messageshown,
-    leftColumnIsSelected, rightColIsdisplayed, rightColumnIsSelected, leftColIsdisplayed} 
+    leftColumnIsSelected, rightColIsdisplayed, rightColumnIsSelected, leftColIsdisplayed, startDrag} 
     from './constants.js';
 
 import $ from "jquery";
@@ -284,12 +284,13 @@ function onMaximizeClick() {
 
 }
 
+
+var svgContainer = d3.select("svg");
+
+var allContents = svgContainer.append("g")
+    .attr("id", "allCanvasContents");
+
 function manageCanvas() {
-    var svgContainer = d3.select("svg");
-
-    var allContents = svgContainer.append("g")
-        .attr("id", "allCanvasContents");
-
     var backgroundRectangle = allContents.append("rect")
         .attr("fill", "url(#img122)")
         .attr("x", -1000)
@@ -310,8 +311,8 @@ function manageCanvas() {
         // }
         return true;
     }).on("zoom", function(event) {
-            allContents.attr("transform", event.transform)
+        if (!startDrag) { allContents.attr("transform", event.transform); }
     }));
 }
 
-export {onMaximizeClick, onMinimizeClick, manageCanvas};
+export {svgContainer, allContents, onMaximizeClick, onMinimizeClick, manageCanvas};

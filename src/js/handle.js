@@ -1,3 +1,101 @@
+import {
+    IDLE_COLOR,
+    ACTIVE_COLOR,
+    ERROR_COLOR,
+    COMPONENT_RADIUS,
+    allComp,
+    allEdges,
+    comp_input_edges,
+    comp_output_edges,
+    edge_comp_matrix,
+    parent_child_matrix,
+    parent_child_matrix_fast_check,
+    root_components,
+    components_selection_data,
+    selected_components,
+    runDeep,
+    StringAnchorclicked,
+    StringAnchorType,
+    StringAnchorId,
+    XANCHOR,
+    YANCHOR,
+    ANCHOR_WIDTH,
+    SLIDER_START_POSITION,
+    SLIDER_END_POSITION,
+    anchorMouseXpos,
+    anchorMouseYpos,
+    SliderAnchorclicked,
+    selectedSliderComponent,
+    dragX,
+    dragY,
+    sliderRectId,
+    initPos,
+    startDrag,
+    clickedId,
+    rectType,
+    deltaX,
+    deltaY,
+    clicked,
+    edgeStarted,
+    targetcircleIN,
+    selectedcircleId,
+    targetcircleId,
+    selectedSliderAnchorId,
+    xGrid,
+    yGrid,
+    mousex,
+    mousey,
+    initEdgex2,
+    initEdgey2,
+    componentClickX,
+    componentClickY,
+    textareaStarted,
+    textAreaRectId,
+    optionListStarted,
+    optionlistRectid,
+    justSelected,
+    mouseInsideOption,
+    is_component_selected,
+    selected_component_id,
+    rightColumnIsSelected,
+    leftColumnIsSelected,
+    topColumnIsSelected,
+    rightColIsdisplayed,
+    leftColIsdisplayed,
+    is_edge_selected,
+    currentTopBarHeight,
+    currentLeftColWidth,
+    currentRightColWidth,
+    defVars,
+    messageshown,
+    Output,
+    Input,
+    uuidv4,
+    addEdge,
+    addCircle,
+    toCircle,
+    fromCircle,
+    udo_names,
+    udo_types,
+    udo_desc,
+    udo_shortNames,
+    udo_inputs,
+    udo_outputs,
+    udo_fill,
+    udo_dftypes,
+    udo_cats,
+    udo_subcats,
+    cats,
+    scats
+    } from './constants.js';
+import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
+    getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
+    addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
+    updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
+    drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
+    edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
+    itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
+import {allContents} from './layout.js';
 import $ from "jquery";
 var d3 = require('d3');
 
@@ -159,8 +257,8 @@ function handleEdgeInitialization() {
                     var y = d3.mouse(allContents.node())[1];
 
 
-                    initEdgex1 = x;
-                    initEdgey1 = y;
+                    var initEdgex1 = x;
+                    var initEdgey1 = y;
 
                     d3.select("g#allPaths")
                         .append("path")
@@ -201,8 +299,8 @@ function handleEdgeInitialization() {
                         " " + fromCircle.element.classList[1] +
                         " " + toCircle.element.classList[2] +
                         " " + toCircle.element.classList[1])) {
-                    thisEdge = addEdge(fromCircle, toCircle, fromCircle.element.classList, toCircle.element.classList);
-                    thisPath = d3.select("#" + selectedcircleId)
+                    var thisEdge = addEdge(fromCircle, toCircle, fromCircle.element.classList, toCircle.element.classList);
+                    var thisPath = d3.select("#" + selectedcircleId)
 
                     thisEdge.path_id = thisPath["_groups"][0][0].id;
 
@@ -280,7 +378,7 @@ function handleDoubleClick() {
             var currentToggle = selectComp(element.GUID);
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
-                    toggleValue = $("text.nodetitle.node_title" + element.GUID).text();
+                    var toggleValue = $("text.nodetitle.node_title" + element.GUID).text();
                     d3.select("text.nodetitle.node_title" + element.GUID)
                         .text(function() {
                             if (toggleValue == "True") {

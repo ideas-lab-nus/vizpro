@@ -24,8 +24,99 @@
  * @since  x.x.x
  */
 
+import {
+    IDLE_COLOR,
+    ACTIVE_COLOR,
+    ERROR_COLOR,
+    COMPONENT_RADIUS,
+    allComp,
+    allEdges,
+    comp_input_edges,
+    comp_output_edges,
+    edge_comp_matrix,
+    parent_child_matrix,
+    parent_child_matrix_fast_check,
+    root_components,
+    components_selection_data,
+    selected_components,
+    runDeep,
+    StringAnchorclicked,
+    StringAnchorType,
+    StringAnchorId,
+    XANCHOR,
+    YANCHOR,
+    ANCHOR_WIDTH,
+    SLIDER_START_POSITION,
+    SLIDER_END_POSITION,
+    anchorMouseXpos,
+    anchorMouseYpos,
+    SliderAnchorclicked,
+    selectedSliderComponent,
+    dragX,
+    dragY,
+    sliderRectId,
+    initPos,
+    startDrag,
+    clickedId,
+    rectType,
+    deltaX,
+    deltaY,
+    clicked,
+    edgeStarted,
+    targetcircleIN,
+    selectedcircleId,
+    targetcircleId,
+    selectedSliderAnchorId,
+    xGrid,
+    yGrid,
+    mousex,
+    mousey,
+    initEdgex2,
+    initEdgey2,
+    componentClickX,
+    componentClickY,
+    textareaStarted,
+    textAreaRectId,
+    optionListStarted,
+    optionlistRectid,
+    justSelected,
+    mouseInsideOption,
+    is_component_selected,
+    selected_component_id,
+    rightColumnIsSelected,
+    leftColumnIsSelected,
+    topColumnIsSelected,
+    rightColIsdisplayed,
+    leftColIsdisplayed,
+    is_edge_selected,
+    currentTopBarHeight,
+    currentLeftColWidth,
+    currentRightColWidth,
+    defVars,
+    messageshown,
+    Output,
+    Input,
+    uuidv4,
+    addEdge,
+    addCircle,
+    toCircle,
+    fromCircle,
+    udo_names,
+    udo_types,
+    udo_desc,
+    udo_shortNames,
+    udo_inputs,
+    udo_outputs,
+    udo_fill,
+    udo_dftypes,
+    udo_cats,
+    udo_subcats,
+    cats,
+    scats
+    } from './constants.js';
+import {allContents} from './layout.js';
+
 import $ from "jquery";
-import {uuidv4} from './constants.js';
 import {handleComponentSelection, handleTheClickOnAllComponents, 
     handleEdgeInitialization, handleDoubleClick} from './handle.js';
 var d3 = require('d3');
@@ -62,7 +153,7 @@ function addSlider(guid, min = 0, max = 100, step = 1.0) {
 } //End of addSlider
 
 //TODO : save and retrieve the slider values. 
-function CreateNewSlider(FromExisting = null) {
+function CreateNewSlider(allComp, FromExisting = null) {
     if (FromExisting != null) {
         var newSlider = FromExisting;
     } else {
@@ -246,7 +337,7 @@ function CreateNewSlider(FromExisting = null) {
     if (FromExisting == null)
         allComp.push(newSlider);
 
-    theRequiredSliderGroup = undefined;
+    var theRequiredSliderGroup = undefined;
 
 
     //Moving the slider body

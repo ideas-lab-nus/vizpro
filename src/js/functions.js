@@ -24,8 +24,98 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
-import {clickedId, mousex, mousey} from './constants.js';
-import {CreateNewComponent} from './component.js';
+ import {
+    IDLE_COLOR,
+    ACTIVE_COLOR,
+    ERROR_COLOR,
+    COMPONENT_RADIUS,
+    allComp,
+    allEdges,
+    comp_input_edges,
+    comp_output_edges,
+    edge_comp_matrix,
+    parent_child_matrix,
+    parent_child_matrix_fast_check,
+    root_components,
+    components_selection_data,
+    selected_components,
+    runDeep,
+    StringAnchorclicked,
+    StringAnchorType,
+    StringAnchorId,
+    XANCHOR,
+    YANCHOR,
+    ANCHOR_WIDTH,
+    SLIDER_START_POSITION,
+    SLIDER_END_POSITION,
+    anchorMouseXpos,
+    anchorMouseYpos,
+    SliderAnchorclicked,
+    selectedSliderComponent,
+    dragX,
+    dragY,
+    sliderRectId,
+    initPos,
+    startDrag,
+    clickedId,
+    rectType,
+    deltaX,
+    deltaY,
+    clicked,
+    edgeStarted,
+    targetcircleIN,
+    selectedcircleId,
+    targetcircleId,
+    selectedSliderAnchorId,
+    xGrid,
+    yGrid,
+    mousex,
+    mousey,
+    initEdgex2,
+    initEdgey2,
+    componentClickX,
+    componentClickY,
+    textareaStarted,
+    textAreaRectId,
+    optionListStarted,
+    optionlistRectid,
+    justSelected,
+    mouseInsideOption,
+    is_component_selected,
+    selected_component_id,
+    rightColumnIsSelected,
+    leftColumnIsSelected,
+    topColumnIsSelected,
+    rightColIsdisplayed,
+    leftColIsdisplayed,
+    is_edge_selected,
+    currentTopBarHeight,
+    currentLeftColWidth,
+    currentRightColWidth,
+    defVars,
+    messageshown,
+    Output,
+    Input,
+    uuidv4,
+    addEdge,
+    addCircle,
+    toCircle,
+    fromCircle,
+    udo_names,
+    udo_types,
+    udo_desc,
+    udo_shortNames,
+    udo_inputs,
+    udo_outputs,
+    udo_fill,
+    udo_dftypes,
+    udo_cats,
+    udo_subcats,
+    cats,
+    scats
+    } from './constants.js';
+// import {CreateNewComponent} from './component.js';
+import {svgContainer, allContents} from './layout.js';
 import $ from "jquery";
 
 var d3 = require('d3');
@@ -263,7 +353,7 @@ function CreatePathes(theEdge) {
 function updateAll(FromExisting = null) {
     allEdges.forEach(element => {
 
-        thisD = $("path#" + element.path_id).attr("d");
+        var thisD = $("path#" + element.path_id).attr("d");
         // //////console.log(thisD)
         d3.select("#" + element.path_id)
             .attr("stroke-width", "5")
@@ -322,7 +412,7 @@ function toMoveEdgeEnds(mainObj) {
 } // End of toMoveEdgeEnds
 
 function returnCurveString(x1, y1, x2, y2) {
-    coalignValue = 10.0;
+    var coalignValue = 10.0;
     if (x2 < x1) {
         coalignValue = Math.abs(y2 - y1) / 5.0 + (Math.abs(x2 - x1) * 1.5);
     } else {
@@ -348,6 +438,7 @@ function ViewListRedrawing() {
         var selectedOptions = $("option.listViewOption." + id);
         for (let i = 0; i < selectedOptions.length; i++) {
             var currentValue = selectedOptions[i].value;
+            var parsedcurrentValue;
             if (selectedOptions[i].selected) {
                 if (isNaN(currentValue)) {
                     parsedcurrentValue = currentValue;
@@ -380,7 +471,6 @@ function ViewListRedrawing() {
     });
 } // End of ViewListRedrawing
 
-
 function getAllChildes(parent, n = 0) {
     let par = selectComp(parent)
     let text = ""
@@ -406,7 +496,7 @@ function repeatStringNumTimes(string, times) {
 } // End of repeatStringNumTimes
 
 function addOptionDropdownList(compId) {
-    optionListComp = selectComp(compId)
+    var optionListComp = selectComp(compId)
     var n = 0;
     var node = d3.select("g#comp-" + compId);
     var optionsGroup = d3.select("g#optionListOption-" + compId);
@@ -414,7 +504,7 @@ function addOptionDropdownList(compId) {
     for (const option in optionListComp.optionListValues) {
         if (optionListComp.optionListValues.hasOwnProperty(option)) {
             n += 1;
-            optionRect = optionsGroup.append('text')
+            var optionRect = optionsGroup.append('text')
                 .attr("fill", "black")
                 .attr("class", "optionListoptiontext " + optionListComp.GUID + " " + optionListComp.optionListValues[option] + " " + option)
                 .attr("value", option)
@@ -429,7 +519,7 @@ function addOptionDropdownList(compId) {
     for (const option in optionListComp.optionListValues) {
         if (optionListComp.optionListValues.hasOwnProperty(option)) {
             n += 1;
-            optionRect = optionsGroup.append('rect')
+            var optionRect = optionsGroup.append('rect')
                 .attr("fill", "white")
                 .attr("class", "optionListoption " + optionListComp.GUID + " " + optionListComp.optionListValues[option] + " " + option)
                 .attr("value", option)
@@ -454,7 +544,7 @@ function addOptionDropdownList(compId) {
 
 function changeOptionListFinalValue(el) {
     console.log(el.attributes.value.value);
-    thisComp = selectComp(el.classList[1])
+    var thisComp = selectComp(el.classList[1])
     thisComp.value = el.attributes.key.value
     thisComp.Name = el.attributes.value.value
 
@@ -564,12 +654,12 @@ function updatShallowCompRender(ch) {
                 console.log(data)
             });
         } else if (ch.inputs[0].type == "plot") {
-            data = JSON.parse(ch.inputs[0].value);
+            var data = JSON.parse(ch.inputs[0].value);
             drawPlotComponent(data, ch);
 
         } else if (ch.inputs[0].type == "spatial") {
-            data = JSON.parse(ch.inputs[0].value);
-            unparseData = ch.inputs[0].value;
+            var data = JSON.parse(ch.inputs[0].value);
+            var unparseData = ch.inputs[0].value;
             visualizeSpatialComponent(data, unparseData, ch);
         }
         $("foreignObject#panel_status_" + ch.GUID).text("type : " + ch.inputs[0].type)
@@ -602,7 +692,7 @@ function updatShallowCompRender(ch) {
 function visualizeSpatialComponent(data, unparseData, comp) {
     $("foreignObject#textbody_" + comp.GUID).html('<div id="vis_area' + comp.GUID + '" style="height:4%"></div><div id="vis_canvas' + comp.GUID + '" style="height:92%">vis</div>')
 
-    options = `<select id='spatial_select_` + comp.GUID + `' onchange= 'displaySelection(` + unparseData + `, "` + comp.GUID + `")'>`
+    var options = `<select id='spatial_select_` + comp.GUID + `' onchange= 'displaySelection(` + unparseData + `, "` + comp.GUID + `")'>`
     for (const key in data) {
         if (data.hasOwnProperty(key)) {
             options += `<option  value="` + key + `">` + key + `</option>`
@@ -615,7 +705,7 @@ function visualizeSpatialComponent(data, unparseData, comp) {
 function displaySelection(data, id) {
 
     var x = document.getElementById("spatial_select_" + id).value;
-    spaces_in_level = `<select id="spatial_zone_selection_list_` + id + `" onchange="highlightSpatialZone('` + id + `')">`
+    var spaces_in_level = `<select id="spatial_zone_selection_list_` + id + `" onchange="highlightSpatialZone('` + id + `')">`
     data[x].forEach(element => {
         spaces_in_level += `<option value="` + element.name + `">` + element.name + `</option>`
     });
@@ -634,7 +724,7 @@ function displaySelection(data, id) {
             .attr("fill", "none")
             .attr("stroke-width", 1)
             .attr("d", () => {
-                pathString = "M"
+                var pathString = "M"
                 for (let i = 0; i < element.coords.length; i++) {
                     if (i < element.coords.length - 1) {
                         pathString += " " + (element.coords[i][0] * 10 + 500).toString() + " " + (element.coords[i][1] * 10 + 300).toString() + " L";
@@ -680,7 +770,7 @@ function drawPlotComponent(data, comp) {
         } else if (data[0].type == "bar") {
 
             data[0].data.forEach(dataElement => {
-                maxValue = Math.max(...dataElement.y);
+                var maxValue = Math.max(...dataElement.y);
                 dataElement["marker"] = {
                     "color": []
                 }
@@ -770,7 +860,7 @@ function updateListViewDrawing(comp) {
     d3.select("foreignObject#listView-" + comp.GUID)
         .html(() => {
             var selectedOptions = [];
-            ListItemsvalueReturn = `<select id="listviewSelect" class="listView ` + comp.GUID + `" size="5"  multiple>`;
+            var ListItemsvalueReturn = `<select id="listviewSelect" class="listView ` + comp.GUID + `" size="5"  multiple>`;
             comp.value.forEach(option => {
 
                 if (option[1] == 0) {
@@ -800,25 +890,26 @@ function handleEdgeMovement(objID, x = null, y = null) {
         for (let index = 0; index < comp_input_edges[objID].length; index++) {
             if (comp_input_edges[objID][index] != undefined) {
                 comp_input_edges[objID][index].forEach(inputElement => {
-                    circleindex = index;
+                    var circleindex = index;
 
-                    rectId = objID;
+                    var rectId = objID;
 
-
-                    rectpos = $("#comp-" + rectId).attr("transform")
+                    var rectpos = $("#comp-" + rectId).attr("transform")
                         .replace("translate(", "").replace(")", "")
                         .split(",").map(function(item) {
                             return parseFloat(item, 10);
                         });
-                    xy2 = $("#" + inputElement).attr("d").split(
+                    var xy2 = $("#" + inputElement).attr("d").split(
                         " ")[1].split(",").map(function(item) {
                         return parseFloat(item, 10);
                     });
+                    var padding = 20;
+                    var titleMargin = 30;
                     var thenewEdge = d3.select("#" + inputElement)
                         .attr("d", function() {
 
                             if (element.type == "component") {
-                                itisthelocation = returnCurveString(
+                                var itisthelocation = returnCurveString(
                                     xy2[0], xy2[1], rectpos[0],
                                     rectpos[1] + (circleindex *
                                         padding + titleMargin));
@@ -849,23 +940,25 @@ function handleEdgeMovement(objID, x = null, y = null) {
             if (comp_output_edges[objID][index] != undefined) {
                 comp_output_edges[objID][index].forEach(
                     outputElement => {
-                        circleindex = index;
-                        rectId = objID;
-                        rectpos = $("#comp-" + rectId).attr("transform")
+                        var circleindex = index;
+                        var rectId = objID;
+                        var rectpos = $("#comp-" + rectId).attr("transform")
                             .replace("translate(", "").replace(")", "")
                             .split(",").map(function(item) {
                                 return parseFloat(item, 10);
                             });
-                        rectwidth = $("rect#dummyRect_" + rectId).attr("width");
-                        xy2 = $("#" + outputElement).attr("d").split(
+                        var rectwidth = $("rect#dummyRect_" + rectId).attr("width");
+                        var xy2 = $("#" + outputElement).attr("d").split(
                             " ")[5].split(",").map(function(item) {
                             return parseFloat(item, 10);
                         });
+                        var padding = 20;
+                        var titleMargin = 30;
                         var thenewEdge = d3.select("#" + outputElement)
                             .attr("d", function() {
 
                                 if (element.type == "component") {
-                                    itisthelocation = returnCurveString(
+                                    var itisthelocation = returnCurveString(
                                         rectpos[0] + parseFloat(rectwidth), rectpos[1] + (circleindex * padding + titleMargin), xy2[0], xy2[1]);
 
                                     handlePathDeleteMovement(outputElement, [
@@ -991,8 +1084,8 @@ function deleteComponent(component_to_be_deleted) {
                     if (thisEdgeId == allEdges[i]["path_id"]) {
                         allEdges.splice(i, 1)
                     }
-                    let otherComp = edge_comp_matrix[thisEdgeId]["from"];
-                    let otherCompIndex = edge_comp_matrix[thisEdgeId]["from_index"];
+                    var otherComp = edge_comp_matrix[thisEdgeId]["from"];
+                    var otherCompIndex = edge_comp_matrix[thisEdgeId]["from_index"];
                     comp_output_edges[otherComp][otherCompIndex] = undefined;
                     parent_child_matrix[otherComp] = [];
                 });
@@ -1011,8 +1104,8 @@ function deleteComponent(component_to_be_deleted) {
                     if (thisEdgeId == allEdges[i]["path_id"]) {
                         allEdges.splice(i, 1)
                     }
-                    otherComp = edge_comp_matrix[thisEdgeId]["to"];
-                    otherCompIndex = edge_comp_matrix[thisEdgeId]["to_index"];
+                    var otherComp = edge_comp_matrix[thisEdgeId]["to"];
+                    var otherCompIndex = edge_comp_matrix[thisEdgeId]["to_index"];
                     comp_input_edges[otherComp][otherCompIndex] = undefined;
                 });
             }
@@ -1034,8 +1127,8 @@ function deleteComponent(component_to_be_deleted) {
 function deleteEdge(edge_to_be_deleted) {
     var components_of_the_edge = edge_comp_matrix[edge_to_be_deleted];
 
-    fromComp = selectComp(components_of_the_edge["from"]) //.outputs[components_of_the_edge["from_index"]])
-    toComp = selectComp(components_of_the_edge["to"]) //.inputs[components_of_the_edge["to_index"]].value = null;
+    var fromComp = selectComp(components_of_the_edge["from"]) //.outputs[components_of_the_edge["from_index"]])
+    var toComp = selectComp(components_of_the_edge["to"]) //.inputs[components_of_the_edge["to_index"]].value = null;
     console.log(toComp);
     toComp.inputs[components_of_the_edge["to_index"]].value = null;
     toComp.value = null;
@@ -1087,7 +1180,7 @@ function saveFile() {
     });
 
     console.log(parseFloat(d3.select("div#PropertiesBar").style("width")))
-    resss = ""
+    var resss = ""
     $.ajax({
         "type": "POST",
         "dataType": "json",
@@ -1167,4 +1260,10 @@ function moveComponent(id, x, y) {
     handleEdgeMovement(id, x, y);
 } // End of moveComponent
 
-export {addcomponent, popupMessage};
+export {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
+    getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
+    addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
+    updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
+    drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
+    edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
+    itemListChangedFunction, componentStatus, moveComponent};
