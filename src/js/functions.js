@@ -114,8 +114,11 @@
     cats,
     scats
     } from './constants.js';
-// import {CreateNewComponent} from './component.js';
+import {CreateNewComponent} from './component.js';
 import {svgContainer, allContents} from './layout.js';
+import {calculateShallow} from './shallow.js';
+import {calculateDeep} from './deep.js';
+import {Plotly} from 'plotly';
 import $ from "jquery";
 
 var d3 = require('d3');
@@ -131,7 +134,7 @@ var cut_component_sName = null;
 var cut_component_dfType = null;
 var cut_component_type = null;
 
-function KeyPress(e) {
+function KeyPress(event, e) {
     var evtobj = window.event ? event : e
     if (evtobj.keyCode == 90 && evtobj.ctrlKey) {
         popupMessage("Ctrl+z");
@@ -140,8 +143,7 @@ function KeyPress(e) {
     if (evtobj.keyCode == 89 && evtobj.ctrlKey) {
         popupMessage("Ctrl+y");
     }
-    if (evtobj.keyCode == 67 && evtobj.ctrlKey) //Ctrl + C copy
-    {
+    if (evtobj.keyCode == 67 && evtobj.ctrlKey) {//Ctrl + C copy
         popupMessage("Ctrl+c");
         is_there_item_copied = true;
         is_there_item_cut = false;
@@ -197,7 +199,7 @@ function KeyPress(e) {
         $(document).on("keydown", (ev) => {
             ev.preventDefault();
         });
-        var answer = confirm("You are leaving, Save changes ? ")
+        var answer = window.confirm("You are leaving, Save changes ?")
         if (answer) {
             saveFile();
             window.location.href = '/def';
@@ -568,7 +570,7 @@ function redrawDependents(parent) {
 
     let par = selectComp(parent)
 
-    if (parent_child_matrix[parent].length > 0) // This means that this parent has already childs
+    if (parent_child_matrix[parent].length > 0) {} // This means that this parent has already childs
     {
 
         if (par.dftype == "shlow") {
@@ -640,9 +642,11 @@ function updatShallowCompRender(ch) {
             $("foreignObject#textbody_" + ch.GUID).html(ch.inputs[0].value)
 
         } else if (ch.inputs[0].type == "json") {
-
+            /*
+            To be handle later
             $("foreignObject#textbody_" + ch.GUID).html('<div id="jsonTreeViewer' + ch.GUID + '"></div>')
             jsonView.format(ch.inputs[0].value, "div#jsonTreeViewer" + ch.GUID);
+            */
 
         } else if (ch.inputs[0].type == "text") {
             $("foreignObject#textbody_" + ch.GUID).html("<pre>" + ch.inputs[0].value + "</pre>");
@@ -815,7 +819,7 @@ function drawPlotComponent(data, comp) {
         } else if (data.type == "bar") {
 
             data.data.forEach(dataElement => {
-                maxValue = Math.max(...dataElement.y);
+                var maxValue = Math.max(...dataElement.y);
                 dataElement["marker"] = {
                     "color": []
                 }
@@ -1184,10 +1188,10 @@ function saveFile() {
     $.ajax({
         "type": "POST",
         "dataType": "json",
-        "url": saveUrl,
+        //"url": saveUrl,
         "accepts": "text",
         "data": {
-            "api": thisDefId,
+            //"api": thisDefId,
             "da": JSON.stringify({
                 "components": allComp,
                 "edges": allEdges,
@@ -1228,7 +1232,7 @@ function itemListChangedFunction(id, value) {
 } // End of itemListChangedFunction
 
 function componentStatus(id, Compstauts) {
-    console.log(status);
+    //console.log(status);
     if (Compstauts == "green") {
         d3.select("rect#statusRect" + id)
             .attr("fill", "#02521b");

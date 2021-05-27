@@ -15,14 +15,8 @@
 
 */
 
-
-// import $ from "jquery";
-// import {startDrag, StringAnchorclicked, SliderAnchorclicked, edgeStarted, allComp, 
-//     udo_cats, udo_desc, udo_dftypes, udo_fill, udo_names, udo_shortNames, udo_types, cats} from './constants.js';
-// import {selection_groud_selected} from './mainGrid.js';
-// import {CreateNewComponent} from './component.js';
-// import {CreateNewSlider} from './slider.js';
-// import {CreatenewString} from './string.js';
+import {startDrag, StringAnchorclicked, SliderAnchorclicked, edgeStarted} from './constants.js';
+import {selection_groud_selected} from './mainGrid.js';
 
 var d3 = require("d3");
 

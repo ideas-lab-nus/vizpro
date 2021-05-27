@@ -25,9 +25,9 @@
  * @since  x.x.x
  */
 
-
-
-
+import $ from "jquery";
+import {uuidv4} from './constants.js';
+import {objToHtmlTable, selectComp} from './functions.js';
 
 var shallow_functions = {
     //Basics
@@ -300,7 +300,6 @@ function average(args) {
         log_output = error
         average_output = null
     }
-    null
     return {
         "type": ["text", "text"],
         "value": [average_output, log_output]
@@ -364,7 +363,6 @@ COMPARISON OPERATORS
 function equal(args) {
     return logCompareOperator(args, operations['==']);
 }
-null
 
 function greater(args) {
     return logCompareOperator(args, operations['>']);
@@ -686,11 +684,11 @@ function jsonNavigator(args) {
      * @return {json} json string indicating the 3d geometry
      */
 
-    input_json = args[0];
-    path = args[1];
+    var input_json = args[0];
+    var path = args[1];
 
-    output = null;
-    log = "Success"
+    var output = null;
+    var log = "Success"
 
     try {
         input_json = parseString(input_json);
@@ -901,7 +899,7 @@ function youTubeDisplay(args) {
        }
     } else {
         try {
-        videoId = _url.split("watch?v=")[1].split("&")[0]
+        var videoId = _url.split("watch?v=")[1].split("&")[0]
         console.log(videoId)
         youTube_ = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/`+videoId+`" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
        return {
@@ -935,14 +933,14 @@ function plot_panel_comp(args) {
  * @param    {string} compId The component GUID.
  */
 function calculateShallow(compId) {
-    thisComp = selectComp(compId); // selects the component that is under test.
+    var thisComp = selectComp(compId); // selects the component that is under test.
     console.log(thisComp);
-    inputGroup = []; // reads the inputs from the component and put them in a list to be mapped to the corresponding shallow function.
+    var inputGroup = []; // reads the inputs from the component and put them in a list to be mapped to the corresponding shallow function.
     thisComp.inputs.forEach(input => {
         inputGroup.push(input.value);
     });
 
-    d = shallow_functions[thisComp.Name](inputGroup);
+    var d = shallow_functions[thisComp.Name](inputGroup);
 
     console.log("I don't know")
 
@@ -951,3 +949,5 @@ function calculateShallow(compId) {
         output.type = d["type"][i];
     });
 }
+
+export { calculateShallow };

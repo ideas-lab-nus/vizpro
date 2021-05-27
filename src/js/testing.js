@@ -1,3 +1,8 @@
+import {selectComp, componentStatus, updatShallowCompRender} from './functions.js';
+import {parent_child_matrix, ACTIVE_COLOR, ERROR_COLOR, runDeep} from './constants.js';
+import {calculateShallow} from './shallow.js';
+import {calculateDeep} from './deep.js';
+
 function redrawDependents(parent) {
     // on a parent changes, only draws all the children tree .
     // all the components --- inputs outpts object (to be sent later to the backend should be modified as well)
@@ -40,7 +45,7 @@ function redrawDependents(parent) {
             par.state = "unbound";
             parent_child_matrix[parent].forEach(function(element, i) {
                 //iterate through all those childs.
-                let ch = selectComp(element[1]);
+                var ch = selectComp(element[1]);
                 if (par.type == "component") {
                     console.log(par);
                     if (par.state == "unbound") {
@@ -55,8 +60,6 @@ function redrawDependents(parent) {
                 updatShallowCompRender(ch);
                 redrawDependents(ch.GUID);
             });
-        } else if (par.dftype == "dp" && ch.dftype == "shlow") {
-            console.log("case3_parent is deep, and child is shallow .... [-----]");
         } else {
             console.log("case4_parent is shallow component");
 

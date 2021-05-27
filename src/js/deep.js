@@ -24,14 +24,16 @@
  * @since  x.x.x
  */
 
-
-
-
-
 /**
  * This is the core function that runs all the calculations and return the outputs to the components. 
  * @param    {string} compId The component GUID.
  */
+
+import {selectComp} from './functions.js';
+import $ from "jquery";
+
+var d3 = require('d3');
+
 function calculateDeep(compId) {
     var functionName;
     var args;
@@ -39,8 +41,8 @@ function calculateDeep(compId) {
     var result;
     d3.select("div#PleaseWaitOverLay").style("display", "block");
     thisComp = selectComp(compId);
-    inputGroup = [];
-    currentDeepComp = thisComp;
+    var inputGroup = [];
+    var currentDeepComp = thisComp;
     thisComp.inputs.forEach(input => {
         inputGroup.push(input.value);
     });
@@ -54,7 +56,7 @@ function calculateDeep(compId) {
         "type": "POST",
         "dataType": "json",
         "async": false,
-        "url": gotoTheMoon,
+        //"url": gotoTheMoon,   //currently, this request is not going to work
         "data": {
             "functionName": functionName,
             "params": JSON.stringify(args)
@@ -85,3 +87,5 @@ function calculateDeep(compId) {
         d3.select("div#PleaseWaitOverLay").style("display", "none");
     }
 }
+
+export {calculateDeep};

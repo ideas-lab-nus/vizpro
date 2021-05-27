@@ -121,6 +121,8 @@ import {handleComponentSelection, handleTheClickOnAllComponents,
     handleEdgeInitialization, handleDoubleClick} from './handle.js';
 var d3 = require('d3');
 
+var theRequiredSliderGroup = "";
+
 function addSlider(guid, min = 0, max = 100, step = 1.0) {
     var initSlider = {
         "GUID": guid,
@@ -337,9 +339,6 @@ function CreateNewSlider(allComp, FromExisting = null) {
     if (FromExisting == null)
         allComp.push(newSlider);
 
-    var theRequiredSliderGroup = undefined;
-
-
     //Moving the slider body
     var allcomp = d3.selectAll("g.SliderGroup")
         .on('mousedown', function(d, i) {
@@ -360,4 +359,4 @@ $("div#addSlider").on('click', function(e) {
     CreateNewSlider();
 });
 
-export {CreateNewSlider};
+export {CreateNewSlider, theRequiredSliderGroup};
