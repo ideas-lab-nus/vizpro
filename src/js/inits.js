@@ -212,11 +212,11 @@ try {
 
 // }
 
-// function handleEdgeSelection() {
-//     d3.selectAll("path")
-//         .on("mousemove", function() {
-//             console.log("hello world")
-//         })
-// }
+function handleEdgeSelection() {
+    d3.selectAll("path")
+        .on("mousemove", function() {
+            console.log("hello world")
+        })
+}
 
-export { manageCanvas};
+export {handleEdgeSelection};

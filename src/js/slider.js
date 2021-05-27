@@ -25,14 +25,46 @@
  */
 
 import $ from "jquery";
+import {uuidv4} from './constants.js';
+import {handleComponentSelection, handleTheClickOnAllComponents, 
+    handleEdgeInitialization, handleDoubleClick} from './handle.js';
 var d3 = require('d3');
+
+function addSlider(guid, min = 0, max = 100, step = 1.0) {
+    var initSlider = {
+        "GUID": guid,
+        "X": 0,
+        "Y": 0,
+        "width": 150,
+        "height": 30,
+        "Name": "Slider",
+        "ShortName": "Num",
+        "Description": "Dummy Slider",
+        "Message": "short description",
+        "inputs": [],
+        "outputs": [],
+        "min": min,
+        "max": max,
+        "value": 0,
+        "step": step,
+        "typeName": null,
+        "selection": "selectable",
+        "view": "visible", // hidden , disabled
+        "fill": "url(#grad1ient)",
+        "rect": null,
+        "type": "slider",
+        "dftype": "shlow",
+        "child": false
+
+    };
+
+    return initSlider;
+} //End of addSlider
+
 //TODO : save and retrieve the slider values. 
 function CreateNewSlider(FromExisting = null) {
-
     if (FromExisting != null) {
         var newSlider = FromExisting;
-
-
     } else {
         var newSlider = addSlider(uuidv4("S"), 0, 100, 1.0);
         parent_child_matrix[newSlider.GUID] = []
@@ -43,10 +75,10 @@ function CreateNewSlider(FromExisting = null) {
     }
 
     newSlider.fill = "#bdc4c8";
-    one_character_width = 8;
-    padding = 20;
-    titleMargin = 30;
-    titleMarginLeft = 5;
+    var one_character_width = 8;
+    var padding = 20;
+    var titleMargin = 30;
+    var titleMarginLeft = 5;
     newSlider.height = 20;
     newSlider.width = 250;
     newSlider.dftype = "shlow";
@@ -60,8 +92,7 @@ function CreateNewSlider(FromExisting = null) {
         .attr("class", "slider")
         .attr("id", newSlider.GUID);
 
-    var node = cont
-        .append("g")
+    var node = cont.append("g")
         .attr("class", "SliderGroup" + " " + newSlider.selection + " " + newSlider
             .view + " " + newSlider.GUID)
         .attr("id", "comp-" + newSlider.GUID)
@@ -231,7 +262,7 @@ function CreateNewSlider(FromExisting = null) {
     handleTheClickOnAllComponents();
     handleEdgeInitialization();
     handleComponentSelection();
-    HandleDoubleClick();
+    handleDoubleClick();
 }
 
 $("div#addSlider").on('click', function(e) {
