@@ -116,9 +116,11 @@
     cats,
     scats
     } from './constants.js';
-// import {CreateNewComponent} from './component.js';
+import {CreateNewComponent} from './component.js';
 import {svgContainer, allContents} from './layout.js';
 import Plotly from 'plotly.js-dist';
+import {calculateShallow} from './shallow.js';
+import {calculateDeep} from './deep.js';
 import $ from "jquery";
 
 var d3 = require('d3');
@@ -134,86 +136,85 @@ var cut_component_sName = null;
 var cut_component_dfType = null;
 var cut_component_type = null;
 
-// function KeyPress(e) {
-//     var evtobj = window.event ? event : e
-//     if (evtobj.keyCode == 90 && evtobj.ctrlKey) {
-//         popupMessage("Ctrl+z");
+function KeyPress(event, e) {
+    var evtobj = window.event ? event : e
+    if (evtobj.keyCode == 90 && evtobj.ctrlKey) {
+        popupMessage("Ctrl+z");
 
-//     };
-//     if (evtobj.keyCode == 89 && evtobj.ctrlKey) {
-//         popupMessage("Ctrl+y");
-//     }
-//     if (evtobj.keyCode == 67 && evtobj.ctrlKey) //Ctrl + C copy
-//     {
-//         popupMessage("Ctrl+c");
-//         is_there_item_copied = true;
-//         is_there_item_cut = false;
+    };
+    if (evtobj.keyCode == 89 && evtobj.ctrlKey) {
+        popupMessage("Ctrl+y");
+    }
+    if (evtobj.keyCode == 67 && evtobj.ctrlKey) {//Ctrl + C copy
+        popupMessage("Ctrl+c");
+        is_there_item_copied = true;
+        is_there_item_cut = false;
 
-//         copiedItem = clickedId;
+        copiedItem = clickedId;
 
-//     }
-//     if (evtobj.keyCode == 88 && evtobj.ctrlKey) {
-//         popupMessage("Ctrl+x");
-//         is_there_item_cut = true;
-//         is_there_item_copied = false;
+    }
+    if (evtobj.keyCode == 88 && evtobj.ctrlKey) {
+        popupMessage("Ctrl+x");
+        is_there_item_cut = true;
+        is_there_item_copied = false;
 
-//         copiedItem = clickedId;
-//         new_copied_component = selectComp(copiedItem)
-//         cut_component_name = new_copied_component.Name;
-//         cut_component_sName = new_copied_component.shortName;
-//         cut_component_dfType = new_copied_component.dfType;
-//         cut_component_type = new_copied_component.type;
+        copiedItem = clickedId;
+        new_copied_component = selectComp(copiedItem)
+        cut_component_name = new_copied_component.Name;
+        cut_component_sName = new_copied_component.shortName;
+        cut_component_dfType = new_copied_component.dfType;
+        cut_component_type = new_copied_component.type;
 
-//         deleteComponent(clickedId);
+        deleteComponent(clickedId);
 
-//     };
-//     if (evtobj.keyCode == 86 && evtobj.ctrlKey) {
-//         if (is_there_item_copied) {
-//             new_copied_component = selectComp(copiedItem);
-//             if (new_copied_component.type == "component")
-//                 CreateNewComponent(null, new_copied_component.Name, {
-//                     "shortName": new_copied_component.shortName,
-//                     "dfType": new_copied_component.dfType,
-//                     "X": mousex,
-//                     "Y": mousey
-//                 });
+    };
+    if (evtobj.keyCode == 86 && evtobj.ctrlKey) {
+        if (is_there_item_copied) {
+            new_copied_component = selectComp(copiedItem);
+            if (new_copied_component.type == "component")
+                CreateNewComponent(null, new_copied_component.Name, {
+                    "shortName": new_copied_component.shortName,
+                    "dfType": new_copied_component.dfType,
+                    "X": mousex,
+                    "Y": mousey
+                });
 
-//         } else if (is_there_item_cut) {
-//             if (cut_component_type == "component")
-//                 CreateNewComponent(null, cut_component_name, {
-//                     "shortName": cut_component_sName,
-//                     "dfType": cut_component_dfType,
-//                     "X": mousex,
-//                     "Y": mousey
-//                 });
-//         }
-//         popupMessage("Ctrl+v");
-//     }
+        } else if (is_there_item_cut) {
+            if (cut_component_type == "component")
+                CreateNewComponent(null, cut_component_name, {
+                    "shortName": cut_component_sName,
+                    "dfType": cut_component_dfType,
+                    "X": mousex,
+                    "Y": mousey
+                });
+        }
+        popupMessage("Ctrl+v");
+    }
 
-//     if (evtobj.keyCode == 83 && evtobj.ctrlKey) {
-//         e.preventDefault();
-//         saveFile();
-//     }
+    if (evtobj.keyCode == 83 && evtobj.ctrlKey) {
+        e.preventDefault();
+        saveFile();
+    }
 
-//     if (evtobj.keyCode == 78 && evtobj.ctrlKey) {
+    if (evtobj.keyCode == 78 && evtobj.ctrlKey) {
 
-//         $(document).on("keydown", (ev) => {
-//             ev.preventDefault();
-//         });
-//         var answer = confirm("You are leaving, Save changes ? ")
-//         if (answer) {
-//             saveFile();
-//             window.location.href = '/def';
-//         } else {
-//             window.location.href = "/def";
-//         }
+        $(document).on("keydown", (ev) => {
+            ev.preventDefault();
+        });
+        var answer = window.confirm("You are leaving, Save changes ?")
+        if (answer) {
+            saveFile();
+            window.location.href = '/def';
+        } else {
+            window.location.href = "/def";
+        }
 
 
-//     }
+    }
 
-// } // End of KeyPress
+} // End of KeyPress
 
-// document.onkeydown = KeyPress;
+document.onkeydown = KeyPress;
 
 $("a#saveTheDef").on("click", function(e) {
     e.preventDefault();
@@ -571,7 +572,7 @@ function redrawDependents(parent) {
 
     let par = selectComp(parent)
 
-    if (parent_child_matrix[parent].length > 0) // This means that this parent has already childs
+    if (parent_child_matrix[parent].length > 0) {} // This means that this parent has already childs
     {
 
         if (par.dftype == "shlow") {
@@ -643,9 +644,11 @@ function updatShallowCompRender(ch) {
             $("foreignObject#textbody_" + ch.GUID).html(ch.inputs[0].value)
 
         } else if (ch.inputs[0].type == "json") {
-
+            /*
+            To be handle later
             $("foreignObject#textbody_" + ch.GUID).html('<div id="jsonTreeViewer' + ch.GUID + '"></div>')
-            // jsonView.format(ch.inputs[0].value, "div#jsonTreeViewer" + ch.GUID);
+            jsonView.format(ch.inputs[0].value, "div#jsonTreeViewer" + ch.GUID);
+            */
 
         } else if (ch.inputs[0].type == "text") {
             $("foreignObject#textbody_" + ch.GUID).html("<pre>" + ch.inputs[0].value + "</pre>");

@@ -24,7 +24,55 @@
  * @since  x.x.x
  */
 
-import {xGrid, yGrid, optionListStarted, mouseInsideOption, startDrag, components_selection_data} from './constants.js';
+import {components_selection_data,
+    selected_components,
+    StringAnchorclicked,
+    StringAnchorType,
+    StringAnchorId,
+    XANCHOR,
+    YANCHOR,
+    ANCHOR_WIDTH,
+    SLIDER_START_POSITION,
+    SLIDER_END_POSITION,
+    anchorMouseXpos,
+    anchorMouseYpos,
+    SliderAnchorclicked,
+    selectedSliderComponent,
+    xGrid, yGrid,
+    sliderRectId,
+    initPos,
+    startDrag,
+    clickedId,
+    rectType,
+    deltaX,
+    deltaY,
+    clicked,
+    edgeStarted,
+    targetcircleIN,
+    selectedcircleId,
+    mousex,
+    mousey,
+    messageshown,
+    componentClickX,
+    componentClickY,
+    textareaStarted,
+    textAreaRectId,
+    optionListStarted,
+    optionlistRectid,
+    justSelected,
+    mouseInsideOption,
+    is_component_selected,
+    selected_component_id} from './constants.js';
+import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
+    getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
+    addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
+    updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
+    drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
+    edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
+    itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
+import {allContents} from './layout.js';
+import {theRequiredSliderGroup} from './slider.js';
+
 var d3 = require("d3");
 
 var selection_box_x = 0;
@@ -81,7 +129,7 @@ var mainGrid = d3.select("#mainGrid")
             console.log("You will delete ")
         }
         if (selectComp(selected_component_id).type == "fileUpload") {
-            if (confirm("Are you sure you want to delete this file from the database? ")) {
+            if (window.confirm("Are you sure you want to delete this file from the database? ")) {
                 console.log("You should detele the file from the database now... ")
                 deleteComponent(selected_component_id);
             } else {
@@ -124,7 +172,8 @@ var mainGrid = d3.select("#mainGrid")
     if (edgeStarted) {
         d3.select("#" + selectedcircleId)
             .attr("d", function () {
-                return returnCurveString(initEdgex1, initEdgey1, mousex - 2, mousey - 2);
+                //return returnCurveString(initEdgex1, initEdgey1, mousex - 2, mousey - 2);
+                return returnCurveString(x, y, mousex - 2, mousey - 2);
             }).attr("fill", "none")
             .attr("stroke-opacity", "0.2")
             .attr("interpolate", "basis");
@@ -143,16 +192,13 @@ var mainGrid = d3.select("#mainGrid")
             var sliderLineEndingpositionX = 238;
             var sliderLineEndingpositionY = 3.0;
 
-
-
-
-            slider_anchor_value = selectedSliderComponent.value;
+            var slider_anchor_value = selectedSliderComponent.value;
 
             var the_slider_slope = (selectedSliderComponent.max-selectedSliderComponent.min)/(SLIDER_END_POSITION-SLIDER_START_POSITION)
             var y_intersection = selectedSliderComponent.min - (the_slider_slope*SLIDER_START_POSITION);
             var slider_value = componentClickX * the_slider_slope + y_intersection; 
 
-            sliderY1 = selectedSliderComponent.max;                                                  
+            var sliderY1 = selectedSliderComponent.max;                                                  
 
             var ax = (selectedSliderComponent.max)/(sliderLineEndingpositionX - sliderLineStartingpositionX); 
 
@@ -168,7 +214,6 @@ var mainGrid = d3.select("#mainGrid")
 
 
             } else {
-
                 slider_anchor_value = componentClickX - sliderLineStartingpositionX;
             }
             selectedSliderComponent.anchorValue = slider_anchor_value;
@@ -187,8 +232,8 @@ var mainGrid = d3.select("#mainGrid")
         }
 
         if (textareaStarted) {
-            selectedRect = getlocationFromTransform(d3.select("g#comp-"+textAreaRectId).attr("transform"));
-            textA = d3.select("#TextAreaSelector")
+            var selectedRect = getlocationFromTransform(d3.select("g#comp-"+textAreaRectId).attr("transform"));
+            var textA = d3.select("#TextAreaSelector")
             .style("position", "absolute")
             .style("height", (parseFloat(d3.select("rect#"+textAreaRectId).attr("height"))-50).toString()+"px")
             .style("left", selectedRect[0]+4+"px")
@@ -207,13 +252,13 @@ var mainGrid = d3.select("#mainGrid")
         if(StringAnchorclicked) {
             if (StringAnchorType == YANCHOR) { 
                 //TODO : encabsulate this in a function.
-                newHeight = mousey - anchorMouseYpos;
+                var newHeight = mousey - anchorMouseYpos;
                 if (newHeight > 20)
                 newHeight = mousey - anchorMouseYpos;
                 else
                 newHeight = 22;
 
-                thisComp = selectComp(StringAnchorId)
+                var thisComp = selectComp(StringAnchorId)
                 thisComp.height = newHeight;
 
                 d3.select("rect#dummyRect_"+StringAnchorId)
@@ -262,7 +307,7 @@ var mainGrid = d3.select("#mainGrid")
             } else if (StringAnchorType == XANCHOR) { 
 
                 //TODO : encabsulate this in a function.
-                newWidth = mousex - anchorMouseXpos;
+                var newWidth = mousex - anchorMouseXpos;
                 if (newWidth > 200)
                 newWidth = mousex - anchorMouseXpos;
                 else
@@ -348,7 +393,6 @@ var mainGrid = d3.select("#mainGrid")
             .attr("fill-opacity", 0.1);
         }
         handleEdgeMovement(StringAnchorId);
-
 })
 .on('mouseup', function () {
     if (startDrag) {
@@ -366,10 +410,10 @@ var mainGrid = d3.select("#mainGrid")
     }
     if (edgeStarted) {
         edgeStarted = false;
-        theEdge = d3.select("#" + selectedcircleId).remove();
+        var theEdge = d3.select("#" + selectedcircleId).remove();
     }
     if (StringAnchorclicked) {
-        modified_string_comp = selectComp(StringAnchorId);
+        var modified_string_comp = selectComp(StringAnchorId);
         components_selection_data[StringAnchorId] = {"x0": modified_string_comp.X, "y0": modified_string_comp.Y, "x1": modified_string_comp.X+modified_string_comp.width, "y1": modified_string_comp.Y + modified_string_comp.height};
         StringAnchorclicked = false;
     }
@@ -523,7 +567,7 @@ function alignComponent(alignment) {
 }
 function showHorizontalAlignment(selectionBox) {
     console.log(selectionBox.attr("width"))
-    horizAlignBox = selectionBox.append("rect")
+    var horizAlignBox = selectionBox.append("rect")
     .attr("x", ((selectionBox.attr("width") - horizontal_align_box.W )/2.0))
     .attr("y", (-horizontal_align_box.H-5))
     .attr("width", horizontal_align_box.W)
@@ -551,7 +595,7 @@ function showHorizontalAlignment(selectionBox) {
 
 function showVerticalAlignment(selectionBox) {
 
-    vertAlignBox = selectionBox.append("rect")
+    var vertAlignBox = selectionBox.append("rect")
     .attr("y", ((selectionBox.attr("height") - vertical_align_box.H )/2.0))
     .attr("x", (-vertical_align_box.W-5))
     .attr("width", vertical_align_box.W)

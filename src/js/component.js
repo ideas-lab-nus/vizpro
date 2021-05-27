@@ -32,6 +32,7 @@ import {addcomponent, popupMessage} from './functions.js';
 import {handleTheClickOnAllComponents, handleEdgeInitialization, handleComponentSelection} from './handle.js';
 import {handleEdgeSelection} from './inits.js';
 import {redrawDependents} from './testing.js';
+import {allContents} from './layout.js';
 import $ from "jquery";
 
 var d3 = require('d3');
@@ -83,7 +84,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
         }
 
 
-        ThisComponentName = type;
+        var ThisComponentName = type;
         let n_inputs = Object.keys(inputdict[ThisComponentName].inputs).length
         let n_outputs = Object.keys(inputdict[ThisComponentName].outputs).length
 

@@ -1,5 +1,11 @@
 # Getting Started with Create React App
 
+Need to fix later:
+- `jsonView` variable not defined in `function.js` file.
+- `url` in `req` variable in `deep.js`, which is depended on a variable that is defined in Django HTML, so it needs to be extracted later.
+- `saveUrl` and `thisDefId` in `resss` variable in `function.js`, which is depended on a variable that is defined in Django HTML, so it needs to be extracted later.
+- `initEdgex1` and `initEdgey1` in `mainGrid.js` are not global variables.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
