@@ -287,10 +287,14 @@ function onMaximizeClick() {
 
 var svgContainer = d3.select("svg");
 
-var allContents = svgContainer.append("g")
-    .attr("id", "allCanvasContents");
+var allContents = d3.select("g");
 
 function manageCanvas() {
+    var svgContainer = d3.select("svg");
+
+    var allContents = svgContainer.append("g")
+    .attr("id", "allCanvasContents");
+
     var backgroundRectangle = allContents.append("rect")
         .attr("fill", "url(#img122)")
         .attr("x", -1000)
@@ -311,7 +315,9 @@ function manageCanvas() {
         // }
         return true;
     }).on("zoom", function(event) {
-        if (!startDrag) { allContents.attr("transform", event.transform); }
+        // if (!startDrag) { 
+            allContents.attr("transform", event.transform); 
+        // }
     }));
 }
 

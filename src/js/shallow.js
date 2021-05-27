@@ -929,25 +929,3 @@ function plot_panel_comp(args) {
         "value": [inputs, "to be stated later .. "]
     }
 }
-
-/**
- * This is the core function that runs all the calculations and return the outputs to the components.
- * @param    {string} compId The component GUID.
- */
-function calculateShallow(compId) {
-    thisComp = selectComp(compId); // selects the component that is under test.
-    console.log(thisComp);
-    inputGroup = []; // reads the inputs from the component and put them in a list to be mapped to the corresponding shallow function.
-    thisComp.inputs.forEach(input => {
-        inputGroup.push(input.value);
-    });
-
-    d = shallow_functions[thisComp.Name](inputGroup);
-
-    console.log("I don't know")
-
-    thisComp.outputs.forEach(function (output, i) {
-        output.value = d["value"][i];
-        output.type = d["type"][i];
-    });
-}

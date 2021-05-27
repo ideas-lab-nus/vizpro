@@ -153,7 +153,7 @@ function addSlider(guid, min = 0, max = 100, step = 1.0) {
 } //End of addSlider
 
 //TODO : save and retrieve the slider values. 
-function CreateNewSlider(allComp, FromExisting = null) {
+function CreateNewSlider(FromExisting = null) {
     if (FromExisting != null) {
         var newSlider = FromExisting;
     } else {
@@ -177,8 +177,7 @@ function CreateNewSlider(allComp, FromExisting = null) {
     // .attr("transform", "translate(" + (60 + (newSlider.value * 100) / (184 - 60)).toString() + ", 3)")
 
 
-
-
+    console.log("wah");
     var cont = allContents.append("g")
         .attr("class", "slider")
         .attr("id", newSlider.GUID);
@@ -355,9 +354,5 @@ function CreateNewSlider(allComp, FromExisting = null) {
     handleComponentSelection();
     handleDoubleClick();
 }
-
-$("div#addSlider").on('click', function(e) {
-    CreateNewSlider();
-});
 
 export {CreateNewSlider};

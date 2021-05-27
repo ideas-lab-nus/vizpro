@@ -24,6 +24,8 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
+
+//IMPORTANT : Fix for lines, 592, 617, 646 
  import {
     IDLE_COLOR,
     ACTIVE_COLOR,
@@ -116,6 +118,7 @@
     } from './constants.js';
 // import {CreateNewComponent} from './component.js';
 import {svgContainer, allContents} from './layout.js';
+import Plotly from 'plotly.js-dist';
 import $ from "jquery";
 
 var d3 = require('d3');
@@ -131,86 +134,86 @@ var cut_component_sName = null;
 var cut_component_dfType = null;
 var cut_component_type = null;
 
-function KeyPress(e) {
-    var evtobj = window.event ? event : e
-    if (evtobj.keyCode == 90 && evtobj.ctrlKey) {
-        popupMessage("Ctrl+z");
+// function KeyPress(e) {
+//     var evtobj = window.event ? event : e
+//     if (evtobj.keyCode == 90 && evtobj.ctrlKey) {
+//         popupMessage("Ctrl+z");
 
-    };
-    if (evtobj.keyCode == 89 && evtobj.ctrlKey) {
-        popupMessage("Ctrl+y");
-    }
-    if (evtobj.keyCode == 67 && evtobj.ctrlKey) //Ctrl + C copy
-    {
-        popupMessage("Ctrl+c");
-        is_there_item_copied = true;
-        is_there_item_cut = false;
+//     };
+//     if (evtobj.keyCode == 89 && evtobj.ctrlKey) {
+//         popupMessage("Ctrl+y");
+//     }
+//     if (evtobj.keyCode == 67 && evtobj.ctrlKey) //Ctrl + C copy
+//     {
+//         popupMessage("Ctrl+c");
+//         is_there_item_copied = true;
+//         is_there_item_cut = false;
 
-        copiedItem = clickedId;
+//         copiedItem = clickedId;
 
-    }
-    if (evtobj.keyCode == 88 && evtobj.ctrlKey) {
-        popupMessage("Ctrl+x");
-        is_there_item_cut = true;
-        is_there_item_copied = false;
+//     }
+//     if (evtobj.keyCode == 88 && evtobj.ctrlKey) {
+//         popupMessage("Ctrl+x");
+//         is_there_item_cut = true;
+//         is_there_item_copied = false;
 
-        copiedItem = clickedId;
-        new_copied_component = selectComp(copiedItem)
-        cut_component_name = new_copied_component.Name;
-        cut_component_sName = new_copied_component.shortName;
-        cut_component_dfType = new_copied_component.dfType;
-        cut_component_type = new_copied_component.type;
+//         copiedItem = clickedId;
+//         new_copied_component = selectComp(copiedItem)
+//         cut_component_name = new_copied_component.Name;
+//         cut_component_sName = new_copied_component.shortName;
+//         cut_component_dfType = new_copied_component.dfType;
+//         cut_component_type = new_copied_component.type;
 
-        deleteComponent(clickedId);
+//         deleteComponent(clickedId);
 
-    };
-    if (evtobj.keyCode == 86 && evtobj.ctrlKey) {
-        if (is_there_item_copied) {
-            new_copied_component = selectComp(copiedItem);
-            if (new_copied_component.type == "component")
-                CreateNewComponent(null, new_copied_component.Name, {
-                    "shortName": new_copied_component.shortName,
-                    "dfType": new_copied_component.dfType,
-                    "X": mousex,
-                    "Y": mousey
-                });
+//     };
+//     if (evtobj.keyCode == 86 && evtobj.ctrlKey) {
+//         if (is_there_item_copied) {
+//             new_copied_component = selectComp(copiedItem);
+//             if (new_copied_component.type == "component")
+//                 CreateNewComponent(null, new_copied_component.Name, {
+//                     "shortName": new_copied_component.shortName,
+//                     "dfType": new_copied_component.dfType,
+//                     "X": mousex,
+//                     "Y": mousey
+//                 });
 
-        } else if (is_there_item_cut) {
-            if (cut_component_type == "component")
-                CreateNewComponent(null, cut_component_name, {
-                    "shortName": cut_component_sName,
-                    "dfType": cut_component_dfType,
-                    "X": mousex,
-                    "Y": mousey
-                });
-        }
-        popupMessage("Ctrl+v");
-    }
+//         } else if (is_there_item_cut) {
+//             if (cut_component_type == "component")
+//                 CreateNewComponent(null, cut_component_name, {
+//                     "shortName": cut_component_sName,
+//                     "dfType": cut_component_dfType,
+//                     "X": mousex,
+//                     "Y": mousey
+//                 });
+//         }
+//         popupMessage("Ctrl+v");
+//     }
 
-    if (evtobj.keyCode == 83 && evtobj.ctrlKey) {
-        e.preventDefault();
-        saveFile();
-    }
+//     if (evtobj.keyCode == 83 && evtobj.ctrlKey) {
+//         e.preventDefault();
+//         saveFile();
+//     }
 
-    if (evtobj.keyCode == 78 && evtobj.ctrlKey) {
+//     if (evtobj.keyCode == 78 && evtobj.ctrlKey) {
 
-        $(document).on("keydown", (ev) => {
-            ev.preventDefault();
-        });
-        var answer = confirm("You are leaving, Save changes ? ")
-        if (answer) {
-            saveFile();
-            window.location.href = '/def';
-        } else {
-            window.location.href = "/def";
-        }
+//         $(document).on("keydown", (ev) => {
+//             ev.preventDefault();
+//         });
+//         var answer = confirm("You are leaving, Save changes ? ")
+//         if (answer) {
+//             saveFile();
+//             window.location.href = '/def';
+//         } else {
+//             window.location.href = "/def";
+//         }
 
 
-    }
+//     }
 
-} // End of KeyPress
+// } // End of KeyPress
 
-document.onkeydown = KeyPress;
+// document.onkeydown = KeyPress;
 
 $("a#saveTheDef").on("click", function(e) {
     e.preventDefault();
@@ -586,7 +589,7 @@ function redrawDependents(parent) {
                     ch.inputs[element[2]].value = par.value;
                 } else if (par.type == "component") {
                     try {
-                        calculateShallow(par.GUID);
+                        // calculateShallow(par.GUID);
                         ch.inputs[element[2]].value = par.outputs[element[0]].value;
                         ch.inputs[element[2]].type = par.outputs[element[0]].type;
                         componentStatus(par.GUID, ACTIVE_COLOR);
@@ -611,7 +614,7 @@ function redrawDependents(parent) {
                     runDeep = false;
 
                     if (par.state == "unbound") {
-                        calculateDeep(par.GUID);
+                        // calculateDeep(par.GUID); 
                         par.state = "active"
                     }
 
@@ -642,7 +645,7 @@ function updatShallowCompRender(ch) {
         } else if (ch.inputs[0].type == "json") {
 
             $("foreignObject#textbody_" + ch.GUID).html('<div id="jsonTreeViewer' + ch.GUID + '"></div>')
-            jsonView.format(ch.inputs[0].value, "div#jsonTreeViewer" + ch.GUID);
+            // jsonView.format(ch.inputs[0].value, "div#jsonTreeViewer" + ch.GUID);
 
         } else if (ch.inputs[0].type == "text") {
             $("foreignObject#textbody_" + ch.GUID).html("<pre>" + ch.inputs[0].value + "</pre>");
@@ -815,7 +818,7 @@ function drawPlotComponent(data, comp) {
         } else if (data.type == "bar") {
 
             data.data.forEach(dataElement => {
-                maxValue = Math.max(...dataElement.y);
+                var maxValue = Math.max(...dataElement.y);
                 dataElement["marker"] = {
                     "color": []
                 }
@@ -1184,10 +1187,10 @@ function saveFile() {
     $.ajax({
         "type": "POST",
         "dataType": "json",
-        "url": saveUrl,
+        "url": "saveUrl", //dummy. refer def.html
         "accepts": "text",
         "data": {
-            "api": thisDefId,
+            "api": "thisDefId", //dummy. refer def.html
             "da": JSON.stringify({
                 "components": allComp,
                 "edges": allEdges,
@@ -1228,7 +1231,6 @@ function itemListChangedFunction(id, value) {
 } // End of itemListChangedFunction
 
 function componentStatus(id, Compstauts) {
-    console.log(status);
     if (Compstauts == "green") {
         d3.select("rect#statusRect" + id)
             .attr("fill", "#02521b");
@@ -1260,7 +1262,29 @@ function moveComponent(id, x, y) {
     handleEdgeMovement(id, x, y);
 } // End of moveComponent
 
-export {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
+/**
+ * This is the core function that runs all the calculations and return the outputs to the components.
+ * @param    {string} compId The component GUID.
+ */
+//  function calculateShallow(compId) {
+//     var thisComp = selectComp(compId); // selects the component that is under test.
+//     console.log(thisComp);
+//     var inputGroup = []; // reads the inputs from the component and put them in a list to be mapped to the corresponding shallow function.
+//     thisComp.inputs.forEach(input => {
+//         inputGroup.push(input.value);
+//     });
+
+//     var d = shallow_functions[thisComp.Name](inputGroup);
+
+//     console.log("I don't know")
+
+//     thisComp.outputs.forEach(function (output, i) {
+//         output.value = d["value"][i];
+//         output.type = d["type"][i];
+//     });
+// }
+
+export {addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
     getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
     addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
     updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
