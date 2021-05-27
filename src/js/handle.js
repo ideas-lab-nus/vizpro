@@ -213,7 +213,7 @@ function handleTheClickOnAllComponents() {
 
     var allcomp = d3.selectAll("rect.CompBody")
         .on('mousedown', function(d, i) {
-            var coordinates = d3.mouse(this);
+            var coordinates = d3.pointer(this);
             componentClickX = coordinates[0];
             componentClickY = coordinates[1];
 

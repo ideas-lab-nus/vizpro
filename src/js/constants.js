@@ -75,10 +75,6 @@ var mousey = 0;
 var initEdgex2 = 0;
 var initEdgey2 = 0;
 
-var componentClickX = 0;
-var componentClickY = 0;
-
-
 // text global variables.
 
 var textareaStarted = false;

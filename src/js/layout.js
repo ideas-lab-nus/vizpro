@@ -287,7 +287,8 @@ function onMaximizeClick() {
 
 var svgContainer = d3.select("svg");
 
-var allContents = d3.select("g");
+var allContents = d3.select("svg");
+console.log(allContents);
 
 function manageCanvas() {
     var svgContainer = d3.select("svg");

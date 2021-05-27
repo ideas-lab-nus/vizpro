@@ -180,6 +180,8 @@ function CreateNewSlider(FromExisting = null) {
 
 
     console.log("wah");
+    var allContents = d3.select("#allCanvasContents");
+    console.log(allContents);
     var cont = allContents.append("g")
         .attr("class", "slider")
         .attr("id", newSlider.GUID);
@@ -352,6 +354,7 @@ function CreateNewSlider(FromExisting = null) {
     handleEdgeInitialization();
     handleComponentSelection();
     handleDoubleClick();
+    console.log("wah");
 }
 
 export {CreateNewSlider, theRequiredSliderGroup};
