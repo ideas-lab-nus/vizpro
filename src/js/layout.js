@@ -26,10 +26,9 @@
 import {currentLeftColWidth, currentTopBarHeight, currentRightColWidth, messageshown,
     leftColumnIsSelected, rightColIsdisplayed, rightColumnIsSelected, leftColIsdisplayed} 
     from './constants.js';
+
 import $ from "jquery";
-// import {event as currentEvent} from 'd3-selection';
 var d3 = require("d3");
-// import * as d3 from 'd3';
 
 d3.select("div#LeftPropertiesBar").style("width", () => { return currentLeftColWidth + "px" }).style("top", () => { return (currentTopBarHeight).toString() + "px" })
 d3.select("div#LeftPropertiesBarSelector").style("top", () => { return (currentTopBarHeight).toString() + "px" }).style("left", currentLeftColWidth + "px")
@@ -311,9 +310,7 @@ function manageCanvas() {
         // }
         return true;
     }).on("zoom", function(event) {
-        // if (!startDrag) {
             allContents.attr("transform", event.transform)
-        // }
     }));
 }
 

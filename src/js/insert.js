@@ -2,8 +2,8 @@ import $ from "jquery";
 
 function showThisPanel(panel_id, id) {
     var allTabs = $("div.TabToolBox." + panel_id);
-    for (let i = 0; i < allTabs.length; i++) {
-        if (allTabs[i].classList[1] == panel_id & allTabs[i].classList[2] == id) {
+    for (var i = 0; i < allTabs.length; i++) {
+        if (allTabs[i].classList[1] === panel_id & allTabs[i].classList[2] === id) {
             $("div.TabToolBox." + panel_id + "." + id).show();
             $("div.toptoggleitem." + panel_id + "." + id).addClass('selected');
         } else {
@@ -15,8 +15,8 @@ function showThisPanel(panel_id, id) {
 
 function setCurrentCagegory(panel_id, id, name) {
     var toolbarbuttonsContainer = $("div.toolbarbuttonsContainer." + panel_id);
-    for (let i = 0; i < toolbarbuttonsContainer.length; i++) {
-        if (toolbarbuttonsContainer[i].classList[2] == id) {
+    for (var i = 0; i < toolbarbuttonsContainer.length; i++) {
+        if (toolbarbuttonsContainer[i].classList[2] === id) {
             $("div.toolbarbuttonsContainer." + panel_id + "." + id).show();
             $("span.currentTab." + panel_id).text(name) // <span class="currentTab {{panel.panel_guid}}">&nbsp;</span>
         } else {
@@ -30,6 +30,6 @@ window.onbeforeunload = function() {
 };
 
 var csrftoken = '{{ csrf_token }}';
-var RetrievedData = '{{def.definition_user_saved | safe}}';
+//var RetrievedData = '{{def.definition_user_saved | safe}}';
 
-export {showThisPanel};
+export {showThisPanel, setCurrentCagegory};

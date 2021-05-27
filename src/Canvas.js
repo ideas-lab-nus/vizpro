@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import {onMaximizeClick, onMinimizeClick, manageCanvas} from './js/layout.js';
-import {showThisPanel} from './js/insert.js';
 import {CreateNewSlider} from './js/slider.js';
-import grid2 from './img/grid2.png';                           
+import grid2 from './img/grid2.png';   
+import {setCurrentCagegory, showThisPanel} from './js/insert.js';                             
 
 export default class Canvas extends Component {
     render() {
@@ -87,11 +87,6 @@ export default class Canvas extends Component {
                                             </linearGradient>
                                         </defs>
                                 </defs>
-                                
-                                {/* <image className='img-circle' onLoad={manageCanvas} xlinkHref={grid2} x='0' y="0" height="1000" width="1000" fill="" id="juh"/> */}
-                                {/* <ScriptTag type="text/javascript" src="./js/resource.js"></ScriptTag> */}
-                                {/* <g id="allCanvasContents"><rect  fill="url(#img122)" x="-1000" y="-1000" width="6000" height="6000" 
-                                    style={{"cursor": "default"}}></rect><g id="allPaths"></g></g> */}
                             </svg>   
                                 
                             </div>
@@ -104,10 +99,10 @@ export default class Canvas extends Component {
                     <a href="#" id="fileTheDef" className="menubarButtons">Help</a>
                     <a href="#" id="saveTheDef" className="menubarButtons">Save</a>
 
-                    <div id="minimizeUpperBar" style={{display: "block"}} onClick={onMinimizeClick}>
+                    <div id="minimizeUpperBar" style={{display: "block"}} onClick={() => onMinimizeClick()}>
                         <i id="tominimize" className="fa fa-caret-up" aria-hidden="true"></i>
                     </div>
-                    <div id="maximizeUpperBar" style={{display: "none"}} onClick={onMaximizeClick}>
+                    <div id="maximizeUpperBar" style={{display: "none"}} onClick={() => onMaximizeClick()}>
                         <i id="tomaximize" className="fa fa-caret-up" aria-hidden="true" style={{transform: [{ rotate: '180deg'}]}}></i>
                     </div>
                 </div>
@@ -120,14 +115,14 @@ export default class Canvas extends Component {
                                 <div id="toolbar_container_1_1_1" className="toolbarTopToggleContainer">
                                     <div className="toolbarTopToggleItem 1">
                                         <div className="toptoggleitem b066a5eb-26dc-4359-8d22-3643444d08e4 00492f59-092c-4ee5-affb-8a5e36495e59 selected" 
-                                        onClick={showThisPanel('b066a5eb-26dc-4359-8d22-3643444d08e4', '00492f59-092c-4ee5-affb-8a5e36495e59')}> 
+                                        onClick={() => showThisPanel('b066a5eb-26dc-4359-8d22-3643444d08e4', '00492f59-092c-4ee5-affb-8a5e36495e59')}> 
                                             Components
                                         </div>
                                     </div>
                                         
                                     <div className="toolbarTopToggleItem 1">
                                         <div className="toptoggleitem b066a5eb-26dc-4359-8d22-3643444d08e4 7beee7af-f0e0-48fe-8827-a372bf8877a0" 
-                                        onClick={showThisPanel('b066a5eb-26dc-4359-8d22-3643444d08e4', '7beee7af-f0e0-48fe-8827-a372bf8877a0')}> 
+                                        onClick={() => showThisPanel('b066a5eb-26dc-4359-8d22-3643444d08e4', '7beee7af-f0e0-48fe-8827-a372bf8877a0')}> 
                                             Layout
                                         </div>
                                     </div>
@@ -239,17 +234,17 @@ export default class Canvas extends Component {
                                 
                                 <div id="toolbar_container_1_2_2" className="toolbarRightToggleNavigator">
                                     
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/7e35adc61ca94a94b72d205029bbaf55.png)"}} onClick="setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', 'd2312a8b-63dc-4112-8a66-76996c150b0e', 'Basic')"><span id="hint">Basic</span></div>
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/7e35adc61ca94a94b72d205029bbaf55.png)"}} onClick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', 'd2312a8b-63dc-4112-8a66-76996c150b0e', 'Basic')}><span id="hint">Basic</span></div>
                                     
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/builsimhub.png)"}} onClick="setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', '094290f2-edaf-4396-b7b9-098ff208257f', 'BuildSimHub')"><span id="hint">BuildSimHub</span></div>
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/builsimhub.png)"}} onClick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', '094290f2-edaf-4396-b7b9-098ff208257f', 'BuildSimHub')}><span id="hint">BuildSimHub</span></div>
                                     
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/osisoft.png)"}} onClick="setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', '11b3c35e-76a6-4c6b-8743-e86fe7f02403', 'OsiSoft')"><span id="hint">OsiSoft</span></div>
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/osisoft.png)"}} onClick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', '11b3c35e-76a6-4c6b-8743-e86fe7f02403', 'OsiSoft')}><span id="hint">OsiSoft</span></div>
                                     
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/958e37827b33418ea03f1e9875c7aa39.png)"}} onClick="setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', 'c0e53dd4-d351-4f87-9ef9-219fe3b108a4', 'Pandas')"><span id="hint">Pandas</span></div>
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/958e37827b33418ea03f1e9875c7aa39.png)"}} onClick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', 'c0e53dd4-d351-4f87-9ef9-219fe3b108a4', 'Pandas')}><span id="hint">Pandas</span></div>
                                     
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/00cebc445ced4d8d89cf842609040d43.png)"}} onClick="setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', 'd3903696-cae5-4b0c-b6c0-0f57649e9253', 'String Operations')"><span id="hint">String Operations</span></div>
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/00cebc445ced4d8d89cf842609040d43.png)"}} onclick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', 'd3903696-cae5-4b0c-b6c0-0f57649e9253', 'String Operations')}><span id="hint">String Operations</span></div>
                                     
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/input.png)"}} onClick="setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', '4949e5ab-6a97-4eed-b8a6-775b65053e41', 'Main Inputs')"><span id="hint">Main Inputs</span></div>
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/input.png)"}} onClick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', '4949e5ab-6a97-4eed-b8a6-775b65053e41', 'Main Inputs')}><span id="hint">Main Inputs</span></div>
                                     
                                 </div>
                             </div>
@@ -343,7 +338,7 @@ export default class Canvas extends Component {
                                 
                                 <div id="toolbar_container_1_2_2" className="toolbarRightToggleNavigator">
                                     
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/404b5524d84a49838ce63a1fe8a2b7e7.png)"}} onClick="setCurrentCagegory('99098379-d5ab-4bc3-bc0e-b8353c952845', '140dfea1-7a19-4663-a905-38ff58c8c82f', 'Properties')"><span id="hint">Properties</span></div>
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/404b5524d84a49838ce63a1fe8a2b7e7.png)"}} onclick={() => setCurrentCagegory('99098379-d5ab-4bc3-bc0e-b8353c952845', '140dfea1-7a19-4663-a905-38ff58c8c82f', 'Properties')}><span id="hint">Properties</span></div>
                                     
                                 </div>
                             </div>
