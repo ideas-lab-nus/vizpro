@@ -983,3 +983,11 @@ div#codeBody {
   transition: 2s;
   min-height: 36%;
 }
+
+div#PropertiesBar {
+  width: 50px;
+  top: 60px;
+  padding-left: 5px;
+  min-width: 250px;
+  padding-top: 5px
+}

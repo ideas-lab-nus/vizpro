@@ -1,97 +1,17 @@
 import React, { Component } from 'react'
-import {onMaximizeClick, onMinimizeClick, manageCanvas} from './js/layout.js';
+import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
 import {CreateNewSlider} from './js/slider.js';
-import grid2 from './img/grid2.png';   
-import {setCurrentCagegory, showThisPanel} from './js/insert.js';                             
+import {setCurrentCagegory, showThisPanel} from './js/insert.js';    
+import Grid from './Grid';                         
 
 export default class Canvas extends Component {
     render() {
         return (
             <div>
-                <div className="canvas_container">
-                    <div className="canvas_container_inner">
-                        <div className="main_canvas_container canvas_body_container">
-                            <div className="ui-designer-grid" id="mainGrid">  
-
-                            <svg height="10000" width="10000" onLoad={manageCanvas}>
-                                <defs>
-                                        <pattern id="img122" patternUnits="userSpaceOnUse" width="500" height="500">
-                                            <image className='rep' xlinkHref={grid2} x="0" y="0" width="500" height="500"/>
-                                        </pattern>
-                                        <filter id={this.props.filter_id} x="-40" y="-40" width="150%" height="150%" filterUnits="userSpaceOnUse">
-                                            <feOffset result="offOut" in="SourceGraphics" dx="0" dy="0" />
-                                            <feGaussianBlur result="blurOut" in="offOut" stdDeviation="1" />
-                                            <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-                                        </filter>
-                                        <defs>
-                                            <linearGradient id="grad1ient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" style={{'stopColour':'#dddddd', 'stopOpacity':'100%'}} />
-                                            <stop offset="50%" style={{"stopColour":"#eeeeee", "stopOpacity":"100%"}} />
-                                            <stop offset="100%" style={{"stopColour":"#dddddd", "stopOpacity":"100%"}} />
-                                            </linearGradient>
-                                        </defs>
-
-                                        <defs>
-                                            <linearGradient id="fileUploadGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" style={{"stopColour":"#344b62", "stopOpacity":"100%"}} />
-                                            <stop offset="10%" style={{"stopColour":"#344b62", "stopOpacity":"100%"}} />
-                                            <stop offset="12%" style={{"stopColour":"#2b3d50", "stopOpacity":"100%"}} />
-                                            <stop offset="88%" style={{"stopColour":"#2b3d50", "stopOpacity":"100%"}} />
-                                            <stop offset="90%" style={{"stopColour":"#23364a", "stopOpacity":"100%"}} />
-                                            <stop offset="100%" style={{"stopColour":"#23364a", "stopOpacity":"100%"}} />
-                                            </linearGradient>
-                                        </defs>
-
-                                        <defs>
-                                            <linearGradient id="gradientlsider" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%"  style={{"stopColour":"#eeeeee", "stopOpacity":"100%"}} />
-                                            <stop offset="20%" style={{"stopColour":"#eeeeee", "stopOpacity":"100%"}} />
-                                            <stop offset="30%" style={{"stopColour":"#dddddd", "stopOpacity":"100%"}} />
-                                            <stop offset="70%" style={{"stopColour":"#dddddd", "stopOpacity":"100%"}} />
-                                            <stop offset="80%" style={{"stopColour":"#cccccc", "stopOpacity":"100%"}} />
-                                            <stop offset="100%"style={{"stopColour":"#cccccc", "stopOpacity":"100%"}} />
-                                            </linearGradient>
-                                        </defs>
-
-                                        <defs>
-                                            <linearGradient id="gradient2" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%"  style={{"stopColour":"#ffffff", "stopOpacity":"100%"}} />
-                                            <stop offset="10%" style={{"stopColour":"#ffffff", "stopOpacity":"100%"}}/>
-                                            <stop offset="30%" style={{"stopColour":"#ffffff", "stopOpacity":"60%"}} />
-                                            <stop offset="80%" style={{"stopColour":"#ffffff", "stopOpacity":"60%"}} />
-                                            </linearGradient>
-                                        </defs>
-
-                                        <defs>
-                                            <linearGradient id="gradient2_2" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%"  style={{"stopColour":"#ffffff", "stopOpacity":"100%"}} />
-                                            <stop offset="50%" style={{"stopColour":"#ffffff", "stopOpacity":"0%"}} />
-                                            <stop offset="70%" style={{"stopColour":"#ffffff", "stopOpacity":"0%"}} />
-                                            <stop offset="100%"style={{"stopColour":"#ffffff", "stopOpacity":"30%"}} />
-                                            </linearGradient>
-                                        </defs>
-
-                                        <defs>
-                                            <linearGradient id="gradient3" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%"  style={{"stopColour":"#555555", "stopOpacity":"0%"}} />
-                                            <stop offset="28%" style={{"stopColour":"#555555", "stopOpacity":"0%"}} />
-                                            <stop offset="30%" style={{"stopColour":"#555555", "stopOpacity":"20%"}} />
-                                            <stop offset="80%" style={{"stopColour":"#555555", "stopOpacity":"50%"}} />
-                                            </linearGradient>
-                                        </defs>
-
-                                        <defs>
-                                            <linearGradient id="gradient4" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%"   style={{"stopColour":"#373939", "stopOpacity":"100%"}} />
-                                            <stop offset="100%" style={{"stopColour":"#023939", "stopOpacity":"100%"}} />
-                                            </linearGradient>
-                                        </defs>
-                                </defs>
-                            </svg>   
-                                
-                            </div>
-                        </div>
-                    </div>
+                <div className="canvas_container canvas_container_inner main_canvas_container canvas_body_container">
+                    <div className="ui-designer-grid" id="mainGrid"> 
+                        <Grid/>   
+                    </div> 
                 </div>
                 <div id="TopPropertiesBar">
                     <a href="#" id="fileTheDef" className="menubarButtons">File</a>
@@ -118,14 +38,7 @@ export default class Canvas extends Component {
                                         onClick={() => showThisPanel('b066a5eb-26dc-4359-8d22-3643444d08e4', '00492f59-092c-4ee5-affb-8a5e36495e59')}> 
                                             Components
                                         </div>
-                                    </div>
-                                        
-                                    <div className="toolbarTopToggleItem 1">
-                                        <div className="toptoggleitem b066a5eb-26dc-4359-8d22-3643444d08e4 7beee7af-f0e0-48fe-8827-a372bf8877a0" 
-                                        onClick={() => showThisPanel('b066a5eb-26dc-4359-8d22-3643444d08e4', '7beee7af-f0e0-48fe-8827-a372bf8877a0')}> 
-                                            Layout
-                                        </div>
-                                    </div>
+                                    </div>      
                                 </div>
                             </div>
                             
@@ -247,70 +160,8 @@ export default class Canvas extends Component {
                                     <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/input.png)"}} onClick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', '4949e5ab-6a97-4eed-b8a6-775b65053e41', 'Main Inputs')}><span id="hint">Main Inputs</span></div>
                                     
                                 </div>
-                            </div>
-
-
-                                
-                            <div id="toolbar_container_1_2" className="TabToolBox b066a5eb-26dc-4359-8d22-3643444d08e4 7beee7af-f0e0-48fe-8827-a372bf8877a0" style={{display:"none"}}>
-                                
-                                <div id="toolbar_container_1_2_0" className="toolbarbuttonsContainer">
-                                    &nbsp; Layout  <span className="currentTab b066a5eb-26dc-4359-8d22-3643444d08e4">&nbsp;</span> 
-                                </div>
-                                
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 d2312a8b-63dc-4112-8a66-76996c150b0e 0" style={{display:"none"}}>
-                                        
-                                    <div className="mainButtonItem 1 1">Average</div>
-                                    
-                                    <div className="mainButtonItem 1 1">Add</div>
-                                        
-                                    <div className="mainButtonItem 1 1">Max</div>
-                                    
-                                    <div className="mainButtonItem 1 1">Min</div>
-                                    
-                                    <div className="mainButtonItem 1 1">Difference 2</div>
-                                                    
-                                    <div className="mainButtonItem 1 1">Json Navigator</div>
-                                                
-                                    <div className="mainButtonItem 1 1">3dVisualizer</div>
-                                    
-                                    <div className="mainButtonItem 1 1">Image Display</div>
-                                    
-                                    <div className="mainButtonItem 1 1">YouTube display</div>
-                                        
-                                    <div className="mainButtonItem 1 1">Plot Panel</div>
-                                        
-                                    <div className="mainButtonItem 1 1">Cloud</div>
-                                    
-                                </div>
-                                
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 11b3c35e-76a6-4c6b-8743-e86fe7f02403 -1" style={{display:"none"}}>
-                                                    
-                                    <div className="mainButtonItem 1 1">get OsiSoft</div>
-                                                
-                                    <div className="mainButtonItem 1 1">Get Data Tree</div>
-                                    
-                                    <div className="mainButtonItem 1 1">OSI Get Data List</div>
-                                        
-                                    <div className="mainButtonItem 1 1">OSI Get Attribute</div>
-                                    
-                                    <div className="mainButtonItem 1 1">OSI_StartTime</div>
-                                    
-                                    <div className="mainButtonItem 1 1">OSI End Time</div>
-                                    
-                                    <div className="mainButtonItem 1 1">OSI Extract TimeSeries Data</div>
-                                                        
-                                </div>
-                                
-                                <div id="toolbar_container_1_2_2" className="toolbarRightToggleNavigator">
-                                    
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/7e35adc61ca94a94b72d205029bbaf55.png)" }}><span id="hint">Basic</span></div>
-                                    
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/osisoft.png)"}}><span id="hint">OsiSoft</span></div>
-                                    
-                                </div>
-                                
-                            </div>
-                                
+                            </div>                        
+                        
                         </div>
                     </div>
                     
@@ -344,7 +195,11 @@ export default class Canvas extends Component {
                             </div>
                         </div>
                     </div>
-                    
+                </div>
+                
+                <div id="PropertiesBar" className="componentsCategory">
+                    <div className="ccatheader"><span id="customcomponentarrow"><i className="fa fa-chevron-circle-down" aria-hidden="true"></i></span>Properties</div>
+                    <div className="ccbody" id="propertiesBarContents" style={{"width":"100%"}}></div>
                 </div>
             </div>
         )
