@@ -85,7 +85,6 @@ var optionlistRectid = "";
 var justSelected = null;
 var mouseInsideOption = false;
 
-
 // selected component variables.
 var is_component_selected = false;
 var selected_component_id = "";

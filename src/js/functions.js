@@ -118,7 +118,7 @@
     } from './constants.js';
 import {CreateNewComponent} from './component.js';
 import {svgContainer, allContents} from './layout.js';
-import Plotly from 'plotly.js-dist';
+import Plotly from 'plotly';
 import {calculateShallow} from './shallow.js';
 import {calculateDeep} from './deep.js';
 import $ from "jquery";
@@ -619,7 +619,7 @@ function redrawDependents(parent) {
                         par.state = "active"
                     }
 
-
+                    
                 }
                 ch.inputs[element[2]].value = par.outputs[element[0]].value;
                 ch.inputs[element[2]].type = par.outputs[element[0]].type;

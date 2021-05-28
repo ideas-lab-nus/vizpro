@@ -105,8 +105,8 @@ var selection_box = null;
 
 var mainGrid = d3.select("#mainGrid")
 .style("backgroud-color", function () {
-    xGrid = this.offsetLeft;
-    yGrid = this.offsetTop;
+    var xGrid = this.offsetLeft;
+    var yGrid = this.offsetTop;
     return "white";
 })
 .on("mousedown", () => {
@@ -161,8 +161,8 @@ var mainGrid = d3.select("#mainGrid")
 })
 .on('mousemove', function () {
         
-    mousex = d3.mouse(allContents.node())[0];
-    mousey = d3.mouse(allContents.node())[1];
+    var mousex = d3.mouse(allContents.node())[0];
+    var mousey = d3.mouse(allContents.node())[1];
     
     var x = mousex - componentClickX;
     var y = mousey - componentClickY;
@@ -183,8 +183,8 @@ var mainGrid = d3.select("#mainGrid")
 
 
         var coordinates = d3.mouse(theRequiredSliderGroup);
-        componentClickX = coordinates[0];
-        componentClickY = coordinates[1];
+        var componentClickX = coordinates[0];
+        var componentClickY = coordinates[1];
 
 
             var sliderLineStartingpositionX = 60;

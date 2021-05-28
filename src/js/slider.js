@@ -25,18 +25,10 @@
  */
 
 import {
-    IDLE_COLOR,
-    ACTIVE_COLOR,
-    ERROR_COLOR,
-    COMPONENT_RADIUS,
     allComp,
-    allEdges,
     comp_input_edges,
     comp_output_edges,
-    edge_comp_matrix,
     parent_child_matrix,
-    parent_child_matrix_fast_check,
-    root_components,
     components_selection_data,
     selected_components,
     runDeep,
@@ -96,23 +88,7 @@ import {
     messageshown,
     Output,
     Input,
-    uuidv4,
-    addEdge,
-    addCircle,
-    toCircle,
-    fromCircle,
-    udo_names,
-    udo_types,
-    udo_desc,
-    udo_shortNames,
-    udo_inputs,
-    udo_outputs,
-    udo_fill,
-    udo_dftypes,
-    udo_cats,
-    udo_subcats,
-    cats,
-    scats
+    uuidv4
     } from './constants.js';
 import {allContents} from './layout.js';
 
@@ -324,9 +300,9 @@ function CreateNewSlider(FromExisting = null) {
                 .attr("stroke", "none");
         })
         .on("mousedown", function() {
-            sliderRectId = this.id;
-            SliderAnchorclicked = true;
-            selectedSliderComponent = newSlider;
+            var sliderRectId = this.id;
+            var SliderAnchorclicked = true;
+            var selectedSliderComponent = newSlider;
 
         })
         .on("mouseup", function() {
@@ -344,7 +320,7 @@ function CreateNewSlider(FromExisting = null) {
     var allcomp = d3.selectAll("g.SliderGroup")
         .on('mousedown', function(d, i) {
             theRequiredSliderGroup = this;
-            rectType = "slider";
+            var rectType = "slider";
         });
 
     components_selection_data[newSlider.GUID] = { "x0": newSlider.X, "y0": newSlider.Y, "x1": newSlider.X + newSlider.width, "y1": newSlider.Y + newSlider.height };

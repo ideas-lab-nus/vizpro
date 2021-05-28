@@ -1,8 +1,4 @@
 import {
-    IDLE_COLOR,
-    ACTIVE_COLOR,
-    ERROR_COLOR,
-    COMPONENT_RADIUS,
     allComp,
     allEdges,
     comp_input_edges,
@@ -13,29 +9,11 @@ import {
     root_components,
     components_selection_data,
     selected_components,
-    runDeep,
-    StringAnchorclicked,
-    StringAnchorType,
-    StringAnchorId,
-    XANCHOR,
-    YANCHOR,
-    ANCHOR_WIDTH,
-    SLIDER_START_POSITION,
-    SLIDER_END_POSITION,
-    anchorMouseXpos,
-    anchorMouseYpos,
-    SliderAnchorclicked,
-    selectedSliderComponent,
     dragX,
     dragY,
-    sliderRectId,
-    initPos,
     startDrag,
     clickedId,
     rectType,
-    deltaX,
-    deltaY,
-    clicked,
     edgeStarted,
     targetcircleIN,
     selectedcircleId,
@@ -74,27 +52,9 @@ import {
     addEdge,
     addCircle,
     toCircle,
-    fromCircle,
-    udo_names,
-    udo_types,
-    udo_desc,
-    udo_shortNames,
-    udo_inputs,
-    udo_outputs,
-    udo_fill,
-    udo_dftypes,
-    udo_cats,
-    udo_subcats,
-    cats,
-    scats
+    fromCircle
     } from './constants.js';
-import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
-    getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
-    addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
-    updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
-    drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
-    edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
-    itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
+import {selectComp, updateAll, ViewListRedrawing, showDropDownList, redrawDependents} from './functions.js';
 import {allContents} from './layout.js';
 import $ from "jquery";
 var d3 = require('d3');
@@ -108,7 +68,7 @@ function handleComponentSelection() {
                         .attr("stroke-width", "15")
                         .attr("stroke", "#0064ffa8");
 
-                    var selected_component_id = element.GUID;
+                    selected_component_id = element.GUID;
                 })
 
             d3.select("rect#" + element.GUID)
@@ -128,7 +88,7 @@ function handleComponentSelection() {
                     d3.select("rect#statusRect" + element.GUID)
                         .attr("fill", "#0081ff")
                         
-                    var selected_component_id = element.GUID;
+                    selected_component_id = element.GUID;
 
                 })
 
@@ -142,7 +102,7 @@ function handleComponentSelection() {
                     d3.select("rect#statusRect" + element.GUID)
                         .attr("fill", "#0081ff")
 
-                    var selected_component_id = element.GUID;
+                    selected_component_id = element.GUID;
 
                 })
 
@@ -173,7 +133,7 @@ function handleComponentSelection() {
                     d3.select("rect#" + element.GUID)
                         .attr("stroke-width", "2")
                         .attr("stroke", "#0064ffa8");
-                    var selected_component_id = element.GUID;
+                    selected_component_id = element.GUID;
                 })
                 .on("focusout", () => {
                     d3.select("rect#" + element.GUID)
@@ -190,7 +150,7 @@ function handleComponentSelection() {
 
                     showDropDownList(element.GUID);
 
-                    var selected_component_id = element.GUID;
+                    selected_component_id = element.GUID;
                     optionListStarted = true;
                     optionlistRectid = element.GUID;
 
@@ -214,16 +174,16 @@ function handleTheClickOnAllComponents() {
     var allcomp = d3.selectAll("rect.CompBody")
         .on('mousedown', function(d, i) {
             var coordinates = d3.pointer(this);
-            componentClickX = coordinates[0];
-            componentClickY = coordinates[1];
+            var componentClickX = coordinates[0];
+            var componentClickY = coordinates[1];
 
-            clicked = true;
+            var clicked = true;
             var pos = $("g#comp-" + this.id.replace("overlaySelector", "")).attr("transform").split("translate(")[1].replace(")",
                 "").split(",").map(function(item) {
                 return parseFloat(item, 10);
             });
-            dragX = pos[0];
-            dragY = pos[1];
+            var dragX = pos[0];
+            var dragY = pos[1];
 
 
             startDrag = true;
