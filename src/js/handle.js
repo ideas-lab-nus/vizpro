@@ -60,6 +60,7 @@ import $ from "jquery";
 var d3 = require('d3');
 
 function handleComponentSelection() {
+    const reactContext = this;
     allComp.forEach(element => {
         if (element.type == "component" || element.type == "toggle" || element.type == "fileUpload") {
             d3.select("g#comp-" + element.GUID)
@@ -68,7 +69,9 @@ function handleComponentSelection() {
                         .attr("stroke-width", "15")
                         .attr("stroke", "#0064ffa8");
 
-                    selected_component_id = element.GUID;
+                    reactContext.setState({  
+                        selected_component_id: element.GUID,
+                    });
                 })
 
             d3.select("rect#" + element.GUID)
@@ -88,8 +91,9 @@ function handleComponentSelection() {
                     d3.select("rect#statusRect" + element.GUID)
                         .attr("fill", "#0081ff")
                         
-                    selected_component_id = element.GUID;
-
+                    reactContext.setState({  
+                        selected_component_id: element.GUID,
+                    });
                 })
 
             d3.select("rect.CompBody." + element.GUID + ".a")
@@ -102,8 +106,9 @@ function handleComponentSelection() {
                     d3.select("rect#statusRect" + element.GUID)
                         .attr("fill", "#0081ff")
 
-                    selected_component_id = element.GUID;
-
+                    reactContext.setState({  
+                        selected_component_id: element.GUID,
+                    });
                 })
 
             d3.select("rect#" + element.GUID)
@@ -133,7 +138,10 @@ function handleComponentSelection() {
                     d3.select("rect#" + element.GUID)
                         .attr("stroke-width", "2")
                         .attr("stroke", "#0064ffa8");
-                    selected_component_id = element.GUID;
+                    
+                    reactContext.setState({  
+                        selected_component_id: element.GUID,
+                    });
                 })
                 .on("focusout", () => {
                     d3.select("rect#" + element.GUID)
@@ -150,10 +158,11 @@ function handleComponentSelection() {
 
                     showDropDownList(element.GUID);
 
-                    selected_component_id = element.GUID;
-                    optionListStarted = true;
-                    optionlistRectid = element.GUID;
-
+                    reactContext.setState({                        
+                        selected_component_id: element.GUID,
+                        optionListStarted: true,
+                        optionlistRectid: element.GUID,
+                    }); 
                 });
 
             d3.select("rect#" + element.GUID)
@@ -170,27 +179,32 @@ function handleComponentSelection() {
 } // End of handleComponentSelection
 
 function handleTheClickOnAllComponents() {
-
+    // console.log("all component clicked");
+    const reactContext = this;
     var allcomp = d3.selectAll("rect.CompBody")
         .on('mousedown', function(d, i) {
             var coordinates = d3.pointer(this);
-            var componentClickX = coordinates[0];
-            var componentClickY = coordinates[1];
-
-            var clicked = true;
-            var pos = $("g#comp-" + this.id.replace("overlaySelector", "")).attr("transform").split("translate(")[1].replace(")",
-                "").split(",").map(function(item) {
-                return parseFloat(item, 10);
-            });
-            var dragX = pos[0];
-            var dragY = pos[1];
-
-
-            startDrag = true;
-            clickedId = this.id.replace("overlaySelector", "");
-            selected_components = [this.id.replace("overlaySelector", "")];
-
-            rectType = "component";
+            
+            var pos = $("g#comp-" + this.id.replace("overlaySelector", ""))
+                .attr("transform")
+                .split("translate(")[1]
+                .replace(")", "")
+                .split(",")
+                .map(function(item) {
+                    return parseFloat(item, 10);
+                });
+            
+            reactContext.setState({
+                dragX: pos[0],
+                dragY: pos[1],  
+                componentClickX: coordinates[0],
+                componentClickY: coordinates[1],
+                clicked: true,
+                startDrag : true,
+                clickedId : this.id.replace("overlaySelector", ""),
+                selected_components : [this.id.replace("overlaySelector", "")],
+                rectType : "component",
+            });            
         })
 
 } // End of handleTheClickOnAllComponents
@@ -316,6 +330,8 @@ function handleEdgeInitialization() {
 } // End of handleEdgeInitialization
 
 function handleDoubleClick() {
+    // console.log("double clicked");
+    const reactContext = this;
     allComp.forEach(element => {
 
         if (element.type == "string") {
@@ -330,9 +346,10 @@ function handleDoubleClick() {
                 .on("dblclick", function() {
                     $("div#propertiesBarContents").load("optionList/" + element.GUID);
 
-
-                    optionListStarted = true;
-                    optionlistRectid = element.GUID;
+                    reactContext.setState({
+                        optionListStarted: true,
+                        optionlistRectid: element.GUID,
+                    });                           
                 })
         } else if (element.type == "toggle") {
             var currentToggle = selectComp(element.GUID);
