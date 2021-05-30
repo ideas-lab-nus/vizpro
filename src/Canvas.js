@@ -8,6 +8,7 @@ import {handleComponentSelection, handleTheClickOnAllComponents,
     handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
 
 const globalVars = {
+    doubleClicked: false,
     date:"km now",
     IDLE_COLOR: "#dfd4b1",
     ACTIVE_COLOR: "green",
@@ -118,7 +119,6 @@ export default class Canvas extends React.Component {
                 <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
                 <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
                 <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>
-                <ScriptTag>console.log({this.state.startDrag + ""})</ScriptTag>
                 <div className="canvas_container canvas_container_inner main_canvas_container canvas_body_container">
                     <div className="ui-designer-grid" id="mainGrid"> 
                         <Grid/>   

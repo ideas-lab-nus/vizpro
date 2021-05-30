@@ -59,6 +59,17 @@ import {allContents} from './layout.js';
 import $ from "jquery";
 var d3 = require('d3');
 
+function GetURLParameter(sParam) {
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) {
+            return sParameterName[1];
+        }
+    }
+}
+
 function handleComponentSelection() {
     const reactContext = this;
     allComp.forEach(element => {
@@ -333,32 +344,50 @@ function handleDoubleClick() {
     // console.log("double clicked");
     const reactContext = this;
     allComp.forEach(element => {
-
-        if (element.type == "string") {
+        if (element.type === "string") {
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
-                    $("div#propertiesBarContents").load("stringEdit/" + element.GUID);
+                    $("div#propertiesBarContents").load("../html/editString.html?compKey=" + element.GUID);
                     element.outputs[0].value = element.value;
-
                 })
-        } else if (element.type == "optionList") {
+        } else if (element.type === "optionList") {
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
-                    $("div#propertiesBarContents").load("optionList/" + element.GUID);
-
+                    $("div#propertiesBarContents").load("../html/editOptionList.html?compKey=" + element.GUID);
                     reactContext.setState({
                         optionListStarted: true,
                         optionlistRectid: element.GUID,
-                    });                           
+                    });
                 })
-        } else if (element.type == "toggle") {
+        } else if (element.type === "slider") {
+            d3.select("g#comp-" + element.GUID)
+                .on("dblclick", function() {
+                    // $("div#propertiesBarContents").load("./../html/editSlider.html?compKey=" + element.GUID);
+                    // $("div#propertiesBarContents").load("./../html/editSlider.html");
+                    if (!reactContext.state.doubleClicked) {
+                        reactContext.setState({
+                            doubleClicked: true,
+                        });
+                        $("div#propertiesBarContents").append(`
+                        <div class="propertiesbarheader label">Slider</div>
+                        <div id="numerical_slider_container"><div id="string_input_label">Min-value : </div><input type="number" id="new_slider_min_value" value="0.0"></div>
+                        <div id="numerical_slider_container"><div id="string_input_label">Max-value: </div><input type="number" id="new_slider_max_value" value="100.0"></div>
+                        <div id="numerical_slider_container"><div id="string_input_label">Step: </div><input type="number" id="new_slider_step_value" value="1"></div>
+                        <div id="numerical_slider_container"><div id="string_input_label">Current-value: </div><input type="number" id="new_slider_current_value" value="0"></div>
+                        <button id="sliderEditButton">Save</button>
+                        <button id="cancelSliderEdit">Cancel</button>
+                        `);
+                    //On save, set double clicked to false
+                    }
+                });
+        } else if (element.type === "toggle") {
             var currentToggle = selectComp(element.GUID);
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
                     var toggleValue = $("text.nodetitle.node_title" + element.GUID).text();
                     d3.select("text.nodetitle.node_title" + element.GUID)
                         .text(function() {
-                            if (toggleValue == "True") {
+                            if (toggleValue === "True") {
                                 currentToggle.value = "False";
                                 currentToggle.outputs[0].value = "False";
                                 return "False"
@@ -371,7 +400,7 @@ function handleDoubleClick() {
 
                         })
                         .attr("fill", () => {
-                            if (toggleValue == "True") {
+                            if (toggleValue === "True") {
                                 d3.select("#dummyRect_" + element.GUID)
                                     .attr("fill", "#2c3e50")
                                 return "#ecf0f1";
@@ -384,16 +413,10 @@ function handleDoubleClick() {
 
                     redrawDependents(currentToggle.GUID);
                 })
-        } else if (element.type == "slider") {
-            d3.select("g#comp-" + element.GUID)
-                .on("dblclick", function() {
-                    $("div#propertiesBarContents").load("sliderEdit/" + element.GUID);
-                });
-        }
+        } 
         //TODO : else if other types than string, then you have to open the properties window.
-
     });
 } // End of HandleDoubleClick
 
-export {handleTheClickOnAllComponents, handleEdgeInitialization, 
+export {GetURLParameter, handleTheClickOnAllComponents, handleEdgeInitialization, 
     handleComponentSelection, handleDoubleClick};

@@ -140,7 +140,6 @@ function CreateNewSlider(FromExisting = null) {
         newSlider.Name = "Numeric";
         newSlider.value = 50.00;
         newSlider.anchorValue = ((184 - 60) / 2.0) + 30 //((60+184)/2.0)-30
-
     }
 
     newSlider.fill = "#bdc4c8";
@@ -154,8 +153,6 @@ function CreateNewSlider(FromExisting = null) {
 
     // .attr("transform", "translate(" + (60 + (newSlider.value * 100) / (184 - 60)).toString() + ", 3)")
 
-
-    console.log("wah");
     var allContents = d3.select("#allCanvasContents");
     console.log(allContents);
     var cont = allContents.append("g")
@@ -313,8 +310,9 @@ function CreateNewSlider(FromExisting = null) {
     comp_output_edges[newSlider.GUID] = new Array(1);
     comp_input_edges[newSlider.GUID] = new Array(1);
 
-    if (FromExisting == null)
+    if (FromExisting == null) {
         allComp.push(newSlider);
+    }
 
     //Moving the slider body
     var allcomp = d3.selectAll("g.SliderGroup")
@@ -324,13 +322,6 @@ function CreateNewSlider(FromExisting = null) {
         });
 
     components_selection_data[newSlider.GUID] = { "x0": newSlider.X, "y0": newSlider.Y, "x1": newSlider.X + newSlider.width, "y1": newSlider.Y + newSlider.height };
-
-
-    handleTheClickOnAllComponents();
-    handleEdgeInitialization();
-    handleComponentSelection();
-    handleDoubleClick();
-    console.log("wah");
 }
 
 export {CreateNewSlider, theRequiredSliderGroup};
