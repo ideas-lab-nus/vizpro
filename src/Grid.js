@@ -1,11 +1,33 @@
 import React, { Component } from 'react'
-import {manageCanvas} from './js/layout.js';
+// import {manageCanvas} from './js/layout.js';
 import grid2 from './img/grid2.png';                              
 
 export default class Grid extends Component {
+    // constructor(props) {
+    //     super(props);
+    //     // this.func = this.props.func;
+    // }
+
+    // componentDidMount() {
+    //     this.timerID = setInterval(
+    //       () => this.tick(),
+    //       1000
+    //     );
+    // }
+    
+    // componentWillUnmount() {
+    //     clearInterval(this.timerID);
+    // }
+    
+    // tick() {
+    //     this.setState({
+    //         date: new Date()
+    //     });
+    // }
+
     render() {
         return (
-            <svg height="10000" width="10000" onLoad={manageCanvas}>
+            <svg height="10000" width="10000" >
                 <defs>
                         <pattern id="img122" patternUnits="userSpaceOnUse" width="500" height="500">
                             <image className='rep' xlinkHref={grid2} x="0" y="0" width="500" height="500"/>

@@ -174,6 +174,7 @@ function CreateNewSlider(FromExisting = null) {
                 return "translate(" + FromExisting.X + ", " + FromExisting.Y + ")";
             }
         }).on("mousedown", () => {
+            console.log("tsk");
             rectType = "slider";
         });
 
@@ -204,6 +205,7 @@ function CreateNewSlider(FromExisting = null) {
         // .attr("filter", "url('#svgshadow')")
         .on("mouseover", function() {
             newSlider.rect = this;
+            console.log("tsk2");
             d3.select(newSlider.rect)
                 // .attr("fill", "#303952")
                 .attr("cursor", "pointer");
@@ -286,23 +288,27 @@ function CreateNewSlider(FromExisting = null) {
         .style("cursor", "pointer")
         .attr("transform", "translate(" + (newSlider.anchorValue).toString() + ", 3)")
         .on("mouseover", function() {
+            console.log("tsk3");
             d3.select(this)
                 .attr("fill", "url(#gradientlsider)")
                 .attr("cursor", "pointer")
                 .attr("stroke", "black");
         })
         .on("mouseleave", function() {
+            console.log("tsk4");
             d3.select(this)
                 .attr("fill", "#3a4d69")
                 .attr("stroke", "none");
         })
         .on("mousedown", function() {
+            console.log("tsk5");
             var sliderRectId = this.id;
             var SliderAnchorclicked = true;
             var selectedSliderComponent = newSlider;
 
         })
         .on("mouseup", function() {
+            console.log("tsk6");
             SliderAnchorclicked = false;
             selectedSliderComponent = null;
         });

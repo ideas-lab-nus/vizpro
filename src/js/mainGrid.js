@@ -70,7 +70,6 @@ import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeE
     drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
     edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
     itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
-import {allContents} from './layout.js';
 import {theRequiredSliderGroup} from './slider.js';
 
 var d3 = require("d3");
@@ -97,7 +96,7 @@ var vertical_alignment_box = null;
 const horizontal_align_box = {"W": 150.0, "H": 30.0 , "color": "#373f46", "opacity": 0.8, "radius":5.0}
 const vertical_align_box = {"W": 30.0, "H": 150.0 , "color": "#373f46", "opacity": 0.8, "radius":5.0}
 
-
+var allContents = d3.select("#allCanvasContents");
 
 var selection_box_started = false;
 var items_are_selected  = false; 

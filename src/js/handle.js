@@ -55,7 +55,6 @@ import {
     fromCircle
     } from './constants.js';
 import {selectComp, updateAll, ViewListRedrawing, showDropDownList, redrawDependents} from './functions.js';
-import {allContents} from './layout.js';
 import $ from "jquery";
 var d3 = require('d3');
 
@@ -190,7 +189,7 @@ function handleComponentSelection() {
 } // End of handleComponentSelection
 
 function handleTheClickOnAllComponents() {
-    // console.log("all component clicked");
+    console.log("all component clicked");
     const reactContext = this;
     var allcomp = d3.selectAll("rect.CompBody")
         .on('mousedown', function(d, i) {
@@ -217,10 +216,11 @@ function handleTheClickOnAllComponents() {
                 rectType : "component",
             });            
         })
-
 } // End of handleTheClickOnAllComponents
 
+//Fix state changes
 function handleEdgeInitialization() {
+    var allContents = d3.select("#allCanvasContents");
     var toComponent = null;
     var fromComponent = null;
     var allCircles = d3.selectAll("circle")

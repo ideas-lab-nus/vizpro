@@ -2,12 +2,14 @@ import React from 'react';
 import ScriptTag from 'react-script-tag';
 import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
 import {CreateNewSlider} from './js/slider.js';
-import {setCurrentCagegory, showThisPanel} from './js/insert.js';    
+import {setCurrentCagegory, showThisPanel} from './js/insert.js';   
+import {manageCanvas} from './js/layout.js'; 
 import Grid from './Grid';      
 import {handleComponentSelection, handleTheClickOnAllComponents, 
     handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
 
 const globalVars = {
+    canvasRendered: false,
     doubleClicked: false,
     date:"km now",
     IDLE_COLOR: "#dfd4b1",
@@ -93,9 +95,11 @@ export default class Canvas extends React.Component {
         this.handleDoubleClick = handleDoubleClick.bind(this);
         this.handleEdgeInitialization = handleEdgeInitialization.bind(this);
         this.handleTheClickOnAllComponents = handleTheClickOnAllComponents.bind(this);
+        this.manageCanvas = manageCanvas.bind(this);
     }
 
     componentDidMount() {
+        this.manageCanvas();
         this.timerID = setInterval(
           () => this.tick(),
           1000
@@ -120,8 +124,8 @@ export default class Canvas extends React.Component {
                 <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
                 <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>
                 <div className="canvas_container canvas_container_inner main_canvas_container canvas_body_container">
-                    <div className="ui-designer-grid" id="mainGrid"> 
-                        <Grid/>   
+                    <div className="ui-designer-grid" id="mainGrid">
+                        <Grid />   
                     </div> 
                 </div>
                 <div id="TopPropertiesBar">

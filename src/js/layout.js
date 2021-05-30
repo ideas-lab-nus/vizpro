@@ -284,13 +284,9 @@ function onMaximizeClick() {
 
 }
 
-
-var svgContainer = d3.select("svg");
-
-var allContents = d3.select("svg");
-console.log(allContents);
-
 function manageCanvas() {
+    const reactContext = this;
+
     var svgContainer = d3.select("svg");
 
     var allContents = svgContainer.append("g")
@@ -307,19 +303,24 @@ function manageCanvas() {
     allContents.append("g")
         .attr("id", "allPaths");
 
-    svgContainer.call(d3.zoom().filter(function() {
-        // if (startDrag || StringAnchorclicked || SliderAnchorclicked || edgeStarted || selection_groud_selected) {
-        //     return false;
-        // } else {
-
-        //     return !d3.event.button;
-        // }
-        return true;
+    svgContainer.call(d3.zoom().filter(function(event) {
+        // return true;
+        if (reactContext.state.startDrag || 
+            reactContext.state.StringAnchorclicked || 
+            reactContext.state.SliderAnchorclicked || 
+            reactContext.state.edgeStarted || 
+            reactContext.state.selection_groud_selected) {
+            return false;
+        } else {
+            // console.log((!event.button) + "");
+            return event.button === 0;
+        }
     }).on("zoom", function(event) {
-        // if (!startDrag) { 
+        console.log(reactContext.state.startDrag);
+        if (!reactContext.state.startDrag) { 
             allContents.attr("transform", event.transform); 
-        // }
+        }
     }));
 }
 
-export {svgContainer, allContents, onMaximizeClick, onMinimizeClick, manageCanvas};
+export {onMaximizeClick, onMinimizeClick, manageCanvas};
