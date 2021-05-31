@@ -1186,6 +1186,8 @@ function saveFile() {
     });
 
     console.log(parseFloat(d3.select("div#PropertiesBar").style("width")))
+    var svgContainer = d3.select("svg");
+    var allContents = d3.select("#allCanvasContents");
     var resss = ""
     $.ajax({
         "type": "POST",

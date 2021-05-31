@@ -32,7 +32,6 @@ import {addcomponent, popupMessage} from './functions.js';
 import {handleTheClickOnAllComponents, handleEdgeInitialization, handleComponentSelection} from './handle.js';
 import {handleEdgeSelection} from './inits.js';
 import {redrawDependents} from './testing.js';
-import {allContents} from './layout.js';
 import $ from "jquery";
 
 var d3 = require('d3');
@@ -43,8 +42,9 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
     var padding = 20;
     var titleMargin = 30;
     var titleMarginLeft = 30;
+    var newcomp;
     if (FromExisting != null) {
-        var newcomp = FromExisting;
+        newcomp = FromExisting;
     } else {
         var inputdict = {}
         var thoseInputNames = {}
@@ -52,18 +52,18 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
 
         for (let i = 0; i < udo_inputs.length; i++) {
             var thisINp = [];
-            for (var property in udo_inputs[i]) {
-                if (udo_inputs[i].hasOwnProperty(property)) {
-                    thisINp.push(udo_inputs[i][property]["name"])
+            for (var inProperty in udo_inputs[i]) {
+                if (udo_inputs[i].hasOwnProperty(inProperty)) {
+                    thisINp.push(udo_inputs[i][inProperty]["name"])
                 }
             }
             thoseInputNames[i] = thisINp;
         }
         for (let i = 0; i < udo_outputs.length; i++) {
             var thisOUt = [];
-            for (var property in udo_outputs[i]) {
-                if (udo_outputs[i].hasOwnProperty(property)) {
-                    thisOUt.push(udo_outputs[i][property]["name"])
+            for (var outProperty in udo_outputs[i]) {
+                if (udo_outputs[i].hasOwnProperty(outProperty)) {
+                    thisOUt.push(udo_outputs[i][outProperty]["name"])
                 }
             }
             thoseOutputNames[i] = thisOUt;
@@ -83,25 +83,19 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
             }
         }
 
-
         var ThisComponentName = type;
         let n_inputs = Object.keys(inputdict[ThisComponentName].inputs).length
         let n_outputs = Object.keys(inputdict[ThisComponentName].outputs).length
 
-
-
-        var newcomp = addcomponent(uuidv4("C"), n_inputs, n_outputs, inputdict[ThisComponentName].inputs, inputdict[ThisComponentName].outputs);
+        newcomp = addcomponent(uuidv4("C"), n_inputs, n_outputs, inputdict[ThisComponentName].inputs, inputdict[ThisComponentName].outputs);
         if (type == null) {
             ThisComponentName = $("div#addComp").attr("type");
         } else {
             ThisComponentName = type;
             newcomp.dftype = kwargs.dfType;
             newcomp.ShortName = kwargs.shortName;
-
             popupMessage(ThisComponentName + " Component added");
         }
-
-        console.log()
 
         newcomp.fill = inputdict[ThisComponentName].color; //allColors[Math.floor(Math.random() * allColors.length)];
         newcomp.Name = ThisComponentName;
@@ -112,6 +106,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
         parent_child_matrix[newcomp.GUID] = []
     }
 
+    var allContents = d3.select("#allCanvasContents");
     var cont = allContents.append("g")
         .attr("class", "component")
         .attr("id", newcomp.GUID);
@@ -123,7 +118,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
         .attr("id", "comp-" + newcomp.GUID)
         .attr("transform", () => {
             if (FromExisting == null) {
-                if (kwargs.X != undefined && kwargs.Y != undefined) {
+                if (kwargs.X !== undefined && kwargs.Y !== undefined) {
                     newcomp.X = kwargs.X;
                     newcomp.Y = kwargs.Y;
                 } else {
@@ -184,9 +179,9 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
             });
     }
 
-    var InputGroup = node.append('g');
+    InputGroup = node.append('g');
     for (let index = 0; index < newcomp.inputs.length; index++) {
-        var inp = InputGroup.append('circle').lower()
+        inp = InputGroup.append('circle').lower()
             .attr("cx", "0")
             .attr("cy", (index * padding + titleMargin).toString())
             .attr("fill", newcomp.fill)
@@ -224,9 +219,9 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
     }
 
 
-    var OutputGroup = node.append('g');
+    OutputGroup = node.append('g');
     for (let index = 0; index < newcomp.outputs.length; index++) {
-        var out = OutputGroup.append('circle')
+        out = OutputGroup.append('circle')
             .attr("cx", newcomp.width)
             .attr("cy", (index * padding + titleMargin).toString())
             .attr("fill", newcomp.fill)
@@ -395,7 +390,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
             return `background-image:url(/static/base/img/` + newcomp.Name + `.png);background-size: 15px;background-repeat: no-repeat;background-position: center;`
         })
 
-    if (newcomp.dftype == 'dp') {
+    if (newcomp.dftype === 'dp') {
 
         var playrect2 = node.append('rect')
             .attr("class", "play " + newcomp.GUID)

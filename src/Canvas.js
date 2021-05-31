@@ -1,16 +1,131 @@
-import React, { Component } from 'react'
+import React from 'react';
+import ScriptTag from 'react-script-tag';
 import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
 import {CreateNewSlider} from './js/slider.js';
-import {setCurrentCagegory, showThisPanel} from './js/insert.js';    
-import Grid from './Grid';                         
+import {setCurrentCagegory, showThisPanel} from './js/insert.js';   
+import {manageCanvas} from './js/layout.js'; 
+import Grid from './Grid';      
+import {handleComponentSelection, handleTheClickOnAllComponents, 
+    handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
 
-export default class Canvas extends Component {
+const globalVars = {
+    canvasRendered: false,
+    doubleClicked: false,
+    date:"km now",
+    IDLE_COLOR: "#dfd4b1",
+    ACTIVE_COLOR: "green",
+    ERROR_COLOR: "red",
+    COMPONENT_RADIUS: 1,
+    allComp: [],
+    allEdges: [],
+    comp_input_edges: {},
+    comp_output_edges: {},
+    edge_comp_matrix: {},
+    parent_child_matrix: {},
+    parent_child_matrix_fast_check: [],
+    root_components: {},
+    components_selection_data: {},
+    selected_components: [],
+    runDeep: false,
+    StringAnchorclicked: false,
+    StringAnchorType: null,
+    StringAnchorId: "",
+    XANCHOR: 0,
+    YANCHOR: 1,
+    ANCHOR_WIDTH: 5,
+    SLIDER_START_POSITION: 60,
+    SLIDER_END_POSITION: 244,
+    anchorMouseXpos: 0,
+    anchorMouseYpos: 0,
+    SliderAnchorclicked: false,
+    selectedSliderComponent: null,
+    dragX: 0,
+    dragY: 0,
+    sliderRectId: "",
+    componentClickX: 0,
+    componentClickY: 0,
+    initPos: null,
+    startDrag: false,
+    clickedId: "",
+    rectType: "",
+    deltaX: 0,
+    deltaY: 0,
+    clicked: false,
+    edgeStarted: false,
+    targetcircleIN: false,
+    selectedcircleId: "",
+    targetcircleId: "",
+    selectedSliderAnchorId: "",
+    xGrid: 0,
+    yGrid: 0,
+    mousex: 0,
+    mousey: 0,
+    initEdgex2: 0,
+    initEdgey2: 0,
+
+    // text global variables.
+    textareaStarted: false,
+    textAreaRectId: "",
+    optionListStarted: false,
+    optionlistRectid: "",
+    justSelected: null,
+    mouseInsideOption: false,
+
+    //selected component variables.
+    is_component_selected: false,
+    selected_component_id: "",
+    rightColumnIsSelected: false,
+    leftColumnIsSelected: false,
+    topColumnIsSelected: false,
+    rightColIsdisplayed: true,
+    leftColIsdisplayed: true,
+    is_edge_selected: false,
+    currentTopBarHeight: 30,
+    currentLeftColWidth: 225,
+    currentRightColWidth: 50,
+    defVars: {},
+    messageshown: false,
+}
+
+export default class Canvas extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = globalVars;
+        this.handleComponentSelection = handleComponentSelection.bind(this);
+        this.handleDoubleClick = handleDoubleClick.bind(this);
+        this.handleEdgeInitialization = handleEdgeInitialization.bind(this);
+        this.handleTheClickOnAllComponents = handleTheClickOnAllComponents.bind(this);
+        this.manageCanvas = manageCanvas.bind(this);
+    }
+
+    componentDidMount() {
+        this.manageCanvas();
+        this.timerID = setInterval(
+          () => this.tick(),
+          1000
+        );
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+    }
+    
+    tick() {
+        this.setState({
+            date: new Date()
+        });
+    }
+
     render() {
         return (
             <div>
+                <ScriptTag>{this.handleComponentSelection()}</ScriptTag>
+                <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
+                <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
+                <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>
                 <div className="canvas_container canvas_container_inner main_canvas_container canvas_body_container">
-                    <div className="ui-designer-grid" id="mainGrid"> 
-                        <Grid/>   
+                    <div className="ui-designer-grid" id="mainGrid">
+                        <Grid />   
                     </div> 
                 </div>
                 <div id="TopPropertiesBar">

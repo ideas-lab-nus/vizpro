@@ -130,7 +130,7 @@ var Output = {
     "ShortName": "A",
     "Description": "output1",
     "Message": "short description",
-    "type": "item",
+    "type2": "item",
     "datatype": "int",
     "value": 0,
 }
@@ -144,7 +144,7 @@ var Input = {
     "ShortName": "X",
     "Description": "input1",
     "Message": "short description",
-    "type": "item",
+    "type2": "item",
     "datatype": "int",
     "value": 0,
 }
@@ -153,7 +153,7 @@ var Input = {
 function uuidv4(ini) {
     return ini + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random() * 16 | 0,
-            v = c == 'x' ? r : (r & 0x3 | 0x8);
+            v = c === 'x' ? r : ((r & 0x3) | 0x8);
         return v.toString(16);
     });
 }
