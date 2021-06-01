@@ -1,5 +1,5 @@
 import {selectComp, componentStatus, updatShallowCompRender} from './functions.js';
-import {parent_child_matrix, ACTIVE_COLOR, ERROR_COLOR, runDeep} from './constants.js';
+import {globalVars} from './constants.js';
 import {calculateShallow} from './shallow.js';
 import {calculateDeep} from './deep.js';
 

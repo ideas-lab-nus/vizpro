@@ -1,19 +1,3 @@
-// import {
-//     allComp,
-//     allEdges,
-//     comp_input_edges,
-//     comp_output_edges,
-//     edge_comp_matrix,
-//     parent_child_matrix,
-//     parent_child_matrix_fast_check,
-//     root_components,
-//     edgeStarted,
-//     targetcircleIN,
-//     selectedcircleId,
-//     addEdge,
-//     toCircle,
-//     fromCircle
-//     } from './constants.js';
 import {selectComp, updateAll, ViewListRedrawing, showDropDownList, redrawDependents} from './functions.js';
 import $ from "jquery";
 var d3 = require('d3');
@@ -454,4 +438,4 @@ function handleDoubleClick() {
 } // End of HandleDoubleClick
 
 export {GetURLParameter, handleTheClickOnAllComponents, handleEdgeInitialization, 
-    handleComponentSelection, handleDoubleClick};
+    handleComponentSelection, handleDoubleClick, uuidv4};

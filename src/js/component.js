@@ -26,8 +26,7 @@
  */
 
 
-import {udo_inputs, udo_outputs, udo_names, udo_fill, uuidv4, parent_child_matrix, mousex, mousey, rectType, allComp, runDeep,
-    comp_input_edges, comp_output_edges, components_selection_data, IDLE_COLOR, COMPONENT_RADIUS} from './constants.js';
+import {globalVars} from './constants.js';
 import {addcomponent, popupMessage} from './functions.js';
 import {handleTheClickOnAllComponents, handleEdgeInitialization, handleComponentSelection} from './handle.js';
 import {handleEdgeSelection} from './inits.js';

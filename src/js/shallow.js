@@ -26,7 +26,7 @@
  */
 
 import $ from "jquery";
-import {uuidv4} from './constants.js';
+import {uuidv4} from './handle.js';
 import {objToHtmlTable, selectComp} from './functions.js';
 
 var shallow_functions = {

@@ -7,7 +7,7 @@ import {manageCanvas} from './js/layout.js';
 import {manageGrid} from './js/mainGrid.js';
 import Grid from './Grid';      
 import {handleComponentSelection, handleTheClickOnAllComponents, 
-    handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
+    handleEdgeInitialization, handleDoubleClick, uuidv4} from './js/handle.js';
 
 function addCircle() {
     var initCircle = {
@@ -22,14 +22,6 @@ function addCircle() {
 
     return initCircle;
 };
-
-function uuidv4(ini) {
-    return ini + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0,
-            v = c === 'x' ? r : ((r & 0x3) | 0x8);
-        return v.toString(16);
-    });
-}
 
 const globalVars = {
     fromCircle: addCircle(),

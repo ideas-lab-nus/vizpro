@@ -24,11 +24,11 @@
  * @since  x.x.x
  */
 
-import { uuidv4 } from './constants.js';
+//import { uuidv4 } from './constants.js';
 
 import $ from "jquery";
 import {handleComponentSelection, handleTheClickOnAllComponents, 
-    handleEdgeInitialization, handleDoubleClick} from './handle.js';
+    handleEdgeInitialization, handleDoubleClick, uuidv4} from './handle.js';
 var d3 = require('d3');
 
 var theRequiredSliderGroup = "";
