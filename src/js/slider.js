@@ -268,9 +268,13 @@ function CreateNewSlider(FromExisting = null) {
     })
 
     if (FromExisting == null) {
-        var current_all_comp = reactContext.state.allComp;
+        //Make a copy of the array
+        var current_all_comp = reactContext.state.allComp.slice();
+        console.log(current_all_comp);
+        console.log("Adding a slider" + newSlider);
+        current_all_comp.push(newSlider);
         reactContext.setState({
-            allComp: current_all_comp.push(newSlider),
+            allComp: current_all_comp,
         })
     }
 

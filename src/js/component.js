@@ -37,6 +37,7 @@ import $ from "jquery";
 var d3 = require('d3');
 
 function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
+    console.log("Create new component called");
     //local title variables; Those should be later put in the visualization properties table. 
     var one_character_width = 8;
     var padding = 20;

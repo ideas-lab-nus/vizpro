@@ -57,8 +57,9 @@ function addEdge(from, to, fromComp, toComp) {
 function handleComponentSelection() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;
+    console.log("sigh" + allComp);
     allComp.forEach(element => {
-        if (element.type == "component" || element.type == "toggle" || element.type == "fileUpload") {
+        if (element.type === "component" || element.type === "toggle" || element.type === "fileUpload") {
             d3.select("g#comp-" + element.GUID)
                 .on("click", function() {
                     d3.select("rect#" + element.GUID)

@@ -31,6 +31,8 @@ function uuidv4(ini) {
     });
 }
 
+
+
 const globalVars = {
     fromCircle: addCircle(),
     toCircle: addCircle(),
@@ -157,9 +159,14 @@ export default class Canvas extends React.Component {
         });
     }
 
+    print() {
+        console.log("all Comp is " + this.state.allComp)
+    }
+
     render() {
         return (
             <div>
+                <ScriptTag>{this.print()}</ScriptTag>
                 <ScriptTag>{this.handleComponentSelection()}</ScriptTag>
                 <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
                 <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>

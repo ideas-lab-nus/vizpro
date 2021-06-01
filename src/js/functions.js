@@ -326,7 +326,7 @@ function addcomponent(guid, n_inputs = 4, n_outputs = 5, inputsIn = 5 * ["input"
     return initComp;
 } //End of addcomponent
 
-function selectComp(value, by = "GUID", allComp) {
+function selectComp(value, by = "GUID") {
     let toreturn = null
     allComp.forEach(element => {
         if (element[by] === value) {
