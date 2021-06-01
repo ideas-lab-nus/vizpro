@@ -326,10 +326,10 @@ function addcomponent(guid, n_inputs = 4, n_outputs = 5, inputsIn = 5 * ["input"
     return initComp;
 } //End of addcomponent
 
-function selectComp(value, by = "GUID") {
+function selectComp(value, by = "GUID", allComp) {
     let toreturn = null
     allComp.forEach(element => {
-        if (element[by] == value) {
+        if (element[by] === value) {
             toreturn = element
         }
     });

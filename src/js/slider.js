@@ -24,73 +24,7 @@
  * @since  x.x.x
  */
 
-import {
-    allComp,
-    comp_input_edges,
-    comp_output_edges,
-    parent_child_matrix,
-    components_selection_data,
-    selected_components,
-    runDeep,
-    StringAnchorclicked,
-    StringAnchorType,
-    StringAnchorId,
-    XANCHOR,
-    YANCHOR,
-    ANCHOR_WIDTH,
-    SLIDER_START_POSITION,
-    SLIDER_END_POSITION,
-    anchorMouseXpos,
-    anchorMouseYpos,
-    SliderAnchorclicked,
-    selectedSliderComponent,
-    dragX,
-    dragY,
-    sliderRectId,
-    initPos,
-    startDrag,
-    clickedId,
-    rectType,
-    deltaX,
-    deltaY,
-    clicked,
-    edgeStarted,
-    targetcircleIN,
-    selectedcircleId,
-    targetcircleId,
-    selectedSliderAnchorId,
-    xGrid,
-    yGrid,
-    mousex,
-    mousey,
-    initEdgex2,
-    initEdgey2,
-    componentClickX,
-    componentClickY,
-    textareaStarted,
-    textAreaRectId,
-    optionListStarted,
-    optionlistRectid,
-    justSelected,
-    mouseInsideOption,
-    is_component_selected,
-    selected_component_id,
-    rightColumnIsSelected,
-    leftColumnIsSelected,
-    topColumnIsSelected,
-    rightColIsdisplayed,
-    leftColIsdisplayed,
-    is_edge_selected,
-    currentTopBarHeight,
-    currentLeftColWidth,
-    currentRightColWidth,
-    defVars,
-    messageshown,
-    Output,
-    Input,
-    uuidv4
-    } from './constants.js';
-import {allContents} from './layout.js';
+import { uuidv4 } from './constants.js';
 
 import $ from "jquery";
 import {handleComponentSelection, handleTheClickOnAllComponents, 
@@ -132,11 +66,19 @@ function addSlider(guid, min = 0, max = 100, step = 1.0) {
 
 //TODO : save and retrieve the slider values. 
 function CreateNewSlider(FromExisting = null) {
+    var reactContext = this;
+    var newSlider;
     if (FromExisting != null) {
-        var newSlider = FromExisting;
+        newSlider = FromExisting;
     } else {
-        var newSlider = addSlider(uuidv4("S"), 0, 100, 1.0);
-        parent_child_matrix[newSlider.GUID] = []
+        newSlider = addSlider(uuidv4("S"), 0, 100, 1.0);
+        //Fix dict creation
+        var guid = newSlider.GUID;
+        var data = {};
+        data[guid] = [];
+        reactContext.setState({
+            parent_child_matrix: data,
+        })
         newSlider.Name = "Numeric";
         newSlider.value = 50.00;
         newSlider.anchorValue = ((184 - 60) / 2.0) + 30 //((60+184)/2.0)-30
@@ -174,8 +116,9 @@ function CreateNewSlider(FromExisting = null) {
                 return "translate(" + FromExisting.X + ", " + FromExisting.Y + ")";
             }
         }).on("mousedown", () => {
-            console.log("tsk");
-            rectType = "slider";
+            reactContext.setState({
+                rectType: "slider",
+            })
         });
 
     var OutputGroup = node.append('g');
@@ -218,9 +161,9 @@ function CreateNewSlider(FromExisting = null) {
             ////////console.log("You dobule clicked me ");
         })
         .on("mousedown", () => {
-            //////console.log('hello world');
-            rectType = "slider";
-
+            reactContext.setState({
+                rectType: "slider",
+            })
         });
 
 
@@ -301,33 +244,55 @@ function CreateNewSlider(FromExisting = null) {
                 .attr("stroke", "none");
         })
         .on("mousedown", function() {
-            console.log("tsk5");
-            var sliderRectId = this.id;
-            var SliderAnchorclicked = true;
-            var selectedSliderComponent = newSlider;
-
+            reactContext.setState({
+                sliderRectId: this.id,
+                SliderAnchorclicked: true,
+                selectedSliderComponent: newSlider,
+            })
         })
         .on("mouseup", function() {
-            console.log("tsk6");
-            SliderAnchorclicked = false;
-            selectedSliderComponent = null;
+            reactContext.setState({
+                SliderAnchorclicked: false,
+                selectedSliderComponent: null,
+            })
         });
 
-    comp_output_edges[newSlider.GUID] = new Array(1);
-    comp_input_edges[newSlider.GUID] = new Array(1);
+    //Make a copy of the current states
+    var current_comp_out = { ...reactContext.state.comp_output_edges};
+    var current_comp_in = { ...reactContext.state.comp_input_edges};
+    current_comp_out[newSlider.GUID] = new Array(1);
+    current_comp_in[newSlider.GUID] = new Array(1);
+    reactContext.setState({
+        comp_input_edges: current_comp_in,
+        comp_output_edges: current_comp_out,
+    })
 
     if (FromExisting == null) {
-        allComp.push(newSlider);
+        var current_all_comp = reactContext.state.allComp;
+        reactContext.setState({
+            allComp: current_all_comp.push(newSlider),
+        })
     }
 
     //Moving the slider body
     var allcomp = d3.selectAll("g.SliderGroup")
         .on('mousedown', function(d, i) {
             theRequiredSliderGroup = this;
-            var rectType = "slider";
+            reactContext.setState({
+                rectType: "slider",
+            })
         });
 
-    components_selection_data[newSlider.GUID] = { "x0": newSlider.X, "y0": newSlider.Y, "x1": newSlider.X + newSlider.width, "y1": newSlider.Y + newSlider.height };
+    var current_components_selection = { ...reactContext.state.components_selection_data };
+    current_components_selection[newSlider.GUID] = {
+        "x0": newSlider.X, 
+        "y0": newSlider.Y, 
+        "x1": newSlider.X + newSlider.width, 
+        "y1": newSlider.Y + newSlider.height,
+    };  
+    reactContext.setState({
+        components_selection_data: current_components_selection,
+    })
 }
 
 export {CreateNewSlider, theRequiredSliderGroup};

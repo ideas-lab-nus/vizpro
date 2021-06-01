@@ -270,7 +270,7 @@ function CreatenewString(FromExisting = null) {
             StringAnchorclicked = true;
             StringAnchorType = XANCHOR;
             StringAnchorId = newcomp.GUID;
-            anchorMouseXpos = d3.mouse(allContents.node())[0] - newcomp.width;
+            anchorMouseXpos = d3.pointer(allContents.node())[0] - newcomp.width;
         });
 
 
@@ -286,7 +286,7 @@ function CreatenewString(FromExisting = null) {
             StringAnchorclicked = true;
             StringAnchorType = YANCHOR;
             StringAnchorId = newcomp.GUID;
-            anchorMouseYpos = d3.mouse(allContents.node())[1] - newcomp.height;
+            anchorMouseYpos = d3.pointer(allContents.node())[1] - newcomp.height;
         });
 
     var rectanchorXY = node.append('rect')

@@ -16,7 +16,7 @@
 */
 
 import {startDrag, StringAnchorclicked, SliderAnchorclicked, edgeStarted} from './constants.js';
-import {selection_groud_selected} from './mainGrid.js';
+import $ from "jquery";
 
 var d3 = require("d3");
 
@@ -39,12 +39,13 @@ function manageCanvas() {
 
     var something;
     svgContainer.call(d3.zoom().filter(function() {
-        if (startDrag || StringAnchorclicked || SliderAnchorclicked || edgeStarted || selection_groud_selected) {
-            return false;
-        } else {
+        // if (startDrag || StringAnchorclicked || SliderAnchorclicked || edgeStarted || selection_groud_selected) {
+            // return false;
+        // } else {
 
-            return !d3.event.button;
-        }
+            // return !d3.event.button;
+        // }
+        return true;
     }).on("zoom", function() {
         if (!startDrag) {
             allContents.attr("transform", d3.event.transform)
@@ -52,61 +53,60 @@ function manageCanvas() {
     }));
 }
 
-/*
-if (RetrievedData != undefined) {
-    if (RetrievedData.canvas_transform != undefined) {
-        allContents.attr("transform", RetrievedData.canvas_transform.transform);
-        svgContainer._groups[0][0].__zoom.k = RetrievedData.canvas_transform.kXY.k;
-        svgContainer._groups[0][0].__zoom.x = RetrievedData.canvas_transform.kXY.x;
-        svgContainer._groups[0][0].__zoom.y = RetrievedData.canvas_transform.kXY.y;
-    }
-}
+// if (RetrievedData != undefined) {
+//     if (RetrievedData.canvas_transform != undefined) {
+//         allContents.attr("transform", RetrievedData.canvas_transform.transform);
+//         svgContainer._groups[0][0].__zoom.k = RetrievedData.canvas_transform.kXY.k;
+//         svgContainer._groups[0][0].__zoom.x = RetrievedData.canvas_transform.kXY.x;
+//         svgContainer._groups[0][0].__zoom.y = RetrievedData.canvas_transform.kXY.y;
+//     }
+// }
 
-try {
-    if (RetrievedData.components != undefined) {
-        allComp = RetrievedData.components;
+// try {
+//     if (RetrievedData.components != undefined) {
+//         allComp = RetrievedData.components;
 
-        allComp.forEach(element => {
-            if (element.type == "component")
-                CreateNewComponent(element);
-            else if (element.type == "slider")
-                CreateNewSlider(element);
-            else if (element.type == "string")
-                CreatenewString(element);
-            else if (element.type == "toggle")
-                CreateNewToggle(element);
-            else if (element.type == "optionList")
-                CreateNewOptionList(element);
-            else if (element.type == "fileUpload")
-                CreateNewFileUpload(element);
-            else if (element.type == "listView")
-                CreateNewListView(element);
-        });
-    }
+//         allComp.forEach(element => {
+//             if (element.type == "component")
+//                 CreateNewComponent(element);
+//             else if (element.type == "slider")
+//                 CreateNewSlider(element);
+//             else if (element.type == "string")
+//                 CreatenewString(element);
+//             else if (element.type == "toggle")
+//                 CreateNewToggle(element);
+//             else if (element.type == "optionList")
+//                 CreateNewOptionList(element);
+//             else if (element.type == "fileUpload")
+//                 CreateNewFileUpload(element);
+//             else if (element.type == "listView")
+//                 CreateNewListView(element);
+//         });
+//     }
 
-} catch (err) {
-    console.log(err);
-}
+// } catch (err) {
+//     console.log(err);
+// }
 
 
-try {
-    if (RetrievedData.edges != undefined) {
-        allEdges = RetrievedData.edges;
-        comp_input_edges = RetrievedData.comp_input_edges
-        comp_output_edges = RetrievedData.comp_output_edges
-        edge_comp_matrix = RetrievedData.edge_comp_matrix
-        parent_child_matrix = RetrievedData.parent_child_matrix
-        parent_child_matrix_fast_check = RetrievedData.parent_child_matrix_fast_check
-        root_components = RetrievedData.root_components
-        allEdges.forEach(element => {
-            CreatePathes(element);
-        })
-    }
+// try {
+//     if (RetrievedData.edges != undefined) {
+//         allEdges = RetrievedData.edges;
+//         comp_input_edges = RetrievedData.comp_input_edges
+//         comp_output_edges = RetrievedData.comp_output_edges
+//         edge_comp_matrix = RetrievedData.edge_comp_matrix
+//         parent_child_matrix = RetrievedData.parent_child_matrix
+//         parent_child_matrix_fast_check = RetrievedData.parent_child_matrix_fast_check
+//         root_components = RetrievedData.root_components
+//         allEdges.forEach(element => {
+//             CreatePathes(element);
+//         })
+//     }
 
-} catch (err) {
-    console.log(err);
-}
-*/
+// } catch (err) {
+//     console.log(err);
+// }
+
 
 // $("div#definedComp").html(function() {
 //     var somearr = udo_names;
@@ -198,13 +198,11 @@ try {
 //     });
 // }); // End of $("input#fileUploadFormToTheCloud").on("change", function(e) { ...
 
-// function HandleSelectedOption() {
-
-//     $("select#listviewSelect").on("change", function(e) {
-//         console.log("hello world ");
-//     });
-
-// }
+function HandleSelectedOption() {
+    $("select#listviewSelect").on("change", function(e) {
+        console.log("hello world ");
+    });
+}
 
 function handleEdgeSelection() {
     d3.selectAll("path")

@@ -447,7 +447,6 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
 
 }
 
-
 function runDeepFunction(compId) {
     runDeep = true;
     redrawDependents(compId);

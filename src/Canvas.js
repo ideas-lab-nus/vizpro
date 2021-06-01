@@ -4,12 +4,37 @@ import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
 import {CreateNewSlider} from './js/slider.js';
 import {setCurrentCagegory, showThisPanel} from './js/insert.js';   
 import {manageCanvas} from './js/layout.js'; 
+import {manageGrid} from './js/mainGrid.js';
 import Grid from './Grid';      
 import {handleComponentSelection, handleTheClickOnAllComponents, 
     handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
 
+function addCircle() {
+    var initCircle = {
+        "GUID": uuidv4("C"),
+        "element": null,
+        "CX": 0,
+        "CY": 0,
+        "Comp": null,
+        "type": "data",
+        "path": null,
+    }
+
+    return initCircle;
+};
+
+function uuidv4(ini) {
+    return ini + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+            v = c === 'x' ? r : ((r & 0x3) | 0x8);
+        return v.toString(16);
+    });
+}
+
 const globalVars = {
-    canvasRendered: false,
+    fromCircle: addCircle(),
+    toCircle: addCircle(),
+    selection_rectangle_group_rect: null,
     doubleClicked: false,
     date:"km now",
     IDLE_COLOR: "#dfd4b1",
@@ -85,6 +110,19 @@ const globalVars = {
     currentRightColWidth: 50,
     defVars: {},
     messageshown: false,
+
+    udo_names: [],
+    udo_types: [],
+    udo_desc: [],
+    udo_shortNames: [],
+    udo_inputs: [],
+    udo_outputs: [],
+    udo_fill: [],
+    udo_dftypes: [],
+    udo_cats: [],
+    udo_subcats: [],
+    cats: {},
+    scats: {},
 }
 
 export default class Canvas extends React.Component {
@@ -96,10 +134,13 @@ export default class Canvas extends React.Component {
         this.handleEdgeInitialization = handleEdgeInitialization.bind(this);
         this.handleTheClickOnAllComponents = handleTheClickOnAllComponents.bind(this);
         this.manageCanvas = manageCanvas.bind(this);
+        this.CreateNewSlider = CreateNewSlider.bind(this);
+        this.manageGrid = manageGrid.bind(this);
     }
 
     componentDidMount() {
         this.manageCanvas();
+        this.manageGrid();
         this.timerID = setInterval(
           () => this.tick(),
           1000
@@ -251,7 +292,7 @@ export default class Canvas extends React.Component {
                                 
                                 <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 4949e5ab-6a97-4eed-b8a6-775b65053e41 0">
                                     
-                                    <div id="addSlider" onClick={() => CreateNewSlider()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"}}>&nbsp;<span id="hint">Slider</span></div>
+                                    <div id="addSlider" onClick={() => this.CreateNewSlider()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"}}>&nbsp;<span id="hint">Slider</span></div>
                                     <div id="addString" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"}}>&nbsp;<span id="hint">Panel</span></div>
                                     <div id="addToggle" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"}}>&nbsp;<span id="hint">Toggle</span></div>
                                     <div id="addOptionList" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"}}>&nbsp;<span id="hint">Option list</span></div>
