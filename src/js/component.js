@@ -26,7 +26,8 @@
  */
 
 
-import {globalVars} from './constants.js';
+ import {udo_inputs, udo_outputs, udo_names, udo_fill, uuidv4, parent_child_matrix, mousex, mousey, rectType, allComp, runDeep,
+    comp_input_edges, comp_output_edges, components_selection_data, IDLE_COLOR, COMPONENT_RADIUS} from './constants.js';
 import {addcomponent, popupMessage} from './functions.js';
 import {handleTheClickOnAllComponents, handleEdgeInitialization, handleComponentSelection} from './handle.js';
 import {handleEdgeSelection} from './inits.js';
@@ -36,6 +37,7 @@ import $ from "jquery";
 var d3 = require('d3');
 
 function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
+    console.log("Create new component called");
     //local title variables; Those should be later put in the visualization properties table. 
     var one_character_width = 8;
     var padding = 20;

@@ -12,10 +12,9 @@
 ─██░░░░░░██─██░░██──██████████░░██─██░░░░░░██─────██░░██─────██░░░░░░░░░░██─
 ─██████████─██████──────────██████─██████████─────██████─────██████████████─
 ────────────────────────────────────────────────────────────────────────────
-
 */
 
-import {globalVars} from './constants.js';
+import {startDrag, StringAnchorclicked, SliderAnchorclicked, edgeStarted} from './constants.js';
 import $ from "jquery";
 
 var d3 = require("d3");

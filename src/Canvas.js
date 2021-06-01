@@ -7,7 +7,7 @@ import {manageCanvas} from './js/layout.js';
 import {manageGrid} from './js/mainGrid.js';
 import Grid from './Grid';      
 import {handleComponentSelection, handleTheClickOnAllComponents, 
-    handleEdgeInitialization, handleDoubleClick, uuidv4} from './js/handle.js';
+    handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
 
 function addCircle() {
     var initCircle = {
@@ -22,6 +22,14 @@ function addCircle() {
 
     return initCircle;
 };
+
+function uuidv4(ini) {
+    return ini + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+            v = c === 'x' ? r : ((r & 0x3) | 0x8);
+        return v.toString(16);
+    });
+}
 
 const globalVars = {
     fromCircle: addCircle(),
@@ -149,9 +157,14 @@ export default class Canvas extends React.Component {
         });
     }
 
+    print() {
+        console.log("all Comp is " + this.state.allComp)
+    }
+
     render() {
         return (
             <div>
+                <ScriptTag>{this.print()}</ScriptTag>
                 <ScriptTag>{this.handleComponentSelection()}</ScriptTag>
                 <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
                 <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
@@ -253,7 +266,6 @@ export default class Canvas extends React.Component {
                                     <div id="addComp" name="Get Data Tree" shname="getDTr" desc="" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Get Data Tree</div>
                                         
                                     <div id="addComp" name="OSI Get Data List" shname="getDList" desc="Main function to get the list of nodes of different levels. 
-
             Arguments:
                     url {string} -- url to the piwebapi asset server" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>OSI Get Data List</div>
                                         
