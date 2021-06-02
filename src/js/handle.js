@@ -41,7 +41,6 @@ function addEdge(from, to, fromComp, toComp) {
 function handleComponentSelection() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;
-    console.log("sigh" + allComp);
     allComp.forEach(element => {
         if (element.type === "component" || element.type === "toggle" || element.type === "fileUpload") {
             d3.select("g#comp-" + element.GUID)
@@ -160,11 +159,11 @@ function handleComponentSelection() {
 } // End of handleComponentSelection
 
 function handleTheClickOnAllComponents() {
-    console.log("all component clicked");
     const reactContext = this;
+    var allComp = reactContext.state.allComp;
     var allcomp = d3.selectAll("rect.CompBody")
-        .on('mousedown', function(d, i) {
-            var coordinates = d3.pointer(this);
+        .on('mousedown', function(event) {
+            var coordinates = d3.pointer(event);
             
             var pos = $("g#comp-" + this.id.replace("overlaySelector", ""))
                 .attr("transform")
@@ -192,6 +191,7 @@ function handleTheClickOnAllComponents() {
 //Fix state changes
 function handleEdgeInitialization() {
     var reactContext = this;
+    var allComp = reactContext.state.allComp;
     var allContents = d3.select("#allCanvasContents");
     var toComponent = null;
     var fromComponent = null;
@@ -279,8 +279,8 @@ function handleEdgeInitialization() {
                 reactContext.setState({
                     toCircle: toCircle,
                 })
-                toComponent = selectComp(toCircle.element.classList[1]);
-                fromComponent = selectComp(fromCircle.element.classList[1]);
+                toComponent = selectComp(allComp, toCircle.element.classList[1]);
+                fromComponent = selectComp(allComp, fromCircle.element.classList[1]);
                 console.log(fromCircle.element.classList[2] +
                     " " + fromCircle.element.classList[1] +
                     " " + toCircle.element.classList[2] +
@@ -401,7 +401,7 @@ function handleDoubleClick() {
                     }
                 });
         } else if (element.type === "toggle") {
-            var currentToggle = selectComp(element.GUID);
+            var currentToggle = selectComp(allComp, element.GUID);
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
                     var toggleValue = $("text.nodetitle.node_title" + element.GUID).text();

@@ -569,57 +569,48 @@ function redrawDependents(parent) {
     // on a parent changes, only draws all the children tree .
     // all the components --- inputs outpts object (to be sent later to the backend should be modified as well)
     // shallow values should be updated instantaniously 
-
     let par = selectComp(parent)
 
-    if (parent_child_matrix[parent].length > 0) {} // This means that this parent has already childs
-    {
-
-        if (par.dftype == "shlow") {
+    if (parent_child_matrix[parent].length > 0) { // This means that this parent has already childs
+        if (par.dftype === "shlow") {
             parent_child_matrix[parent].forEach(function(element, i) { //iterate through all those childs.
                 let ch = selectComp(element[1]);
-                if (par.type == "slider") {
+                if (par.type === "slider") {
                     ch.inputs[element[2]].value = par.value;
-                } else if (par.type == "string" || par.type == "fileUpload") {
+                } else if (par.type === "string" || par.type === "fileUpload") {
                     ch.inputs[element[2]].value = par.outputs[element[0]].value;
-                } else if (par.type == "listView") {
+                } else if (par.type === "listView") {
                     ch.inputs[element[2]].value = par.outputs[element[0]].value;
                     console.log(ch.inputs[element[2]])
                     ch.inputs[element[2]].type = "json";
-                } else if (par.type == "toggle" || par.type == "optionList") {
+                } else if (par.type === "toggle" || par.type === "optionList") {
                     ch.inputs[element[2]].value = par.value;
-                } else if (par.type == "component") {
+                } else if (par.type === "component") {
                     try {
                         // calculateShallow(par.GUID);
                         ch.inputs[element[2]].value = par.outputs[element[0]].value;
                         ch.inputs[element[2]].type = par.outputs[element[0]].type;
                         componentStatus(par.GUID, ACTIVE_COLOR);
-
                     } catch (error) {
                         console.log(error)
                         componentStatus(par.GUID, ERROR_COLOR);
                     }
-
                 }
                 updatShallowCompRender(ch);
                 redrawDependents(ch.GUID);
-
                 console.log("case1 _ parent is shallow")
             });
-        } else if (par.dftype == "dp") {
+        } else if (par.dftype === "dp") {
             console.log("case 2")
             par.state = "unbound"
             parent_child_matrix[parent].forEach(function(element, i) { //iterate through all those childs.
                 let ch = selectComp(element[1]);
-                if (par.type == "component" && runDeep == true) {
+                if (par.type === "component" && runDeep === true) {
                     runDeep = false;
-
-                    if (par.state == "unbound") {
+                    if (par.state === "unbound") {
                         // calculateDeep(par.GUID); 
                         par.state = "active"
-                    }
-
-                    
+                    }                    
                 }
                 ch.inputs[element[2]].value = par.outputs[element[0]].value;
                 ch.inputs[element[2]].type = par.outputs[element[0]].type;
@@ -630,11 +621,8 @@ function redrawDependents(parent) {
                 updatShallowCompRender(ch);
                 redrawDependents(ch.GUID);
             });
-
         }
-
     }
-
 } // End of redrawDependents
 
 function updatShallowCompRender(ch) {

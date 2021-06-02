@@ -24,7 +24,7 @@
  * @since  x.x.x
  */
 
-import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
+import {KeyPress, addcomponent, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
     getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
     addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
     updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
@@ -63,12 +63,23 @@ var selection_box = null;
 var allContents = d3.select("#allCanvasContents");
 var reactContext;
 
+function selectComp(allComp, value, by = "GUID") {
+    let toreturn = null
+    allComp.forEach(element => {
+        if (element[by] === value) {
+            toreturn = element
+        }
+    });
+    return toreturn;
+} // End of selectComp
+
 function manageGrid() {
     reactContext = this;
     var optionListStarted = reactContext.state.optionListStarted;
     var startDrag = reactContext.state.startDrag;
     var mouseInsideOption = reactContext.state.mouseInsideOption;
     var selected_component_id = reactContext.state.selected_component_id;
+    var allComp = reactContext.state.allComp;
 
     var mainGrid = d3.select("#mainGrid")
     .style("backgroud-color", function () {
@@ -93,7 +104,7 @@ function manageGrid() {
             if (reactContext.state.selected_components.length > 1) {
                 console.log("You will delete ")
             }
-            if (selectComp(selected_component_id).type == "fileUpload") {
+            if (selectComp(allComp, selected_component_id).type == "fileUpload") {
                 if (window.confirm("Are you sure you want to delete this file from the database? ")) {
                     console.log("You should detele the file from the database now... ")
                     deleteComponent(selected_component_id);
@@ -105,8 +116,7 @@ function manageGrid() {
             }
         }
     })
-    .on("dblclick", function()
-    {
+    .on("dblclick", function() {
         d3.select("div#buttonClickedname").text("dblclick").style("opacity", ()=>{ reactContext.setState({ messageshown: true, }); return 1});
         reactContext.setState({            
             mousex: d3.pointer(allContents.node())[0],
@@ -122,19 +132,21 @@ function manageGrid() {
         selection_box_y = d3.pointer(allContents.node())[1];        
         selection_box = allContents.append("polyline"); 
     })
-    .on('mousemove', function (event) {            
-        // var mousex = d3.pointer(allContents.node())[0];
-        // var mousey = d3.pointer(allContents.node())[1];
+    .on('mousemove', function (event) {       
+        console.log("addr" + allContents.node() + "works" + event);     
         var mousex = d3.pointer(event)[0];
         var mousey = d3.pointer(event)[1];
         reactContext.setState({            
             mousex: mousex,
             mousey: mousey,
         })        
-        var x = mousex - componentClickX;
-        var y = mousey - componentClickY;
+        console.log(reactContext.state.componentClickX);
+        var x = mousex - reactContext.state.componentClickX;
+        var y = mousey - reactContext.state.componentClickY;
         if (reactContext.state.startDrag) {
+            console.log("Trying to drag the component");
             moveComponent(reactContext.state.clickedId, x, y)
+            // moveComponent(reactContext.state.clickedId, mousex, mousey)
         }
         if (reactContext.state.edgeStarted) {
             d3.select("#" + reactContext.state.selectedcircleId)
@@ -146,7 +158,9 @@ function manageGrid() {
                 .attr("interpolate", "basis");
         }
         if (reactContext.state.SliderAnchorclicked) {
-            var coordinates = d3.pointer(theRequiredSliderGroup);
+            console.log("slider anchor clicked");
+            // var coordinates = d3.pointer(theRequiredSliderGroup);
+            var coordinates = d3.pointer(event);
             var componentClickX = coordinates[0];
             var componentClickY = coordinates[1];
             reactContext.setState({
@@ -233,7 +247,7 @@ function manageGrid() {
                 else
                 newHeight = 22;
 
-                var thisComp = selectComp(StringAnchorId)
+                var thisComp = selectComp(allComp, StringAnchorId)
                 thisComp.height = newHeight;
 
                 d3.select("rect#dummyRect_"+StringAnchorId)
@@ -288,7 +302,7 @@ function manageGrid() {
                 else
                 newWidth = 201;
 
-                thisComp = selectComp(StringAnchorId)
+                thisComp = selectComp(allComp, StringAnchorId)
                 thisComp.width = newWidth;
 
                 d3.select("rect#dummyRect_"+StringAnchorId)
@@ -365,7 +379,6 @@ function manageGrid() {
             .attr("stroke-width", 1)
             .attr("fill-opacity", 0.1);
         }
-        console.log("HIIIII" + reactContext.state.StringAnchorId + "walao");
         handleEdgeMovement(reactContext.state.StringAnchorId);
     })
     .on('mouseup', function () {
@@ -373,7 +386,7 @@ function manageGrid() {
             try {           
                 //This needs to move to a separate function .     
                 var clickedId = reactContext.state.clickedId;
-                var just_moved_component = selectComp(clickedId);
+                var just_moved_component = selectComp(allComp, clickedId);
                 var current_components_selection = { ...reactContext.state.components_selection_data };
                 current_components_selection[clickedId] = {
                     "x0": just_moved_component.X, 
@@ -400,7 +413,7 @@ function manageGrid() {
         }
         if (reactContext.state.StringAnchorclicked) {
             var StringAnchorId = reactContext.state.StringAnchorId;
-            var modified_string_comp = selectComp(StringAnchorId);
+            var modified_string_comp = selectComp(allComp, StringAnchorId);
             current_components_selection = { ...reactContext.state.components_selection_data };
             current_components_selection[StringAnchorId] = {
                 "x0": modified_string_comp.X, 
@@ -453,8 +466,7 @@ function manageGrid() {
                             })
                         }      
                 }
-            }
-            console.log(current_selected_comps);                     
+            }                    
             highlightSelection(current_selected_comps, temp_selected_xs, temp_selected_ys)
             selection_box_started =false;
         }
@@ -530,7 +542,7 @@ function highlightSelection(components_list, temp_selected_xs, temp_selected_ys)
 
 function alignComponent(alignment) {
     reactContext.state.selected_components.forEach(element => {
-        var this_comp = selectComp(element);
+        var this_comp = selectComp(reactContext.state.allComp, element);
         if (alignment === "left") {
             this_comp.X = min_selected_x;
         } else if (alignment === "right") {
