@@ -5,6 +5,7 @@ import {CreateNewSlider} from './js/slider.js';
 import {setCurrentCagegory, showThisPanel} from './js/insert.js';   
 import {manageCanvas} from './js/layout.js'; 
 import {manageGrid} from './js/mainGrid.js';
+import {dummyToSetState} from './js/functions.js';
 import Grid from './Grid';      
 import {handleComponentSelection, handleTheClickOnAllComponents, 
     handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
@@ -32,6 +33,7 @@ function uuidv4(ini) {
 }
 
 const globalVars = {
+    theRequiredSliderGroup: "",
     fromCircle: addCircle(),
     toCircle: addCircle(),
     selection_rectangle_group_rect: null,
@@ -136,6 +138,7 @@ export default class Canvas extends React.Component {
         this.manageCanvas = manageCanvas.bind(this);
         this.CreateNewSlider = CreateNewSlider.bind(this);
         this.manageGrid = manageGrid.bind(this);
+        this.dummyToSetState = dummyToSetState.bind(this);
     }
 
     componentDidMount() {
@@ -164,7 +167,8 @@ export default class Canvas extends React.Component {
     render() {
         return (
             <div>
-                <ScriptTag>{this.print()}</ScriptTag>
+                {/* <ScriptTag>{this.print()}</ScriptTag> */}
+                <ScriptTag>{this.dummyToSetState()}</ScriptTag>
                 <ScriptTag>{this.handleComponentSelection()}</ScriptTag>
                 <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
                 <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>

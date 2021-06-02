@@ -124,23 +124,21 @@ function manageGrid() {
         })
         d3.select("body").append("option")
     })
-    .on("contextmenu", function (d, i) {
-        d3.event.preventDefault();
+    .on("contextmenu", function (event, d, i) {
+        event.preventDefault();
         popupMessage("RMB");
         selection_box_started = true; 
         selection_box_x = d3.pointer(allContents.node())[0];
         selection_box_y = d3.pointer(allContents.node())[1];        
         selection_box = allContents.append("polyline"); 
     })
-    .on('mousemove', function (event) {       
-        console.log("addr" + allContents.node() + "works" + event);     
-        var mousex = d3.pointer(event)[0];
-        var mousey = d3.pointer(event)[1];
+    .on('mousemove', function (event) {         
+        var mousex = d3.pointer(event, allContents.node())[0];
+        var mousey = d3.pointer(event, allContents.node())[1];
         reactContext.setState({            
             mousex: mousex,
             mousey: mousey,
         })        
-        console.log(reactContext.state.componentClickX);
         var x = mousex - reactContext.state.componentClickX;
         var y = mousey - reactContext.state.componentClickY;
         if (reactContext.state.startDrag) {
@@ -158,9 +156,11 @@ function manageGrid() {
                 .attr("interpolate", "basis");
         }
         if (reactContext.state.SliderAnchorclicked) {
-            console.log("slider anchor clicked");
+            console.log("slider anchor clicked" + reactContext.state.theRequiredSliderGroup);
             // var coordinates = d3.pointer(theRequiredSliderGroup);
-            var coordinates = d3.pointer(event);
+            var coordinates = d3.pointer(event, reactContext.state.theRequiredSliderGroup);
+            // var coordinates = d3.pointer(event);
+            console.log("coords for slider anchor move" + coordinates);
             var componentClickX = coordinates[0];
             var componentClickY = coordinates[1];
             reactContext.setState({
@@ -187,8 +187,10 @@ function manageGrid() {
             var ANCHOR_WIDTH = reactContext.state.ANCHOR_WIDTH;
 
             var slider_anchor_value = selectedSliderComponent.value;
+            
+            console.log("anchor val11" + slider_anchor_value);
 
-            var the_slider_slope = (selectedSliderComponent.max-selectedSliderComponent.min)/(SLIDER_END_POSITION-SLIDER_START_POSITION)
+            var the_slider_slope = (selectedSliderComponent.max - selectedSliderComponent.min)/(SLIDER_END_POSITION-SLIDER_START_POSITION)
             var y_intersection = selectedSliderComponent.min - (the_slider_slope*SLIDER_START_POSITION);
             var slider_value = componentClickX * the_slider_slope + y_intersection; 
 
@@ -197,22 +199,26 @@ function manageGrid() {
             var ax = (selectedSliderComponent.max)/(sliderLineEndingpositionX - sliderLineStartingpositionX); 
 
             if (componentClickX <= sliderLineStartingpositionX) {
+                console.log("before")
                 slider_anchor_value = 0;
                 slider_value = selectedSliderComponent.min;                
             } else if (componentClickX >= sliderLineEndingpositionX) {
-                slider_anchor_value = sliderLineEndingpositionX-sliderLineStartingpositionX;
+                console.log("after")
+                slider_anchor_value = sliderLineEndingpositionX - sliderLineStartingpositionX;
                 slider_value = selectedSliderComponent.max;
             } else {
+                console.log("middle" + componentClickX + "and" + sliderLineStartingpositionX)
                 slider_anchor_value = componentClickX - sliderLineStartingpositionX;
             }
 
+            console.log("anchor val" + slider_anchor_value);
             selectedSliderComponent.anchorValue = slider_anchor_value;
             d3.select("#" + sliderRectId)
                 .attr("transform", function () {
-                    return "translate(" + (slider_anchor_value).toString() + "," +sliderLineStartingpositionY+")";
+                    return "translate(" + (slider_anchor_value).toString() + "," + sliderLineStartingpositionY + ")";
                 });
 
-            d3.select("#sliderValueText_"+sliderRectId.replace("SliderAnchor_",""))
+            d3.select("#sliderValueText_" + sliderRectId.replace("SliderAnchor_",""))
             .text((slider_value).toFixed(6));
 
             selectedSliderComponent.value = slider_value;

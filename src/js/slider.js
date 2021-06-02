@@ -58,7 +58,6 @@ function addSlider(guid, min = 0, max = 100, step = 1.0) {
         "type": "slider",
         "dftype": "shlow",
         "child": false
-
     };
 
     return initSlider;
@@ -102,7 +101,7 @@ function CreateNewSlider(FromExisting = null) {
         .attr("id", newSlider.GUID);
 
     var node = cont.append("g")
-        .attr("class", "SliderGroup" + " " + newSlider.selection + " " + newSlider
+        .attr("class", "SliderGroup " + newSlider.selection + " " + newSlider
             .view + " " + newSlider.GUID)
         .attr("id", "comp-" + newSlider.GUID)
         .attr("transform", () => {
@@ -147,9 +146,12 @@ function CreateNewSlider(FromExisting = null) {
         .attr("fill", "url(#gradientlsider)")
         // .attr("filter", "url('#svgshadow')")
         .on("mouseover", function() {
-            newSlider.rect = this;
-            console.log("tsk2");
-            d3.select(newSlider.rect)
+            var current_slider = { ...reactContext.state.selectedSliderComponent };            
+            current_slider.rect = this;
+            reactContext.setState({
+                selectedSliderComponent: current_slider,
+            })
+            d3.select(current_slider.rect)
                 // .attr("fill", "#303952")
                 .attr("cursor", "pointer");
         })
@@ -281,9 +283,9 @@ function CreateNewSlider(FromExisting = null) {
     //Moving the slider body
     var allcomp = d3.selectAll("g.SliderGroup")
         .on('mousedown', function(d, i) {
-            theRequiredSliderGroup = this;
             reactContext.setState({
                 rectType: "slider",
+                theRequiredSliderGroup: this,
             })
         });
 
