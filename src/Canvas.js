@@ -209,8 +209,8 @@ export default class Canvas extends React.Component {
                             
                             <div id="toolbar_container_1_2" className="TabToolBox b066a5eb-26dc-4359-8d22-3643444d08e4 00492f59-092c-4ee5-affb-8a5e36495e59">
                                 <div id="toolbar_container_1_2_0" className="toolbarbuttonsContainer">
-                                    &nbsp; Components 
-                                    <span className="currentTab b066a5eb-26dc-4359-8d22-3643444d08e4">&nbsp;</span> 
+                                    &nbsp; Components
+                                    <span className="currentTab b066a5eb-26dc-4359-8d22-3643444d08e4" style={{marginLeft: "3px"}}> &nbsp;</span> 
                                 </div>
                                 
                                 <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 d2312a8b-63dc-4112-8a66-76996c150b0e 0" style={{display:"none"}}>

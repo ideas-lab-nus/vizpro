@@ -92,8 +92,6 @@ function CreateNewSlider(FromExisting = null) {
     newSlider.width = 250;
     newSlider.dftype = "shlow";
 
-    // .attr("transform", "translate(" + (60 + (newSlider.value * 100) / (184 - 60)).toString() + ", 3)")
-
     var allContents = d3.select("#allCanvasContents");
     console.log(allContents);
     var cont = allContents.append("g")
@@ -137,14 +135,11 @@ function CreateNewSlider(FromExisting = null) {
         .attr("id", newSlider.GUID)
         .attr("rx", "3")
         .attr("ry", "3")
-        //.attr("filter", "url(#f2")
         .attr("stroke-width", "2")
         .attr("stroke", "#3a4c69")
         .attr("width", newSlider.width)
         .attr("height", newSlider.height)
-        // .attr("fill", newSlider.fill)
-        .attr("fill", "url(#gradientlsider)")
-        // .attr("filter", "url('#svgshadow')")
+        .attr("fill", '#dddddd')
         .on("mouseover", function() {
             var current_slider = { ...reactContext.state.selectedSliderComponent };            
             current_slider.rect = this;
@@ -152,12 +147,10 @@ function CreateNewSlider(FromExisting = null) {
                 selectedSliderComponent: current_slider,
             })
             d3.select(current_slider.rect)
-                // .attr("fill", "#303952")
                 .attr("cursor", "pointer");
         })
         .on("mouseout", function() {
             newSlider.rect = this;
-            d3.select(newSlider.rect).attr("fill", "url(#gradientlsider)")
         })
         .on("dblclick", () => {
             ////////console.log("You dobule clicked me ");
