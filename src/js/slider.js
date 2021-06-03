@@ -25,9 +25,7 @@
  */
 
 import {redrawDependents} from './functions.js';
-import $ from "jquery";
 import {uuidv4} from './handle.js';
-import { componentClickX } from './constants.js';
 var d3 = require('d3');
 
 var theRequiredSliderGroup = "";

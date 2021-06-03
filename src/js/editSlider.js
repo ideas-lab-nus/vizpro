@@ -1,16 +1,7 @@
 import {SLIDER_START_POSITION, SLIDER_END_POSITION} from './constants.js';
 import {selectComp, redrawDependents} from './functions.js';
-import {GetURLParameter} from './handle.js';
 import $ from "jquery";
 var d3 = require('d3');
-
-// var compKey = GetURLParameter('compKey');
-// var slider_component = selectComp(compKey);
-
-// $("input#new_slider_min_value").val(slider_component.min);
-// $("input#new_slider_max_value").val(slider_component.max);
-// $("input#new_slider_current_value").val(slider_component.value);
-// $("button#sliderEditButton").on("click", function() { submitSliderEdit(compKey); });
 
 function submitSliderEdit(compKey) {
     var slider_component = selectComp(compKey);

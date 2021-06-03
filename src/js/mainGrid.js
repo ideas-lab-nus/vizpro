@@ -24,14 +24,8 @@
  * @since  x.x.x
  */
 
-import {KeyPress, addcomponent, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
-    getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
-    addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
-    updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
-    drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
-    edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
-    itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
-import {theRequiredSliderGroup} from './slider.js';
+import {returnCurveString,getlocationFromTransform, handleEdgeMovement,
+    deleteComponent, popupMessage,moveComponent} from './functions.js';
 
 var d3 = require("d3");
 
@@ -149,7 +143,6 @@ function manageGrid() {
         if (reactContext.state.edgeStarted) {
             d3.select("#" + reactContext.state.selectedcircleId)
                 .attr("d", function () {
-                    //return returnCurveString(initEdgex1, initEdgey1, mousex - 2, mousey - 2);
                     return returnCurveString(x, y, mousex - 2, mousey - 2);
                 }).attr("fill", "none")
                 .attr("stroke-opacity", "0.2")
@@ -166,12 +159,12 @@ function manageGrid() {
         var ANCHOR_WIDTH = reactContext.state.ANCHOR_WIDTH;
 
         if (reactContext.state.textareaStarted) {
-            var selectedRect = getlocationFromTransform(d3.select("g#comp-"+textAreaRectId).attr("transform"));
+            var selectedRect = getlocationFromTransform(d3.select("g#comp-" + textAreaRectId).attr("transform"));
             var textA = d3.select("#TextAreaSelector")
             .style("position", "absolute")
-            .style("height", (parseFloat(d3.select("rect#"+textAreaRectId).attr("height"))-50).toString()+"px")
-            .style("left", selectedRect[0]+4+"px")
-            .style("top", selectedRect[1]+17+"px")
+            .style("height", (parseFloat(d3.select("rect#"+textAreaRectId).attr("height")) - 50).toString() + "px")
+            .style("left", selectedRect[0] + 4 + "px")
+            .style("top", selectedRect[1] + 17 + "px")
             .style("border", "none"); 
         }
         if (reactContext.state.optionListStarted) {
@@ -179,22 +172,22 @@ function manageGrid() {
             textA = d3.select("#optionListSelectItems"+optionlistRectid)
             .style("position", "absolute")
             .style("height", (parseFloat(d3.select("rect#"+optionlistRectid).attr("height"))-50).toString()+"px")
-            .style("left", selectedRect[0]+20+"px")
-            .style("top", selectedRect[1]+1+"px");
+            .style("left", selectedRect[0] + 20 + "px")
+            .style("top", selectedRect[1] + 1 + "px");
         }
         if (reactContext.state.StringAnchorclicked) {
             if (StringAnchorType === YANCHOR) { 
                 //TODO : encabsulate this in a function.
                 var newHeight = mousey - anchorMouseYpos;
                 if (newHeight > 20)
-                newHeight = mousey - anchorMouseYpos;
+                    newHeight = mousey - anchorMouseYpos;
                 else
-                newHeight = 22;
+                    newHeight = 22;
 
                 var thisComp = selectComp(allComp, StringAnchorId)
                 thisComp.height = newHeight;
 
-                d3.select("rect#dummyRect_"+StringAnchorId)
+                d3.select("rect#dummyRect_" + StringAnchorId)
                     .attr("height",newHeight);
 
                 d3.select("rect#"+StringAnchorId)
@@ -232,19 +225,19 @@ function manageGrid() {
                     return "translate(" + (x).toString() + "," + (y - 10).toString() + ")";
                 });
                 d3.select("circle#outputCir"+StringAnchorId+"_0")
-                .attr("cy", thisComp.height/2);
+                .attr("cy", thisComp.height / 2);
 
                 d3.select("circle#inputCir"+StringAnchorId+"_0")
-                .attr("cy", thisComp.height/2);
+                .attr("cy", thisComp.height / 2);
 
             } else if (reactContext.state.StringAnchorType === XANCHOR) { 
 
                 //TODO : encabsulate this in a function.
                 var newWidth = mousex - anchorMouseXpos;
                 if (newWidth > 200)
-                newWidth = mousex - anchorMouseXpos;
+                    newWidth = mousex - anchorMouseXpos;
                 else
-                newWidth = 201;
+                    newWidth = 201;
 
                 thisComp = selectComp(allComp, StringAnchorId)
                 thisComp.width = newWidth;
@@ -457,13 +450,13 @@ function highlightSelection(components_list, temp_selected_xs, temp_selected_ys)
         .attr("fill", "red")
 
         selection_rectangle_group = allContents.append("g")
-        .attr("transform", "translate("+(min_selected_x-20)+","+(min_selected_y-20)+")")
-        .attr("width", max_selected_x+40)
-        .attr("height", max_selected_y+40)
+        .attr("transform", "translate("+(min_selected_x - 20)+","+(min_selected_y - 20)+")")
+        .attr("width", max_selected_x + 40)
+        .attr("height", max_selected_y + 40)
 
         selection_rectangle_group_rect = selection_rectangle_group.append("rect")
-        .attr("width", max_selected_x+40)
-        .attr("height", max_selected_y+40)
+        .attr("width", max_selected_x + 40)
+        .attr("height", max_selected_y + 40)
         .attr("fill", "gray")
         .attr("rx", 25)
         .attr("ry", 25)
@@ -472,8 +465,7 @@ function highlightSelection(components_list, temp_selected_xs, temp_selected_ys)
         .attr("stroke-width", 2)
         .attr("stroke-opacity", 0.5)
         .style("cursor", "pointer")
-        .on("mousedown", () =>
-        {
+        .on("mousedown", () => {
             reactContext.setState({
                 selection_groud_selected: true,
             })
@@ -493,9 +485,12 @@ function alignComponent(alignment) {
             this_comp.X = max_selected_x + min_selected_x - this_comp.width;
         } else if (alignment === "center") {
             this_comp.X = (min_selected_x + min_selected_x + max_selected_x)/2.0 - this_comp.width/2.0;
-        } else if (alignment === "top") {    
-        } else if (alignment === "bottom") {    
+        } else if (alignment === "top") {   
+            //TO BE HANDLE LATER 
+        } else if (alignment === "bottom") {  
+            //TO BE HANDLE LATER   
         } else {    
+            //TO BE HANDLE LATER 
         }
 
         moveComponent(element, this_comp.X, this_comp.Y);
@@ -513,7 +508,7 @@ function alignComponent(alignment) {
 
 function showHorizontalAlignment(selectionBox) {
     var horizAlignBox = selectionBox.append("rect")
-    .attr("x", ((selectionBox.attr("width") - horizontal_align_box.W )/2.0))
+    .attr("x", ((selectionBox.attr("width") - horizontal_align_box.W ) / 2.0))
     .attr("y", (-horizontal_align_box.H-5))
     .attr("width", horizontal_align_box.W)
     .attr("height", horizontal_align_box.H)
@@ -523,7 +518,7 @@ function showHorizontalAlignment(selectionBox) {
 
     selectionBox.append("foreignObject")
     .attr("id", "halign_box")    
-    .attr("x", ((selectionBox.attr("width") - horizontal_align_box.W )/2.0))
+    .attr("x", ((selectionBox.attr("width") - horizontal_align_box.W ) / 2.0))
     .attr("width", horizontal_align_box.W)
     .attr("height", horizontal_align_box.H)
     .attr("y", (-horizontal_align_box.H-5))
@@ -537,8 +532,8 @@ function showHorizontalAlignment(selectionBox) {
 
 function showVerticalAlignment(selectionBox) {
     var vertAlignBox = selectionBox.append("rect")
-    .attr("y", ((selectionBox.attr("height") - vertical_align_box.H )/2.0))
-    .attr("x", (-vertical_align_box.W-5))
+    .attr("y", ((selectionBox.attr("height") - vertical_align_box.H ) / 2.0))
+    .attr("x", (-vertical_align_box.W - 5))
     .attr("width", vertical_align_box.W)
     .attr("height", vertical_align_box.H)
     .attr("fill", vertical_align_box.color)

@@ -217,14 +217,14 @@ function dummyToSetState() {
 
 function KeyPress(event, e) {
     var evtobj = window.event ? event : e
-    if (evtobj.keyCode == 90 && evtobj.ctrlKey) {
+    if (evtobj.keyCode === 90 && evtobj.ctrlKey) {
         popupMessage("Ctrl+z");
 
     };
-    if (evtobj.keyCode == 89 && evtobj.ctrlKey) {
+    if (evtobj.keyCode === 89 && evtobj.ctrlKey) {
         popupMessage("Ctrl+y");
     }
-    if (evtobj.keyCode == 67 && evtobj.ctrlKey) {//Ctrl + C copy
+    if (evtobj.keyCode === 67 && evtobj.ctrlKey) {//Ctrl + C copy
         popupMessage("Ctrl+c");
         is_there_item_copied = true;
         is_there_item_cut = false;
@@ -232,7 +232,7 @@ function KeyPress(event, e) {
         copiedItem = clickedId;
 
     }
-    if (evtobj.keyCode == 88 && evtobj.ctrlKey) {
+    if (evtobj.keyCode === 88 && evtobj.ctrlKey) {
         popupMessage("Ctrl+x");
         is_there_item_cut = true;
         is_there_item_copied = false;
@@ -247,10 +247,10 @@ function KeyPress(event, e) {
         deleteComponent(clickedId);
 
     };
-    if (evtobj.keyCode == 86 && evtobj.ctrlKey) {
+    if (evtobj.keyCode === 86 && evtobj.ctrlKey) {
         if (is_there_item_copied) {
             new_copied_component = selectComp(copiedItem);
-            if (new_copied_component.type == "component")
+            if (new_copied_component.type === "component")
                 CreateNewComponent(null, new_copied_component.Name, {
                     "shortName": new_copied_component.shortName,
                     "dfType": new_copied_component.dfType,
@@ -259,7 +259,7 @@ function KeyPress(event, e) {
                 });
 
         } else if (is_there_item_cut) {
-            if (cut_component_type == "component")
+            if (cut_component_type === "component")
                 CreateNewComponent(null, cut_component_name, {
                     "shortName": cut_component_sName,
                     "dfType": cut_component_dfType,
@@ -270,12 +270,12 @@ function KeyPress(event, e) {
         popupMessage("Ctrl+v");
     }
 
-    if (evtobj.keyCode == 83 && evtobj.ctrlKey) {
+    if (evtobj.keyCode === 83 && evtobj.ctrlKey) {
         e.preventDefault();
         saveFile();
     }
 
-    if (evtobj.keyCode == 78 && evtobj.ctrlKey) {
+    if (evtobj.keyCode === 78 && evtobj.ctrlKey) {
 
         $(document).on("keydown", (ev) => {
             ev.preventDefault();
@@ -525,7 +525,7 @@ function ViewListRedrawing() {
             if (selectedOptions[i].selected) {
                 if (isNaN(currentValue)) {
                     parsedcurrentValue = currentValue;
-                } else if (currentValue.indexOf(".") == -1) {
+                } else if (currentValue.indexOf(".") === -1) {
                     parsedcurrentValue = parseInt(currentValue);
                 } else {
                     parsedcurrentValue = parseFloat(currentValue);
@@ -538,7 +538,7 @@ function ViewListRedrawing() {
 
                 if (isNaN(currentValue)) {
                     parsedcurrentValue = currentValue;
-                } else if (currentValue.indexOf(".") == -1) {
+                } else if (currentValue.indexOf(".") === -1) {
                     parsedcurrentValue = parseInt(currentValue);
                 } else {
                     parsedcurrentValue = parseFloat(currentValue);
@@ -598,7 +598,6 @@ function addOptionDropdownList(compId) {
                 .attr("x", 5);
         }
     }
-    var n = 0;
     for (const option in optionListComp.optionListValues) {
         if (optionListComp.optionListValues.hasOwnProperty(option)) {
             n += 1;
@@ -652,23 +651,22 @@ function redrawDependents(parent) {
     let par = selectComp(parent);
     console.log(parent_child_matrix);
 
-    if (parent_child_matrix[parent].length > 0) // This means that this parent has already childs
-    {
-
-        if (par.dftype == "shlow") {
+    if (parent_child_matrix[parent].length > 0) { // This means that this parent has already childs
+    
+        if (par.dftype === "shlow") {
             parent_child_matrix[parent].forEach(function(element, i) { //iterate through all those childs.
                 let ch = selectComp(element[1]);
-                if (par.type == "slider") {
+                if (par.type === "slider") {
                     ch.inputs[element[2]].value = par.value;
-                } else if (par.type == "string" || par.type == "fileUpload") {
+                } else if (par.type === "string" || par.type === "fileUpload") {
                     ch.inputs[element[2]].value = par.outputs[element[0]].value;
-                } else if (par.type == "listView") {
+                } else if (par.type === "listView") {
                     ch.inputs[element[2]].value = par.outputs[element[0]].value;
                     console.log(ch.inputs[element[2]])
                     ch.inputs[element[2]].type = "json";
-                } else if (par.type == "toggle" || par.type == "optionList") {
+                } else if (par.type === "toggle" || par.type === "optionList") {
                     ch.inputs[element[2]].value = par.value;
-                } else if (par.type == "component") {
+                } else if (par.type === "component") {
                     try {
                         //calculateShallow(par.GUID);
                         ch.inputs[element[2]].value = par.outputs[element[0]].value;
@@ -686,20 +684,18 @@ function redrawDependents(parent) {
 
                 console.log("case1 _ parent is shallow")
             });
-        } else if (par.dftype == "dp") {
+        } else if (par.dftype === "dp") {
             console.log("case 2")
             par.state = "unbound"
             parent_child_matrix[parent].forEach(function(element, i) { //iterate through all those childs.
                 let ch = selectComp(element[1]);
-                if (par.type == "component" && runDeep == true) {
+                if (par.type === "component" && runDeep === true) {
                     runDeep = false;
 
-                    if (par.state == "unbound") {
+                    if (par.state === "unbound") {
                         //calculateDeep(par.GUID);
                         par.state = "active"
                     }
-
-
                 }
                 ch.inputs[element[2]].value = par.outputs[element[0]].value;
                 ch.inputs[element[2]].type = par.outputs[element[0]].type;
@@ -719,44 +715,44 @@ function redrawDependents(parent) {
 
 function updatShallowCompRender(ch) {
     console.log(ch)
-    if (ch.type == "string") {
-        if (ch.inputs[0].type == "html") {
+    if (ch.type === "string") {
+        if (ch.inputs[0].type === "html") {
             $("foreignObject#textbody_" + ch.GUID).html(ch.inputs[0].value)
 
-        } else if (ch.inputs[0].type == "json") {
+        } else if (ch.inputs[0].type === "json") {
             /*
             To be handle later
             $("foreignObject#textbody_" + ch.GUID).html('<div id="jsonTreeViewer' + ch.GUID + '"></div>')
             jsonView.format(ch.inputs[0].value, "div#jsonTreeViewer" + ch.GUID);
             */
 
-        } else if (ch.inputs[0].type == "text") {
+        } else if (ch.inputs[0].type === "text") {
             $("foreignObject#textbody_" + ch.GUID).html("<pre>" + ch.inputs[0].value + "</pre>");
 
-        } else if (ch.inputs[0].type == "htmlLoad") {
+        } else if (ch.inputs[0].type === "htmlLoad") {
 
             $("foreignObject#textbody_" + ch.GUID).html('<div id="3DViewer' + ch.GUID + '"></div>')
             $("div#3DViewer" + ch.GUID).load(ch.inputs[0].value, function(data) {
                 console.log(data)
             });
-        } else if (ch.inputs[0].type == "plot") {
-            var data = JSON.parse(ch.inputs[0].value);
+        } else if (ch.inputs[0].type === "plot") {
+            let data = JSON.parse(ch.inputs[0].value);
             drawPlotComponent(data, ch);
 
-        } else if (ch.inputs[0].type == "spatial") {
-            var data = JSON.parse(ch.inputs[0].value);
-            var unparseData = ch.inputs[0].value;
+        } else if (ch.inputs[0].type === "spatial") {
+            let data = JSON.parse(ch.inputs[0].value);
+            let unparseData = ch.inputs[0].value;
             visualizeSpatialComponent(data, unparseData, ch);
         }
         $("foreignObject#panel_status_" + ch.GUID).text("type : " + ch.inputs[0].type)
         ch.outputs[0].value = ch.inputs[0].value;
         ch.outputs[0].type = ch.inputs[0].type;
 
-    } else if (ch.type == "optionList") {
+    } else if (ch.type === "optionList") {
 
         ch.optionListValues = JSON.parse(ch.inputs[0].value);
 
-    } else if (ch.type == "listView") {
+    } else if (ch.type === "listView") {
 
         var newValues = []
         for (let i = 0; i < JSON.parse(ch.inputs[0].value).length; i++) {
@@ -843,7 +839,7 @@ function drawPlotComponent(data, comp) {
     $("foreignObject#textbody_" + comp.GUID).html('<div id="plot_area' + comp.GUID + '" style="width:100%; height:100%;"></div>')
     if (data != null && Array.isArray(data)) {
 
-        if (data[0].type == "scatter") {
+        if (data[0].type === "scatter") {
             if ("layout" in data[0]) {
                 Plotly.newPlot("plot_area" + comp.GUID, data[0].data, data[0].layout, {
                     "responsive": true
@@ -853,7 +849,7 @@ function drawPlotComponent(data, comp) {
                     "responsive": true
                 });
             }
-        } else if (data[0].type == "bar") {
+        } else if (data[0].type === "bar") {
 
             data[0].data.forEach(dataElement => {
                 var maxValue = Math.max(...dataElement.y);
@@ -888,7 +884,7 @@ function drawPlotComponent(data, comp) {
     } else if (data != null) {
 
 
-        if (data.type == "scatter") {
+        if (data.type === "scatter") {
             if ("layout" in data) {
                 Plotly.newPlot("plot_area" + comp.GUID, data.data, data.layout, {
                     "responsive": true
@@ -898,7 +894,7 @@ function drawPlotComponent(data, comp) {
                     "responsive": true
                 });
             }
-        } else if (data.type == "bar") {
+        } else if (data.type === "bar") {
 
             data.data.forEach(dataElement => {
                 var maxValue = Math.max(...dataElement.y);
@@ -949,7 +945,7 @@ function updateListViewDrawing(comp) {
             var ListItemsvalueReturn = `<select id="listviewSelect" class="listView ` + comp.GUID + `" size="5"  multiple>`;
             comp.value.forEach(option => {
 
-                if (option[1] == 0) {
+                if (option[1] === 0) {
                     ListItemsvalueReturn += `<option id="someSelection" class="listViewOption ` + comp.GUID + `" value="` + option[0] + `">` + option[0] + `</option>`
                 } else {
                     ListItemsvalueReturn += `<option id="someSelection" class="listViewOption ` + comp.GUID + `" value="` + option[0] + `" selected>` + option[0] + `</option>`
@@ -966,7 +962,7 @@ function updateListViewDrawing(comp) {
 
 function handleEdgeMovement(objID, x = null, y = null) {
     var element = selectComp(objID);
-    if (element != null && element.GUID == objID) {
+    if (element != null && element.GUID === objID) {
         if (x !== null && y !== null) {
             element.X = x;
             element.Y = y;
@@ -974,7 +970,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
 
 
         for (let index = 0; index < comp_input_edges[objID].length; index++) {
-            if (comp_input_edges[objID][index] != undefined) {
+            if (comp_input_edges[objID][index] !== undefined) {
                 comp_input_edges[objID][index].forEach(inputElement => {
                     var circleindex = index;
 
@@ -994,7 +990,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                     var thenewEdge = d3.select("#" + inputElement)
                         .attr("d", function() {
 
-                            if (element.type == "component") {
+                            if (element.type === "component") {
                                 var itisthelocation = returnCurveString(
                                     xy2[0], xy2[1], rectpos[0],
                                     rectpos[1] + (circleindex *
@@ -1003,7 +999,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
 
                                 handlePathDeleteMovement(inputElement, xy2, [rectpos[0], rectpos[1] + (circleindex * padding + titleMargin)])
 
-                            } else if (element.type == "string" || element.type == "toggle" || element.type == "fileUpload" || element.type == "slider" || element.type == "optionList" || element.type == "listView") {
+                            } else if (element.type === "string" || element.type === "toggle" || element.type === "fileUpload" || element.type === "slider" || element.type === "optionList" || element.type === "listView") {
                                 itisthelocation = returnCurveString(
                                     xy2[0],
                                     xy2[1],
@@ -1043,7 +1039,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                         var thenewEdge = d3.select("#" + outputElement)
                             .attr("d", function() {
 
-                                if (element.type == "component") {
+                                if (element.type === "component") {
                                     var itisthelocation = returnCurveString(
                                         rectpos[0] + parseFloat(rectwidth), rectpos[1] + (circleindex * padding + titleMargin), xy2[0], xy2[1]);
 
@@ -1054,7 +1050,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                                         xy2[0],
                                         xy2[1]
                                     ])
-                                } else if (element.type == "slider") {
+                                } else if (element.type === "slider") {
                                     itisthelocation = returnCurveString(rectpos[0] + parseFloat(250),
                                         rectpos[1] + 10,
                                         xy2[0],
@@ -1067,7 +1063,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                                         xy2[0],
                                         xy2[1]
                                     ])
-                                } else if (element.type == "string" || element.type == "toggle" || element.type == "optionList" || element.type == "listView" || element.type == "fileUpload") {
+                                } else if (element.type === "string" || element.type === "toggle" || element.type === "optionList" || element.type === "listView" || element.type === "fileUpload") {
                                     itisthelocation = returnCurveString(rectpos[0] + parseFloat(rectwidth),
                                         rectpos[1] + element.height / 2,
                                         xy2[0],
@@ -1156,7 +1152,7 @@ function deleteComponent(component_to_be_deleted) {
 
     for (let i = 0; i < parent_child_matrix_fast_check.length; i++) {
         var current_parent_child_object_asList = parent_child_matrix_fast_check[i].split(" ");
-        if (current_parent_child_object_asList[1] == component_to_be_deleted) {
+        if (current_parent_child_object_asList[1] === component_to_be_deleted) {
             parent_child_matrix_fast_check.splice(i, 1);
         }
 
@@ -1167,7 +1163,7 @@ function deleteComponent(component_to_be_deleted) {
             for (let i = 0; i < allEdges.length; i++) {
                 element.forEach(thisEdgeId => {
                     d3.select("path#" + thisEdgeId).remove();
-                    if (thisEdgeId == allEdges[i]["path_id"]) {
+                    if (thisEdgeId === allEdges[i]["path_id"]) {
                         allEdges.splice(i, 1)
                     }
                     var otherComp = edge_comp_matrix[thisEdgeId]["from"];
@@ -1203,7 +1199,7 @@ function deleteComponent(component_to_be_deleted) {
     });
 
     for (let i = 0; i < allComp.length; i++) {
-        if (allComp[i].GUID == component_to_be_deleted) {
+        if (allComp[i].GUID === component_to_be_deleted) {
             allComp.splice(i, 1)
         }
     }
@@ -1223,8 +1219,8 @@ function deleteEdge(edge_to_be_deleted) {
 
     for (let i = 0; i < parent_child_matrix[fromComp.GUID].length; i++) {
 
-        console.log(parseInt(parent_child_matrix[fromComp.GUID][i][2]) == components_of_the_edge["to_index"])
-        if (parseInt(parent_child_matrix[fromComp.GUID][i][2]) == components_of_the_edge["to_index"]) {
+        console.log(parseInt(parent_child_matrix[fromComp.GUID][i][2]) === components_of_the_edge["to_index"])
+        if (parseInt(parent_child_matrix[fromComp.GUID][i][2]) === components_of_the_edge["to_index"]) {
             parent_child_matrix[fromComp.GUID] = [];
         }
     }
@@ -1237,14 +1233,14 @@ function deleteEdge(edge_to_be_deleted) {
     redrawDependents(components_of_the_edge["to"]);
 
     for (let i = 0; i < allEdges.length; i++) {
-        if (edge_to_be_deleted == allEdges[i]["path_id"]) {
+        if (edge_to_be_deleted === allEdges[i]["path_id"]) {
             allEdges.splice(i, 1)
         }
     };
 
     for (let i = 0; i < parent_child_matrix_fast_check.length; i++) {
         var current_parent_child_object_asList = parent_child_matrix_fast_check[i].split(" ");
-        if (current_parent_child_object_asList[0] == components_of_the_edge["from_index"] && current_parent_child_object_asList[1] == fromComp.GUID) {
+        if (current_parent_child_object_asList[0] === components_of_the_edge["from_index"] && current_parent_child_object_asList[1] === fromComp.GUID) {
             parent_child_matrix_fast_check.splice(i, 1);
         }
 
@@ -1316,7 +1312,7 @@ function itemListChangedFunction(id, value) {
 } // End of itemListChangedFunction
 
 function componentStatus(id, Compstauts) {
-    if (Compstauts == "green") {
+    if (Compstauts === "green") {
         d3.select("rect#statusRect" + id)
             .attr("fill", "#02521b");
 
@@ -1324,13 +1320,13 @@ function componentStatus(id, Compstauts) {
             .text("Active")
             .attr("fill", "#6cff13");
 
-    } else if (Compstauts == "#ffca28") {
+    } else if (Compstauts === "#ffca28") {
         d3.select("rect#statusRect" + id)
             .attr("fill", Compstauts);
         d3.select("text#statusText" + id)
             .text("Idle ...")
             .attr("fill", "black");
-    } else if (Compstauts == "red") {
+    } else if (Compstauts === "red") {
         d3.select("rect#statusRect" + id)
             .attr("fill", "#fceecc");
         d3.select("text#statusText" + id)

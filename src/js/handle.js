@@ -8,7 +8,7 @@ function GetURLParameter(sParam) {
     var sURLVariables = sPageURL.split('&');
     for (var i = 0; i < sURLVariables.length; i++) {
         var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam) {
+        if (sParameterName[0] === sParam) {
             return sParameterName[1];
         }
     }
@@ -61,7 +61,7 @@ function handleComponentSelection() {
                         .attr("stroke-width", "0")
                         .attr("stroke", "none");
                 })
-        } else if (element.type == "string") {
+        } else if (element.type === "string") {
             d3.select("rect#" + element.GUID)
                 .on("click", function() {
 
@@ -130,7 +130,7 @@ function handleComponentSelection() {
                         .attr("stroke", "black");
                 })
 
-        } else if (element.type == "optionList") {
+        } else if (element.type === "optionList") {
             d3.select("g#comp-" + element.GUID)
                 .on("click", function() {
                     d3.select("rect#" + element.GUID)
@@ -214,8 +214,8 @@ function handleEdgeInitialization() {
             if (edgeStarted && targetcircleIN && this !== fromCircle.element) {
                 // DUMMY, Nothing to do in this version. :D :D 
             } else {
-                if (this.classList[0] == "outputCir") {
-                    if (comp_output_edges[this.classList[1]][this.classList[2]] == undefined) {
+                if (this.classList[0] === "outputCir") {
+                    if (comp_output_edges[this.classList[1]][this.classList[2]] === undefined) {
                         selectedcircleId = this.id;
                         reactContext.setState({
                             selectedcircleId: selectedcircleId,
