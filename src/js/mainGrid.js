@@ -139,8 +139,8 @@ function manageGrid() {
             mousex: mousex,
             mousey: mousey,
         })        
-        var x = mousex - reactContext.state.componentClickX;
-        var y = mousey - reactContext.state.componentClickY;
+        var x = mousex - reactContext.state.componentClickX - 180;
+        var y = mousey - reactContext.state.componentClickY - 25;
         if (reactContext.state.startDrag) {
             console.log("Trying to drag the component");
             moveComponent(reactContext.state.clickedId, x, y)
@@ -156,11 +156,9 @@ function manageGrid() {
                 .attr("interpolate", "basis");
         }
         if (reactContext.state.SliderAnchorclicked) {
-            console.log("slider anchor clicked" + reactContext.state.theRequiredSliderGroup);
-            // var coordinates = d3.pointer(theRequiredSliderGroup);
+            //console.log("slider anchor clicked" + reactContext.state.theRequiredSliderGroup);
             var coordinates = d3.pointer(event, reactContext.state.theRequiredSliderGroup);
-            // var coordinates = d3.pointer(event);
-            console.log("coords for slider anchor move" + coordinates);
+            //console.log("coords for slider anchor move" + coordinates);
             var componentClickX = coordinates[0];
             var componentClickY = coordinates[1];
             reactContext.setState({
@@ -188,7 +186,7 @@ function manageGrid() {
 
             var slider_anchor_value = selectedSliderComponent.value;
             
-            console.log("anchor val11" + slider_anchor_value);
+            //console.log("anchor val11" + slider_anchor_value);
 
             var the_slider_slope = (selectedSliderComponent.max - selectedSliderComponent.min)/(SLIDER_END_POSITION-SLIDER_START_POSITION)
             var y_intersection = selectedSliderComponent.min - (the_slider_slope*SLIDER_START_POSITION);
@@ -207,11 +205,11 @@ function manageGrid() {
                 slider_anchor_value = sliderLineEndingpositionX - sliderLineStartingpositionX;
                 slider_value = selectedSliderComponent.max;
             } else {
-                console.log("middle" + componentClickX + "and" + sliderLineStartingpositionX)
+                //console.log("middle" + componentClickX + "and" + sliderLineStartingpositionX)
                 slider_anchor_value = componentClickX - sliderLineStartingpositionX;
             }
 
-            console.log("anchor val" + slider_anchor_value);
+            //console.log("anchor val" + slider_anchor_value);
             selectedSliderComponent.anchorValue = slider_anchor_value;
             d3.select("#" + sliderRectId)
                 .attr("transform", function () {

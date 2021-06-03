@@ -1,4 +1,5 @@
 import {selectComp, updateAll, ViewListRedrawing, showDropDownList, redrawDependents} from './functions.js';
+import {submitSliderEdit} from './editSlider.js';
 import $ from "jquery";
 var d3 = require('d3');
 
@@ -382,22 +383,34 @@ function handleDoubleClick() {
         } else if (element.type === "slider") {
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
-                    // $("div#propertiesBarContents").load("./../html/editSlider.html?compKey=" + element.GUID);
-                    // $("div#propertiesBarContents").load("./../html/editSlider.html");
+                    console.log(element);
                     if (!reactContext.state.doubleClicked) {
                         reactContext.setState({
                             doubleClicked: true,
                         });
+                    
                         $("div#propertiesBarContents").append(`
                         <div class="propertiesbarheader label">Slider</div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Min-value : </div><input type="number" id="new_slider_min_value" value="0.0"></div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Max-value: </div><input type="number" id="new_slider_max_value" value="100.0"></div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Step: </div><input type="number" id="new_slider_step_value" value="1"></div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Current-value: </div><input type="number" id="new_slider_current_value" value="0"></div>
+                        <div id="numerical_slider_container"><div id="string_input_label">Min-value : </div><input type="number" id="new_slider_min_value"></div>
+                        <div id="numerical_slider_container"><div id="string_input_label">Max-value: </div><input type="number" id="new_slider_max_value"></div>
+                        <div id="numerical_slider_container"><div id="string_input_label">Step: </div><input type="number" id="new_slider_step_value"></div>
+                        <div id="numerical_slider_container"><div id="string_input_label">Current-value: </div><input type="number" id="new_slider_current_value"></div>
                         <button id="sliderEditButton">Save</button>
                         <button id="cancelSliderEdit">Cancel</button>
                         `);
-                    //On save, set double clicked to false
+                        $("input#new_slider_min_value").val(element.min);
+                        $("input#new_slider_max_value").val(element.max);
+                        $("input#new_slider_step_value").val(element.step);
+                        $("input#new_slider_current_value").val(element.value);
+
+                        //On save, set double clicked to false
+                        $("button#sliderEditButton").on("click", function(e) {
+                            var compKey = element.GUID;
+                            submitSliderEdit(compKey);
+                            reactContext.setState({
+                                doubleClicked: false,
+                            });
+                        });
                     }
                 });
         } else if (element.type === "toggle") {

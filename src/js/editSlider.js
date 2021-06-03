@@ -4,13 +4,13 @@ import {GetURLParameter} from './handle.js';
 import $ from "jquery";
 var d3 = require('d3');
 
-var compKey = GetURLParameter('compKey');
-var slider_component = selectComp(compKey);
+// var compKey = GetURLParameter('compKey');
+// var slider_component = selectComp(compKey);
 
-$("input#new_slider_min_value").val(slider_component.min);
-$("input#new_slider_max_value").val(slider_component.max);
-$("input#new_slider_current_value").val(slider_component.value);
-$("button#sliderEditButton").on("click", function() { submitSliderEdit(compKey); });
+// $("input#new_slider_min_value").val(slider_component.min);
+// $("input#new_slider_max_value").val(slider_component.max);
+// $("input#new_slider_current_value").val(slider_component.value);
+// $("button#sliderEditButton").on("click", function() { submitSliderEdit(compKey); });
 
 function submitSliderEdit(compKey) {
     var slider_component = selectComp(compKey);
@@ -25,6 +25,7 @@ function submitSliderEdit(compKey) {
     console.log("slope : "+ slider_anchor_slope);
     console.log("y_intersect : " + slider_anchor_y_intersection);
 
+    
     d3.select("rect#SliderAnchor_" + slider_component.GUID)
             .attr("transform", function () {
                 return "translate(" + (slider_anchor_currrent_position).toString() + ",3)";
@@ -36,4 +37,7 @@ function submitSliderEdit(compKey) {
         redrawDependents(slider_component.GUID);
 
         $("div#propertiesBarContents").html("");
+        
 }
+
+export {submitSliderEdit};

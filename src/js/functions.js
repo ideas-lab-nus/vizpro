@@ -26,101 +26,9 @@
  */
 
 //IMPORTANT : Fix for lines, 592, 617, 646 
-// import {
-//     IDLE_COLOR,
-//     ACTIVE_COLOR,
-//     ERROR_COLOR,
-//     COMPONENT_RADIUS,
-//     // allComp,
-//     allEdges,
-//     comp_input_edges,
-//     comp_output_edges,
-//     edge_comp_matrix,
-//     parent_child_matrix,
-//     parent_child_matrix_fast_check,
-//     root_components,
-//     components_selection_data,
-//     selected_components,
-//     runDeep,
-//     StringAnchorclicked,
-//     StringAnchorType,
-//     StringAnchorId,
-//     XANCHOR,
-//     YANCHOR,
-//     ANCHOR_WIDTH,
-//     SLIDER_START_POSITION,
-//     SLIDER_END_POSITION,
-//     anchorMouseXpos,
-//     anchorMouseYpos,
-//     SliderAnchorclicked,
-//     selectedSliderComponent,
-//     dragX,
-//     dragY,
-//     sliderRectId,
-//     initPos,
-//     startDrag,
-//     clickedId,
-//     rectType,
-//     deltaX,
-//     deltaY,
-//     clicked,
-//     edgeStarted,
-//     targetcircleIN,
-//     selectedcircleId,
-//     targetcircleId,
-//     selectedSliderAnchorId,
-//     xGrid,
-//     yGrid,
-//     mousex,
-//     mousey,
-//     initEdgex2,
-//     initEdgey2,
-//     componentClickX,
-//     componentClickY,
-//     textareaStarted,
-//     textAreaRectId,
-//     optionListStarted,
-//     optionlistRectid,
-//     justSelected,
-//     mouseInsideOption,
-//     is_component_selected,
-//     selected_component_id,
-//     rightColumnIsSelected,
-//     leftColumnIsSelected,
-//     topColumnIsSelected,
-//     rightColIsdisplayed,
-//     leftColIsdisplayed,
-//     is_edge_selected,
-//     currentTopBarHeight,
-//     currentLeftColWidth,
-//     currentRightColWidth,
-//     defVars,
-//     messageshown,
-//     Output,
-//     Input,
-//     uuidv4,
-//     addEdge,
-//     addCircle,
-//     toCircle,
-//     fromCircle,
-//     udo_names,
-//     udo_types,
-//     udo_desc,
-//     udo_shortNames,
-//     udo_inputs,
-//     udo_outputs,
-//     udo_fill,
-//     udo_dftypes,
-//     udo_cats,
-//     udo_subcats,
-//     cats,
-//     scats
-//     } from './constants.js';
+
 import {CreateNewComponent} from './component.js';
-import {svgContainer, allContents} from './layout.js';
 import Plotly from 'plotly';
-import {calculateShallow} from './shallow.js';
-import {calculateDeep} from './deep.js';
 import $ from "jquery";
 
 var d3 = require('d3');
@@ -740,48 +648,58 @@ function redrawDependents(parent) {
     // on a parent changes, only draws all the children tree .
     // all the components --- inputs outpts object (to be sent later to the backend should be modified as well)
     // shallow values should be updated instantaniously 
-    let par = selectComp(parent)
+    console.log('inside redraw dep function');
+    let par = selectComp(parent);
+    console.log(parent_child_matrix);
 
-    if (parent_child_matrix[parent].length > 0) { // This means that this parent has already childs
-        if (par.dftype === "shlow") {
+    if (parent_child_matrix[parent].length > 0) // This means that this parent has already childs
+    {
+
+        if (par.dftype == "shlow") {
             parent_child_matrix[parent].forEach(function(element, i) { //iterate through all those childs.
                 let ch = selectComp(element[1]);
-                if (par.type === "slider") {
+                if (par.type == "slider") {
                     ch.inputs[element[2]].value = par.value;
-                } else if (par.type === "string" || par.type === "fileUpload") {
+                } else if (par.type == "string" || par.type == "fileUpload") {
                     ch.inputs[element[2]].value = par.outputs[element[0]].value;
-                } else if (par.type === "listView") {
+                } else if (par.type == "listView") {
                     ch.inputs[element[2]].value = par.outputs[element[0]].value;
                     console.log(ch.inputs[element[2]])
                     ch.inputs[element[2]].type = "json";
-                } else if (par.type === "toggle" || par.type === "optionList") {
+                } else if (par.type == "toggle" || par.type == "optionList") {
                     ch.inputs[element[2]].value = par.value;
-                } else if (par.type === "component") {
+                } else if (par.type == "component") {
                     try {
-                        // calculateShallow(par.GUID);
+                        //calculateShallow(par.GUID);
                         ch.inputs[element[2]].value = par.outputs[element[0]].value;
                         ch.inputs[element[2]].type = par.outputs[element[0]].type;
                         componentStatus(par.GUID, ACTIVE_COLOR);
+
                     } catch (error) {
                         console.log(error)
                         componentStatus(par.GUID, ERROR_COLOR);
                     }
+
                 }
                 updatShallowCompRender(ch);
                 redrawDependents(ch.GUID);
+
                 console.log("case1 _ parent is shallow")
             });
-        } else if (par.dftype === "dp") {
+        } else if (par.dftype == "dp") {
             console.log("case 2")
             par.state = "unbound"
             parent_child_matrix[parent].forEach(function(element, i) { //iterate through all those childs.
                 let ch = selectComp(element[1]);
-                if (par.type === "component" && runDeep === true) {
+                if (par.type == "component" && runDeep == true) {
                     runDeep = false;
-                    if (par.state === "unbound") {
-                        // calculateDeep(par.GUID); 
+
+                    if (par.state == "unbound") {
+                        //calculateDeep(par.GUID);
                         par.state = "active"
-                    }                    
+                    }
+
+
                 }
                 ch.inputs[element[2]].value = par.outputs[element[0]].value;
                 ch.inputs[element[2]].type = par.outputs[element[0]].type;
@@ -792,8 +710,11 @@ function redrawDependents(parent) {
                 updatShallowCompRender(ch);
                 redrawDependents(ch.GUID);
             });
+
         }
+
     }
+
 } // End of redrawDependents
 
 function updatShallowCompRender(ch) {
