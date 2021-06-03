@@ -159,6 +159,9 @@ function handleComponentSelection() {
     ViewListRedrawing();
 } // End of handleComponentSelection
 
+
+//Slider component id changed to CompSBody hence will not be picked up
+//by this function. Lookout for side effects!
 function handleTheClickOnAllComponents() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;
