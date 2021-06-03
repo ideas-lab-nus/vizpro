@@ -24,11 +24,10 @@
  * @since  x.x.x
  */
 
-//import { uuidv4 } from './constants.js';
-
+import {redrawDependents} from './functions.js';
 import $ from "jquery";
-import {handleComponentSelection, handleTheClickOnAllComponents, 
-    handleEdgeInitialization, handleDoubleClick, uuidv4} from './handle.js';
+import {uuidv4} from './handle.js';
+import { componentClickX } from './constants.js';
 var d3 = require('d3');
 
 var theRequiredSliderGroup = "";
@@ -66,7 +65,11 @@ function addSlider(guid, min = 0, max = 100, step = 1.0) {
 //TODO : save and retrieve the slider values. 
 function CreateNewSlider(FromExisting = null) {
     var reactContext = this;
+    
+    var SLIDER_END_POSITION = reactContext.state.SLIDER_END_POSITION;
+    var SLIDER_START_POSITION = reactContext.state.SLIDER_START_POSITION;
     var newSlider;
+
     if (FromExisting != null) {
         newSlider = FromExisting;
     } else {
@@ -80,7 +83,7 @@ function CreateNewSlider(FromExisting = null) {
         })
         newSlider.Name = "Numeric";
         newSlider.value = 50.00;
-        newSlider.anchorValue = ((184 - 60) / 2.0) + 30 //((60+184)/2.0)-30
+        newSlider.anchorValue = (SLIDER_END_POSITION - SLIDER_START_POSITION) / 2;
     }
 
     newSlider.fill = "#bdc4c8";
@@ -94,9 +97,23 @@ function CreateNewSlider(FromExisting = null) {
 
     var allContents = d3.select("#allCanvasContents");
     console.log(allContents);
+
+    function update() {
+        node.attr("transform", d => `translate(${d.x},${d.y})`);
+    }
+
+    var dragHandler = d3.drag()
+       .on("start", (event, d) => rect.attr("stroke", "red"))
+       .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
+       .on("end", (event, d) => rect.attr("stroke", "#3a4c69"))
+       .on("start.update drag.update end.update", update)
+
     var cont = allContents.append("g")
         .attr("class", "slider")
         .attr("id", newSlider.GUID);
+
+    var genX;
+    var genY;
 
     var node = cont.append("g")
         .attr("class", "SliderGroup " + newSlider.selection + " " + newSlider
@@ -104,26 +121,32 @@ function CreateNewSlider(FromExisting = null) {
         .attr("id", "comp-" + newSlider.GUID)
         .attr("transform", () => {
             if (FromExisting == null) {
-                let genX = Math.random() * 500 + 200;
-                let genY = Math.random() * 500 + 200;
+                genX = Math.random() * 500 + 200;
+                genY = Math.random() * 500 + 200;
                 newSlider.X = genX;
                 newSlider.Y = genY;
                 return "translate(" + genX + ", " + genY + ")";
             } else {
                 return "translate(" + FromExisting.X + ", " + FromExisting.Y + ")";
             }
-        }).on("mousedown", () => {
+        })
+        .data([{
+            x: FromExisting ? FromExisting.X : genX,
+            y: FromExisting ? FromExisting.Y : genY,
+        }])
+        .on("mousedown", () => {
             reactContext.setState({
                 rectType: "slider",
             })
-        });
+        })
+        .call(dragHandler);
 
     var OutputGroup = node.append('g');
 
     var out = OutputGroup.append('circle')
         .attr("cx", newSlider.width)
         .attr("cy", "10")
-        .attr("fill", "gray") //newcomp.fill)
+        .attr("fill", "gray")
         .attr("r", "5")
         .attr("stroke", "black")
         .attr("stroke-width", "2")
@@ -131,7 +154,7 @@ function CreateNewSlider(FromExisting = null) {
         .attr("class", "outputCir " + newSlider.GUID + " 0");
 
     var rect = node.append('rect')
-        .attr("class", "CompBody " + newSlider.GUID)
+        .attr("class", "CompSBody " + newSlider.GUID)
         .attr("id", newSlider.GUID)
         .attr("rx", "3")
         .attr("ry", "3")
@@ -153,7 +176,7 @@ function CreateNewSlider(FromExisting = null) {
             newSlider.rect = this;
         })
         .on("dblclick", () => {
-            ////////console.log("You dobule clicked me ");
+            //console.log("You dobule clicked me ");
         })
         .on("mousedown", () => {
             reactContext.setState({
@@ -216,6 +239,51 @@ function CreateNewSlider(FromExisting = null) {
         .attr("stroke", "gray")
         .attr("stroke-width", "1")
 
+    function anchorUpdate() {
+        slidingAnchor.attr("transform", d => `translate(${d.x},3)`);
+    }
+
+    var anchorDragHandler = d3.drag()
+        .on("start", (event, d) => rect.attr("stroke", "red"))
+        .on("drag", (event, d) => {
+            var selectedSliderComponent = reactContext.state.selectedSliderComponent;
+            var sliderRectId = reactContext.state.sliderRectId;
+
+            var slider_anchor_value;
+            var slider_value;
+
+            var the_slider_slope = (selectedSliderComponent.max - selectedSliderComponent.min) / (SLIDER_END_POSITION-SLIDER_START_POSITION);
+            var y_intersection = selectedSliderComponent.min - (the_slider_slope * SLIDER_START_POSITION);
+
+            if (event.x <= SLIDER_START_POSITION) {
+                console.log("before")
+                slider_anchor_value = 0;
+                slider_value = selectedSliderComponent.min;                
+            } else if (event.x >= SLIDER_END_POSITION) {
+                console.log("after")
+                slider_anchor_value = SLIDER_END_POSITION - SLIDER_START_POSITION;
+                slider_value = selectedSliderComponent.max;
+            } else {
+                console.log("middle")
+                slider_anchor_value = event.x - SLIDER_START_POSITION;
+                slider_value = event.x * the_slider_slope + y_intersection;
+            }
+            
+            selectedSliderComponent.anchorValue = slider_anchor_value;
+            d.x = slider_anchor_value; 
+
+            d3.select("#sliderValueText_" + sliderRectId.replace("SliderAnchor_",""))
+            .text((slider_value).toFixed(6));
+
+            selectedSliderComponent.value = slider_value;
+            reactContext.setState({
+                selectedSliderComponent: selectedSliderComponent,
+            })
+            redrawDependents(selectedSliderComponent.GUID);
+        })
+        .on("end", (event, d) => rect.attr("stroke", "#3a4c69"))
+        .on("start.update drag.update end.update", anchorUpdate)
+
     var slidingAnchor = SlidingGroup.append("rect")
         .attr("id", "SliderAnchor_" + newSlider.GUID)
         .attr("width", "10")
@@ -225,6 +293,10 @@ function CreateNewSlider(FromExisting = null) {
         .attr("fill", "#3a4d69")
         .style("cursor", "pointer")
         .attr("transform", "translate(" + (newSlider.anchorValue).toString() + ", 3)")
+        .data([{
+            x: newSlider.anchorValue,
+            y: 3,
+        }])
         .on("mouseover", function() {
             console.log("tsk3");
             d3.select(this)
@@ -241,16 +313,17 @@ function CreateNewSlider(FromExisting = null) {
         .on("mousedown", function() {
             reactContext.setState({
                 sliderRectId: this.id,
-                SliderAnchorclicked: true,
+                // SliderAnchorclicked: true,
                 selectedSliderComponent: newSlider,
             })
         })
         .on("mouseup", function() {
             reactContext.setState({
-                SliderAnchorclicked: false,
+                // SliderAnchorclicked: false,
                 selectedSliderComponent: null,
             })
-        });
+        })
+        .call(anchorDragHandler);    
 
     //Make a copy of the current states
     var current_comp_out = { ...reactContext.state.comp_output_edges};

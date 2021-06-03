@@ -128,8 +128,8 @@ function manageGrid() {
         event.preventDefault();
         popupMessage("RMB");
         selection_box_started = true; 
-        selection_box_x = d3.pointer(allContents.node())[0];
-        selection_box_y = d3.pointer(allContents.node())[1];        
+        selection_box_x = d3.pointer(event, allContents.node())[0];
+        selection_box_y = d3.pointer(event, allContents.node())[1];        
         selection_box = allContents.append("polyline"); 
     })
     .on('mousemove', function (event) {         
@@ -142,9 +142,9 @@ function manageGrid() {
         var x = mousex - reactContext.state.componentClickX;
         var y = mousey - reactContext.state.componentClickY;
         if (reactContext.state.startDrag) {
+            //A slider shouldn't enter this condition
             console.log("Trying to drag the component");
-            moveComponent(reactContext.state.clickedId, x, y)
-            // moveComponent(reactContext.state.clickedId, mousex, mousey)
+            moveComponent(reactContext.state.clickedId, x, y);
         }
         if (reactContext.state.edgeStarted) {
             d3.select("#" + reactContext.state.selectedcircleId)
@@ -155,78 +155,16 @@ function manageGrid() {
                 .attr("stroke-opacity", "0.2")
                 .attr("interpolate", "basis");
         }
-        if (reactContext.state.SliderAnchorclicked) {
-            console.log("slider anchor clicked" + reactContext.state.theRequiredSliderGroup);
-            // var coordinates = d3.pointer(theRequiredSliderGroup);
-            var coordinates = d3.pointer(event, reactContext.state.theRequiredSliderGroup);
-            // var coordinates = d3.pointer(event);
-            console.log("coords for slider anchor move" + coordinates);
-            var componentClickX = coordinates[0];
-            var componentClickY = coordinates[1];
-            reactContext.setState({
-                componentClickX: componentClickX,
-                componentClickY: componentClickY,
-            })
-            var sliderLineStartingpositionX = 60;
-            var sliderLineStartingpositionY = 3.0;
-            var sliderLineEndingpositionX = 238;
-            var sliderLineEndingpositionY = 3.0;
+        var textAreaRectId = reactContext.state.textAreaRectId;
+        var optionlistRectid = reactContext.state.optionlistRectid;
+        var StringAnchorType = reactContext.state.StringAnchorclicked;
+        var YANCHOR = reactContext.state.YANCHOR;
+        var XANCHOR = reactContext.state.XANCHOR;
+        var anchorMouseXpos = reactContext.state.anchorMouseXpos;
+        var anchorMouseYpos = reactContext.state.anchorMouseYpos;
+        var StringAnchorId = reactContext.state.StringAnchorId;
+        var ANCHOR_WIDTH = reactContext.state.ANCHOR_WIDTH;
 
-            var selectedSliderComponent = reactContext.state.selectedSliderComponent;
-            var SLIDER_END_POSITION = reactContext.state.SLIDER_END_POSITION;
-            var SLIDER_START_POSITION = reactContext.state.SLIDER_START_POSITION;
-            var sliderRectId = reactContext.state.sliderRectId;
-            var textAreaRectId = reactContext.state.textAreaRectId;
-            var optionlistRectid = reactContext.state.optionlistRectid;
-            var StringAnchorType = reactContext.state.StringAnchorclicked;
-            var YANCHOR = reactContext.state.YANCHOR;
-            var XANCHOR = reactContext.state.XANCHOR;
-            var anchorMouseXpos = reactContext.state.anchorMouseXpos;
-            var anchorMouseYpos = reactContext.state.anchorMouseYpos;
-            var StringAnchorId = reactContext.state.StringAnchorId;
-            var ANCHOR_WIDTH = reactContext.state.ANCHOR_WIDTH;
-
-            var slider_anchor_value = selectedSliderComponent.value;
-            
-            console.log("anchor val11" + slider_anchor_value);
-
-            var the_slider_slope = (selectedSliderComponent.max - selectedSliderComponent.min)/(SLIDER_END_POSITION-SLIDER_START_POSITION)
-            var y_intersection = selectedSliderComponent.min - (the_slider_slope*SLIDER_START_POSITION);
-            var slider_value = componentClickX * the_slider_slope + y_intersection; 
-
-            var sliderY1 = selectedSliderComponent.max;                                                  
-
-            var ax = (selectedSliderComponent.max)/(sliderLineEndingpositionX - sliderLineStartingpositionX); 
-
-            if (componentClickX <= sliderLineStartingpositionX) {
-                console.log("before")
-                slider_anchor_value = 0;
-                slider_value = selectedSliderComponent.min;                
-            } else if (componentClickX >= sliderLineEndingpositionX) {
-                console.log("after")
-                slider_anchor_value = sliderLineEndingpositionX - sliderLineStartingpositionX;
-                slider_value = selectedSliderComponent.max;
-            } else {
-                console.log("middle" + componentClickX + "and" + sliderLineStartingpositionX)
-                slider_anchor_value = componentClickX - sliderLineStartingpositionX;
-            }
-
-            console.log("anchor val" + slider_anchor_value);
-            selectedSliderComponent.anchorValue = slider_anchor_value;
-            d3.select("#" + sliderRectId)
-                .attr("transform", function () {
-                    return "translate(" + (slider_anchor_value).toString() + "," + sliderLineStartingpositionY + ")";
-                });
-
-            d3.select("#sliderValueText_" + sliderRectId.replace("SliderAnchor_",""))
-            .text((slider_value).toFixed(6));
-
-            selectedSliderComponent.value = slider_value;
-            reactContext.setState({
-                selectedSliderComponent: selectedSliderComponent,
-            })
-            redrawDependents(selectedSliderComponent.GUID)        
-        }
         if (reactContext.state.textareaStarted) {
             var selectedRect = getlocationFromTransform(d3.select("g#comp-"+textAreaRectId).attr("transform"));
             var textA = d3.select("#TextAreaSelector")
