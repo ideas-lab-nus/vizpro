@@ -148,6 +148,7 @@ function manageGrid() {
                 .attr("stroke-opacity", "0.2")
                 .attr("interpolate", "basis");
         }
+        
         var textAreaRectId = reactContext.state.textAreaRectId;
         var optionlistRectid = reactContext.state.optionlistRectid;
         var StringAnchorType = reactContext.state.StringAnchorclicked;
@@ -360,8 +361,6 @@ function manageGrid() {
             };  
             reactContext.setState({
                 components_selection_data: current_components_selection,
-            })
-            reactContext.setState({
                 StringAnchorclicked: false,
             })
         }

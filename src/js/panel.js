@@ -247,6 +247,7 @@ function CreateNewPanel(FromExisting = null) {
         visualizeSpatialComponent(data, unparseData, newcomp);
     }
 
+    //White Text Box
     var rect = node.append('rect')
         .attr("class", "CompBody " + newcomp.GUID + " a")
         .attr("id", "overlaySelector" + newcomp.GUID)
@@ -271,6 +272,7 @@ function CreateNewPanel(FromExisting = null) {
         .attr("ry", COMPONENT_RADIUS)
         .attr("fill-opacity", 0.01)
         .on("mousedown", (event) => {
+            console.log("the x anchor")
             reactContext.setState({
                 StringAnchorclicked: true,
                 StringAnchorType: XANCHOR,
