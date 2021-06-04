@@ -1,5 +1,5 @@
 import {selectComp, updateAll, ViewListRedrawing, showDropDownList, redrawDependents} from './functions.js';
-import {submitSliderEdit} from './editSlider.js';
+import {cancelSliderEdit, submitSliderEdit} from './editSlider.js';
 import $ from "jquery";
 var d3 = require('d3');
 
@@ -410,6 +410,12 @@ function handleDoubleClick() {
                         $("button#sliderEditButton").on("click", function(e) {
                             var compKey = element.GUID;
                             submitSliderEdit(compKey);
+                            reactContext.setState({
+                                doubleClicked: false,
+                            });
+                        });
+                        $("button#cancelSliderEdit").on("click", function(e) {
+                            cancelSliderEdit();
                             reactContext.setState({
                                 doubleClicked: false,
                             });

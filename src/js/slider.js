@@ -250,7 +250,7 @@ function CreateNewSlider(FromExisting = null) {
             var slider_anchor_value;
             var slider_value;
 
-            var the_slider_slope = (selectedSliderComponent.max - selectedSliderComponent.min) / (SLIDER_END_POSITION-SLIDER_START_POSITION);
+            var the_slider_slope = (selectedSliderComponent.max - selectedSliderComponent.min) / (SLIDER_END_POSITION - SLIDER_START_POSITION);
             var y_intersection = selectedSliderComponent.min - (the_slider_slope * SLIDER_START_POSITION);
 
             if (event.x <= SLIDER_START_POSITION) {
