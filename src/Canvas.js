@@ -2,7 +2,7 @@ import React from 'react';
 import ScriptTag from 'react-script-tag';
 import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
 import {CreateNewSlider} from './js/slider.js';
-import {CreateNewPanel} from './js/panel/js';
+import {CreateNewPanel} from './js/panel.js';
 import {setCurrentCagegory, showThisPanel} from './js/insert.js';   
 import {manageCanvas} from './js/layout.js'; 
 import {manageGrid} from './js/mainGrid.js';
@@ -34,7 +34,6 @@ function uuidv4(ini) {
 }
 
 const globalVars = {
-    theRequiredSliderGroup: "",
     fromCircle: addCircle(),
     toCircle: addCircle(),
     selection_rectangle_group_rect: null,
@@ -60,6 +59,7 @@ const globalVars = {
     StringAnchorId: "",
     XANCHOR: 0,
     YANCHOR: 1,
+    XYANCHOR: 2,
     ANCHOR_WIDTH: 5,
     SLIDER_START_POSITION: 60 - 60,
     SLIDER_END_POSITION: 238 - 60,

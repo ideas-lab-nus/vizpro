@@ -1,5 +1,3 @@
-(function() {
-'use strict';
 /**
  * Create html element
  * @param {String} type html element 
@@ -30,7 +28,6 @@ function  createElement(type, config) {
 
   return htmlElement; 
 }
-
 
 /**
  * @param {Object} node
@@ -99,7 +96,6 @@ function createExpandedElement(node) {
   return lineElem;
 }
 
-
 /**
  * @param {Object} node
  * @return {HTMLElement}
@@ -137,7 +133,6 @@ function createNotExpandedElement(node) {
 
   return lineElem;
 }
-
 
 /**
  * create tree node
@@ -200,7 +195,6 @@ function createNode() {
   }
 }
 
-
 /**
  * Return object length
  * @param {Object} obj
@@ -213,7 +207,6 @@ function getLength(obj) {
   };
   return length;
 }
-
 
 /**
  * Return variable type
@@ -228,7 +221,6 @@ function getType(val) {
   }
   return type;
 }
-
 
 /**
  * Recursively traverse json object
@@ -257,7 +249,6 @@ function traverseObject(obj, parent) {
   }
 }
 
-
 /**
  * Create root of a tree
  * @param {Object} obj Json object
@@ -275,7 +266,6 @@ function createTree(obj) {
   return tree;
 }
 
-
 /**
  * Recursively traverse Tree object
  * @param {Object} node
@@ -289,7 +279,6 @@ function traverseTree(node, callback) {
     });
   }
 }
-
 
 /**
  * Render Tree object
@@ -312,9 +301,8 @@ function render(tree, targetElem) {
   });
 }
 
-
 /* Export jsonView object */
-window.jsonView = {
+var jsonView = {
   /**
    * Render JSON into DOM container
    * @param {String} jsonData
@@ -327,4 +315,4 @@ window.jsonView = {
   }
 }
 
-})();
+export {jsonView};
