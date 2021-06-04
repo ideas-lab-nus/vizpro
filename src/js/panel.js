@@ -28,21 +28,19 @@ import $ from "jquery";
 var d3 = require('d3');
 
 //TODO : check this for the text overflow : https://bl.ocks.org/mbostock/1424037 
-function CreatenewString(FromExisting = null) {
+function CreateNewPanel(FromExisting = null) {
     if (FromExisting == null) {
         var newcomp = addcomponent(uuidv4("C"), 1, 1);
         parent_child_matrix[newcomp.GUID] = []
 
         newcomp.Name = "Panel";
         newcomp.width = 300;
-
     } else {
         //console.log(FromExisting);
         var newcomp = FromExisting;
         newcomp.value = newcomp.outputs[0].value;
         // newcomp.Name = FromExisting.Name;
         // newcomp.Name = "Panel";
-
     }
 
     newcomp.fill = "white"; //"#fbedcc";
@@ -312,18 +310,10 @@ function CreatenewString(FromExisting = null) {
 
 
     components_selection_data[newcomp.GUID] = { "x0": newcomp.X, "y0": newcomp.Y, "x1": newcomp.X + newcomp.width, "y1": newcomp.Y + newcomp.height };
-
-
-    var mainGrid = d3.select("#mainGrid");
-    handleTheClickOnAllComponents();
-    handleEdgeInitialization();
-    handleComponentSelection();
-    HandleDoubleClick();
-
 }
 
-$("div#addString").on('click', function(e) {
-    CreatenewString();
+$("div#addPanel").on('click', function(e) {
+    CreateNewPanel();
 });
 
-export {CreatenewString};
+export {CreateNewPanel};
