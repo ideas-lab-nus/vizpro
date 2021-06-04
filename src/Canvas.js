@@ -60,7 +60,7 @@ const globalVars = {
     XANCHOR: 0,
     YANCHOR: 1,
     XYANCHOR: 2,
-    ANCHOR_WIDTH: 5,
+    ANCHOR_WIDTH: 10,
     SLIDER_START_POSITION: 60 - 60,
     SLIDER_END_POSITION: 238 - 60,
     anchorMouseXpos: 0,

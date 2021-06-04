@@ -759,8 +759,6 @@ function updatShallowCompRender(ch) {
         ch.outputs[0].value = newValues;
 
         updateListViewDrawing(ch);
-
-
     }
 } // End of updatShallowCompRender
 

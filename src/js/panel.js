@@ -57,7 +57,6 @@ function CreateNewPanel(FromExisting = null) {
         newcomp.Name = "Panel";
         newcomp.width = 300;
     } else {
-        //console.log(FromExisting);
         newcomp = FromExisting;
         newcomp.value = newcomp.outputs[0].value;
         // newcomp.Name = FromExisting.Name;
@@ -79,10 +78,23 @@ function CreateNewPanel(FromExisting = null) {
     var allContents = d3.select("#allCanvasContents");
     console.log(allContents);
 
+    function update() {
+        node.attr("transform", d => `translate(${d.x},${d.y})`);
+    }
+
+    var dragHandler = d3.drag()
+       .on("start", (event, d) => Dummyrect.attr("stroke", "red"))
+       .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
+       .on("end", (event, d) => Dummyrect.attr("stroke", "#3a4c69"))
+       .on("start.update drag.update end.update", update)
+
     // compPos = [Math.random() * 500 +200, Math.random() * 500 +200]
     var cont = allContents.append("g")
         .attr("class", "component")
         .attr("id", newcomp.GUID);
+
+    var genX;
+    var genY;
 
     var node = cont
         .append("g")
@@ -91,8 +103,8 @@ function CreateNewPanel(FromExisting = null) {
         .attr("id", "comp-" + newcomp.GUID)
         .attr("transform", () => {
             if (FromExisting == null) {
-                let genX = Math.random() * 500 + 200;
-                let genY = Math.random() * 500 + 200;
+                genX = Math.random() * 500 + 200;
+                genY = Math.random() * 500 + 200;
                 newcomp.X = genX;
                 newcomp.Y = genY;
                 return "translate(" + genX + ", " + genY + ")";
@@ -100,15 +112,19 @@ function CreateNewPanel(FromExisting = null) {
                 return "translate(" + FromExisting.X + ", " + FromExisting.Y + ")";
             }
         })
+        .data([{
+            x: FromExisting ? FromExisting.X : genX,
+            y: FromExisting ? FromExisting.Y : genY,
+        }])
+        .call(dragHandler);
 
     var rect = node.append('rect')
-        .attr("class", "CompBody " + newcomp.GUID)
+        .attr("class", "CompPBody " + newcomp.GUID)
         .attr("id", newcomp.GUID)
         .attr("rx", COMPONENT_RADIUS)
         .attr("ry", COMPONENT_RADIUS)
         .attr("y", "-15")
         .attr("width", () => {
-            // 
             return 10 + newcomp.Name.length * 6;
         })
         .attr("height", newcomp.height + 10)
@@ -133,7 +149,6 @@ function CreateNewPanel(FromExisting = null) {
             .attr("type", function() {
                 newcomp.inputs[index].circle = this;
                 if (FromExisting == null) {
-
                     newcomp.inputs[index].type = "text";
                 }
                 return "input";
@@ -159,7 +174,7 @@ function CreateNewPanel(FromExisting = null) {
     }
 
     var rectstatus = node.append('rect')
-        .attr("class", "CompBody statusRect " + newcomp.GUID)
+        .attr("class", "CompPBody statusRect " + newcomp.GUID)
         .attr("id", "statusRect" + newcomp.GUID)
         .attr("rx", COMPONENT_RADIUS)
         .attr("ry", COMPONENT_RADIUS)
@@ -181,7 +196,7 @@ function CreateNewPanel(FromExisting = null) {
         .attr("fill", "white")
         // .attr("width", newcomp.width - 4 - ANCHOR_WIDTH);
 
-    var Panel_staus = node.append('foreignObject')
+    var Panel_staus2 = node.append('foreignObject')
         .attr("id", "panel_edit_mode" + newcomp.GUID)
         .attr("class", "panel_edit_mode " + newcomp.GUID)
         .html(() => {
@@ -195,7 +210,7 @@ function CreateNewPanel(FromExisting = null) {
         // .attr("width", newcomp.width - 4 - ANCHOR_WIDTH);
 
     var Dummyrect = node.append('rect')
-        .attr("class", "CompBodyDummy " + newcomp.GUID)
+        .attr("class", "CompPBodyDummy " + newcomp.GUID)
         .attr("id", "dummyRect_" + newcomp.GUID)
         .attr("rx", COMPONENT_RADIUS)
         .attr("ry", COMPONENT_RADIUS)
@@ -224,7 +239,6 @@ function CreateNewPanel(FromExisting = null) {
         .attr("class", "textbody " + newcomp.GUID)
         .attr("height", newcomp.height - ANCHOR_WIDTH - 5)
         .html(function() {
-
             if (newcomp.inputs[0].type === "html" || newcomp.inputs[0].type === "input") {
                 return newcomp.inputs[0].value;
             } else if (newcomp.inputs[0].type === "text") {
@@ -248,8 +262,8 @@ function CreateNewPanel(FromExisting = null) {
     }
 
     //White Text Box
-    var rect = node.append('rect')
-        .attr("class", "CompBody " + newcomp.GUID + " a")
+    var rect2 = node.append('rect')
+        .attr("class", "CompPBody " + newcomp.GUID + " a")
         .attr("id", "overlaySelector" + newcomp.GUID)
         .attr("rx", COMPONENT_RADIUS)
         .attr("ry", COMPONENT_RADIUS)
@@ -263,43 +277,86 @@ function CreateNewPanel(FromExisting = null) {
                 .attr("cursor", "pointer");
         })
 
-    var rectanchorX = node.append('rect')
-        .attr("class", "xAnchor " + newcomp.GUID)
-        .attr("width", ANCHOR_WIDTH)
-        .attr("height", newcomp.height - ANCHOR_WIDTH)
-        .attr("x", newcomp.width - ANCHOR_WIDTH)
-        .attr("rx", COMPONENT_RADIUS)
-        .attr("ry", COMPONENT_RADIUS)
-        .attr("fill-opacity", 0.01)
-        .on("mousedown", (event) => {
-            console.log("the x anchor")
-            reactContext.setState({
-                StringAnchorclicked: true,
-                StringAnchorType: XANCHOR,
-                StringAnchorId: newcomp.GUID,
-                anchorMouseXpos: d3.pointer(event, allContents.node())[0] - newcomp.width,
-            })
-        });
+    var resize = d3.drag()    
+        .on("start", (event, d) => Dummyrect.attr("stroke", "red"))
+        .on("end", (event, d) => Dummyrect.attr("stroke", "#3a4c69"))
+            .on('drag', function (event, d) {
+                var anchorMouseYpos = reactContext.state.anchorMouseYpos;
+                var anchorMouseXpos = reactContext.state.anchorMouseXpos;
+                var StringAnchorId = reactContext.state.StringAnchorId;
+                var newHeight = event.y - anchorMouseYpos;
+                if (newHeight <= 50) {
+                    newHeight = 52;
+                }
+                var newWidth = event.x - anchorMouseXpos;
+                if (newWidth <= 300) {
+                    newWidth = 301;
+                }
 
-    var rectanchorY = node.append('rect')
-        .attr("class", "yAnchor " + newcomp.GUID)
-        .attr("height", ANCHOR_WIDTH)
-        .attr("width", newcomp.width - ANCHOR_WIDTH)
-        .attr("y", newcomp.height - ANCHOR_WIDTH)
-        .attr("fill-opacity", 0.01)
-        .attr("rx", "3")
-        .attr("ry", "3")
-        .on("mousedown", (event) => {
-            reactContext.setState({
-                StringAnchorclicked: true,
-                StringAnchorType: YANCHOR,
-                StringAnchorId: newcomp.GUID,
-                anchorMouseXpos: d3.pointer(event, allContents.node())[1] - newcomp.height,
-            })
-        });
+                d.x = newWidth;
+                d.y = newHeight;
+                d.width = newWidth;
+                d.height = newHeight;
+
+                var thisComp = selectComp(StringAnchorId)
+                thisComp.height = newHeight;
+                thisComp.width = newWidth;
+
+                d3.select("rect#dummyRect_" + StringAnchorId)
+                .attr("height", newHeight)
+                .attr("width", newWidth);
+
+                d3.select("rect#" + StringAnchorId)
+                .attr("height", newHeight);
+
+                d3.select("rect.CompPBody." + StringAnchorId+".a")
+                .attr("width", newWidth);
+
+                d3.select("rect#statusRect" + StringAnchorId)
+                .attr("y", newHeight - 20)
+                .attr("width", newWidth - 50);
+
+                d3.select("foreignObject#panel_status_" + StringAnchorId)
+                .attr("y", newHeight + 2)
+                .attr("width", newWidth - 50);
+
+                d3.select("rect#overlaySelector" + StringAnchorId)
+                .attr("height", newHeight - 5)
+
+                d3.select("rect.xyAnchor." + StringAnchorId)
+                .attr("x", thisComp.width-ANCHOR_WIDTH)
+                .attr("y", thisComp.height-ANCHOR_WIDTH);
+
+                d3.select("foreignObject#textbody_" + StringAnchorId)
+                .attr("height", thisComp.height - ANCHOR_WIDTH - 5)
+                .attr("width", thisComp.width - 4 - ANCHOR_WIDTH)
+
+                d3.select("foreignObject#panel_edit_mode" + StringAnchorId)
+                .attr("y", newHeight + 2)
+                .attr("x", newWidth - 30)
+
+                d3.select("g#logCirGroup_" + StringAnchorId)
+                .attr("transform", () => {
+                    var x = thisComp.width;
+                    var y = thisComp.height;
+                    return "translate(" + (x).toString() + "," + (y - 10).toString() + ")";
+                });
+                d3.select("circle#outputCir" + StringAnchorId + "_0")
+                .attr("cy", thisComp.height / 2)
+                .attr("cx", thisComp.width);
+
+                d3.select("circle#inputCir" + StringAnchorId + "_0")
+                .attr("cy", thisComp.height / 2);
+            });
 
     var rectanchorXY = node.append('rect')
         .attr("class", "xyAnchor " + newcomp.GUID)
+        .data([{
+            x: newcomp.width - ANCHOR_WIDTH,
+            y: newcomp.height - ANCHOR_WIDTH,
+            width: ANCHOR_WIDTH,
+            height: ANCHOR_WIDTH,
+        }])
         .attr("width", ANCHOR_WIDTH)
         .attr("height", ANCHOR_WIDTH)
         .attr("x", newcomp.width - ANCHOR_WIDTH)
@@ -307,17 +364,17 @@ function CreateNewPanel(FromExisting = null) {
         .attr("fill-opacity", 0.01)
         .attr("rx", COMPONENT_RADIUS)
         .attr("ry", COMPONENT_RADIUS)
-        .on("mousedown", () => {
+        .on("mousedown", (event) => {
             reactContext.setState({
-                StringAnchorclicked: true,
-                StringAnchorType: XYANCHOR,
+                anchorMouseXpos: d3.pointer(event)[0] - newcomp.width,
+                anchorMouseYpos: d3.pointer(event)[1] - newcomp.height,
                 StringAnchorId: newcomp.GUID,
             })
-        });
+        })
+        .call(resize);
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log(current_all_comp);
         console.log("Adding a panel" + newcomp);
         current_all_comp.push(newcomp);
         reactContext.setState({

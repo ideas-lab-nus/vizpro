@@ -163,6 +163,7 @@ function handleComponentSelection() {
 
 //Slider component id changed to CompSBody hence will not be picked up
 //by this function. Lookout for side effects!
+//Similarly panel changed CompPBody
 function handleTheClickOnAllComponents() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;
