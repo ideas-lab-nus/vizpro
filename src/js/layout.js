@@ -31,6 +31,7 @@ import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeE
     edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
     itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
 import {CreateNewComponent} from './component.js';
+import {CreateNewOptionList} from './optionlist.js';
 import $ from "jquery";
 var d3 = require("d3");
 
@@ -245,8 +246,8 @@ function manageCanvas() {
                 //     CreatenewString(element);
                 // else if (element.type === "toggle")
                 //     CreateNewToggle(element);
-                // else if (element.type === "optionList")
-                //     CreateNewOptionList(element);
+                else if (element.type === "optionList")
+                     CreateNewOptionList(element);
                 // else if (element.type === "fileUpload")
                 //     CreateNewFileUpload(element);
                 // else if (element.type === "listView")

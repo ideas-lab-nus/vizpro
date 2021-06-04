@@ -3,6 +3,20 @@ import {submitSliderEdit} from './editSlider.js';
 import $ from "jquery";
 var d3 = require('d3');
 
+function addCircle() {
+    var initCircle = {
+        "GUID": uuidv4("C"),
+        "element": null,
+        "CX": 0,
+        "CY": 0,
+        "Comp": null,
+        "type": "data",
+        "path": null,
+    }
+
+    return initCircle;
+}
+
 function GetURLParameter(sParam) {
     var sPageURL = window.location.search.substring(1);
     var sURLVariables = sPageURL.split('&');
@@ -455,4 +469,4 @@ function handleDoubleClick() {
 } // End of HandleDoubleClick
 
 export {GetURLParameter, handleTheClickOnAllComponents, handleEdgeInitialization, 
-    handleComponentSelection, handleDoubleClick, uuidv4};
+    handleComponentSelection, handleDoubleClick, uuidv4, addCircle};
