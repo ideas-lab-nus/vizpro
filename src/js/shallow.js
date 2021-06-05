@@ -129,7 +129,7 @@ var operations = {
     "^": (a, b) => a ** b,
     "&&": (a, b) => a && b,
     "||": (a, b) => a || b,
-    "==": (a, b) => a == b,
+    "==": (a, b) => a === b,
     ">": (a, b) => a > b,
     "<": (a, b) => a < b,
     "split": (a, b) => a.split(b),
@@ -637,7 +637,7 @@ function draw3dModel(args) {
     var commit_id = parseInt(tracking.split("-")[2]);
 
     
-    if (tracking == null  || tracking == "null") {
+    if (tracking == null  || tracking === "null") {
         log = "drawing"
         result_3d = '<a href = "https://my.buildsim.io/IDF3DSimpleViewerSocket.html?project_id='+project_id+'&branch_id='+branch_id+'&commit_id='+commit_id+'&stand_alone_token=b21df01da249eef60e56660f1d3f4bab-y8xlwk-19&full_screen=true">Open in new window</a>'
         $("div#propertiesBarContents").html('<iframe src="https://my.buildsim.io/IDF3DSimpleViewerSocket.html?project_id='+project_id+'&branch_id='+branch_id+'&commit_id='+commit_id+'&stand_alone_token=b21df01da249eef60e56660f1d3f4bab-y8xlwk-19&full_screen=true" style="width:100%; height:100vh;"></iframe>')
@@ -648,9 +648,9 @@ function draw3dModel(args) {
         }
     } else {
         try {
-            var project_id = parseInt(tracking.split("-")[0]);
-            var branch_id = parseInt(tracking.split("-")[1]);
-            var commit_id = parseInt(tracking.split("-")[2]);
+            project_id = parseInt(tracking.split("-")[0]);
+            branch_id = parseInt(tracking.split("-")[1]);
+            commit_id = parseInt(tracking.split("-")[2]);
             result_3d = '<a href = "https://my.buildsim.io/IDF3DSimpleViewerSocket.html?project_id='+project_id+'&branch_id='+branch_id+'&commit_id='+commit_id+'&stand_alone_token=b21df01da249eef60e56660f1d3f4bab-y8xlwk-19&full_screen=true">Open in new window</a>'
             $("div#propertiesBarContents").html('<iframe src="https://my.buildsim.io/IDF3DSimpleViewerSocket.html?project_id='+project_id+'&branch_id='+branch_id+'&commit_id='+commit_id+'&stand_alone_token=b21df01da249eef60e56660f1d3f4bab-y8xlwk-19&full_screen=true" style="width:100%; height:100vh;"></iframe>')
     

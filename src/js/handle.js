@@ -165,6 +165,7 @@ function handleComponentSelection() {
 //by this function. Lookout for side effects!
 //Panel changed to CompPBody
 //Toggle changed to CompTBody
+//fileUpload changed to CompFBody
 function handleTheClickOnAllComponents() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;

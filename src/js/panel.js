@@ -247,17 +247,17 @@ function CreateNewPanel(FromExisting = null) {
         .attr("transform", "translate(5, 5)")
         .attr("width", newcomp.width - 4 - ANCHOR_WIDTH);
 
-    var data;
+    var data2;
     if (newcomp.inputs[0].type === "json") {
         $("foreignObject#textbody_" + newcomp.GUID).html('<div id="jsonTreeViewer' + newcomp.GUID + '"></div>')
         jsonView.format(newcomp.inputs[0].value, "div#jsonTreeViewer" + newcomp.GUID);
     } else if (newcomp.inputs[0].type === "plot") {
-        data = JSON.parse(newcomp.inputs[0].value);
-        drawPlotComponent(data, newcomp);
+        data2 = JSON.parse(newcomp.inputs[0].value);
+        drawPlotComponent(data2, newcomp);
     } else if (newcomp.inputs[0].type === "spatial") {
-        data = JSON.parse(newcomp.inputs[0].value);
+        data2 = JSON.parse(newcomp.inputs[0].value);
         var unparseData = newcomp.inputs[0].value;
-        visualizeSpatialComponent(data, unparseData, newcomp);
+        visualizeSpatialComponent(data2, unparseData, newcomp);
     }
 
     //White Text Box

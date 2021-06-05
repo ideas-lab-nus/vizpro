@@ -602,7 +602,7 @@ function addOptionDropdownList(compId) {
     for (const option in optionListComp.optionListValues) {
         if (optionListComp.optionListValues.hasOwnProperty(option)) {
             n += 1;
-            var optionRect = optionsGroup.append('rect')
+            var optionRect2 = optionsGroup.append('rect')
                 .attr("fill", "white")
                 .attr("class", "optionListoption " + optionListComp.GUID + " " + optionListComp.optionListValues[option] + " " + option)
                 .attr("value", option)
@@ -1010,7 +1010,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
         }
         for (let index = 0; index < comp_output_edges[objID].length; index++) {
 
-            if (comp_output_edges[objID][index] != undefined) {
+            if (comp_output_edges[objID][index] !== undefined) {
                 comp_output_edges[objID][index].forEach(
                     outputElement => {
                         var circleindex = index;
@@ -1087,12 +1087,12 @@ function handlePathDeleteMovement(pathId, xy1, xy2) {
 function edit_move_mode(compId, mode) {
     const EDIT_MODE = 0;
     const DRAG_MODE = 1;
-    if (mode == EDIT_MODE) {
+    if (mode === EDIT_MODE) {
         d3.select("rect#overlaySelector" + compId).style("display", "none")
-        d3.select("a#changeEditMoveMode_" + compId).attr("onclick", "edit_move_mode(\'" + compId + "\', 1)").text("Edit Mode")
+        d3.select("a#changeEditMoveMode_" + compId).attr("onclick", "edit_move_mode('" + compId + "', 1)").text("Edit Mode")
     } else {
         d3.select("rect#overlaySelector" + compId).style("display", "block")
-        d3.select("a#changeEditMoveMode_" + compId).attr("onclick", "edit_move_mode(\'" + compId + "\', 0)").text("Drag Mode")
+        d3.select("a#changeEditMoveMode_" + compId).attr("onclick", "edit_move_mode('" + compId + "', 0)").text("Drag Mode")
     }
 
 } // End of edit_move_mode
@@ -1174,7 +1174,7 @@ function deleteComponent(component_to_be_deleted) {
             for (let i = 0; i < allEdges.length; i++) {
                 element.forEach(thisEdgeId => {
                     d3.select("path#" + thisEdgeId).remove();
-                    if (thisEdgeId == allEdges[i]["path_id"]) {
+                    if (thisEdgeId === allEdges[i]["path_id"]) {
                         allEdges.splice(i, 1)
                     }
                     var otherComp = edge_comp_matrix[thisEdgeId]["to"];

@@ -98,9 +98,9 @@ function manageGrid() {
             if (reactContext.state.selected_components.length > 1) {
                 console.log("You will delete ")
             }
-            if (selectComp(allComp, selected_component_id).type == "fileUpload") {
+            if (selectComp(allComp, selected_component_id).type === "fileUpload") {
                 if (window.confirm("Are you sure you want to delete this file from the database? ")) {
-                    console.log("You should detele the file from the database now... ")
+                    console.log("You should delete the file from the database now... ")
                     deleteComponent(selected_component_id);
                 } else {
                     console.log("not deleted. ")
@@ -110,11 +110,11 @@ function manageGrid() {
             }
         }
     })
-    .on("dblclick", function() {
+    .on("dblclick", function(event) {
         d3.select("div#buttonClickedname").text("dblclick").style("opacity", ()=>{ reactContext.setState({ messageshown: true, }); return 1});
         reactContext.setState({            
-            mousex: d3.pointer(allContents.node())[0],
-            mousey: d3.pointer(allContents.node())[1],
+            mousex: d3.pointer(event, allContents.node())[0],
+            mousey: d3.pointer(event, allContents.node())[1],
         })
         d3.select("body").append("option")
     })
@@ -136,7 +136,7 @@ function manageGrid() {
         var x = mousex - reactContext.state.componentClickX - 180;
         var y = mousey - reactContext.state.componentClickY - 25;
         if (reactContext.state.startDrag) {
-            //A slider/panel/toggle shouldn't enter this condition
+            //A slider/panel/toggle/fileUpload shouldn't enter this condition
             console.log("Trying to drag the component");
             moveComponent(reactContext.state.clickedId, x, y);
         }

@@ -641,7 +641,7 @@ foreignObject.fileUpload_status {
 }
 
 input#fileUploadFormToTheCloud {
-    border-radius: 5px;
+    border-radius: 1px;
     margin-left: 1px;
     /* height: 20px; */
 }

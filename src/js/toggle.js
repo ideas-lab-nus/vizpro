@@ -23,9 +23,8 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
- import {addcomponent} from './functions.js';
+import {addcomponent} from './functions.js';
 import {uuidv4} from './handle.js';
-import $ from "jquery";
 var d3 = require('d3');
 
 function CreateNewToggle(FromExisting = null) {
@@ -103,7 +102,7 @@ function CreateNewToggle(FromExisting = null) {
         var inp = InputGroup.append('circle').lower()
             .attr("cx", "0")
             .attr("cy", newcomp.height / 2)
-            .attr("fill", "gray") //newcomp.fill)
+            .attr("fill", "gray")
             .attr("r", "5")
             .attr("stroke", "black")
             .attr("stroke-width", "2")
@@ -197,6 +196,7 @@ function CreateNewToggle(FromExisting = null) {
             // newcomp.rect = this;
             d3.select(this).attr("fill", newcomp.fill)
         })
+        
     newcomp.value = newcomp.Name;
 
     if (FromExisting == null) {
