@@ -28,6 +28,7 @@
 //IMPORTANT : Fix for lines, 592, 617, 646 
 
 import {CreateNewComponent} from './component.js';
+import {jsonView} from './jsonview.js';
 import Plotly from 'plotly';
 import $ from "jquery";
 
@@ -718,19 +719,12 @@ function updatShallowCompRender(ch) {
     if (ch.type === "string") {
         if (ch.inputs[0].type === "html") {
             $("foreignObject#textbody_" + ch.GUID).html(ch.inputs[0].value)
-
         } else if (ch.inputs[0].type === "json") {
-            /*
-            To be handle later
             $("foreignObject#textbody_" + ch.GUID).html('<div id="jsonTreeViewer' + ch.GUID + '"></div>')
             jsonView.format(ch.inputs[0].value, "div#jsonTreeViewer" + ch.GUID);
-            */
-
         } else if (ch.inputs[0].type === "text") {
             $("foreignObject#textbody_" + ch.GUID).html("<pre>" + ch.inputs[0].value + "</pre>");
-
         } else if (ch.inputs[0].type === "htmlLoad") {
-
             $("foreignObject#textbody_" + ch.GUID).html('<div id="3DViewer' + ch.GUID + '"></div>')
             $("div#3DViewer" + ch.GUID).load(ch.inputs[0].value, function(data) {
                 console.log(data)
@@ -738,7 +732,6 @@ function updatShallowCompRender(ch) {
         } else if (ch.inputs[0].type === "plot") {
             let data = JSON.parse(ch.inputs[0].value);
             drawPlotComponent(data, ch);
-
         } else if (ch.inputs[0].type === "spatial") {
             let data = JSON.parse(ch.inputs[0].value);
             let unparseData = ch.inputs[0].value;
@@ -766,8 +759,6 @@ function updatShallowCompRender(ch) {
         ch.outputs[0].value = newValues;
 
         updateListViewDrawing(ch);
-
-
     }
 } // End of updatShallowCompRender
 

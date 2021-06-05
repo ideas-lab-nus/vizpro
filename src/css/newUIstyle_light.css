@@ -348,7 +348,7 @@ textarea.textarea.stringProperties {
     width: 100%;
     padding: 0px;
     font-family: 'Ubuntu Mono', monospace;
-    min-height: 50vh;
+    min-height: 10vh;
     border: none;
     border-radius: 3px;
     background-color: #ffffffc7;
