@@ -1,14 +1,17 @@
 //var compKey = "{{ comp_key }}";
 import $ from "jquery";
+import {selectComp, addOptionDropdownList} from './functions.js';
 var d3 = require('d3');
+var readyToGo = false;
+var optionListComp;
+var OptionListValues;
 function submitOptionListEdit(compKey){
-    var optionListComp = selectComp(compKey);
-    var readyToGo = false;
-    var OptionListValues = optionListComp["optionListValues"];
+    optionListComp = selectComp(compKey);
+    OptionListValues = optionListComp["optionListValues"];
     // //console.log(OptionListValues)
     $("textarea.textarea.optionlistProperties").text(function () {
-        optionListOptionsfromTextarea = ""
-        forTheHTMLpreview = ""
+        let optionListOptionsfromTextarea = "";
+        let forTheHTMLpreview = "";
         for (const option in optionListComp["optionListValues"]) {
             if (optionListComp["optionListValues"].hasOwnProperty(option)) {
                 optionListOptionsfromTextarea += '<option value="' + optionListComp["optionListValues"][
@@ -29,8 +32,8 @@ function submitOptionListEdit(compKey){
             let thedict = JSON.parse($(this).val());
             OptionListValues = thedict;
             $("select#propertisBarSelecId").html(function () {
-                optionListOptionsfromTextarea = ""
-                forTheHTMLpreview = ""
+                let optionListOptionsfromTextarea = "";
+                let forTheHTMLpreview = "";
                 for (const option in thedict) {
                     if (thedict.hasOwnProperty(option)) {
                         optionListOptionsfromTextarea += '<option value="' + thedict[option] + '">' +
@@ -53,9 +56,11 @@ function submitOptionListEdit(compKey){
     });
 }
 
-function readyToGoSubmit() {
+function readyToGoSubmit(compKey) {
     optionListComp["optionListValues"] = OptionListValues;
     $("div#propertiesBarContents").html("");
     addOptionDropdownList(compKey)
     readyToGo = false;
 }
+
+export {submitOptionListEdit, readyToGoSubmit};

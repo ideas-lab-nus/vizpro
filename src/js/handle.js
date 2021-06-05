@@ -1,5 +1,6 @@
 import {selectComp, updateAll, ViewListRedrawing, showDropDownList, redrawDependents} from './functions.js';
 import {submitSliderEdit} from './editSlider.js';
+import {submitOptionListEdit, readyToGoSubmit} from './editOptionList.js';
 import $ from "jquery";
 var d3 = require('d3');
 
@@ -148,8 +149,8 @@ function handleComponentSelection() {
             d3.select("g#comp-" + element.GUID)
                 .on("click", function() {
                     d3.select("rect#" + element.GUID)
-                        .attr("stroke-width", "2")
-                        .attr("stroke", "#0064ffa8");
+                        .attr("stroke-width", "1")
+                        .attr("stroke", "black");
 
                     showDropDownList(element.GUID);
 
@@ -391,12 +392,47 @@ function handleDoubleClick() {
         } else if (element.type === "optionList") {
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
-                    $("div#propertiesBarContents").load("../html/editOptionList.html?compKey=" + element.GUID);
+                    d3.select("rect#" + element.GUID)
+                        .attr("stroke-width", "1")
+                        .attr("stroke", "black");
+                        
                     reactContext.setState({
                         optionListStarted: true,
                         optionlistRectid: element.GUID,
                     });
-                })
+                    //console.log('option list double clicked');
+                    if (!reactContext.state.doubleClicked) {
+                        reactContext.setState({
+                            doubleClicked: true,
+                        });
+                        $("div#propertiesBarContents").append(`
+                        <div class="propertiesbar title">Option list properties.</div>
+                        <div class="propertiesbar label">options (as dictionary)</div>
+                        <textarea class="textarea optionlistProperties"></textarea>
+                        <hr>
+                        <div class="propertiesbar label">
+                            Preview:
+                        </div>
+                        <select id="propertisBarSelecId">
+
+                        </select>
+                        <hr>
+                        <div class="propertiesbar label">
+                            Log
+                        </div>
+                        <div id="propertiesBarLog" class="log"></div>
+                        <button id="applyChangeButton">apply</button>
+                        `);
+
+                        let compKey = element.GUID;
+                        submitOptionListEdit(compKey);
+                        
+                        $("button#applyChangeButton").on("click", function(e) {
+                            console.log('applying changes');
+                            readyToGoSubmit(compKey);
+                        });
+                    }
+                });
         } else if (element.type === "slider") {
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
@@ -422,7 +458,7 @@ function handleDoubleClick() {
 
                         //On save, set double clicked to false
                         $("button#sliderEditButton").on("click", function(e) {
-                            var compKey = element.GUID;
+                            let compKey = element.GUID;
                             submitSliderEdit(compKey);
                             reactContext.setState({
                                 doubleClicked: false,
