@@ -32,6 +32,7 @@ import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeE
     itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
 import {CreateNewComponent} from './component.js';
 import {CreateNewPanel} from './panel.js';
+import {CreateNewToggle} from './toggle.js';
 import $ from "jquery";
 var d3 = require("d3");
 
@@ -244,8 +245,8 @@ function manageCanvas() {
                 //     CreateNewSlider(element);
                 else if (element.type === "string")
                     CreateNewPanel(element);
-                // else if (element.type === "toggle")
-                //     CreateNewToggle(element);
+                else if (element.type === "toggle")
+                    CreateNewToggle(element);
                 // else if (element.type === "optionList")
                 //     CreateNewOptionList(element);
                 // else if (element.type === "fileUpload")

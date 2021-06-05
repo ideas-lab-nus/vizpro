@@ -76,7 +76,6 @@ function CreateNewPanel(FromExisting = null) {
     newcomp.inputs[0].value = newcomp.value;
     
     var allContents = d3.select("#allCanvasContents");
-    console.log(allContents);
 
     function update() {
         node.attr("transform", d => `translate(${d.x},${d.y})`);

@@ -45,16 +45,17 @@ function handleComponentSelection() {
     var allComp = reactContext.state.allComp;
     allComp.forEach(element => {
         if (element.type === "component" || element.type === "toggle" || element.type === "fileUpload") {
-            d3.select("g#comp-" + element.GUID)
-                .on("click", function() {
-                    d3.select("rect#" + element.GUID)
-                        .attr("stroke-width", "15")
-                        .attr("stroke", "#0064ffa8");
+            // Blue highlight
+            // d3.select("g#comp-" + element.GUID)
+            //     .on("click", function() {
+            //         d3.select("rect#" + element.GUID)
+            //             .attr("stroke-width", "15")
+            //             .attr("stroke", "#0064ffa8");
 
-                    reactContext.setState({  
-                        selected_component_id: element.GUID,
-                    });
-                })
+            //         reactContext.setState({  
+            //             selected_component_id: element.GUID,
+            //         });
+            //     })
 
             d3.select("rect#" + element.GUID)
                 .on("focusout", () => {
@@ -156,14 +157,14 @@ function handleComponentSelection() {
 
         }
     });
-
     ViewListRedrawing();
 } // End of handleComponentSelection
 
 
 //Slider component id changed to CompSBody hence will not be picked up
 //by this function. Lookout for side effects!
-//Similarly panel changed CompPBody
+//Panel changed to CompPBody
+//Toggle changed to CompTBody
 function handleTheClickOnAllComponents() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;
@@ -284,8 +285,8 @@ function handleEdgeInitialization() {
                 reactContext.setState({
                     toCircle: toCircle,
                 })
-                toComponent = selectComp(allComp, toCircle.element.classList[1]);
-                fromComponent = selectComp(allComp, fromCircle.element.classList[1]);
+                toComponent = selectComp(toCircle.element.classList[1]);
+                fromComponent = selectComp(fromCircle.element.classList[1]);
                 console.log(fromCircle.element.classList[2] +
                     " " + fromCircle.element.classList[1] +
                     " " + toCircle.element.classList[2] +
@@ -491,7 +492,7 @@ function handleDoubleClick() {
                     }
                 });
         } else if (element.type === "toggle") {
-            var currentToggle = selectComp(allComp, element.GUID);
+            var currentToggle = selectComp(element.GUID);
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
                     var toggleValue = $("text.nodetitle.node_title" + element.GUID).text();
@@ -504,10 +505,8 @@ function handleDoubleClick() {
                             } else {
                                 currentToggle.value = "True";
                                 currentToggle.outputs[0].value = "True";
-
                                 return "True"
                             }
-
                         })
                         .attr("fill", () => {
                             if (toggleValue === "True") {
@@ -520,7 +519,6 @@ function handleDoubleClick() {
                                 return "#2c3e50"
                             }
                         });
-
                     redrawDependents(currentToggle.GUID);
                 })
         } 
