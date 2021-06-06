@@ -23,15 +23,23 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
-
-
+import {addcomponent} from './functions.js';
+import {uuidv4, addCircle} from './handle.js';
+import {HandleSelectedOption} from './layout.js';
+var d3 = require('d3');
 
 function CreateNewListView(FromExisting = null, optionlist_predefined_items = null) {
+    var reactContext = this;
+    var newcomp;
 
     if (FromExisting == null) {
-
-        var newcomp = addcomponent(uuidv4("C"), 1, 1);
-        parent_child_matrix[newcomp.GUID] = []
+        newcomp = addcomponent(uuidv4("C"), 1, 1);
+        var guid = newcomp.GUID;
+        var data = { ...reactContext.state.parent_child_matrix };
+        data[guid] = [];
+        reactContext.setState({
+            parent_child_matrix: data,
+        });
         newcomp.Name = "Select item";
         newcomp.value = [
             ["dummy_Option1", 0],
@@ -48,22 +56,19 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
             ["shouldBeSelected", 1]
         ]
 
-
         if (optionlist_predefined_items != null) {
             newcomp.optionListValues = JSON.parse(optionlist_predefined_items)
         }
 
     } else {
-
-        var newcomp = FromExisting;
-        console.log(newcomp)
+        newcomp = FromExisting;
     }
 
     newcomp.fill = "url(#grad1ient)";
-    one_character_width = 8;
-    padding = 20;
-    titleMargin = 30;
-    titleMarginLeft = 30;
+    var one_character_width = 8;
+    var padding = 20;
+    var titleMargin = 30;
+    var titleMarginLeft = 30;
     newcomp.height = 200;
     newcomp.type = "listView";
     newcomp.dftype = "shlow";
@@ -73,9 +78,24 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
 
     newcomp.width = 200;
 
+    var allContents = d3.select("#allCanvasContents");
+
+    function update() {
+        node.attr("transform", d => `translate(${d.x},${d.y})`);
+    }
+
+    var dragHandler = d3.drag()
+       .on("start", (event, d) => Dummyrect.attr("stroke", "red"))
+       .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
+       .on("end", (event, d) => Dummyrect.attr("stroke", "#3a4c69"))
+       .on("start.update drag.update end.update", update);
+
     var cont = allContents.append("g")
         .attr("class", "component")
         .attr("id", newcomp.GUID);
+
+    var genX;
+    var genY;
 
     var node = cont
         .append("g")
@@ -84,8 +104,8 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
         .attr("id", "comp-" + newcomp.GUID)
         .attr("transform", () => {
             if (FromExisting == null) {
-                let genX = Math.random() * 500 + 200;
-                let genY = Math.random() * 500 + 200;
+                genX = Math.random() * 500 + 200;
+                genY = Math.random() * 500 + 200;
                 newcomp.X = genX;
                 newcomp.Y = genY;
                 return "translate(" + genX + ", " + genY + ")";
@@ -93,6 +113,11 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
                 return "translate(" + FromExisting.X + ", " + FromExisting.Y + ")";
             }
         })
+        .data([{
+            x: FromExisting ? FromExisting.X : genX,
+            y: FromExisting ? FromExisting.Y : genY,
+        }])
+        .call(dragHandler);
 
     var InputGroup = node.append('g');
     for (let index = 0; index < newcomp.inputs.length; index++) {
@@ -134,25 +159,24 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
             }).lower();
     }
 
-
-
     var Dummyrect = node.append('rect')
-        .attr("class", "CompBodyDummy " + newcomp.GUID)
+        .attr("class", "CompLBodyDummy " + newcomp.GUID)
         .attr("id", "dummyRect_" + newcomp.GUID)
         .attr("rx", "3")
         .attr("ry", "3")
-        .attr("filter", "url(#f2")
+        //.attr("filter", "url(#f2")
         .attr("stroke-width", "1")
         .attr("stroke", "black")
         .attr("width", newcomp.width)
         .attr("height", newcomp.height)
-        .attr("fill", newcomp.fill)
+        .attr("fill", "#CECECE");
 
     node.append("text")
         .attr("x", 5)
         .attr("y", 15)
         .text("listItems")
         .attr("fill", "black")
+        .style('font-family', 'Ubuntu mono');
 
     //listbox items
     node.append("foreignObject")
@@ -165,7 +189,7 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
         .html(() => {
             var selectedOptions = [];
             console.log(newcomp.value)
-            ListItemsvalueReturn = `<select id="listviewSelect" class="listView ` + newcomp.GUID + `" size="5"  multiple>`;
+            var ListItemsvalueReturn = `<select id="listviewSelect" class="listView ` + newcomp.GUID + `" size="5"  multiple>`;
             newcomp.value.forEach(option => {
 
                 if (option[1] == 0) {
@@ -182,7 +206,7 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
         })
 
     var rect = node.append('rect')
-        .attr("class", "CompBody " + newcomp.GUID)
+        .attr("class", "CompLBody " + newcomp.GUID)
         .attr("id", newcomp.GUID)
         .attr("rx", "3")
         .attr("ry", "3")
@@ -200,20 +224,34 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
 
     node.append("g").attr("id", "optionListOption-" + newcomp.GUID)
 
-    if (FromExisting == null)
-        allComp.push(newcomp);
+    if (FromExisting == null) {
+        var current_all_comp = reactContext.state.allComp.slice();
+        console.log("Adding a list view" + newcomp);
+        current_all_comp.push(newcomp);
+        reactContext.setState({
+            allComp: current_all_comp,
+        });
+    }
 
-    comp_input_edges[newcomp.GUID] = new Array(newcomp.inputs.length);
-    comp_output_edges[newcomp.GUID] = new Array(newcomp.outputs.length);
+    var current_comp_out = { ...reactContext.state.comp_output_edges};
+    var current_comp_in = { ...reactContext.state.comp_input_edges};
+    current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
+    current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
+    reactContext.setState({
+        comp_input_edges: current_comp_in,
+        comp_output_edges: current_comp_out,
+    });
 
-    components_selection_data[newcomp.GUID] = { "x0": newcomp.X, "y0": newcomp.Y, "x1": newcomp.X + newcomp.width, "y1": newcomp.Y + newcomp.height };
-
-    handleTheClickOnAllComponents();
-    handleEdgeInitialization();
-    handleComponentSelection();
-    HandleDoubleClick();
+    var current_components_selection = { ...reactContext.state.components_selection_data };
+    current_components_selection[newcomp.GUID] = { 
+        "x0": newcomp.X, 
+        "y0": newcomp.Y, 
+        "x1": newcomp.X + newcomp.width, 
+        "y1": newcomp.Y + newcomp.height 
+    };
+    reactContext.setState({
+        components_selection_data: current_components_selection,
+    });
 }
 
-$("div#addListView").on('click', function(e) {
-    CreateNewListView()
-});
+export {CreateNewListView};

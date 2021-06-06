@@ -36,6 +36,7 @@ import {CreateNewSlider} from './slider.js';
 import {CreateNewPanel} from './panel.js';
 import {CreateNewToggle} from './toggle.js';
 import {CreateNewFileUpload} from './fileUpload.js';
+import {CreateNewListView} from './listView.js';
 import $ from "jquery";
 var d3 = require("d3");
 
@@ -254,8 +255,8 @@ function manageCanvas() {
                      CreateNewOptionList(element);
                 else if (element.type === "fileUpload")
                     CreateNewFileUpload(element);
-                // else if (element.type === "listView")
-                //     CreateNewListView(element);
+                else if (element.type === "listView")
+                    CreateNewListView(element);
             });
         }    
     } catch (err) {
@@ -453,4 +454,4 @@ function handleEdgeSelection() {
         })
 }
 
-export {onMaximizeClick, onMinimizeClick, manageCanvas};
+export {onMaximizeClick, onMinimizeClick, manageCanvas, HandleSelectedOption};

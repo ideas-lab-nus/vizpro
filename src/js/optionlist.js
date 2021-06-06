@@ -24,21 +24,13 @@
  * @since  x.x.x
  */
 
- import {addcomponent, selectComp, CreatePathes, updateAll,
-    getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
-    addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
-    updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
-    drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
-    edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
-    itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
+ import {addcomponent} from './functions.js';
 import {uuidv4, addCircle} from './handle.js';
 var d3 = require('d3');
 
 function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = null) {
     const reactContext = this;
     var newcomp;
-    var parent_child_matrix = reactContext.state.parent_child_matrix;
-
 
     if (FromExisting == null) {
         newcomp = addcomponent(uuidv4("C"), 1, 1);

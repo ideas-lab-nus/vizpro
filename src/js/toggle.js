@@ -205,7 +205,7 @@ function CreateNewToggle(FromExisting = null) {
         current_all_comp.push(newcomp);
         reactContext.setState({
             allComp: current_all_comp,
-        })
+        });
     }
 
     var current_comp_out = { ...reactContext.state.comp_output_edges};
