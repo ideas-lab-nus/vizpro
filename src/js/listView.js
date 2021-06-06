@@ -26,6 +26,7 @@
 import {addcomponent} from './functions.js';
 import {uuidv4, addCircle} from './handle.js';
 import {HandleSelectedOption} from './layout.js';
+import "@fontsource/ubuntu-mono";
 var d3 = require('d3');
 
 function CreateNewListView(FromExisting = null, optionlist_predefined_items = null) {
@@ -176,7 +177,7 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
         .attr("y", 15)
         .text("listItems")
         .attr("fill", "black")
-        .style('font-family', 'Ubuntu mono');
+        .style('font-family', 'Ubuntu Mono');
 
     //listbox items
     node.append("foreignObject")
