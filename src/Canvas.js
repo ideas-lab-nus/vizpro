@@ -2,13 +2,10 @@ import React from 'react';
 import ScriptTag from 'react-script-tag';
 import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
 import {CreateNewSlider} from './js/slider.js';
-<<<<<<< HEAD
 import {CreateNewOptionList} from './js/optionlist.js';
-=======
 import {CreateNewPanel} from './js/panel.js';
 import {CreateNewToggle} from './js/toggle.js';
 import {CreateNewFileUpload, handleFileUpload} from './js/fileUpload.js';
->>>>>>> react-2
 import {setCurrentCagegory, showThisPanel} from './js/insert.js';   
 import {manageCanvas} from './js/layout.js'; 
 import {manageGrid} from './js/mainGrid.js';

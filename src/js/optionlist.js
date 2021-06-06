@@ -36,13 +36,18 @@ var d3 = require('d3');
 
 function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = null) {
     const reactContext = this;
+    var newcomp;
     var parent_child_matrix = reactContext.state.parent_child_matrix;
 
 
     if (FromExisting == null) {
-
-        var newcomp = addcomponent(uuidv4("C"), 1, 1);
-        parent_child_matrix[newcomp.GUID] = []
+        newcomp = addcomponent(uuidv4("C"), 1, 1);
+        var guid = newcomp.GUID;
+        var data = { ...reactContext.state.parent_child_matrix };
+        data[guid] = [];
+        reactContext.setState({
+            parent_child_matrix: data,
+        });
         newcomp.Name = "Select item";
 
         if (optionlist_predefined_items != null) {
@@ -50,8 +55,7 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
         }
 
     } else {
-
-        var newcomp = FromExisting;
+        newcomp = FromExisting;
         console.log(newcomp)
     }
 
@@ -69,11 +73,24 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
     var allContents = d3.select("#allCanvasContents");
     console.log(allContents);
 
+    function update() {
+        node.attr("transform", d => `translate(${d.x},${d.y})`);
+    }
+
+    var dragHandler = d3.drag()
+       .on("start", (event, d) => Dummyrect.attr("stroke", "red"))
+       .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
+       .on("end", (event, d) => Dummyrect.attr("stroke", "#3a4c69"))
+       .on("start.update drag.update end.update", update);
+
     newcomp.width = 200;
 
     var cont = allContents.append("g")
         .attr("class", "component")
         .attr("id", newcomp.GUID);
+
+    var genX;
+    var genY;
 
     var node = cont
         .append("g")
@@ -82,8 +99,8 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
         .attr("id", "comp-" + newcomp.GUID)
         .attr("transform", () => {
             if (FromExisting == null) {
-                let genX = Math.random() * 500 + 200;
-                let genY = Math.random() * 500 + 200;
+                genX = Math.random() * 500 + 200;
+                genY = Math.random() * 500 + 200;
                 newcomp.X = genX;
                 newcomp.Y = genY;
                 return "translate(" + genX + ", " + genY + ")";
@@ -91,6 +108,11 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
                 return "translate(" + FromExisting.X + ", " + FromExisting.Y + ")";
             }
         })
+        .data([{
+            x: FromExisting ? FromExisting.X : genX,
+            y: FromExisting ? FromExisting.Y : genY,
+        }])
+        .call(dragHandler);
 
     var InputGroup = node.append('g');
     for (let index = 0; index < newcomp.inputs.length; index++) {
@@ -132,6 +154,18 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
             }).lower();
     }
 
+    var Dummyrect = node.append('rect')
+        .attr("class", "CompOBodyDummy " + newcomp.GUID)
+        .attr("id", "dummyRect_" + newcomp.GUID)
+        .attr("rx", "3")
+        .attr("ry", "3")
+        //.attr("filter", "url(#f2")
+        .attr("stroke-width", "1")
+        .attr("stroke", "black")
+        .attr("width", newcomp.width)
+        .attr("height", newcomp.height)
+        .attr("fill", newcomp.fill);
+
     var cirGroup = node.append('g')
         .attr("transform", () => {
             let x = newcomp.width;
@@ -148,7 +182,7 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
         .style("display", "none");
 
     var rect = node.append('rect')
-        .attr("class", "CompBody " + newcomp.GUID)
+        .attr("class", "CompOBody " + newcomp.GUID)
         .attr("id", newcomp.GUID)
         .attr("rx", "3")
         .attr("ry", "3")
@@ -206,11 +240,6 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
     reactContext.setState({
         components_selection_data: current_components_selection,
     });
-
-    // handleTheClickOnAllComponents();
-    // handleEdgeInitialization();
-    // handleComponentSelection();
-    // HandleDoubleClick();
 }
 
 export {CreateNewOptionList};
