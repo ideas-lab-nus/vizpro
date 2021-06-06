@@ -352,7 +352,9 @@ export default class Canvas extends React.Component {
                 </div>
                 
                 <div id="PropertiesBar" className="componentsCategory">
-                    <div className="ccatheader"><span id="customcomponentarrow"><i className="fa fa-chevron-circle-down" aria-hidden="true"></i></span>Properties</div>
+                    <div className="ccatheader"><span id="customcomponentarrow">
+                        <i className="fa fa-chevron-circle-down" aria-hidden="true"></i></span>  Properties
+                    </div>
                     <div className="ccbody" id="propertiesBarContents" style={{"width":"100%"}}></div>
                 </div>
             </div>
