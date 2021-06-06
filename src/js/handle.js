@@ -1,6 +1,7 @@
 import {selectComp, updateAll, ViewListRedrawing, showDropDownList, redrawDependents} from './functions.js';
-import {submitSliderEdit} from './editSlider.js';
 import {submitOptionListEdit, readyToGoSubmit} from './editOptionList.js';
+import {cancelSliderEdit, submitSliderEdit} from './editSlider.js';
+import {cancelPanelEdit, submitPanelEdit} from './editPanel.js';
 import $ from "jquery";
 var d3 = require('d3');
 
@@ -59,16 +60,17 @@ function handleComponentSelection() {
     var allComp = reactContext.state.allComp;
     allComp.forEach(element => {
         if (element.type === "component" || element.type === "toggle" || element.type === "fileUpload") {
-            d3.select("g#comp-" + element.GUID)
-                .on("click", function() {
-                    d3.select("rect#" + element.GUID)
-                        .attr("stroke-width", "15")
-                        .attr("stroke", "#0064ffa8");
+            // Blue highlight
+            // d3.select("g#comp-" + element.GUID)
+            //     .on("click", function() {
+            //         d3.select("rect#" + element.GUID)
+            //             .attr("stroke-width", "15")
+            //             .attr("stroke", "#0064ffa8");
 
-                    reactContext.setState({  
-                        selected_component_id: element.GUID,
-                    });
-                })
+            //         reactContext.setState({  
+            //             selected_component_id: element.GUID,
+            //         });
+            //     })
 
             d3.select("rect#" + element.GUID)
                 .on("focusout", () => {
@@ -170,13 +172,15 @@ function handleComponentSelection() {
 
         }
     });
-
     ViewListRedrawing();
 } // End of handleComponentSelection
 
 
 //Slider component id changed to CompSBody hence will not be picked up
 //by this function. Lookout for side effects!
+//Panel changed to CompPBody
+//Toggle changed to CompTBody
+//fileUpload changed to CompFBody
 function handleTheClickOnAllComponents() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;
@@ -215,7 +219,7 @@ function handleEdgeInitialization() {
     var toComponent = null;
     var fromComponent = null;
     var allCircles = d3.selectAll("circle")
-        .on('mousedown', function() {
+        .on('mousedown', function(event) {
             reactContext.setState({
                 targetcircleId: this.id,
             })
@@ -245,8 +249,8 @@ function handleEdgeInitialization() {
                         edgeStarted: true,
                     })
 
-                    var x = d3.pointer(allContents.node())[0];
-                    var y = d3.pointer(allContents.node())[1];
+                    var x = d3.pointer(event, allContents.node())[0];
+                    var y = d3.pointer(event, allContents.node())[1];
 
                     var initEdgex1 = x;
                     var initEdgey1 = y;
@@ -256,7 +260,6 @@ function handleEdgeInitialization() {
                         .attr("stroke-dasharray", "4")
                         .attr("d", function() {
                             return "M " + initEdgex1 + " " + initEdgey1 + " L " + x + " " + y;
-
                         }).attr('stroke', "black")
                         .attr("stroke-width", "3")
                         .attr("id", "Path" + selectedcircleId);
@@ -298,14 +301,14 @@ function handleEdgeInitialization() {
                 reactContext.setState({
                     toCircle: toCircle,
                 })
-                toComponent = selectComp(allComp, toCircle.element.classList[1]);
-                fromComponent = selectComp(allComp, fromCircle.element.classList[1]);
+                toComponent = selectComp(toCircle.element.classList[1]);
+                fromComponent = selectComp(fromCircle.element.classList[1]);
                 console.log(fromCircle.element.classList[2] +
                     " " + fromCircle.element.classList[1] +
                     " " + toCircle.element.classList[2] +
                     " " + toCircle.element.classList[1]);
 
-                // console.log(parent_child_matrix_fast_check)
+                console.log(parent_child_matrix_fast_check)
                 if (!parent_child_matrix_fast_check.includes(fromCircle.element.classList[2] +
                         " " + fromCircle.element.classList[1] +
                         " " + toCircle.element.classList[2] +
@@ -386,8 +389,76 @@ function handleDoubleClick() {
         if (element.type === "string") {
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
-                    $("div#propertiesBarContents").load("../html/editString.html?compKey=" + element.GUID);
-                    element.outputs[0].value = element.value;
+                    if (!reactContext.state.doubleClicked) {
+                        reactContext.setState({
+                            doubleClicked: true,
+                        });
+                        $("div#propertiesBarContents").append(`
+                        <div class="propertiesbarheader title">String Panel Properties</div>
+                        <div class="propertiesbarheader label">Name</div>
+                        <input class="stringPnanel Name"></textarea>
+                        <hr>
+                        <div class="propertiesbarheader label">Value</div>
+                        <textarea class="textarea stringProperties"></textarea>
+                        <hr>
+                        <div class="propertiesbarheader label">Panel Type</div>
+                        <form>
+                            <input type="radio" name="type" id="string_radio_text" value="text"> text<br>
+                            <input type="radio" name="type" id="string_radio_html" value="html"> html<br>
+                            <input type="radio" name="type" id="string_radio_json" value="json"> json<br>
+                            <input type="radio" name="type" id="string_radio_lsit" value="lsit"> list<br>
+                            <input type="radio" name="type" id="string_radio_plot" value="plot"> plot <br>
+                        </form>
+                        <hr>
+                        <div class="propertiesbarheader label">Log</div>
+                        <div id="propertiesBarLog" class="log"></div>
+                        <button id="stringEditButton">Apply</button>
+                        <button id="cancelStringEdit">Cancel</button>`);
+
+                        element.outputs[0].value = element.value;
+
+                        var StringComp = selectComp(element.GUID);
+                        $("input#string_radio_"+StringComp.inputs[0].type).prop("checked", true);
+                        console.log(StringComp.inputs[0].type)        
+                        var newName;
+                        $("input.stringPnanel.Name").on("change keyup paste", function () {
+                            newName = $("input.stringPnanel.Name").val();
+                            d3.select("text#nodeTitle" + StringComp.GUID).text(newName)
+                            // StringComp.Name = newName;
+                            d3.select("rect#" + StringComp.GUID).attr("width", 10 + newName.length * 6)
+                        });
+
+                        if (StringComp.child) {
+                            $("textarea.textarea.stringProperties").prop('disabled', true);
+                            $("textarea.stringProperties").text(() => {
+                                return StringComp.inputs[0].value;
+                            });
+                            $("body").on("mousemove", () => {
+                                $("textarea.stringProperties").text(() => {
+                                    return StringComp.inputs[0].value;
+                                });
+                            });
+                        } else {
+                            $("textarea.stringProperties").text(() => {
+                                return StringComp.inputs[0].value;
+                            });
+                        }
+
+                        $("input.stringPnanel.Name").val(StringComp.Name);
+
+                        $("button#stringEditButton").on("click", function() { 
+                            submitPanelEdit(element.GUID); 
+                            reactContext.setState({
+                                doubleClicked: false,
+                            });
+                        });
+                        $("button#cancelStringEdit").on("click", function() {
+                            cancelPanelEdit();
+                            reactContext.setState({
+                                doubleClicked: false,
+                            });
+                        });
+                    }
                 })
         } else if (element.type === "optionList") {
             d3.select("g#comp-" + element.GUID)
@@ -458,8 +529,13 @@ function handleDoubleClick() {
 
                         //On save, set double clicked to false
                         $("button#sliderEditButton").on("click", function(e) {
-                            let compKey = element.GUID;
-                            submitSliderEdit(compKey);
+                            submitSliderEdit(element.GUID);
+                            reactContext.setState({
+                                doubleClicked: false,
+                            });
+                        });
+                        $("button#cancelSliderEdit").on("click", function(e) {
+                            cancelSliderEdit();
                             reactContext.setState({
                                 doubleClicked: false,
                             });
@@ -467,7 +543,7 @@ function handleDoubleClick() {
                     }
                 });
         } else if (element.type === "toggle") {
-            var currentToggle = selectComp(allComp, element.GUID);
+            var currentToggle = selectComp(element.GUID);
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
                     var toggleValue = $("text.nodetitle.node_title" + element.GUID).text();
@@ -480,10 +556,8 @@ function handleDoubleClick() {
                             } else {
                                 currentToggle.value = "True";
                                 currentToggle.outputs[0].value = "True";
-
                                 return "True"
                             }
-
                         })
                         .attr("fill", () => {
                             if (toggleValue === "True") {
@@ -496,7 +570,6 @@ function handleDoubleClick() {
                                 return "#2c3e50"
                             }
                         });
-
                     redrawDependents(currentToggle.GUID);
                 })
         } 

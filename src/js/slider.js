@@ -74,7 +74,7 @@ function CreateNewSlider(FromExisting = null) {
         newSlider = addSlider(uuidv4("S"), 0, 100, 1.0);
         //Fix dict creation
         var guid = newSlider.GUID;
-        var data = {};
+        var data = { ...reactContext.state.parent_child_matrix };
         data[guid] = [];
         reactContext.setState({
             parent_child_matrix: data,
@@ -250,7 +250,7 @@ function CreateNewSlider(FromExisting = null) {
             var slider_anchor_value;
             var slider_value;
 
-            var the_slider_slope = (selectedSliderComponent.max - selectedSliderComponent.min) / (SLIDER_END_POSITION-SLIDER_START_POSITION);
+            var the_slider_slope = (selectedSliderComponent.max - selectedSliderComponent.min) / (SLIDER_END_POSITION - SLIDER_START_POSITION);
             var y_intersection = selectedSliderComponent.min - (the_slider_slope * SLIDER_START_POSITION);
 
             if (event.x <= SLIDER_START_POSITION) {
@@ -349,7 +349,6 @@ function CreateNewSlider(FromExisting = null) {
         .on('mousedown', function(d, i) {
             reactContext.setState({
                 rectType: "slider",
-                theRequiredSliderGroup: this,
             })
         });
 
@@ -365,4 +364,4 @@ function CreateNewSlider(FromExisting = null) {
     })
 }
 
-export {CreateNewSlider, theRequiredSliderGroup};
+export {CreateNewSlider};

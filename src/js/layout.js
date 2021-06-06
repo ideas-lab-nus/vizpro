@@ -32,6 +32,10 @@ import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeE
     itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
 import {CreateNewComponent} from './component.js';
 import {CreateNewOptionList} from './optionlist.js';
+import {CreateNewSlider} from './slider.js';
+import {CreateNewPanel} from './panel.js';
+import {CreateNewToggle} from './toggle.js';
+import {CreateNewFileUpload} from './fileUpload.js';
 import $ from "jquery";
 var d3 = require("d3");
 
@@ -240,16 +244,16 @@ function manageCanvas() {
             allComp.forEach(element => {
                 if (element.type === "component")
                     CreateNewComponent(element);
-                // else if (element.type === "slider")
-                //     CreateNewSlider(element);
-                // else if (element.type === "string")
-                //     CreatenewString(element);
-                // else if (element.type === "toggle")
-                //     CreateNewToggle(element);
+                else if (element.type === "slider")
+                    CreateNewSlider(element);
+                else if (element.type === "string")
+                    CreateNewPanel(element);
+                else if (element.type === "toggle")
+                    CreateNewToggle(element);
                 else if (element.type === "optionList")
                      CreateNewOptionList(element);
-                // else if (element.type === "fileUpload")
-                //     CreateNewFileUpload(element);
+                else if (element.type === "fileUpload")
+                    CreateNewFileUpload(element);
                 // else if (element.type === "listView")
                 //     CreateNewListView(element);
             });
@@ -283,7 +287,7 @@ function manageCanvas() {
                 text += '<div id="catbody">'
                 // eslint-disable-next-line no-loop-func
                 somearr.forEach(function(element, i) {    
-                    if (reactContext.state.udo_cats[i] == cat) {
+                    if (reactContext.state.udo_cats[i] === cat) {
                         text += '<button id="addComp" name="' 
                             + element 
                             + '" shName="' 
@@ -318,62 +322,16 @@ function manageCanvas() {
     
         console.log(ThisComponentDesc)
     
-        if (ThisComponentType == "component") {
+        if (ThisComponentType === "component") {
             CreateNewComponent(null, ThisComponentName, {
                 "shortName": ThisComponenShortName,
                 "dfType": ThisComponentDfType
             });
-        } else if (ThisComponentType == "optionList") {
+        } else if (ThisComponentType === "optionList") {
             // CreateNewOptionList(null, ThisComponentDesc);
         }
     
     });
-    
-    $("input#fileUploadFormToTheCloud").on("change", function(e) {
-        var thisFormId = $(this).attr("class");
-    
-        var this_form_elemnt = $("#form_" + thisFormId);
-    
-        var form_data = new FormData(this_form_elemnt[0]);
-        console.log(form_data)
-    
-        var fileName = $(this).val();
-        console.log(fileName);
-    
-        const thefileuploadajax = $.ajax({
-            "type": "POST",
-            "accepts": "text/json",
-            "url": "../upload/",
-            "data": form_data,
-            processData: false,
-            contentType: false,
-            "beforeSend": function(xhr, settings) {
-                $.ajaxSettings.beforeSend(xhr, settings);
-                d3.select("#fileUpload_status_" + thisFormId)
-                    .html("Uploading ..... ")
-    
-            },
-            "success": function(res) {
-                console.log(res);
-                var theCurrentComp = selectComp(thisFormId);
-                theCurrentComp.outputs[0].Name = res.FileName;
-                theCurrentComp.outputs[0].Description = { "Name": res.FileName, "size": res.FileSize, "url": res.publicURL };
-                theCurrentComp.outputs[0].value = res.publicURL;
-                d3.select("#fileUpload_status_" + thisFormId)
-                    .html("File Size : " + (res["FileSize"] / (1024 * 1024)).toString() + " MB " + "<a class='open_uploadedFile_link' href='" + res.publicURL + "' target='blank'>open</a>")
-    
-                d3.select("#foreignObject_fileUpload" + thisFormId)
-                    .html(() => {
-                        return `
-                    <div id="TheContainedFile">` + res.FileName + `</div>
-                    <div id="TheContainedFile">Size :` + (res.FileSize / (1024 * 1024)).toFixed(4).toString() + ` MB</div>
-                `
-                    })
-                redrawDependents(thisFormId);
-            }
-    
-        });
-    }); // End of $("input#fileUploadFormToTheCloud").on("change", function(e) { ...
     
     d3.select("div#LeftPropertiesBar").style("width", () => { return currentLeftColWidth + "px" }).style("top", () => { return (currentTopBarHeight).toString() + "px" })
     d3.select("div#LeftPropertiesBarSelector").style("top", () => { return (currentTopBarHeight).toString() + "px" }).style("left", currentLeftColWidth + "px")

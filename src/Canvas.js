@@ -2,7 +2,13 @@ import React from 'react';
 import ScriptTag from 'react-script-tag';
 import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
 import {CreateNewSlider} from './js/slider.js';
+<<<<<<< HEAD
 import {CreateNewOptionList} from './js/optionlist.js';
+=======
+import {CreateNewPanel} from './js/panel.js';
+import {CreateNewToggle} from './js/toggle.js';
+import {CreateNewFileUpload, handleFileUpload} from './js/fileUpload.js';
+>>>>>>> react-2
 import {setCurrentCagegory, showThisPanel} from './js/insert.js';   
 import {manageCanvas} from './js/layout.js'; 
 import {manageGrid} from './js/mainGrid.js';
@@ -12,7 +18,6 @@ import {handleComponentSelection, handleTheClickOnAllComponents,
     handleEdgeInitialization, handleDoubleClick, uuidv4, addCircle} from './js/handle.js';
 
 const globalVars = {
-    theRequiredSliderGroup: "",
     fromCircle: addCircle(),
     toCircle: addCircle(),
     selection_rectangle_group_rect: null,
@@ -38,7 +43,8 @@ const globalVars = {
     StringAnchorId: "",
     XANCHOR: 0,
     YANCHOR: 1,
-    ANCHOR_WIDTH: 5,
+    XYANCHOR: 2,
+    ANCHOR_WIDTH: 10,
     SLIDER_START_POSITION: 60 - 60,
     SLIDER_END_POSITION: 238 - 60,
     anchorMouseXpos: 0,
@@ -114,9 +120,13 @@ export default class Canvas extends React.Component {
         this.handleDoubleClick = handleDoubleClick.bind(this);
         this.handleEdgeInitialization = handleEdgeInitialization.bind(this);
         this.handleTheClickOnAllComponents = handleTheClickOnAllComponents.bind(this);
+        this.handleFileUpload = handleFileUpload.bind(this);
         this.manageCanvas = manageCanvas.bind(this);
         this.CreateNewSlider = CreateNewSlider.bind(this);
         this.CreateNewOptionList = CreateNewOptionList.bind(this);
+        this.CreateNewPanel = CreateNewPanel.bind(this);
+        this.CreateNewToggle = CreateNewToggle.bind(this);
+        this.CreateNewFileUpload = CreateNewFileUpload.bind(this);
         this.manageGrid = manageGrid.bind(this);
         this.dummyToSetState = dummyToSetState.bind(this);
     }
@@ -153,6 +163,7 @@ export default class Canvas extends React.Component {
                 <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
                 <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
                 <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>
+                <ScriptTag>{this.handleFileUpload()}</ScriptTag>
                 <div className="canvas_container canvas_container_inner main_canvas_container canvas_body_container">
                     <div className="ui-designer-grid" id="mainGrid">
                         <Grid />   
@@ -281,11 +292,11 @@ export default class Canvas extends React.Component {
                                 <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 4949e5ab-6a97-4eed-b8a6-775b65053e41 0">
                                     
                                     <div id="addSlider" onClick={() => this.CreateNewSlider()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"}}>&nbsp;<span id="hint">Slider</span></div>
-                                    <div id="addString" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"}}>&nbsp;<span id="hint">Panel</span></div>
-                                    <div id="addToggle" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"}}>&nbsp;<span id="hint">Toggle</span></div>
+                                    <div id="addPanel" onClick={() => this.CreateNewPanel()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"}}>&nbsp;<span id="hint">Panel</span></div>
+                                    <div id="addToggle" onClick={() => this.CreateNewToggle()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"}}>&nbsp;<span id="hint">Toggle</span></div>
                                     <div id="addOptionList" onClick={() => this.CreateNewOptionList()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"}}>&nbsp;<span id="hint">Option list</span></div>
                                     <div id="addListView" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"}}>&nbsp;<span id="hint">List view</span></div>
-                                    <div id="addFile" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"}}>&nbsp;<span id="hint">File upload</span></div>
+                                    <div id="addFile" onClick={() => this.CreateNewFileUpload()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"}}>&nbsp;<span id="hint">File upload</span></div>
                                     
                                 </div>
                                 

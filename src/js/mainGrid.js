@@ -98,9 +98,9 @@ function manageGrid() {
             if (reactContext.state.selected_components.length > 1) {
                 console.log("You will delete ")
             }
-            if (selectComp(allComp, selected_component_id).type == "fileUpload") {
+            if (selectComp(allComp, selected_component_id).type === "fileUpload") {
                 if (window.confirm("Are you sure you want to delete this file from the database? ")) {
-                    console.log("You should detele the file from the database now... ")
+                    console.log("You should delete the file from the database now... ")
                     deleteComponent(selected_component_id);
                 } else {
                     console.log("not deleted. ")
@@ -110,11 +110,11 @@ function manageGrid() {
             }
         }
     })
-    .on("dblclick", function() {
+    .on("dblclick", function(event) {
         d3.select("div#buttonClickedname").text("dblclick").style("opacity", ()=>{ reactContext.setState({ messageshown: true, }); return 1});
         reactContext.setState({            
-            mousex: d3.pointer(allContents.node())[0],
-            mousey: d3.pointer(allContents.node())[1],
+            mousex: d3.pointer(event, allContents.node())[0],
+            mousey: d3.pointer(event, allContents.node())[1],
         })
         d3.select("body").append("option")
     })
@@ -136,7 +136,7 @@ function manageGrid() {
         var x = mousex - reactContext.state.componentClickX - 180;
         var y = mousey - reactContext.state.componentClickY - 25;
         if (reactContext.state.startDrag) {
-            //A slider shouldn't enter this condition
+            //A slider/panel/toggle/fileUpload shouldn't enter this condition
             console.log("Trying to drag the component");
             moveComponent(reactContext.state.clickedId, x, y);
         }
@@ -148,6 +148,7 @@ function manageGrid() {
                 .attr("stroke-opacity", "0.2")
                 .attr("interpolate", "basis");
         }
+
         var textAreaRectId = reactContext.state.textAreaRectId;
         var optionlistRectid = reactContext.state.optionlistRectid;
         var StringAnchorType = reactContext.state.StringAnchorclicked;
@@ -175,126 +176,126 @@ function manageGrid() {
             .style("left", selectedRect[0] + 20 + "px")
             .style("top", selectedRect[1] + 1 + "px");
         }
-        if (reactContext.state.StringAnchorclicked) {
-            if (StringAnchorType === YANCHOR) { 
-                //TODO : encabsulate this in a function.
-                var newHeight = mousey - anchorMouseYpos;
-                if (newHeight > 20)
-                    newHeight = mousey - anchorMouseYpos;
-                else
-                    newHeight = 22;
+        // if (reactContext.state.StringAnchorclicked) {
+        //     if (StringAnchorType === YANCHOR) { 
+        //         //TODO : encabsulate this in a function.
+        //         var newHeight = mousey - anchorMouseYpos;
+        //         if (newHeight > 20)
+        //             newHeight = mousey - anchorMouseYpos;
+        //         else
+        //             newHeight = 22;
 
-                var thisComp = selectComp(allComp, StringAnchorId)
-                thisComp.height = newHeight;
+        //         var thisComp = selectComp(allComp, StringAnchorId)
+        //         thisComp.height = newHeight;
 
-                d3.select("rect#dummyRect_" + StringAnchorId)
-                    .attr("height",newHeight);
+        //         d3.select("rect#dummyRect_" + StringAnchorId)
+        //             .attr("height",newHeight);
 
-                d3.select("rect#"+StringAnchorId)
-                .attr("height",newHeight );
+        //         d3.select("rect#"+StringAnchorId)
+        //         .attr("height",newHeight );
 
-                d3.select("rect#statusRect"+StringAnchorId)
-                .attr("y", newHeight-20)
+        //         d3.select("rect#statusRect"+StringAnchorId)
+        //         .attr("y", newHeight-20)
 
-                d3.select("foreignObject#panel_status_"+StringAnchorId)
-                .attr("y",newHeight+2);
+        //         d3.select("foreignObject#panel_status_"+StringAnchorId)
+        //         .attr("y",newHeight+2);
 
-                d3.select("rect#overlaySelector"+StringAnchorId)
-                .attr("height", newHeight-5)
+        //         d3.select("rect#overlaySelector"+StringAnchorId)
+        //         .attr("height", newHeight-5)
 
-                d3.select("rect.yAnchor." + StringAnchorId)
-                .attr("y", newHeight-ANCHOR_WIDTH);
+        //         d3.select("rect.yAnchor." + StringAnchorId)
+        //         .attr("y", newHeight-ANCHOR_WIDTH);
 
-                d3.select("rect.xAnchor." + StringAnchorId)
-                .attr("height", thisComp.height-ANCHOR_WIDTH);
+        //         d3.select("rect.xAnchor." + StringAnchorId)
+        //         .attr("height", thisComp.height-ANCHOR_WIDTH);
 
-                d3.select("rect.xyAnchor." + StringAnchorId)
-                .attr("x", thisComp.width-ANCHOR_WIDTH)
-                .attr("y", thisComp.height-ANCHOR_WIDTH);
+        //         d3.select("rect.xyAnchor." + StringAnchorId)
+        //         .attr("x", thisComp.width-ANCHOR_WIDTH)
+        //         .attr("y", thisComp.height-ANCHOR_WIDTH);
 
-                d3.select("foreignObject#textbody_" + StringAnchorId)
-                .attr("height", thisComp.height-ANCHOR_WIDTH-5)
+        //         d3.select("foreignObject#textbody_" + StringAnchorId)
+        //         .attr("height", thisComp.height-ANCHOR_WIDTH-5)
 
-                d3.select("foreignObject#panel_edit_mode"+StringAnchorId)
-                .attr("y", newHeight + 2)
+        //         d3.select("foreignObject#panel_edit_mode"+StringAnchorId)
+        //         .attr("y", newHeight + 2)
 
-                d3.select("g#logCirGroup_" + StringAnchorId)
-                .attr("transform", () => {
-                    x = thisComp.width;
-                    y = thisComp.height;
-                    return "translate(" + (x).toString() + "," + (y - 10).toString() + ")";
-                });
-                d3.select("circle#outputCir"+StringAnchorId+"_0")
-                .attr("cy", thisComp.height / 2);
+        //         d3.select("g#logCirGroup_" + StringAnchorId)
+        //         .attr("transform", () => {
+        //             x = thisComp.width;
+        //             y = thisComp.height;
+        //             return "translate(" + (x).toString() + "," + (y - 10).toString() + ")";
+        //         });
+        //         d3.select("circle#outputCir"+StringAnchorId+"_0")
+        //         .attr("cy", thisComp.height / 2);
 
-                d3.select("circle#inputCir"+StringAnchorId+"_0")
-                .attr("cy", thisComp.height / 2);
+        //         d3.select("circle#inputCir"+StringAnchorId+"_0")
+        //         .attr("cy", thisComp.height / 2);
 
-            } else if (reactContext.state.StringAnchorType === XANCHOR) { 
+        //     } else if (reactContext.state.StringAnchorType === XANCHOR) { 
 
-                //TODO : encabsulate this in a function.
-                var newWidth = mousex - anchorMouseXpos;
-                if (newWidth > 200)
-                    newWidth = mousex - anchorMouseXpos;
-                else
-                    newWidth = 201;
+        //         //TODO : encabsulate this in a function.
+        //         var newWidth = mousex - anchorMouseXpos;
+        //         if (newWidth > 200)
+        //             newWidth = mousex - anchorMouseXpos;
+        //         else
+        //             newWidth = 201;
 
-                thisComp = selectComp(allComp, StringAnchorId)
-                thisComp.width = newWidth;
+        //         thisComp = selectComp(allComp, StringAnchorId)
+        //         thisComp.width = newWidth;
 
-                d3.select("rect#dummyRect_"+StringAnchorId)
-                    .attr("width",newWidth);
+        //         d3.select("rect#dummyRect_"+StringAnchorId)
+        //             .attr("width",newWidth);
 
-                d3.select("rect#statusRect"+StringAnchorId)
-                .attr("width",newWidth-50);
+        //         d3.select("rect#statusRect"+StringAnchorId)
+        //         .attr("width",newWidth-50);
 
-                d3.select("rect.CompBody."+StringAnchorId+".a")
-                .attr("width",newWidth);
+        //         d3.select("rect.CompBody."+StringAnchorId+".a")
+        //         .attr("width",newWidth);
 
-                d3.select("foreignObject#panel_status_"+StringAnchorId)
-                .attr("width",newWidth-50);
+        //         d3.select("foreignObject#panel_status_"+StringAnchorId)
+        //         .attr("width",newWidth-50);
 
-                d3.select("rect.xAnchor."+StringAnchorId)
-                .attr("x", newWidth-ANCHOR_WIDTH);
+        //         d3.select("rect.xAnchor."+StringAnchorId)
+        //         .attr("x", newWidth-ANCHOR_WIDTH);
 
-                d3.select("rect.yAnchor."+StringAnchorId)
-                .attr("width", thisComp.width-ANCHOR_WIDTH);
+        //         d3.select("rect.yAnchor."+StringAnchorId)
+        //         .attr("width", thisComp.width-ANCHOR_WIDTH);
 
-                d3.select("rect.xyAnchor."+StringAnchorId)
-                .attr("x", thisComp.width-ANCHOR_WIDTH)
-                .attr("y", thisComp.height-ANCHOR_WIDTH);
+        //         d3.select("rect.xyAnchor."+StringAnchorId)
+        //         .attr("x", thisComp.width-ANCHOR_WIDTH)
+        //         .attr("y", thisComp.height-ANCHOR_WIDTH);
 
-                d3.select("foreignObject#textbody_"+StringAnchorId)
-                .attr("width", thisComp.width - 4 - ANCHOR_WIDTH )
+        //         d3.select("foreignObject#textbody_"+StringAnchorId)
+        //         .attr("width", thisComp.width - 4 - ANCHOR_WIDTH )
 
-                d3.select("g#logCirGroup_"+StringAnchorId)
-                .attr("transform", () => {
-                    x = thisComp.width;
-                    y = thisComp.height;
-                    return "translate(" + (x).toString() + "," + (y - 10).toString() + ")";
-                });
+        //         d3.select("g#logCirGroup_"+StringAnchorId)
+        //         .attr("transform", () => {
+        //             x = thisComp.width;
+        //             y = thisComp.height;
+        //             return "translate(" + (x).toString() + "," + (y - 10).toString() + ")";
+        //         });
 
-                d3.select("foreignObject#panel_edit_mode"+StringAnchorId)
-                .attr("x", newWidth - 30)
+        //         d3.select("foreignObject#panel_edit_mode"+StringAnchorId)
+        //         .attr("x", newWidth - 30)
 
 
-                d3.select("circle#outputCir"+StringAnchorId+"_0")
-                .attr("cx", thisComp.width);
+        //         d3.select("circle#outputCir"+StringAnchorId+"_0")
+        //         .attr("cx", thisComp.width);
 
-            }
-        }
+        //     }
+        // }
         if (selection_box_started) {
             var x1 = selection_box_x; 
             var y1 = selection_box_y;
 
-            var x2 = d3.pointer(allContents.node())[0];
+            var x2 = d3.pointer(event, allContents.node())[0];
             var y2 = selection_box_y; 
 
-            var x3 = d3.pointer(allContents.node())[0];
-            var y3 = d3.pointer(allContents.node())[1];
+            var x3 = d3.pointer(event, allContents.node())[0];
+            var y3 = d3.pointer(event, allContents.node())[1];
 
             var x4 = selection_box_x; 
-            var y4 = d3.pointer(allContents.node())[1];
+            var y4 = d3.pointer(event, allContents.node())[1];
             
             selection_box.attr("x", selection_box_x)
             .attr("points", () => {
@@ -360,8 +361,6 @@ function manageGrid() {
             };  
             reactContext.setState({
                 components_selection_data: current_components_selection,
-            })
-            reactContext.setState({
                 StringAnchorclicked: false,
             })
         }
@@ -405,7 +404,7 @@ function manageGrid() {
                 }
             }                    
             highlightSelection(current_selected_comps, temp_selected_xs, temp_selected_ys)
-            selection_box_started =false;
+            selection_box_started = false;
         }
 
         if (reactContext.state.selection_groud_selected) {

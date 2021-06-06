@@ -348,7 +348,7 @@ textarea.textarea.stringProperties {
   width: 100%;
   padding: 0px;
   font-family: 'Ubuntu Mono', monospace;
-  min-height: 50vh;
+  min-height: 10vh;
   border: none;
   border-radius: 3px;
   background-color: #ffffffc7;
@@ -641,7 +641,7 @@ foreignObject.fileUpload_status {
 }
 
 input#fileUploadFormToTheCloud {
-  border-radius: 5px;
+  border-radius: 1px;
   margin-left: 1px;
   /* height: 20px; */
 }

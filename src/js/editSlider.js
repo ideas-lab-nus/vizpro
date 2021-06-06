@@ -12,23 +12,21 @@ function submitSliderEdit(compKey) {
     var slider_anchor_slope = (SLIDER_END_POSITION-SLIDER_START_POSITION)/(slider_component.max-slider_component.min);
     var slider_anchor_y_intersection = (SLIDER_END_POSITION-SLIDER_START_POSITION) - (slider_anchor_slope*slider_component.max); 
     var slider_anchor_currrent_position = (slider_anchor_slope * slider_component.value) + slider_anchor_y_intersection;
-    console.log(SLIDER_END_POSITION-SLIDER_START_POSITION)
-    console.log("slope : "+ slider_anchor_slope);
-    console.log("y_intersect : " + slider_anchor_y_intersection);
-
     
     d3.select("rect#SliderAnchor_" + slider_component.GUID)
-            .attr("transform", function () {
-                return "translate(" + (slider_anchor_currrent_position).toString() + ",3)";
-            });
+        .attr("transform", function () {
+            return "translate(" + (slider_anchor_currrent_position).toString() + ",3)";
+        });
 
-            d3.select("#sliderValueText_"+slider_component.GUID.replace("SliderAnchor_",""))
-        .text((slider_component.value).toFixed(6));
+    d3.select("#sliderValueText_"+slider_component.GUID.replace("SliderAnchor_",""))
+    .text((slider_component.value).toFixed(6));
     
-        redrawDependents(slider_component.GUID);
-
-        $("div#propertiesBarContents").html("");
-        
+    redrawDependents(slider_component.GUID);
+    $("div#propertiesBarContents").html("");        
 }
 
-export {submitSliderEdit};
+function cancelSliderEdit() {
+    $("div#propertiesBarContents").html(""); 
+}
+
+export {submitSliderEdit, cancelSliderEdit};
