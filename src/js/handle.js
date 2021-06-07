@@ -492,7 +492,7 @@ function handleDoubleClick() {
                             Log
                         </div>
                         <div id="propertiesBarLog" class="log"></div>
-                        <button id="applyChangeButton">apply</button>
+                        <button id="applyChangeButton">Apply</button>
                         `);
 
                         let compKey = element.GUID;
@@ -501,6 +501,9 @@ function handleDoubleClick() {
                         $("button#applyChangeButton").on("click", function(e) {
                             console.log('applying changes');
                             readyToGoSubmit(compKey);
+                            reactContext.setState({
+                                doubleClicked: false,
+                            });
                         });
                     }
                 });

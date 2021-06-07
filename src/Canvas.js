@@ -13,7 +13,7 @@ import {manageGrid} from './js/mainGrid.js';
 import {dummyToSetState} from './js/functions.js';
 import Grid from './Grid';      
 import {handleComponentSelection, handleTheClickOnAllComponents, 
-    handleEdgeInitialization, handleDoubleClick, uuidv4, addCircle} from './js/handle.js';
+    handleEdgeInitialization, handleDoubleClick, addCircle} from './js/handle.js';
 
 const globalVars = {
     fromCircle: addCircle(),
@@ -121,10 +121,10 @@ export default class Canvas extends React.Component {
         this.handleFileUpload = handleFileUpload.bind(this);
         this.manageCanvas = manageCanvas.bind(this);
         this.CreateNewSlider = CreateNewSlider.bind(this);
-        this.CreateNewOptionList = CreateNewOptionList.bind(this);
         this.CreateNewPanel = CreateNewPanel.bind(this);
         this.CreateNewToggle = CreateNewToggle.bind(this);
         this.CreateNewListView = CreateNewListView.bind(this);
+        this.CreateNewOptionList = CreateNewOptionList.bind(this);
         this.CreateNewFileUpload = CreateNewFileUpload.bind(this);
         this.manageGrid = manageGrid.bind(this);
         this.dummyToSetState = dummyToSetState.bind(this);
