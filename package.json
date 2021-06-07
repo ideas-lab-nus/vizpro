@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "dependencies": {
     "@craco/craco": "^6.1.2",
+    "@fontsource/ubuntu": "^4.4.5",
+    "@fontsource/ubuntu-mono": "^4.4.5",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",

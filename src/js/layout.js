@@ -31,10 +31,12 @@ import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeE
     edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
     itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
 import {CreateNewComponent} from './component.js';
+import {CreateNewOptionList} from './optionlist.js';
 import {CreateNewSlider} from './slider.js';
 import {CreateNewPanel} from './panel.js';
 import {CreateNewToggle} from './toggle.js';
 import {CreateNewFileUpload} from './fileUpload.js';
+import {CreateNewListView} from './listView.js';
 import $ from "jquery";
 var d3 = require("d3");
 
@@ -249,12 +251,12 @@ function manageCanvas() {
                     CreateNewPanel(element);
                 else if (element.type === "toggle")
                     CreateNewToggle(element);
-                // else if (element.type === "optionList")
-                //     CreateNewOptionList(element);
+                else if (element.type === "optionList")
+                     CreateNewOptionList(element);
                 else if (element.type === "fileUpload")
                     CreateNewFileUpload(element);
-                // else if (element.type === "listView")
-                //     CreateNewListView(element);
+                else if (element.type === "listView")
+                    CreateNewListView(element);
             });
         }    
     } catch (err) {
@@ -452,4 +454,4 @@ function handleEdgeSelection() {
         })
 }
 
-export {onMaximizeClick, onMinimizeClick, manageCanvas};
+export {onMaximizeClick, onMinimizeClick, manageCanvas, HandleSelectedOption};

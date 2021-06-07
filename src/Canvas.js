@@ -2,38 +2,18 @@ import React from 'react';
 import ScriptTag from 'react-script-tag';
 import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
 import {CreateNewSlider} from './js/slider.js';
+import {CreateNewOptionList} from './js/optionlist.js';
 import {CreateNewPanel} from './js/panel.js';
 import {CreateNewToggle} from './js/toggle.js';
 import {CreateNewFileUpload, handleFileUpload} from './js/fileUpload.js';
+import {CreateNewListView} from './js/listView.js';
 import {setCurrentCagegory, showThisPanel} from './js/insert.js';   
 import {manageCanvas} from './js/layout.js'; 
 import {manageGrid} from './js/mainGrid.js';
 import {dummyToSetState} from './js/functions.js';
 import Grid from './Grid';      
 import {handleComponentSelection, handleTheClickOnAllComponents, 
-    handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
-
-function addCircle() {
-    var initCircle = {
-        "GUID": uuidv4("C"),
-        "element": null,
-        "CX": 0,
-        "CY": 0,
-        "Comp": null,
-        "type": "data",
-        "path": null,
-    }
-
-    return initCircle;
-};
-
-function uuidv4(ini) {
-    return ini + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0,
-            v = c === 'x' ? r : ((r & 0x3) | 0x8);
-        return v.toString(16);
-    });
-}
+    handleEdgeInitialization, handleDoubleClick, addCircle} from './js/handle.js';
 
 const globalVars = {
     fromCircle: addCircle(),
@@ -143,6 +123,8 @@ export default class Canvas extends React.Component {
         this.CreateNewSlider = CreateNewSlider.bind(this);
         this.CreateNewPanel = CreateNewPanel.bind(this);
         this.CreateNewToggle = CreateNewToggle.bind(this);
+        this.CreateNewListView = CreateNewListView.bind(this);
+        this.CreateNewOptionList = CreateNewOptionList.bind(this);
         this.CreateNewFileUpload = CreateNewFileUpload.bind(this);
         this.manageGrid = manageGrid.bind(this);
         this.dummyToSetState = dummyToSetState.bind(this);
@@ -311,8 +293,8 @@ export default class Canvas extends React.Component {
                                     <div id="addSlider" onClick={() => this.CreateNewSlider()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"}}>&nbsp;<span id="hint">Slider</span></div>
                                     <div id="addPanel" onClick={() => this.CreateNewPanel()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"}}>&nbsp;<span id="hint">Panel</span></div>
                                     <div id="addToggle" onClick={() => this.CreateNewToggle()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"}}>&nbsp;<span id="hint">Toggle</span></div>
-                                    <div id="addOptionList" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"}}>&nbsp;<span id="hint">Option list</span></div>
-                                    <div id="addListView" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"}}>&nbsp;<span id="hint">List view</span></div>
+                                    <div id="addOptionList" onClick={() => this.CreateNewOptionList()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"}}>&nbsp;<span id="hint">Option list</span></div>
+                                    <div id="addListView" onClick={() => this.CreateNewListView()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"}}>&nbsp;<span id="hint">List view</span></div>
                                     <div id="addFile" onClick={() => this.CreateNewFileUpload()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"}}>&nbsp;<span id="hint">File upload</span></div>
                                     
                                 </div>
@@ -370,7 +352,9 @@ export default class Canvas extends React.Component {
                 </div>
                 
                 <div id="PropertiesBar" className="componentsCategory">
-                    <div className="ccatheader"><span id="customcomponentarrow"><i className="fa fa-chevron-circle-down" aria-hidden="true"></i></span>Properties</div>
+                    <div className="ccatheader"><span id="customcomponentarrow">
+                        <i className="fa fa-chevron-circle-down" aria-hidden="true"></i></span>  Properties
+                    </div>
                     <div className="ccbody" id="propertiesBarContents" style={{"width":"100%"}}></div>
                 </div>
             </div>

@@ -24,14 +24,22 @@
  * @since  x.x.x
  */
 
-
+ import {addcomponent} from './functions.js';
+import {uuidv4, addCircle} from './handle.js';
+var d3 = require('d3');
 
 function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = null) {
+    const reactContext = this;
+    var newcomp;
 
     if (FromExisting == null) {
-
-        var newcomp = addcomponent(uuidv4("C"), 1, 1);
-        parent_child_matrix[newcomp.GUID] = []
+        newcomp = addcomponent(uuidv4("C"), 1, 1);
+        var guid = newcomp.GUID;
+        var data = { ...reactContext.state.parent_child_matrix };
+        data[guid] = [];
+        reactContext.setState({
+            parent_child_matrix: data,
+        });
         newcomp.Name = "Select item";
 
         if (optionlist_predefined_items != null) {
@@ -39,27 +47,42 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
         }
 
     } else {
-
-        var newcomp = FromExisting;
+        newcomp = FromExisting;
         console.log(newcomp)
     }
 
     newcomp.fill = "white";
-    one_character_width = 8;
-    padding = 20;
-    titleMargin = 30;
-    titleMarginLeft = 30;
+    var one_character_width = 8;
+    var padding = 20;
+    var titleMargin = 30;
+    var titleMarginLeft = 30;
     newcomp.height = 20;
     newcomp.type = "optionList";
     newcomp.dftype = "shlow";
 
     // TODO : get the longest text in the component. and set the width based on this. 
 
+    var allContents = d3.select("#allCanvasContents");
+    console.log(allContents);
+
+    function update() {
+        node.attr("transform", d => `translate(${d.x},${d.y})`);
+    }
+
+    var dragHandler = d3.drag()
+       .on("start", (event, d) => Dummyrect.attr("stroke", "red"))
+       .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
+       .on("end", (event, d) => Dummyrect.attr("stroke", "#3a4c69"))
+       .on("start.update drag.update end.update", update);
+
     newcomp.width = 200;
 
     var cont = allContents.append("g")
         .attr("class", "component")
         .attr("id", newcomp.GUID);
+
+    var genX;
+    var genY;
 
     var node = cont
         .append("g")
@@ -68,8 +91,8 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
         .attr("id", "comp-" + newcomp.GUID)
         .attr("transform", () => {
             if (FromExisting == null) {
-                let genX = Math.random() * 500 + 200;
-                let genY = Math.random() * 500 + 200;
+                genX = Math.random() * 500 + 200;
+                genY = Math.random() * 500 + 200;
                 newcomp.X = genX;
                 newcomp.Y = genY;
                 return "translate(" + genX + ", " + genY + ")";
@@ -77,6 +100,11 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
                 return "translate(" + FromExisting.X + ", " + FromExisting.Y + ")";
             }
         })
+        .data([{
+            x: FromExisting ? FromExisting.X : genX,
+            y: FromExisting ? FromExisting.Y : genY,
+        }])
+        .call(dragHandler);
 
     var InputGroup = node.append('g');
     for (let index = 0; index < newcomp.inputs.length; index++) {
@@ -105,7 +133,7 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
         var out = OutputGroup.append('circle')
             .attr("cx", newcomp.width)
             .attr("cy", newcomp.height / 2)
-            .attr("fill", "gray") //newcomp.fill)
+            .attr("fill", "gray")
             .attr("r", "5")
             .attr("stroke", "black")
             .attr("stroke-width", "2")
@@ -114,29 +142,26 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
             .attr("type", function() {
                 newcomp.outputs[index].circle = this;
                 newcomp.outputs[index].type = "output";
-                // //////////console.log(newcomp.outputs[index]);
                 return "output";
             }).lower();
     }
 
     var Dummyrect = node.append('rect')
-        .attr("class", "CompBodyDummy " + newcomp.GUID)
+        .attr("class", "CompOBodyDummy " + newcomp.GUID)
         .attr("id", "dummyRect_" + newcomp.GUID)
         .attr("rx", "3")
         .attr("ry", "3")
-        .attr("filter", "url(#f2")
+        //.attr("filter", "url(#f2")
         .attr("stroke-width", "1")
         .attr("stroke", "black")
         .attr("width", newcomp.width)
         .attr("height", newcomp.height)
-        .attr("fill", newcomp.fill)
-
-
+        .attr("fill", newcomp.fill);
 
     var cirGroup = node.append('g')
         .attr("transform", () => {
-            x = newcomp.width;
-            y = newcomp.height;
+            let x = newcomp.width;
+            let y = newcomp.height;
             return "translate(" + (x).toString() + "," + (y - 10).toString() + ")";
         });
 
@@ -148,7 +173,21 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
         .attr("fill", "black")
         .style("display", "none");
 
-
+    var rect = node.append('rect')
+        .attr("class", "CompOBody " + newcomp.GUID)
+        .attr("id", newcomp.GUID)
+        .attr("rx", "3")
+        .attr("ry", "3")
+        .attr("width", newcomp.width)
+        .attr("height", newcomp.height)
+        .attr("fill", "white")
+        .attr("stroke", "black")
+        .attr("stroke-width", "1")
+        .on("mouseover", function() {
+            d3.select(this)
+                .attr("cursor", "pointer");
+        });
+    
     var Titlegroup = node.append("g")
         .attr("transform", () => {
             return "translate(0, 15)";
@@ -162,46 +201,38 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
         .attr("fill", "black")
         .attr("transform", "translate(" + 20 + ", 0)");
 
-
-    var rect = node.append('rect')
-        .attr("class", "CompBody " + newcomp.GUID)
-        .attr("id", newcomp.GUID)
-        .attr("rx", "3")
-        .attr("ry", "3")
-        .attr("width", newcomp.width)
-        .attr("height", newcomp.height)
-        .attr("fill", newcomp.fill)
-        .attr("fill-opacity", "0.01")
-        // .attr("filter", "url('#svgshadow')")
-        .on("mouseover", function() {
-            // newcomp.rect = this;
-            d3.select(this)
-                // .attr("fill", "#303952")
-                .attr("cursor", "pointer");
-        })
-        .on("mouseout", function() {
-            // newcomp.rect = this;
-            d3.select(this).attr("fill", newcomp.fill)
-        }) //.attr("onclick", "showDropDownList('"+newcomp.GUID+"')");
-
     node.append("g").attr("id", "optionListOption-" + newcomp.GUID)
 
-    if (FromExisting == null)
-        allComp.push(newcomp);
+    if (FromExisting == null) {
+        var current_all_comp = reactContext.state.allComp.slice();
+        console.log(current_all_comp);
+        console.log("Adding an option list" + newcomp);
+        current_all_comp.push(newcomp);
+        reactContext.setState({
+            allComp: current_all_comp,
+        });
+    }
 
-    comp_input_edges[newcomp.GUID] = new Array(newcomp.inputs.length);
-    comp_output_edges[newcomp.GUID] = new Array(newcomp.outputs.length);
+    var current_comp_out = { ...reactContext.state.comp_output_edges};
+    var current_comp_in = { ...reactContext.state.comp_input_edges};
+    current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
+    current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
+    reactContext.setState({
+        comp_input_edges: current_comp_in,
+        comp_output_edges: current_comp_out,
+    });
 
-    var mainGrid = d3.select("#mainGrid");
-    components_selection_data[newcomp.GUID] = { "x0": newcomp.X, "y0": newcomp.Y, "x1": newcomp.X + newcomp.width, "y1": newcomp.Y + newcomp.height };
-
-    handleTheClickOnAllComponents();
-    handleEdgeInitialization();
-    handleComponentSelection();
-    HandleDoubleClick();
-
+    var current_components_selection = { ...reactContext.state.components_selection_data };
+    current_components_selection[newcomp.GUID] = { 
+        "x0": newcomp.X, 
+        "y0": newcomp.Y, 
+        "x1": newcomp.X + newcomp.width, 
+        "y1": newcomp.Y + newcomp.height 
+    };
+    reactContext.setState({
+        components_selection_data: current_components_selection,
+    });
 }
 
-$("div#addOptionList").on('click', function(e) {
-    CreateNewOptionList()
-});
+export {CreateNewOptionList};
+

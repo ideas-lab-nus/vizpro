@@ -38,7 +38,7 @@ function CreateNewToggle(FromExisting = null) {
         data[guid] = [];
         reactContext.setState({
             parent_child_matrix: data,
-        })
+        });
     } else {
         newcomp = FromExisting;
     }
@@ -66,7 +66,7 @@ function CreateNewToggle(FromExisting = null) {
        .on("start", (event, d) => Dummyrect.attr("stroke", "red"))
        .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
        .on("end", (event, d) => Dummyrect.attr("stroke", "#3a4c69"))
-       .on("start.update drag.update end.update", update)
+       .on("start.update drag.update end.update", update);
 
     var cont = allContents.append("g")
         .attr("class", "component")
@@ -205,7 +205,7 @@ function CreateNewToggle(FromExisting = null) {
         current_all_comp.push(newcomp);
         reactContext.setState({
             allComp: current_all_comp,
-        })
+        });
     }
 
     var current_comp_out = { ...reactContext.state.comp_output_edges};

@@ -599,6 +599,7 @@ function addOptionDropdownList(compId) {
                 .attr("x", 5);
         }
     }
+    n = 0;
     for (const option in optionListComp.optionListValues) {
         if (optionListComp.optionListValues.hasOwnProperty(option)) {
             n += 1;
@@ -613,13 +614,15 @@ function addOptionDropdownList(compId) {
                 .attr("y", 20 * n)
                 .attr("opacity", "0.3")
                 .attr("stroke", "gray")
-                .attr("onclick", "changeOptionListFinalValue(this)")
                 .on("mouseover", function() {
                     mouseInsideOption = true;
                 })
                 .on("mouseout", function() {
                     mouseInsideOption = false;
                 })
+                .on("click", function() {
+                    changeOptionListFinalValue(this);
+                });
 
         }
     }

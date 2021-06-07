@@ -136,7 +136,7 @@ function manageGrid() {
         var x = mousex - reactContext.state.componentClickX - 180;
         var y = mousey - reactContext.state.componentClickY - 25;
         if (reactContext.state.startDrag) {
-            //A slider/panel/toggle/fileUpload shouldn't enter this condition
+            //A slider/panel/toggle/fileUpload/listView/optionList shouldn't enter this condition
             console.log("Trying to drag the component");
             moveComponent(reactContext.state.clickedId, x, y);
         }
