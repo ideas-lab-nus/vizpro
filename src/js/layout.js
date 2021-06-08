@@ -314,6 +314,7 @@ function manageCanvas() {
         return text;
     });   
     
+    /*
     $("div#addComp").on('click', function(e) {
         var ThisComponentName = $(this).attr("name");
         var ThisComponenShortName = $(this).attr("shName");
@@ -324,6 +325,7 @@ function manageCanvas() {
         console.log(ThisComponentDesc)
     
         if (ThisComponentType === "component") {
+            console.log('in here');
             CreateNewComponent(null, ThisComponentName, {
                 "shortName": ThisComponenShortName,
                 "dfType": ThisComponentDfType
@@ -332,7 +334,7 @@ function manageCanvas() {
             // CreateNewOptionList(null, ThisComponentDesc);
         }
     
-    });
+    }); */
     
     d3.select("div#LeftPropertiesBar").style("width", () => { return currentLeftColWidth + "px" }).style("top", () => { return (currentTopBarHeight).toString() + "px" })
     d3.select("div#LeftPropertiesBarSelector").style("top", () => { return (currentTopBarHeight).toString() + "px" }).style("left", currentLeftColWidth + "px")

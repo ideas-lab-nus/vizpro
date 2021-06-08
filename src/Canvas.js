@@ -7,7 +7,8 @@ import {CreateNewPanel} from './js/panel.js';
 import {CreateNewToggle} from './js/toggle.js';
 import {CreateNewFileUpload, handleFileUpload} from './js/fileUpload.js';
 import {CreateNewListView} from './js/listView.js';
-import {setCurrentCagegory, showThisPanel} from './js/insert.js';   
+import {setCurrentCagegory, showThisPanel} from './js/insert.js';  
+import {CreateNewComponent} from './js/component.js'; 
 import {manageCanvas} from './js/layout.js'; 
 import {manageGrid} from './js/mainGrid.js';
 import {dummyToSetState} from './js/functions.js';
@@ -126,6 +127,7 @@ export default class Canvas extends React.Component {
         this.CreateNewListView = CreateNewListView.bind(this);
         this.CreateNewOptionList = CreateNewOptionList.bind(this);
         this.CreateNewFileUpload = CreateNewFileUpload.bind(this);
+        this.CreateNewComponent = CreateNewComponent.bind(this);
         this.manageGrid = manageGrid.bind(this);
         this.dummyToSetState = dummyToSetState.bind(this);
     }
@@ -191,7 +193,7 @@ export default class Canvas extends React.Component {
                                     <div className="toolbarTopToggleItem 1">
                                         <div className="toptoggleitem b066a5eb-26dc-4359-8d22-3643444d08e4 00492f59-092c-4ee5-affb-8a5e36495e59 selected" 
                                         onClick={() => showThisPanel('b066a5eb-26dc-4359-8d22-3643444d08e4', '00492f59-092c-4ee5-affb-8a5e36495e59')}> 
-                                            Components
+                                            Components 
                                         </div>
                                     </div>      
                                 </div>
@@ -199,13 +201,13 @@ export default class Canvas extends React.Component {
                             
                             <div id="toolbar_container_1_2" className="TabToolBox b066a5eb-26dc-4359-8d22-3643444d08e4 00492f59-092c-4ee5-affb-8a5e36495e59">
                                 <div id="toolbar_container_1_2_0" className="toolbarbuttonsContainer">
-                                    &nbsp; Components
+                                    &nbsp; Components {'>'} 
                                     <span className="currentTab b066a5eb-26dc-4359-8d22-3643444d08e4" style={{marginLeft: "3px"}}> &nbsp;</span> 
                                 </div>
                                 
                                 <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 d2312a8b-63dc-4112-8a66-76996c150b0e 0" style={{display:"none"}}>
                                         
-                                    <div id="addComp" name="Average" shname="AVG" desc="The average between two values" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/958f17e5cfad4cdbbe26dd5affbbbfa2.png)"}}>&nbsp;<span id="hint">Average</span></div>
+                                    <div onClick={() => this.CreateNewComponent(null, "Average", {"shortName": "AVG", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["average", "log_"], "#F23322")} id="addComp" name="Average" shname="AVG" desc="The average between two values" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/958f17e5cfad4cdbbe26dd5affbbbfa2.png)"}}>&nbsp;<span id="hint">Average</span></div>
                                         
                                     <div id="addComp" name="Add" shname="+" desc="Add two numbers." type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/e2c5a0d28dca45c38b0e96e6723e2bde.png)"}}>&nbsp;<span id="hint">Add</span></div>
                                         
