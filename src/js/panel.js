@@ -116,7 +116,7 @@ function CreateNewPanel(FromExisting = null) {
             x: FromExisting ? FromExisting.X : genX,
             y: FromExisting ? FromExisting.Y : genY,
         }])
-        .call(dragHandler);
+        // .call(dragHandler);
 
     var rect = node.append('rect')
         .attr("class", "CompPBody " + newcomp.GUID)
@@ -164,7 +164,7 @@ function CreateNewPanel(FromExisting = null) {
                     targetcircleIN: false,
                 })
             })
-            .call(edgeDragHandler)
+            // .call(edgeDragHandler)
             .lower();
     }
 

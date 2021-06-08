@@ -181,9 +181,6 @@ var edgeDragHandler = d3.drag()
         .on("end", onEnd)
         // .on("start.update drag.update end.update", update);
 
-function update() {    
-}
-
 function onDrag(event, d) {
     d.x = event.x;
     d.y = event.y;     

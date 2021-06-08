@@ -24,7 +24,7 @@
  * @since  x.x.x
  */
 
-import {redrawDependents, selectComp, updateAll} from './functions.js';
+import {redrawDependents, selectComp, updateAll, moveComponent} from './functions.js';
 import {addEdge} from './handle';
 import {uuidv4} from './handle.js';
 import {edgeDragHandler} from './edge.js';
@@ -98,13 +98,21 @@ function CreateNewSlider(FromExisting = null) {
     var allContents = d3.select("#allCanvasContents");
 
     function update() {
-        node.attr("transform", d => `translate(${d.x},${d.y})`);
+        // node.attr("transform", d => `translate(${d.x},${d.y})`);
     }
 
     var dragHandler = d3.drag()
        .on("start", (event, d) => rect.attr("stroke", "red"))
-       .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
-       .on("end", (event, d) => rect.attr("stroke", "#3a4c69"))
+       .on("drag", (event, d) => {           
+           console.log(reactContext.state.clickedId)
+            moveComponent(reactContext.state.clickedId, event.x, event.y);
+            d.x = event.x; 
+            d.y = event.y;
+        })
+       .on("end", (event, d) => {
+           rect.attr("stroke", "#3a4c69");
+           
+       })
        .on("start.update drag.update end.update", update)
 
     var edgeDragHandlerf = d3.drag()
@@ -144,7 +152,7 @@ function CreateNewSlider(FromExisting = null) {
                 rectType: "slider",
             })
         })
-        .call(dragHandler);
+        // .call(dragHandler);
     
     var superNode = node.append("g");
 
@@ -174,7 +182,7 @@ function CreateNewSlider(FromExisting = null) {
             y: FromExisting ? FromExisting.Y : genY + 10,
         }])
         // .call(edgeDragHandlerf);
-        .call(edgeDragHandler);
+        // .call(edgeDragHandler);
 
     var rect = superNode.append('rect')
         .attr("class", "CompSBody " + newSlider.GUID)

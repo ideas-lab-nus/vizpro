@@ -25,7 +25,7 @@
  */
 
 import {returnCurveString,getlocationFromTransform, handleEdgeMovement,
-    deleteComponent, popupMessage,moveComponent} from './functions.js';
+    deleteComponent, popupMessage,moveComponent, selectComp} from './functions.js';
 
 var d3 = require("d3");
 
@@ -56,16 +56,6 @@ var selection_box = null;
 
 var allContents = d3.select("#allCanvasContents");
 var reactContext;
-
-function selectComp(allComp, value, by = "GUID") {
-    let toreturn = null
-    allComp.forEach(element => {
-        if (element[by] === value) {
-            toreturn = element
-        }
-    });
-    return toreturn;
-} // End of selectComp
 
 function manageGrid() {
     reactContext = this;
@@ -98,7 +88,7 @@ function manageGrid() {
             if (reactContext.state.selected_components.length > 1) {
                 console.log("You will delete ")
             }
-            if (selectComp(allComp, selected_component_id).type === "fileUpload") {
+            if (selectComp(selected_component_id).type === "fileUpload") {
                 if (window.confirm("Are you sure you want to delete this file from the database? ")) {
                     console.log("You should delete the file from the database now... ")
                     deleteComponent(selected_component_id);
@@ -141,17 +131,17 @@ function manageGrid() {
             moveComponent(reactContext.state.clickedId, x, y);
         }
         if (reactContext.state.edgeStarted) {
-            // d3.select("#" + reactContext.state.selectedcircleId)
-            //     .attr("d", function () {
-            //         return returnCurveString(reactContext.state.initEdgex1, reactContext.state.initEdgey1, mousex - 2, mousey - 2);
-            //     }).attr("fill", "none")
-            //     .attr("stroke-opacity", "0.2")
-            //     .attr("interpolate", "basis");
+            d3.select("#" + reactContext.state.selectedcircleId)
+                .attr("d", function () {
+                    return returnCurveString(reactContext.state.initEdgex1, reactContext.state.initEdgey1, mousex - 2, mousey - 2);
+                }).attr("fill", "none")
+                .attr("stroke-opacity", "0.2")
+                .attr("interpolate", "basis");
         }
 
         var textAreaRectId = reactContext.state.textAreaRectId;
         var optionlistRectid = reactContext.state.optionlistRectid;
-        var StringAnchorType = reactContext.state.StringAnchorclicked;
+        var StringAnchorType = reactContext.state.StringAnchorType;
         var YANCHOR = reactContext.state.YANCHOR;
         var XANCHOR = reactContext.state.XANCHOR;
         var anchorMouseXpos = reactContext.state.anchorMouseXpos;
@@ -324,7 +314,7 @@ function manageGrid() {
             try {           
                 //This needs to move to a separate function .     
                 var clickedId = reactContext.state.clickedId;
-                var just_moved_component = selectComp(allComp, clickedId);
+                var just_moved_component = selectComp(clickedId);
                 var current_components_selection = { ...reactContext.state.components_selection_data };
                 current_components_selection[clickedId] = {
                     "x0": just_moved_component.X, 
@@ -351,7 +341,7 @@ function manageGrid() {
         }
         if (reactContext.state.StringAnchorclicked) {
             var StringAnchorId = reactContext.state.StringAnchorId;
-            var modified_string_comp = selectComp(allComp, StringAnchorId);
+            var modified_string_comp = selectComp(StringAnchorId);
             current_components_selection = { ...reactContext.state.components_selection_data };
             current_components_selection[StringAnchorId] = {
                 "x0": modified_string_comp.X, 
@@ -477,7 +467,7 @@ function highlightSelection(components_list, temp_selected_xs, temp_selected_ys)
 
 function alignComponent(alignment) {
     reactContext.state.selected_components.forEach(element => {
-        var this_comp = selectComp(reactContext.state.allComp, element);
+        var this_comp = selectComp(element);
         if (alignment === "left") {
             this_comp.X = min_selected_x;
         } else if (alignment === "right") {

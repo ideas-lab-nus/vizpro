@@ -165,7 +165,7 @@ export default class Canvas extends React.Component {
                 <ScriptTag>{this.dummyToSetStateEdge()}</ScriptTag>
                 <ScriptTag>{this.handleComponentSelection()}</ScriptTag>
                 <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
-                {/* <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag> */}
+                <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
                 <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>
                 <ScriptTag>{this.handleFileUpload()}</ScriptTag>
                 <div className="canvas_container canvas_container_inner main_canvas_container canvas_body_container">

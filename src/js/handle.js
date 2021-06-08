@@ -183,7 +183,7 @@ function handleComponentSelection() {
 function handleTheClickOnAllComponents() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;
-    var allcomp = d3.selectAll("rect.CompBody")
+    var allcomp = d3.selectAll("rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody")
         .on('mousedown', function(event) {
             var coordinates = d3.pointer(event);
             
@@ -210,9 +210,10 @@ function handleTheClickOnAllComponents() {
         })
 } // End of handleTheClickOnAllComponents
 
-function handleEdgeInitialization(context = 1) {
-    console.log(context +" vs" + this);
-    var reactContext = context === 1 ? this : context;
+function handleEdgeInitialization() {
+    // console.log(context +" vs" + this);
+    // var reactContext = context === 1 ? this : context;
+    var reactContext = this;
     var allComp = reactContext.state.allComp;
     var allContents = d3.select("#allCanvasContents");
     var toComponent = null;
@@ -265,6 +266,7 @@ function handleEdgeInitialization(context = 1) {
                         }).attr('stroke', "black")
                         .attr("stroke-width", "3")
                         .attr("id", "Path" + selectedcircleId);
+
                     fromCircle.element = this;                    
                     reactContext.setState({
                         selectedcircleId: "Path" + selectedcircleId,
@@ -296,8 +298,8 @@ function handleEdgeInitialization(context = 1) {
             var comp_output_edges = { ...reactContext.state.comp_output_edges };
             var root_components = reactContext.state.root_components;
             var parent_child_matrix = { ...reactContext.state.parent_child_matrix };
-            var parent_child_matrix_fast_check = { ...reactContext.state.parent_child_matrix_fast_check };
-            var selectedcircleId;
+            var parent_child_matrix_fast_check = [ ...reactContext.state.parent_child_matrix_fast_check ];
+            var selectedcircleId = reactContext.state.selectedcircleId;
 
             if (edgeStarted && targetcircleIN && this !== fromCircle.element && comp_input_edges[this.classList[1]][this.classList[2]] === undefined) {
                 toCircle.element = this;
