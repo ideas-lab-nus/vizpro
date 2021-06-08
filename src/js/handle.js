@@ -175,7 +175,6 @@ function handleComponentSelection() {
     ViewListRedrawing();
 } // End of handleComponentSelection
 
-
 //Slider component id changed to CompSBody hence will not be picked up
 //by this function. Lookout for side effects!
 //Panel changed to CompPBody
@@ -211,15 +210,16 @@ function handleTheClickOnAllComponents() {
         })
 } // End of handleTheClickOnAllComponents
 
-//Fix state changes
-function handleEdgeInitialization() {
-    var reactContext = this;
+function handleEdgeInitialization(context = 1) {
+    console.log(context +" vs" + this);
+    var reactContext = context === 1 ? this : context;
     var allComp = reactContext.state.allComp;
     var allContents = d3.select("#allCanvasContents");
     var toComponent = null;
     var fromComponent = null;
     var allCircles = d3.selectAll("circle")
         .on('mousedown', function(event) {
+            console.log(this);
             reactContext.setState({
                 targetcircleId: this.id,
             })
@@ -233,7 +233,9 @@ function handleEdgeInitialization() {
             if (edgeStarted && targetcircleIN && this !== fromCircle.element) {
                 // DUMMY, Nothing to do in this version. :D :D 
             } else {
+                console.log("cond" + (this.classList[0] === "outputCir"))
                 if (this.classList[0] === "outputCir") {
+                    console.log(comp_output_edges);
                     if (comp_output_edges[this.classList[1]][this.classList[2]] === undefined) {
                         selectedcircleId = this.id;
                         reactContext.setState({
@@ -267,6 +269,8 @@ function handleEdgeInitialization() {
                     reactContext.setState({
                         selectedcircleId: "Path" + selectedcircleId,
                         fromCircle: fromCircle,
+                        initEdgex1: initEdgex1,
+                        initEdgey1: initEdgey1
                     })
                 }
             }
@@ -283,7 +287,6 @@ function handleEdgeInitialization() {
         })
         .on("mouseup", function() {
             //This event is called when the mouse cursor is inside the input circle, this means that the line is now complete and ready to be created. 
-
             var edgeStarted = reactContext.state.edgeStarted;
             var allEdges = reactContext.state.allEdges;
             var targetcircleIN = reactContext.state.targetcircleIN;
@@ -309,10 +312,10 @@ function handleEdgeInitialization() {
                     " " + toCircle.element.classList[1]);
 
                 console.log(parent_child_matrix_fast_check)
-                if (!parent_child_matrix_fast_check.includes(fromCircle.element.classList[2] +
-                        " " + fromCircle.element.classList[1] +
-                        " " + toCircle.element.classList[2] +
-                        " " + toCircle.element.classList[1])) {
+                if (!parent_child_matrix_fast_check.includes(fromCircle.element.classList[2] + " " + 
+                                                             fromCircle.element.classList[1] + " " + 
+                                                             toCircle.element.classList[2] + " " + 
+                                                             toCircle.element.classList[1])) {
                     var thisEdge = addEdge(fromCircle, toCircle, fromCircle.element.classList, toCircle.element.classList);
                     var thisPath = d3.select("#" + selectedcircleId)
 
@@ -581,4 +584,4 @@ function handleDoubleClick() {
 } // End of HandleDoubleClick
 
 export {GetURLParameter, handleTheClickOnAllComponents, handleEdgeInitialization, 
-    handleComponentSelection, handleDoubleClick, uuidv4, addCircle};
+    handleComponentSelection, handleDoubleClick, uuidv4, addCircle, addEdge};

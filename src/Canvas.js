@@ -11,11 +11,14 @@ import {setCurrentCagegory, showThisPanel} from './js/insert.js';
 import {manageCanvas} from './js/layout.js'; 
 import {manageGrid} from './js/mainGrid.js';
 import {dummyToSetState} from './js/functions.js';
+import {dummyToSetStateEdge} from './js/edge.js';
 import Grid from './Grid';      
 import {handleComponentSelection, handleTheClickOnAllComponents, 
     handleEdgeInitialization, handleDoubleClick, addCircle} from './js/handle.js';
 
 const globalVars = {
+    initEdgex1: 0,
+    initEdgey1: 0,
     fromCircle: addCircle(),
     toCircle: addCircle(),
     selection_rectangle_group_rect: null,
@@ -128,6 +131,7 @@ export default class Canvas extends React.Component {
         this.CreateNewFileUpload = CreateNewFileUpload.bind(this);
         this.manageGrid = manageGrid.bind(this);
         this.dummyToSetState = dummyToSetState.bind(this);
+        this.dummyToSetStateEdge = dummyToSetStateEdge.bind(this);
     }
 
     componentDidMount() {
@@ -158,9 +162,10 @@ export default class Canvas extends React.Component {
             <div>
                 {/* <ScriptTag>{this.print()}</ScriptTag> */}
                 <ScriptTag>{this.dummyToSetState()}</ScriptTag>
+                <ScriptTag>{this.dummyToSetStateEdge()}</ScriptTag>
                 <ScriptTag>{this.handleComponentSelection()}</ScriptTag>
                 <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
-                <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
+                {/* <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag> */}
                 <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>
                 <ScriptTag>{this.handleFileUpload()}</ScriptTag>
                 <div className="canvas_container canvas_container_inner main_canvas_container canvas_body_container">

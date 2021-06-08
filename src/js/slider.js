@@ -24,8 +24,10 @@
  * @since  x.x.x
  */
 
-import {redrawDependents} from './functions.js';
+import {redrawDependents, selectComp, updateAll} from './functions.js';
+import {addEdge} from './handle';
 import {uuidv4} from './handle.js';
+import {edgeDragHandler} from './edge.js';
 var d3 = require('d3');
 
 var theRequiredSliderGroup = "";
@@ -94,7 +96,6 @@ function CreateNewSlider(FromExisting = null) {
     newSlider.dftype = "shlow";
 
     var allContents = d3.select("#allCanvasContents");
-    console.log(allContents);
 
     function update() {
         node.attr("transform", d => `translate(${d.x},${d.y})`);
@@ -106,10 +107,16 @@ function CreateNewSlider(FromExisting = null) {
        .on("end", (event, d) => rect.attr("stroke", "#3a4c69"))
        .on("start.update drag.update end.update", update)
 
+    var edgeDragHandlerf = d3.drag()
+    .on("start", (event, d) => rect.attr("stroke", "yellow"))
+    .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
+    .on("end", (event, d) => rect.attr("stroke", "#3a4c69"))
+//    .on("start.update drag.update end.update", update)
+
     var cont = allContents.append("g")
         .attr("class", "slider")
         .attr("id", newSlider.GUID);
-
+ 
     var genX;
     var genY;
 
@@ -138,6 +145,8 @@ function CreateNewSlider(FromExisting = null) {
             })
         })
         .call(dragHandler);
+    
+    var superNode = node.append("g");
 
     var OutputGroup = node.append('g');
 
@@ -149,9 +158,25 @@ function CreateNewSlider(FromExisting = null) {
         .attr("stroke", "black")
         .attr("stroke-width", "2")
         .attr("id", "outputCir" + newSlider.GUID)
-        .attr("class", "outputCir " + newSlider.GUID + " 0");
+        .attr("class", "outputCir " + newSlider.GUID + " 0")
+        .on("mouseover", function() {
+            reactContext.setState({
+                targetcircleIN: true,
+            })
+        })
+        .on("mouseout", function() {
+            reactContext.setState({
+                targetcircleIN: false,
+            })
+        })        
+        .data([{
+            x: FromExisting ? FromExisting.X : genX + newSlider.width,
+            y: FromExisting ? FromExisting.Y : genY + 10,
+        }])
+        // .call(edgeDragHandlerf);
+        .call(edgeDragHandler);
 
-    var rect = node.append('rect')
+    var rect = superNode.append('rect')
         .attr("class", "CompSBody " + newSlider.GUID)
         .attr("id", newSlider.GUID)
         .attr("rx", "3")
@@ -174,7 +199,7 @@ function CreateNewSlider(FromExisting = null) {
             newSlider.rect = this;
         })
         .on("dblclick", () => {
-            //console.log("You dobule clicked me ");
+            //console.log("You double clicked me ");
         })
         .on("mousedown", () => {
             reactContext.setState({
@@ -183,7 +208,7 @@ function CreateNewSlider(FromExisting = null) {
         });
 
 
-    var ValueTextGroup = node.append("g")
+    var ValueTextGroup = superNode.append("g")
         .attr("transform", () => {
             return ("translate(-80, 0)")
         });
@@ -205,7 +230,7 @@ function CreateNewSlider(FromExisting = null) {
         .attr("fill", "white")
         .text(newSlider.value.toString());
 
-    var Titlegroup = node.append("g")
+    var Titlegroup = superNode.append("g")
         .attr("transform", () => {
             return "translate(0, 15)";
         });
@@ -216,7 +241,7 @@ function CreateNewSlider(FromExisting = null) {
         .attr("fill", "black")
         .attr("transform", "translate(" + titleMarginLeft / 2.0 + ", 0)")
 
-    var SlidingGroup = node.append("g")
+    var SlidingGroup = superNode.append("g")
         .attr("transform", "translate(60, 0)");
 
     var slidingRectContainer = SlidingGroup.append("rect")
@@ -336,7 +361,6 @@ function CreateNewSlider(FromExisting = null) {
     if (FromExisting == null) {
         //Make a copy of the array
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log(current_all_comp);
         console.log("Adding a slider" + newSlider);
         current_all_comp.push(newSlider);
         reactContext.setState({

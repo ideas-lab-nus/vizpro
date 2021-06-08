@@ -141,12 +141,12 @@ function manageGrid() {
             moveComponent(reactContext.state.clickedId, x, y);
         }
         if (reactContext.state.edgeStarted) {
-            d3.select("#" + reactContext.state.selectedcircleId)
-                .attr("d", function () {
-                    return returnCurveString(x, y, mousex - 2, mousey - 2);
-                }).attr("fill", "none")
-                .attr("stroke-opacity", "0.2")
-                .attr("interpolate", "basis");
+            // d3.select("#" + reactContext.state.selectedcircleId)
+            //     .attr("d", function () {
+            //         return returnCurveString(reactContext.state.initEdgex1, reactContext.state.initEdgey1, mousex - 2, mousey - 2);
+            //     }).attr("fill", "none")
+            //     .attr("stroke-opacity", "0.2")
+            //     .attr("interpolate", "basis");
         }
 
         var textAreaRectId = reactContext.state.textAreaRectId;
@@ -347,7 +347,7 @@ function manageGrid() {
             reactContext.setState({
                 edgeStarted: false,
             })
-            var theEdge = d3.select("#" + reactContext.state.selectedcircleId).remove();
+            d3.select("#" + reactContext.state.selectedcircleId).remove();
         }
         if (reactContext.state.StringAnchorclicked) {
             var StringAnchorId = reactContext.state.StringAnchorId;
