@@ -34,7 +34,9 @@ var d3 = require('d3');
 var runDeep;
 
 /**
- * 
+ * Create a new generic component (everything except slider, option list, panel, file upload, toogle, list view).
+ * Example of calling this function for Average component:
+ * CreateNewComponent(null, "Average", {"shortName": "AVG", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["average", "log_"], "#F23322")}
  * @param {*} FromExisting 
  * @param {*} type the type of the component, either shallow or deep
  * @param {*} kwargs 
@@ -42,8 +44,6 @@ var runDeep;
  * This can be obtained by print out the udo_inputs in the Django version.
  * @param {*} outputList a list of string containing the name of the outputs. This can be obtained by print out the udo_outputs in the Django version.
  * @param {*} color the color of the component. The default color is #F23322 (orange). This can be obtained by print out the udo_fill in the Django version.
- * Example of calling this function for Average component:
- * CreateNewComponent(null, "Average", {"shortName": "AVG", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["average", "log_"], "#F23322")}
  */
 function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inputList, outputList, color = "#F23322") {
     console.log("Create new component called");
@@ -191,13 +191,12 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inp
                 } else {
                     return FromExisting.inputs[index].type;
                 }
-
             });
     }
 
     InputGroup = node.append('g');
     for (let index = 0; index < newcomp.inputs.length; index++) {
-        var inp = InputGroup.append('circle').lower()
+        inp = InputGroup.append('circle').lower()
             .attr("cx", "0")
             .attr("cy", (index * padding + titleMargin).toString())
             .attr("fill", newcomp.fill)
@@ -263,10 +262,10 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inp
         .attr("stroke", newcomp.fill)
         .attr("width", newcomp.width)
         .attr("height", newcomp.height)
-        .attr("fill", "url(#grad1ient)")
+        .attr("fill", "#E8E8E8")
         .on("mousedown", () => {
             rectType = "component";
-        })
+        });
 
 
 
@@ -331,7 +330,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inp
             .attr("transform", "translate(" + 10 +
                 " , " + (index * padding + titleMargin + 5).toString() + ")")
             .text(newcomp.inputs[index].Name)
-            .attr("fill", "white")
+            .attr("fill", "black")
             .attr("type", function() {
                 newcomp.inputs[index].textObj = this.id;
                 if (FromExisting == null) {
@@ -340,7 +339,6 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inp
                     return FromExisting.inputs[index].type;
                 }
             });
-
     }
 
     var OutputGroupText = node.append('g');
@@ -351,7 +349,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inp
             .attr("transform", "translate(" + (newcomp.width - (newcomp.outputs[index].ShortName.length * 8) - 5).toString() + " , " + (index * padding + titleMargin + 5).toString() +
                 ")")
             .text(newcomp.outputs[index].ShortName)
-            .attr("fill", "white")
+            .attr("fill", "black")
             .attr("type", function() {
                 newcomp.outputs[index].circle = this;
                 if (FromExisting == null) {
@@ -403,7 +401,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inp
         .attr("width", 18)
         .attr("height", 18)
         .attr("style", () => {
-            return `background-image:url(/static/base/img/` + newcomp.Name + `.png);background-size: 15px;background-repeat: no-repeat;background-position: center;`
+            return `background-image:url(src/img/` + newcomp.Name + `.png);background-size: 15px;background-repeat: no-repeat;background-position: center;`
         })
 
     if (newcomp.dftype === 'dp') {

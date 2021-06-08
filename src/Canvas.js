@@ -152,7 +152,7 @@ export default class Canvas extends React.Component {
     }
 
     print() {
-        console.log("all Comp is " + this.state.allComp)
+        console.log("all Comp is " + this.state.allComp);
     }
 
     render() {
@@ -207,9 +207,11 @@ export default class Canvas extends React.Component {
                                 
                                 <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 d2312a8b-63dc-4112-8a66-76996c150b0e 0" style={{display:"none"}}>
                                         
-                                    <div onClick={() => this.CreateNewComponent(null, "Average", {"shortName": "AVG", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["average", "log_"], "#F23322")} id="addComp" name="Average" shname="AVG" desc="The average between two values" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/958f17e5cfad4cdbbe26dd5affbbbfa2.png)"}}>&nbsp;<span id="hint">Average</span></div>
+                                    <div onClick={() => this.CreateNewComponent(null, "Average", {"shortName": "AVG", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["average", "log_"], "#F23322")} 
+                                    id="addComp" name="Average" shname="AVG" desc="The average between two values" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/958f17e5cfad4cdbbe26dd5affbbbfa2.png)"}}>&nbsp;<span id="hint">Average</span></div>
                                         
-                                    <div id="addComp" name="Add" shname="+" desc="Add two numbers." type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/e2c5a0d28dca45c38b0e96e6723e2bde.png)"}}>&nbsp;<span id="hint">Add</span></div>
+                                    <div onClick={() => this.CreateNewComponent(null, "Add", {"shortName": "+", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["sum_", "log_"], "#F23322")} 
+                                    id="addComp" name="Add" shname="+" desc="Add two numbers." type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/e2c5a0d28dca45c38b0e96e6723e2bde.png)"}}>&nbsp;<span id="hint">Add</span></div>
                                         
                                     <div id="addComp" name="Max" shname="max" desc="Maximum value of a list of inputs." type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/96524490dcdf4317a9a3e80b9d4762ba.png)"}}>&nbsp;<span id="hint">Max</span></div>
                                         
@@ -227,7 +229,8 @@ export default class Canvas extends React.Component {
                                             
                                     <div id="addComp" name="Plot Panel" shname="plot panel" desc="" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Plot Panel</div>
                                         
-                                    <div id="addComp" name="Cloud" shname="Cloud" desc="" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Cloud</div>
+                                    <div onClick={() => this.CreateNewComponent(null, "Cloud", {"shortName": "Cloud", "dfType": "dp"}, [{"name": "number"}, {"name": "url"}], ["abs"], "#F0CA4D")} 
+                                    id="addComp" name="Cloud" shname="Cloud" desc="" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Cloud</div>
                                     
                                 </div>
                                 
