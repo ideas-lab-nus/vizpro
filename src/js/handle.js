@@ -186,6 +186,7 @@ function handleTheClickOnAllComponents() {
     var allcomp = d3.selectAll("rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody")
         .on('mousedown', function(event) {
             var coordinates = d3.pointer(event);
+            console.log(coordinates)
             
             var pos = $("g#comp-" + this.id.replace("overlaySelector", ""))
                 .attr("transform")

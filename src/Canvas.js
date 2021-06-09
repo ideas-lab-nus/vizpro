@@ -8,7 +8,7 @@ import {CreateNewToggle} from './js/toggle.js';
 import {CreateNewFileUpload, handleFileUpload} from './js/fileUpload.js';
 import {CreateNewListView} from './js/listView.js';
 import {setCurrentCagegory, showThisPanel} from './js/insert.js';   
-import {manageCanvas} from './js/layout.js'; 
+import {manageCanvas, zoom} from './js/layout.js'; 
 import {manageGrid} from './js/mainGrid.js';
 import {dummyToSetState} from './js/functions.js';
 import {dummyToSetStateEdge} from './js/edge.js';
@@ -16,7 +16,12 @@ import Grid from './Grid';
 import {handleComponentSelection, handleTheClickOnAllComponents, 
     handleEdgeInitialization, handleDoubleClick, addCircle} from './js/handle.js';
 
+    
+var d3 = require('d3');
+
 const globalVars = {
+    canvasX: 0,
+    canvasY: 0,
     initEdgex1: 0,
     initEdgey1: 0,
     fromCircle: addCircle(),
@@ -132,6 +137,7 @@ export default class Canvas extends React.Component {
         this.manageGrid = manageGrid.bind(this);
         this.dummyToSetState = dummyToSetState.bind(this);
         this.dummyToSetStateEdge = dummyToSetStateEdge.bind(this);
+        // this.zoom = zoom.bind(this);
     }
 
     componentDidMount() {
@@ -168,6 +174,7 @@ export default class Canvas extends React.Component {
                 <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
                 <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>
                 <ScriptTag>{this.handleFileUpload()}</ScriptTag>
+                {/* <ScriptTag>{this.zoom()}</ScriptTag> */}
                 <div className="canvas_container canvas_container_inner main_canvas_container canvas_body_container">
                     <div className="ui-designer-grid" id="mainGrid">
                         <Grid />   

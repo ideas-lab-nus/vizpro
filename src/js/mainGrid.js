@@ -54,11 +54,11 @@ var selection_box_started = false;
 var items_are_selected  = false; 
 var selection_box = null;
 
-var allContents = d3.select("#allCanvasContents");
 var reactContext;
 
 function manageGrid() {
     reactContext = this;
+    var allContents = d3.select("#allCanvasContents");
     var optionListStarted = reactContext.state.optionListStarted;
     var startDrag = reactContext.state.startDrag;
     var mouseInsideOption = reactContext.state.mouseInsideOption;
@@ -109,6 +109,7 @@ function manageGrid() {
         d3.select("body").append("option")
     })
     .on("contextmenu", function (event, d, i) {
+        //context menu event raised on right click
         event.preventDefault();
         popupMessage("RMB");
         selection_box_started = true; 
@@ -116,24 +117,32 @@ function manageGrid() {
         selection_box_y = d3.pointer(event, allContents.node())[1];        
         selection_box = allContents.append("polyline"); 
     })
-    .on('mousemove', function (event) {         
+    .on('mousemove', function (event) {   
+        console.log(allContents.node())      
         var mousex = d3.pointer(event, allContents.node())[0];
         var mousey = d3.pointer(event, allContents.node())[1];
         reactContext.setState({            
             mousex: mousex,
             mousey: mousey,
         })        
-        var x = mousex - reactContext.state.componentClickX - 180;
-        var y = mousey - reactContext.state.componentClickY - 25;
         if (reactContext.state.startDrag) {
             //A slider/panel/toggle/fileUpload/listView/optionList shouldn't enter this condition
             console.log("Trying to drag the component");
+            // console.log(event);      
+            // console.log(mousex)      
+            var x = mousex - reactContext.state.componentClickX ;
+            var y = mousey - reactContext.state.componentClickY ;
             moveComponent(reactContext.state.clickedId, x, y);
         }
         if (reactContext.state.edgeStarted) {
             d3.select("#" + reactContext.state.selectedcircleId)
                 .attr("d", function () {
-                    return returnCurveString(reactContext.state.initEdgex1, reactContext.state.initEdgey1, mousex - 2, mousey - 2);
+                    return returnCurveString(reactContext.state.initEdgex1, 
+                                             reactContext.state.initEdgey1, 
+                                            //  event.screenX,
+                                            //  event.screenY);
+                                             mousex - reactContext.state.canvasX, 
+                                             mousey - reactContext.state.canvasY);
                 }).attr("fill", "none")
                 .attr("stroke-opacity", "0.2")
                 .attr("interpolate", "basis");
@@ -408,6 +417,7 @@ function manageGrid() {
 
 var someCircle; 
 function highlightSelection(components_list, temp_selected_xs, temp_selected_ys) {
+    var allContents = d3.select("#allCanvasContents");
     if (selection_rectangle_group != null ) {
         selection_rectangle_group.remove();
         selection_rectangle_group = null;
