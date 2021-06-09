@@ -3,11 +3,16 @@ import {selectComp, redrawDependents} from './functions.js';
 import $ from "jquery";
 var d3 = require('d3');
 
+/**
+ * Double click the slider => the property bar appears
+ * Handles the event when the Save button on the property bar is clicked
+ * @param {String} compKey The ID of the clicked components
+ */
 function submitSliderEdit(compKey) {
     var slider_component = selectComp(compKey);
-    slider_component.min = parseFloat($("input#new_slider_min_value").val())
-    slider_component.max = parseFloat($("input#new_slider_max_value").val())   
-    slider_component.value = parseFloat($("input#new_slider_current_value").val())
+    slider_component.min = parseFloat($("input#new_slider_min_value").val());
+    slider_component.max = parseFloat($("input#new_slider_max_value").val());  
+    slider_component.value = parseFloat($("input#new_slider_current_value").val());
 
     var slider_anchor_slope = (SLIDER_END_POSITION-SLIDER_START_POSITION)/(slider_component.max-slider_component.min);
     var slider_anchor_y_intersection = (SLIDER_END_POSITION-SLIDER_START_POSITION) - (slider_anchor_slope*slider_component.max); 
@@ -25,6 +30,10 @@ function submitSliderEdit(compKey) {
     $("div#propertiesBarContents").html("");        
 }
 
+/**
+ * Double click the slider => the property bar appears
+ * Handles the event when the Cancel button on the property bar is clicked
+ */
 function cancelSliderEdit() {
     $("div#propertiesBarContents").html(""); 
 }

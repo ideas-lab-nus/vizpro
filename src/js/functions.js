@@ -47,10 +47,8 @@ var cut_component_type = null;
 
 var reactContext;
 var allComp;
-var IDLE_COLOR;
 var ACTIVE_COLOR;
 var ERROR_COLOR;
-var COMPONENT_RADIUS;
 var allEdges;
 var comp_input_edges;
 var comp_output_edges;
@@ -59,25 +57,7 @@ var parent_child_matrix;
 var parent_child_matrix_fast_check;
 var root_components;
 var components_selection_data;
-var selected_components;
 var runDeep;
-var StringAnchorclicked;
-var StringAnchorType;
-var StringAnchorId;
-var XANCHOR;
-var YANCHOR;
-var ANCHOR_WIDTH;
-var SLIDER_START_POSITION;
-var SLIDER_END_POSITION;
-var anchorMouseXpos;
-var anchorMouseYpos;
-var SliderAnchorclicked;
-var selectedSliderComponent;
-var dragX;
-var dragY;
-var sliderRectId;
-var initPos;
-var startDrag;
 var clickedId;
 var rectType;
 var deltaX;
@@ -92,129 +72,39 @@ var xGrid;
 var yGrid;
 var mousex;
 var mousey;
-var initEdgex2;
-var initEdgey2;
-var componentClickX;
-var componentClickY;
-var textareaStarted;
-var textAreaRectId;
-var optionListStarted;
-var optionlistRectid;
-var justSelected;
-var mouseInsideOption;
-var is_component_selected;
-var selected_component_id;
-var rightColumnIsSelected;
-var leftColumnIsSelected;
-var topColumnIsSelected;
-var rightColIsdisplayed;
-var leftColIsdisplayed;
-var is_edge_selected;
-var currentTopBarHeight;
-var currentLeftColWidth;
-var currentRightColWidth;
-var defVars;
 var messageshown;
-var Output;
-var Input;
-var toCircle;
-var fromCircle;
-var udo_names;
-var udo_types;
-var udo_desc;
-var udo_shortNames;
-var udo_inputs;
-var udo_outputs;
-var udo_fill;
-var udo_dftypes;
-var udo_cats;
-var udo_subcats;
-var cats;
-var scats;
+var mouseInsideOption;
 
 function dummyToSetState() {
     reactContext = this;
     allComp = reactContext.state.allComp;
-    IDLE_COLOR = reactContext.state.IDLE_COLOR
-    ACTIVE_COLOR = reactContext.state.ACTIVE_COLOR
-    ERROR_COLOR = reactContext.state.ERROR_COLOR
-    COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS
-    allEdges = reactContext.state.allEdges
-    comp_input_edges = reactContext.state.comp_input_edges
-    comp_output_edges = reactContext.state.comp_output_edges
-    edge_comp_matrix = reactContext.state.edge_comp_matrix
-    parent_child_matrix = reactContext.state.parent_child_matrix
-    parent_child_matrix_fast_check = reactContext.state.parent_child_matrix_fast_check
-    root_components = reactContext.state.root_components
-    components_selection_data = reactContext.state.components_selection_data
-    selected_components = reactContext.state.selected_components
-    runDeep = reactContext.state.runDeep
-    StringAnchorclicked = reactContext.state.StringAnchorclicked
-    StringAnchorType = reactContext.state.StringAnchorType
-    StringAnchorId = reactContext.state.StringAnchorId
-    XANCHOR = reactContext.state.XANCHOR
-    YANCHOR = reactContext.state.YANCHOR
-    ANCHOR_WIDTH = reactContext.state.ANCHOR_WIDTH
-    SLIDER_START_POSITION = reactContext.state.SLIDER_START_POSITION
-    SLIDER_END_POSITION = reactContext.state.SLIDER_END_POSITION
-    anchorMouseXpos = reactContext.state.anchorMouseXpos
-    anchorMouseYpos = reactContext.state.anchorMouseYpos
-    SliderAnchorclicked = reactContext.state.SliderAnchorclicked
-    selectedSliderComponent = reactContext.state.selectedSliderComponent
-    dragX = reactContext.state.dragX
-    dragY = reactContext.state.dragY
-    sliderRectId = reactContext.state.sliderRectId
-    initPos = reactContext.state.initPos
-    startDrag = reactContext.state.startDrag
-    clickedId = reactContext.state.clickedId
-    rectType = reactContext.state.rectType
-    deltaX = reactContext.state.deltaX
-    deltaY = reactContext.state.deltaY
-    clicked = reactContext.state.clicked
-    edgeStarted = reactContext.state.edgeStarted
-    targetcircleIN = reactContext.state.targetcircleIN
-    selectedcircleId = reactContext.state.selectedcircleId
-    targetcircleId = reactContext.state.targetcircleId
-    selectedSliderAnchorId = reactContext.state.selectedSliderAnchorId
-    xGrid = reactContext.state.xGrid
-    yGrid = reactContext.state.yGrid
+    ACTIVE_COLOR = reactContext.state.ACTIVE_COLOR;
+    ERROR_COLOR = reactContext.state.ERROR_COLOR;
+    allEdges = reactContext.state.allEdges;
+    comp_input_edges = reactContext.state.comp_input_edges;
+    comp_output_edges = reactContext.state.comp_output_edges;
+    edge_comp_matrix = reactContext.state.edge_comp_matrix;
+    parent_child_matrix = reactContext.state.parent_child_matrix;
+    parent_child_matrix_fast_check = reactContext.state.parent_child_matrix_fast_check;
+    root_components = reactContext.state.root_components;
+    components_selection_data = reactContext.state.components_selection_data;
+    runDeep = reactContext.state.runDeep;
+    clickedId = reactContext.state.clickedId;
+    rectType = reactContext.state.rectType;
+    deltaX = reactContext.state.deltaX;
+    deltaY = reactContext.state.deltaY;
+    clicked = reactContext.state.clicked;
+    edgeStarted = reactContext.state.edgeStarted;
+    targetcircleIN = reactContext.state.targetcircleIN;
+    selectedcircleId = reactContext.state.selectedcircleId;
+    targetcircleId = reactContext.state.targetcircleId;
+    selectedSliderAnchorId = reactContext.state.selectedSliderAnchorId;
+    xGrid = reactContext.state.xGrid;
+    yGrid = reactContext.state.yGrid;
     mousex = reactContext.state.mousex
-    mousey = reactContext.state.mousey
-    initEdgex2 = reactContext.state.initEdgex2
-    initEdgey2 = reactContext.state.initEdgey2
-    componentClickX = reactContext.state.componentClickX
-    componentClickY = reactContext.state.componentClickY
-    textareaStarted = reactContext.state.textareaStarted
-    textAreaRectId = reactContext.state.textAreaRectId
-    optionListStarted = reactContext.state.optionListStarted
-    optionlistRectid = reactContext.state.optionlistRectid
-    justSelected = reactContext.state.justSelected
-    mouseInsideOption = reactContext.state.mouseInsideOption
-    is_component_selected = reactContext.state.is_component_selected
-    selected_component_id = reactContext.state.selected_component_id
-    rightColumnIsSelected = reactContext.state.rightColumnIsSelected
-    leftColumnIsSelected = reactContext.state.leftColumnIsSelected
-    topColumnIsSelected = reactContext.state.topColumnIsSelected
-    rightColIsdisplayed = reactContext.state.rightColIsdisplayed
-    leftColIsdisplayed = reactContext.state.leftColIsdisplayed
-    is_edge_selected = reactContext.state.is_edge_selected
-    currentTopBarHeight = reactContext.state.currentTopBarHeight
-    currentLeftColWidth = reactContext.state.currentLeftColWidth
-    currentRightColWidth = reactContext.state.currentRightColWidth
-    defVars = reactContext.state.defVars
-    messageshown = reactContext.state.messageshown
-    udo_names = reactContext.state.udo_names
-    udo_types = reactContext.state.udo_types
-    udo_desc = reactContext.state.udo_desc
-    udo_shortNames = reactContext.state.udo_shortNames
-    udo_inputs = reactContext.state.udo_inputs
-    udo_outputs = reactContext.state.udo_outputs
-    udo_fill = reactContext.state.udo_fill
-    udo_dftypes = reactContext.state.udo_dftypes
-    udo_cats = reactContext.state.udo_cats
-    udo_subcats = reactContext.state.udo_subcats
-    cats = reactContext.state.cats
-    scats = reactContext.state.scats
+    mousey = reactContext.state.mousey;
+    mouseInsideOption = reactContext.state.mouseInsideOption;
+    messageshown = reactContext.state.messageshown;
 }
 
 function KeyPress(event, e) {

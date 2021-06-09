@@ -66,10 +66,8 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
     }
 
     newcomp.fill = "url(#grad1ient)";
-    var one_character_width = 8;
     var padding = 20;
     var titleMargin = 30;
-    var titleMarginLeft = 30;
     newcomp.height = 200;
     newcomp.type = "listView";
     newcomp.dftype = "shlow";

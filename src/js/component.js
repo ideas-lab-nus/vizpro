@@ -25,20 +25,36 @@
  * @since  x.x.x
  */
 
-
- import {udo_inputs, udo_outputs, udo_names, udo_fill, uuidv4, parent_child_matrix, mousex, mousey, rectType, allComp, runDeep,
-    comp_input_edges, comp_output_edges, components_selection_data, IDLE_COLOR, COMPONENT_RADIUS} from './constants.js';
 import {addcomponent, popupMessage} from './functions.js';
-import {handleTheClickOnAllComponents, handleComponentSelection} from './handle.js';
-import {handleEdgeSelection} from './inits.js';
+import {uuidv4} from './handle.js';
 import {redrawDependents} from './testing.js';
 import $ from "jquery";
 
 var d3 = require('d3');
+var runDeep;
 
-function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
+/**
+ * Create a new generic component (everything except slider, option list, panel, file upload, toogle, list view).
+ * Example of calling this function for Average component:
+ * CreateNewComponent(null, "Average", {"shortName": "AVG", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["average", "log_"], "#F23322")}
+ * @param {*} FromExisting 
+ * @param {*} type the type of the component, either shallow or deep
+ * @param {*} kwargs 
+ * @param {*} inputList a list of dictionary containing the name, short name, description and default value of the inputs. 
+ * This can be obtained by print out the udo_inputs in the Django version.
+ * @param {*} outputList a list of string containing the name of the outputs. This can be obtained by print out the udo_outputs in the Django version.
+ * @param {*} color the color of the component. The default color is #F23322 (orange). This can be obtained by print out the udo_fill in the Django version.
+ */
+function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inputList, outputList, color = "#F23322") {
     console.log("Create new component called");
-    //local title variables; Those should be later put in the visualization properties table. 
+    //local title variables; Those should be later put in the visualization properties table.
+    const reactContext = this;
+    var IDLE_COLOR = reactContext.state.IDLE_COLOR;
+    var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
+    var rectType = reactContext.state.rectType;
+    runDeep = reactContext.state.runDeep;
+
+    console.log(this); 
     var one_character_width = 8;
     var padding = 20;
     var titleMargin = 30;
@@ -47,48 +63,25 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
     if (FromExisting != null) {
         newcomp = FromExisting;
     } else {
-        var inputdict = {}
-        var thoseInputNames = {}
-        var thoseOutputNames = {}
-
-        for (let i = 0; i < udo_inputs.length; i++) {
-            var thisINp = [];
-            for (var inProperty in udo_inputs[i]) {
-                if (udo_inputs[i].hasOwnProperty(inProperty)) {
-                    thisINp.push(udo_inputs[i][inProperty]["name"])
-                }
+        var longestInput = "";
+        for (let index = 0; index < inputList.length; index++) {
+            const curr = inputList[index].name;
+            if (curr.length > longestInput.length) {
+                longestInput = curr;
             }
-            thoseInputNames[i] = thisINp;
-        }
-        for (let i = 0; i < udo_outputs.length; i++) {
-            var thisOUt = [];
-            for (var outProperty in udo_outputs[i]) {
-                if (udo_outputs[i].hasOwnProperty(outProperty)) {
-                    thisOUt.push(udo_outputs[i][outProperty]["name"])
-                }
-            }
-            thoseOutputNames[i] = thisOUt;
         }
 
-        for (let i = 0; i < udo_names.length; i++) {
-            inputdict[udo_names[i]] = {
-                "color": udo_fill[i],
-                "inputs": udo_inputs[i],
-                "longestInput": thoseInputNames[i].reduce(function(a, b) {
-                    return a.length > b.length ? a : b
-                }, ''),
-                "outputs": thoseOutputNames[i],
-                "longestOutput": thoseOutputNames[i].reduce(function(a, b) {
-                    return a.length > b.length ? a : b
-                }, ''),
-            }
-        }
+        var longestOutput = outputList.reduce(function(a, b) {
+            return a.length > b.length ? a : b
+        }, '')
 
         var ThisComponentName = type;
-        let n_inputs = Object.keys(inputdict[ThisComponentName].inputs).length
-        let n_outputs = Object.keys(inputdict[ThisComponentName].outputs).length
+        console.log(ThisComponentName);
+        
+        let n_inputs = inputList.length;
+        let n_outputs = outputList.length;
 
-        newcomp = addcomponent(uuidv4("C"), n_inputs, n_outputs, inputdict[ThisComponentName].inputs, inputdict[ThisComponentName].outputs);
+        newcomp = addcomponent(uuidv4("C"), n_inputs, n_outputs, inputList, outputList);
         if (type == null) {
             ThisComponentName = $("div#addComp").attr("type");
         } else {
@@ -98,19 +91,38 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
             popupMessage(ThisComponentName + " Component added");
         }
 
-        newcomp.fill = inputdict[ThisComponentName].color; //allColors[Math.floor(Math.random() * allColors.length)];
+        newcomp.fill = color; //allColors[Math.floor(Math.random() * allColors.length)];
         newcomp.Name = ThisComponentName;
         newcomp.height = titleMargin + (Math.max(newcomp.inputs.length, newcomp.outputs.length + 1)) * padding;
-        newcomp.width = (inputdict[ThisComponentName].longestInput.length + inputdict[ThisComponentName].longestOutput.length) * one_character_width + titleMarginLeft;
+        newcomp.width = (longestInput.length + longestOutput.length) * one_character_width + titleMarginLeft;
 
         // initiate the parent_children_matrix
-        parent_child_matrix[newcomp.GUID] = []
+        var guid = newcomp.GUID;
+        var data = { ...reactContext.state.parent_child_matrix };
+        data[guid] = [];
+        reactContext.setState({
+            parent_child_matrix: data,
+        });
     }
 
     var allContents = d3.select("#allCanvasContents");
+
+    function update() {
+        node.attr("transform", d => `translate(${d.x},${d.y})`);
+    }
+
+    var dragHandler = d3.drag()
+       .on("start", (event, d) => Dummyrect.attr("stroke", "red"))
+       .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
+       .on("end", (event, d) => Dummyrect.attr("stroke", "#3a4c69"))
+       .on("start.update drag.update end.update", update);
+
     var cont = allContents.append("g")
         .attr("class", "component")
         .attr("id", newcomp.GUID);
+
+    var genX;
+    var genY;
 
     var node = cont
         .append("g")
@@ -123,19 +135,24 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
                     newcomp.X = kwargs.X;
                     newcomp.Y = kwargs.Y;
                 } else {
-                    newcomp.X = mousex + Math.random() * 500;
-                    newcomp.Y = mousey + Math.random() * 500;
+                    genX = Math.random() * 500 + 200;
+                    genY = Math.random() * 500 + 200;
+                    newcomp.X = genX;
+                    newcomp.Y = genY;
                 }
-
-
                 return "translate(" + newcomp.X + ", " + newcomp.Y + ")";
             } else {
                 return "translate(" + FromExisting.X + ", " + FromExisting.Y + ")";
             }
         })
+        .data([{
+            x: FromExisting ? FromExisting.X : ((kwargs.X !== undefined && kwargs.Y !== undefined) ? kwargs.X : genX),
+            y: FromExisting ? FromExisting.Y : ((kwargs.X !== undefined && kwargs.Y !== undefined) ? kwargs.Y : genY),
+        }])
+        .call(dragHandler);
 
     var statusBar = node.append("g")
-        .attr("transform", "translate(0," + (newcomp.height - 25) + ")")
+        .attr("transform", "translate(0," + (newcomp.height - 25) + ")");
 
     statusBar.append("rect")
         .attr("id", "statusRect" + newcomp.GUID)
@@ -147,7 +164,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
         // .attr("stroke", "#525252")
         .attr("rx", COMPONENT_RADIUS)
         .attr("ry", COMPONENT_RADIUS)
-        .attr("opacity", 0.5)
+        .attr("opacity", 0.5);
 
     statusBar.append("text")
         .attr("class", "statusTextClass")
@@ -155,9 +172,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
         .attr("fill", "black")
         .attr("x", 5)
         .attr("y", 37)
-        .text("Idle ..")
-
-
+        .text("Idle...");
 
     var InputGroup = node.append('g');
     for (let index = 0; index < newcomp.inputs.length; index++) {
@@ -176,7 +191,6 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
                 } else {
                     return FromExisting.inputs[index].type;
                 }
-
             });
     }
 
@@ -240,7 +254,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
     }
 
     var Dummyrect = node.append('rect')
-        .attr("class", "CompBodyDummy " + newcomp.GUID)
+        .attr("class", "CompCBodyDummy " + newcomp.GUID)
         .attr("id", "dummyRect_" + newcomp.GUID)
         .attr("rx", COMPONENT_RADIUS + 1)
         .attr("ry", COMPONENT_RADIUS + 1)
@@ -248,10 +262,10 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
         .attr("stroke", newcomp.fill)
         .attr("width", newcomp.width)
         .attr("height", newcomp.height)
-        .attr("fill", "url(#grad1ient)")
+        .attr("fill", "#E8E8E8")
         .on("mousedown", () => {
             rectType = "component";
-        })
+        });
 
 
 
@@ -325,7 +339,6 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
                     return FromExisting.inputs[index].type;
                 }
             });
-
     }
 
     var OutputGroupText = node.append('g');
@@ -358,7 +371,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
     }
 
     var rect = node.append('rect')
-        .attr("class", "CompBody " + newcomp.GUID)
+        .attr("class", "CompCBody " + newcomp.GUID)
         .attr("id", newcomp.GUID)
         .attr("rx", COMPONENT_RADIUS)
         .attr("ry", COMPONENT_RADIUS)
@@ -388,7 +401,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
         .attr("width", 18)
         .attr("height", 18)
         .attr("style", () => {
-            return `background-image:url(/static/base/img/` + newcomp.Name + `.png);background-size: 15px;background-repeat: no-repeat;background-position: center;`
+            return `background-image:url(src/img/` + newcomp.Name + `.png);background-size: 15px;background-repeat: no-repeat;background-position: center;`
         })
 
     if (newcomp.dftype === 'dp') {
@@ -431,20 +444,33 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null) {
     }
 
     if (FromExisting == null) {
-        allComp.push(newcomp);
+        var current_all_comp = reactContext.state.allComp.slice();
+        console.log("Adding a list view" + newcomp);
+        current_all_comp.push(newcomp);
+        reactContext.setState({
+            allComp: current_all_comp,
+        });
     }
-    comp_input_edges[newcomp.GUID] = new Array(newcomp.inputs.length);
-    comp_output_edges[newcomp.GUID] = new Array(newcomp.outputs.length);
 
-    components_selection_data[newcomp.GUID] = { "x0": newcomp.X, "y0": newcomp.Y, "x1": newcomp.X + newcomp.width, "y1": newcomp.Y + newcomp.height };
+    var current_comp_out = { ...reactContext.state.comp_output_edges};
+    var current_comp_in = { ...reactContext.state.comp_input_edges};
+    current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
+    current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
+    reactContext.setState({
+        comp_input_edges: current_comp_in,
+        comp_output_edges: current_comp_out,
+    });
 
-    var mainGrid = d3.select("#mainGrid");
-
-    handleTheClickOnAllComponents();
-    handleComponentSelection();
-    handleEdgeSelection();
-
-
+    var current_components_selection = { ...reactContext.state.components_selection_data };
+    current_components_selection[newcomp.GUID] = { 
+        "x0": newcomp.X, 
+        "y0": newcomp.Y, 
+        "x1": newcomp.X + newcomp.width, 
+        "y1": newcomp.Y + newcomp.height 
+    };
+    reactContext.setState({
+        components_selection_data: current_components_selection,
+    });
 }
 
 function runDeepFunction(compId) {
