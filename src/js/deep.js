@@ -42,7 +42,7 @@ function calculateDeep(compId) {
     d3.select("div#PleaseWaitOverLay").style("display", "block");
     thisComp = selectComp(compId);
     var inputGroup = [];
-    var currentDeepComp = thisComp;
+    //var currentDeepComp = thisComp;
     thisComp.inputs.forEach(input => {
         inputGroup.push(input.value);
     });
