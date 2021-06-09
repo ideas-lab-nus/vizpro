@@ -23,13 +23,7 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
-import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
-    getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
-    addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
-    updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
-    drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
-    edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
-    itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
+import {CreatePathes} from './functions.js';
 import {CreateNewComponent} from './component.js';
 import {CreateNewOptionList} from './optionlist.js';
 import {CreateNewSlider} from './slider.js';

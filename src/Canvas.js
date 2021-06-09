@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from "jquery";
 import ScriptTag from 'react-script-tag';
 import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
 import {CreateNewSlider} from './js/slider.js';
@@ -12,104 +13,10 @@ import {CreateNewComponent} from './js/component.js';
 import {manageCanvas} from './js/layout.js'; 
 import {manageGrid} from './js/mainGrid.js';
 import {dummyToSetState} from './js/functions.js';
+import {globalVars} from './js/constants.js';
 import Grid from './Grid';      
 import {handleComponentSelection, handleTheClickOnAllComponents, 
-    handleEdgeInitialization, handleDoubleClick, addCircle} from './js/handle.js';
-
-const globalVars = {
-    fromCircle: addCircle(),
-    toCircle: addCircle(),
-    selection_rectangle_group_rect: null,
-    doubleClicked: false,
-    date:"km now",
-    IDLE_COLOR: "#dfd4b1",
-    ACTIVE_COLOR: "green",
-    ERROR_COLOR: "red",
-    COMPONENT_RADIUS: 1,
-    allComp: [],
-    allEdges: [],
-    comp_input_edges: {},
-    comp_output_edges: {},
-    edge_comp_matrix: {},
-    parent_child_matrix: {},
-    parent_child_matrix_fast_check: [],
-    root_components: {},
-    components_selection_data: {},
-    selected_components: [],
-    runDeep: false,
-    StringAnchorclicked: false,
-    StringAnchorType: null,
-    StringAnchorId: "",
-    XANCHOR: 0,
-    YANCHOR: 1,
-    XYANCHOR: 2,
-    ANCHOR_WIDTH: 10,
-    SLIDER_START_POSITION: 60 - 60,
-    SLIDER_END_POSITION: 238 - 60,
-    anchorMouseXpos: 0,
-    anchorMouseYpos: 0,
-    SliderAnchorclicked: false,
-    selectedSliderComponent: null,
-    dragX: 0,
-    dragY: 0,
-    sliderRectId: "",
-    componentClickX: 0,
-    componentClickY: 0,
-    initPos: null,
-    startDrag: false,
-    clickedId: "",
-    rectType: "",
-    deltaX: 0,
-    deltaY: 0,
-    clicked: false,
-    edgeStarted: false,
-    targetcircleIN: false,
-    selectedcircleId: "",
-    targetcircleId: "",
-    selectedSliderAnchorId: "",
-    xGrid: 0,
-    yGrid: 0,
-    mousex: 0,
-    mousey: 0,
-    initEdgex2: 0,
-    initEdgey2: 0,
-
-    // text global variables.
-    textareaStarted: false,
-    textAreaRectId: "",
-    optionListStarted: false,
-    optionlistRectid: "",
-    justSelected: null,
-    mouseInsideOption: false,
-
-    //selected component variables.
-    is_component_selected: false,
-    selected_component_id: "",
-    rightColumnIsSelected: false,
-    leftColumnIsSelected: false,
-    topColumnIsSelected: false,
-    rightColIsdisplayed: true,
-    leftColIsdisplayed: true,
-    is_edge_selected: false,
-    currentTopBarHeight: 30,
-    currentLeftColWidth: 225,
-    currentRightColWidth: 50,
-    defVars: {},
-    messageshown: false,
-
-    udo_names: [],
-    udo_types: [],
-    udo_desc: [],
-    udo_shortNames: [],
-    udo_inputs: [],
-    udo_outputs: [],
-    udo_fill: [],
-    udo_dftypes: [],
-    udo_cats: [],
-    udo_subcats: [],
-    cats: {},
-    scats: {},
-}
+    handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
 
 export default class Canvas extends React.Component {
     constructor(props) {
@@ -130,11 +37,13 @@ export default class Canvas extends React.Component {
         this.CreateNewComponent = CreateNewComponent.bind(this);
         this.manageGrid = manageGrid.bind(this);
         this.dummyToSetState = dummyToSetState.bind(this);
+        this.addGenericComponentIcon = this.addGenericComponentIcon.bind(this);
     }
 
     componentDidMount() {
         this.manageCanvas();
         this.manageGrid();
+        this.addGenericComponentIcon();
         this.timerID = setInterval(
           () => this.tick(),
           1000
@@ -153,6 +62,18 @@ export default class Canvas extends React.Component {
 
     print() {
         console.log("all Comp is " + this.state.allComp);
+    }
+
+    addGenericComponentIcon() {
+        console.log('added');
+        this.CreateNewComponent = CreateNewComponent.bind(this);
+        var r = $('<div id="addComp" name="Average" shname="AVG" desc="The average between two values" type="component" dftype="shlow" class="mainButtonItem 1 1" style="background-image:url(https://storage.googleapis.com/ghostbucket111/icons/958f17e5cfad4cdbbe26dd5affbbbfa2.png)">&nbsp;<span id="hint">Average</span></div>');
+        r.on("click", () => {
+            console.log('Average clicked');
+            console.log(this);
+            CreateNewComponent(this, null, "Average", {"shortName": "AVG", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["average", "log_"], "#F23322");
+        });
+        $("div.toolbarbuttonsContainer.b066a5eb-26dc-4359-8d22-3643444d08e4.d2312a8b-63dc-4112-8a66-76996c150b0e").append(r);
     }
 
     render() {
@@ -207,37 +128,36 @@ export default class Canvas extends React.Component {
                                 
                                 <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 d2312a8b-63dc-4112-8a66-76996c150b0e 0" style={{display:"none"}}>
                                         
-                                    <div onClick={() => this.CreateNewComponent(null, "Average", {"shortName": "AVG", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["average", "log_"], "#F23322")} 
-                                    id="addComp" name="Average" shname="AVG" desc="The average between two values" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/958f17e5cfad4cdbbe26dd5affbbbfa2.png)"}}>&nbsp;<span id="hint">Average</span></div>
+                                    
                                         
-                                    <div onClick={() => this.CreateNewComponent(null, "Add", {"shortName": "+", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["sum_", "log_"], "#F23322")} 
+                                    <div onClick={() => this.CreateNewComponent(this, null, "Add", {"shortName": "+", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["sum_", "log_"], "#F23322")} 
                                     id="addComp" name="Add" shname="+" desc="Add two numbers." type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/e2c5a0d28dca45c38b0e96e6723e2bde.png)"}}>&nbsp;<span id="hint">Add</span></div>
                                         
-                                    <div onClick={() => this.CreateNewComponent(null, "Max", {"shortName": "max", "dfType": "shlow"}, [{"name": "InputList", "shortName": "_list", "desc": "the input list", "default_value": "[0.0, 1.0, 2.0]"}], ["output_", "log_"], "#F23322")} 
+                                    <div onClick={() => this.CreateNewComponent(this, null, "Max", {"shortName": "max", "dfType": "shlow"}, [{"name": "InputList", "shortName": "_list", "desc": "the input list", "default_value": "[0.0, 1.0, 2.0]"}], ["output_", "log_"], "#F23322")} 
                                     id="addComp" name="Max" shname="max" desc="Maximum value of a list of inputs." type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/96524490dcdf4317a9a3e80b9d4762ba.png)"}}>&nbsp;<span id="hint">Max</span></div>
                                         
-                                    <div onClick={() => this.CreateNewComponent(null, "Min", {"shortName": "min", "dfType": "shlow"}, [{"name": "InputList", "shortName": "_list", "desc": "the input list", "default_value": "[0.0, 1.0, 2.0]"}], ["output_", "log_"], "#F23322")} 
+                                    <div onClick={() => this.CreateNewComponent(this, null, "Min", {"shortName": "min", "dfType": "shlow"}, [{"name": "InputList", "shortName": "_list", "desc": "the input list", "default_value": "[0.0, 1.0, 2.0]"}], ["output_", "log_"], "#F23322")} 
                                     id="addComp" name="Min" shname="min" desc="Minimum value of a list of inputs" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/5d844dbee9f54f9ba9891082ac8a52c5.png)"}}>&nbsp;<span id="hint">Min</span></div>
                                         
-                                    <div onClick={() => this.CreateNewComponent(null, "Difference 2", {"shortName": "Difference", "dfType": "shlow"}, [{"name": "in_01", "shortName": "in_01", "desc": "first input", "default_value": "10.0"}, {"name": "in_02", "shortName": "in_02", "desc": "second input", "default_value": "5.0"}], ["output_", "log_"], "#9B59B6")} 
+                                    <div onClick={() => this.CreateNewComponent(this, null, "Difference 2", {"shortName": "Difference", "dfType": "shlow"}, [{"name": "in_01", "shortName": "in_01", "desc": "first input", "default_value": "10.0"}, {"name": "in_02", "shortName": "in_02", "desc": "second input", "default_value": "5.0"}], ["output_", "log_"], "#9B59B6")} 
                                     id="addComp" name="Difference 2" shname="Difference" desc="Substraction" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/f4fbd2bace8d4fb6b8982ccfaf310f63.png)"}}>&nbsp;<span id="hint">Difference 2</span></div>
                                                         
-                                    <div onClick={() => this.CreateNewComponent(null, "Json Navigator", {"shortName": "jsonNav", "dfType": "shlow"}, [{"name": "input_json", "shortName": "input_json", "desc": "input_json", "default_value": "null"}, {"name": "path", "shortName": "path", "desc": "path", "default_value": "null"}], ["output_", "log_"], "#C0392B")} 
+                                    <div onClick={() => this.CreateNewComponent(this, null, "Json Navigator", {"shortName": "jsonNav", "dfType": "shlow"}, [{"name": "input_json", "shortName": "input_json", "desc": "input_json", "default_value": "null"}, {"name": "path", "shortName": "path", "desc": "path", "default_value": "null"}], ["output_", "log_"], "#C0392B")} 
                                     id="addComp" name="Json Navigator" shname="jsonNav" desc="Select item from json object by path" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Json Navigator</div>
                                                     
-                                    <div onClick={() => this.CreateNewComponent(null, "3dVisualizer", {"shortName": "3dvis", "dfType": "shlow"}, [{"name": "url", "shortName": "url", "default_value": "null"}], ["url"], "#E38A74")} 
+                                    <div onClick={() => this.CreateNewComponent(this, null, "3dVisualizer", {"shortName": "3dvis", "dfType": "shlow"}, [{"name": "url", "shortName": "url", "default_value": "null"}], ["url"], "#E38A74")} 
                                     id="addComp" name="3dVisualizer" shname="3dvis" desc="" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>3dVisualizer</div>
                                         
-                                    <div onClick={() => this.CreateNewComponent(null, "Image Display", {"shortName": "imshow", "dfType": "shlow"}, [{"name": "_url", "shortName": "url", "desc": "url", "default_value": "https://user-images.githubusercontent.com/6969514/60951247-4bac1200-a32b-11e9-8b66-02bc19953461.png"}], ["output_", "log_"], "#F23322")} 
+                                    <div onClick={() => this.CreateNewComponent(this, null, "Image Display", {"shortName": "imshow", "dfType": "shlow"}, [{"name": "_url", "shortName": "url", "desc": "url", "default_value": "https://user-images.githubusercontent.com/6969514/60951247-4bac1200-a32b-11e9-8b66-02bc19953461.png"}], ["output_", "log_"], "#F23322")} 
                                     id="addComp" name="Image Display" shname="imshow" desc="" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Image Display</div>
                                         
-                                    <div onClick={() => this.CreateNewComponent(null, "Youtube display", {"shortName": "Youtube", "dfType": "shlow"}, [{"name": "_url", "shortName": "_url", "desc": "youtube url","default_value": "null"}], ["url"], "#C0392B")} 
+                                    <div onClick={() => this.CreateNewComponent(this, null, "Youtube display", {"shortName": "Youtube", "dfType": "shlow"}, [{"name": "_url", "shortName": "_url", "desc": "youtube url","default_value": "null"}], ["url"], "#C0392B")} 
                                     id="addComp" name="YouTube display" shname="YouTube" desc="" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>YouTube display</div>
                                             
-                                    <div onClick={() => this.CreateNewComponent(null, "Plot Panel", {"shortName": "plot panel", "dfType": "shlow"}, [{"name": "inputs", "shortName": "in", "default_value": "null", "desc": "in"}], ["url"], "#F1C40F")} 
+                                    <div onClick={() => this.CreateNewComponent(this, null, "Plot Panel", {"shortName": "plot panel", "dfType": "shlow"}, [{"name": "inputs", "shortName": "in", "default_value": "null", "desc": "in"}], ["url"], "#F1C40F")} 
                                     id="addComp" name="Plot Panel" shname="plot panel" desc="" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Plot Panel</div>
                                         
-                                    <div onClick={() => this.CreateNewComponent(null, "Cloud", {"shortName": "Cloud", "dfType": "dp"}, [{"name": "number"}, {"name": "url"}], ["abs"], "#F0CA4D")} 
+                                    <div onClick={() => this.CreateNewComponent(this, null, "Cloud", {"shortName": "Cloud", "dfType": "dp"}, [{"name": "number"}, {"name": "url"}], ["abs"], "#F0CA4D")} 
                                     id="addComp" name="Cloud" shname="Cloud" desc="" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Cloud</div>
                                     
                                 </div>

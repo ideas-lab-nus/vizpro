@@ -45,16 +45,16 @@ var runDeep;
  * @param {*} outputList a list of string containing the name of the outputs. This can be obtained by print out the udo_outputs in the Django version.
  * @param {*} color the color of the component. The default color is #F23322 (orange). This can be obtained by print out the udo_fill in the Django version.
  */
-function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inputList, outputList, color = "#F23322") {
+function CreateNewComponent(reactContext, FromExisting = null, type = null, kwargs = null, inputList, outputList, color = "#F23322") {
     console.log("Create new component called");
     //local title variables; Those should be later put in the visualization properties table.
-    const reactContext = this;
+    //const reactContext = this;
+    console.log(reactContext);
     var IDLE_COLOR = reactContext.state.IDLE_COLOR;
     var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
     var rectType = reactContext.state.rectType;
     runDeep = reactContext.state.runDeep;
 
-    console.log(this); 
     var one_character_width = 8;
     var padding = 20;
     var titleMargin = 30;
