@@ -2,12 +2,13 @@ import {selectComp, componentStatus, updatShallowCompRender} from './functions.j
 import {parent_child_matrix, ACTIVE_COLOR, ERROR_COLOR, runDeep} from './constants.js';
 import {calculateShallow} from './shallow.js';
 import {calculateDeep} from './deep.js';
-
+/**
+ * On a parent changes, only draws all the children tree .
+ * All the components --- inputs outpts object (to be sent later to the backend should be modified as well)
+ * Shallow values should be updated instantaniously
+ * @param {String} parent : The id of the parent.
+ */
 function redrawDependents(parent) {
-    // on a parent changes, only draws all the children tree .
-    // all the components --- inputs outpts object (to be sent later to the backend should be modified as well)
-    // shallow values should be updated instantaniously
-
     let par = selectComp(parent);
 
     if (parent_child_matrix[parent].length > 0) {
