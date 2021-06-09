@@ -175,7 +175,6 @@ function handleComponentSelection() {
     ViewListRedrawing();
 } // End of handleComponentSelection
 
-
 //Slider component id changed to CompSBody hence will not be picked up
 //by this function. Lookout for side effects!
 //Panel changed to CompPBody
@@ -184,9 +183,10 @@ function handleComponentSelection() {
 function handleTheClickOnAllComponents() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;
-    var allcomp = d3.selectAll("rect.CompBody")
+    var allcomp = d3.selectAll("rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody")
         .on('mousedown', function(event) {
             var coordinates = d3.pointer(event);
+            console.log(coordinates)
             
             var pos = $("g#comp-" + this.id.replace("overlaySelector", ""))
                 .attr("transform")
@@ -211,8 +211,9 @@ function handleTheClickOnAllComponents() {
         })
 } // End of handleTheClickOnAllComponents
 
-//Fix state changes
 function handleEdgeInitialization() {
+    // console.log(context +" vs" + this);
+    // var reactContext = context === 1 ? this : context;
     var reactContext = this;
     var allComp = reactContext.state.allComp;
     var allContents = d3.select("#allCanvasContents");
@@ -220,6 +221,7 @@ function handleEdgeInitialization() {
     var fromComponent = null;
     var allCircles = d3.selectAll("circle")
         .on('mousedown', function(event) {
+            console.log(this);
             reactContext.setState({
                 targetcircleId: this.id,
             })
@@ -233,7 +235,9 @@ function handleEdgeInitialization() {
             if (edgeStarted && targetcircleIN && this !== fromCircle.element) {
                 // DUMMY, Nothing to do in this version. :D :D 
             } else {
+                console.log("cond" + (this.classList[0] === "outputCir"))
                 if (this.classList[0] === "outputCir") {
+                    console.log(comp_output_edges);
                     if (comp_output_edges[this.classList[1]][this.classList[2]] === undefined) {
                         selectedcircleId = this.id;
                         reactContext.setState({
@@ -263,10 +267,13 @@ function handleEdgeInitialization() {
                         }).attr('stroke', "black")
                         .attr("stroke-width", "3")
                         .attr("id", "Path" + selectedcircleId);
+
                     fromCircle.element = this;                    
                     reactContext.setState({
                         selectedcircleId: "Path" + selectedcircleId,
                         fromCircle: fromCircle,
+                        initEdgex1: initEdgex1,
+                        initEdgey1: initEdgey1
                     })
                 }
             }
@@ -283,7 +290,6 @@ function handleEdgeInitialization() {
         })
         .on("mouseup", function() {
             //This event is called when the mouse cursor is inside the input circle, this means that the line is now complete and ready to be created. 
-
             var edgeStarted = reactContext.state.edgeStarted;
             var allEdges = reactContext.state.allEdges;
             var targetcircleIN = reactContext.state.targetcircleIN;
@@ -293,8 +299,8 @@ function handleEdgeInitialization() {
             var comp_output_edges = { ...reactContext.state.comp_output_edges };
             var root_components = reactContext.state.root_components;
             var parent_child_matrix = { ...reactContext.state.parent_child_matrix };
-            var parent_child_matrix_fast_check = { ...reactContext.state.parent_child_matrix_fast_check };
-            var selectedcircleId;
+            var parent_child_matrix_fast_check = [ ...reactContext.state.parent_child_matrix_fast_check ];
+            var selectedcircleId = reactContext.state.selectedcircleId;
 
             if (edgeStarted && targetcircleIN && this !== fromCircle.element && comp_input_edges[this.classList[1]][this.classList[2]] === undefined) {
                 toCircle.element = this;
@@ -309,10 +315,10 @@ function handleEdgeInitialization() {
                     " " + toCircle.element.classList[1]);
 
                 console.log(parent_child_matrix_fast_check)
-                if (!parent_child_matrix_fast_check.includes(fromCircle.element.classList[2] +
-                        " " + fromCircle.element.classList[1] +
-                        " " + toCircle.element.classList[2] +
-                        " " + toCircle.element.classList[1])) {
+                if (!parent_child_matrix_fast_check.includes(fromCircle.element.classList[2] + " " + 
+                                                             fromCircle.element.classList[1] + " " + 
+                                                             toCircle.element.classList[2] + " " + 
+                                                             toCircle.element.classList[1])) {
                     var thisEdge = addEdge(fromCircle, toCircle, fromCircle.element.classList, toCircle.element.classList);
                     var thisPath = d3.select("#" + selectedcircleId)
 
@@ -581,4 +587,4 @@ function handleDoubleClick() {
 } // End of HandleDoubleClick
 
 export {GetURLParameter, handleTheClickOnAllComponents, handleEdgeInitialization, 
-    handleComponentSelection, handleDoubleClick, uuidv4, addCircle};
+    handleComponentSelection, handleDoubleClick, uuidv4, addCircle, addEdge};

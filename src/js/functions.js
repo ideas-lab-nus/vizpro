@@ -45,6 +45,7 @@ var cut_component_sName = null;
 var cut_component_dfType = null;
 var cut_component_type = null;
 
+var reactContext;
 var allComp;
 var ACTIVE_COLOR;
 var ERROR_COLOR;
@@ -75,7 +76,7 @@ var messageshown;
 var mouseInsideOption;
 
 function dummyToSetState() {
-    var reactContext = this;
+    reactContext = this;
     allComp = reactContext.state.allComp;
     ACTIVE_COLOR = reactContext.state.ACTIVE_COLOR;
     ERROR_COLOR = reactContext.state.ERROR_COLOR;
@@ -386,7 +387,7 @@ function toMoveEdgeEnds(mainObj) {
 } // End of toMoveEdgeEnds
 
 function returnCurveString(x1, y1, x2, y2) {
-    var coalignValue = 10.0;
+    var coalignValue;
     if (x2 < x1) {
         coalignValue = Math.abs(y2 - y1) / 5.0 + (Math.abs(x2 - x1) * 1.5);
     } else {
@@ -1224,6 +1225,7 @@ function moveComponent(id, x, y) {
         .attr("transform", function() {
             return "translate(" + x + "," + y + ")"
         });
+    console.log("walaoeh")
     handleEdgeMovement(id, x, y);
 } // End of moveComponent
 

@@ -25,7 +25,7 @@
  */
 
 import {returnCurveString,getlocationFromTransform, handleEdgeMovement,
-    deleteComponent, popupMessage,moveComponent} from './functions.js';
+    deleteComponent, popupMessage,moveComponent, selectComp} from './functions.js';
 
 var d3 = require("d3");
 
@@ -54,21 +54,11 @@ var selection_box_started = false;
 var items_are_selected  = false; 
 var selection_box = null;
 
-var allContents = d3.select("#allCanvasContents");
 var reactContext;
-
-function selectComp(allComp, value, by = "GUID") {
-    let toreturn = null
-    allComp.forEach(element => {
-        if (element[by] === value) {
-            toreturn = element
-        }
-    });
-    return toreturn;
-} // End of selectComp
 
 function manageGrid() {
     reactContext = this;
+    var allContents = d3.select("#allCanvasContents");
     var optionListStarted = reactContext.state.optionListStarted;
     var startDrag = reactContext.state.startDrag;
     var mouseInsideOption = reactContext.state.mouseInsideOption;
@@ -98,7 +88,7 @@ function manageGrid() {
             if (reactContext.state.selected_components.length > 1) {
                 console.log("You will delete ")
             }
-            if (selectComp(allComp, selected_component_id).type === "fileUpload") {
+            if (selectComp(selected_component_id).type === "fileUpload") {
                 if (window.confirm("Are you sure you want to delete this file from the database? ")) {
                     console.log("You should delete the file from the database now... ")
                     deleteComponent(selected_component_id);
@@ -119,6 +109,7 @@ function manageGrid() {
         d3.select("body").append("option")
     })
     .on("contextmenu", function (event, d, i) {
+        //context menu event raised on right click
         event.preventDefault();
         popupMessage("RMB");
         selection_box_started = true; 
@@ -126,24 +117,26 @@ function manageGrid() {
         selection_box_y = d3.pointer(event, allContents.node())[1];        
         selection_box = allContents.append("polyline"); 
     })
-    .on('mousemove', function (event) {         
+    .on('mousemove', function (event) {       
         var mousex = d3.pointer(event, allContents.node())[0];
         var mousey = d3.pointer(event, allContents.node())[1];
         reactContext.setState({            
             mousex: mousex,
             mousey: mousey,
         })        
-        var x = mousex - reactContext.state.componentClickX - 180;
-        var y = mousey - reactContext.state.componentClickY - 25;
         if (reactContext.state.startDrag) {
-            //A slider/panel/toggle/fileUpload/listView/optionList shouldn't enter this condition
-            console.log("Trying to drag the component");
+            console.log("Trying to drag the component");   
+            var x = mousex - reactContext.state.componentClickX ;
+            var y = mousey - reactContext.state.componentClickY ;
             moveComponent(reactContext.state.clickedId, x, y);
         }
         if (reactContext.state.edgeStarted) {
             d3.select("#" + reactContext.state.selectedcircleId)
                 .attr("d", function () {
-                    return returnCurveString(x, y, mousex - 2, mousey - 2);
+                    return returnCurveString(reactContext.state.initEdgex1, 
+                                             reactContext.state.initEdgey1, 
+                                             mousex, 
+                                             mousey);
                 }).attr("fill", "none")
                 .attr("stroke-opacity", "0.2")
                 .attr("interpolate", "basis");
@@ -151,7 +144,7 @@ function manageGrid() {
 
         var textAreaRectId = reactContext.state.textAreaRectId;
         var optionlistRectid = reactContext.state.optionlistRectid;
-        var StringAnchorType = reactContext.state.StringAnchorclicked;
+        var StringAnchorType = reactContext.state.StringAnchorType;
         var YANCHOR = reactContext.state.YANCHOR;
         var XANCHOR = reactContext.state.XANCHOR;
         var anchorMouseXpos = reactContext.state.anchorMouseXpos;
@@ -324,7 +317,7 @@ function manageGrid() {
             try {           
                 //This needs to move to a separate function .     
                 var clickedId = reactContext.state.clickedId;
-                var just_moved_component = selectComp(allComp, clickedId);
+                var just_moved_component = selectComp(clickedId);
                 var current_components_selection = { ...reactContext.state.components_selection_data };
                 current_components_selection[clickedId] = {
                     "x0": just_moved_component.X, 
@@ -347,11 +340,11 @@ function manageGrid() {
             reactContext.setState({
                 edgeStarted: false,
             })
-            var theEdge = d3.select("#" + reactContext.state.selectedcircleId).remove();
+            d3.select("#" + reactContext.state.selectedcircleId).remove();
         }
         if (reactContext.state.StringAnchorclicked) {
             var StringAnchorId = reactContext.state.StringAnchorId;
-            var modified_string_comp = selectComp(allComp, StringAnchorId);
+            var modified_string_comp = selectComp(StringAnchorId);
             current_components_selection = { ...reactContext.state.components_selection_data };
             current_components_selection[StringAnchorId] = {
                 "x0": modified_string_comp.X, 
@@ -418,6 +411,7 @@ function manageGrid() {
 
 var someCircle; 
 function highlightSelection(components_list, temp_selected_xs, temp_selected_ys) {
+    var allContents = d3.select("#allCanvasContents");
     if (selection_rectangle_group != null ) {
         selection_rectangle_group.remove();
         selection_rectangle_group = null;
@@ -477,7 +471,7 @@ function highlightSelection(components_list, temp_selected_xs, temp_selected_ys)
 
 function alignComponent(alignment) {
     reactContext.state.selected_components.forEach(element => {
-        var this_comp = selectComp(reactContext.state.allComp, element);
+        var this_comp = selectComp(element);
         if (alignment === "left") {
             this_comp.X = min_selected_x;
         } else if (alignment === "right") {

@@ -181,9 +181,7 @@ function onMaximizeClick() {
 
 function manageCanvas() {
     const reactContext = this;
-
     var svgContainer = d3.select("svg");
-
     var allContents = svgContainer.append("g")
     .attr("id", "allCanvasContents");
 
@@ -209,20 +207,18 @@ function manageCanvas() {
         .attr("id", "allPaths");
 
     svgContainer.call(d3.zoom().filter(function(event) {
-        // return true;
-        if (reactContext.state.startDrag || 
-            reactContext.state.StringAnchorclicked || 
-            reactContext.state.SliderAnchorclicked || 
-            reactContext.state.edgeStarted || 
-            reactContext.state.selection_groud_selected) {
-            return false;
-        } else {
-            // console.log((!event.button) + "");
-            return event.button === 0;
-        }
+        return !(reactContext.state.startDrag || 
+                reactContext.state.StringAnchorclicked || 
+                reactContext.state.SliderAnchorclicked || 
+                reactContext.state.edgeStarted || 
+                reactContext.state.selection_groud_selected) && event.button === 0;
     }).on("zoom", function(event) {
-        console.log(reactContext.state.startDrag);
-        if (!reactContext.state.startDrag) { 
+        console.log(event.transform.k);
+        if (!reactContext.state.startDrag) {             
+            reactContext.setState({
+                canvasX:  event.transform.x,
+                canvasY:  event.transform.y,
+            })
             allContents.attr("transform", event.transform); 
         }
     }));

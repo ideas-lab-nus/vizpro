@@ -12,11 +12,16 @@ import {CreateNewComponent} from './js/component.js';
 import {manageCanvas} from './js/layout.js'; 
 import {manageGrid} from './js/mainGrid.js';
 import {dummyToSetState} from './js/functions.js';
+import {dummyToSetStateEdge} from './js/edge.js';
 import Grid from './Grid';      
 import {handleComponentSelection, handleTheClickOnAllComponents, 
     handleEdgeInitialization, handleDoubleClick, addCircle} from './js/handle.js';
+    
+var d3 = require('d3');
 
 const globalVars = {
+    initEdgex1: 0,
+    initEdgey1: 0,
     fromCircle: addCircle(),
     toCircle: addCircle(),
     selection_rectangle_group_rect: null,
@@ -71,9 +76,7 @@ const globalVars = {
     yGrid: 0,
     mousex: 0,
     mousey: 0,
-    initEdgex2: 0,
-    initEdgey2: 0,
-
+    
     // text global variables.
     textareaStarted: false,
     textAreaRectId: "",
@@ -130,6 +133,8 @@ export default class Canvas extends React.Component {
         this.CreateNewComponent = CreateNewComponent.bind(this);
         this.manageGrid = manageGrid.bind(this);
         this.dummyToSetState = dummyToSetState.bind(this);
+        this.dummyToSetStateEdge = dummyToSetStateEdge.bind(this);
+        // this.zoom = zoom.bind(this);
     }
 
     componentDidMount() {
@@ -160,6 +165,7 @@ export default class Canvas extends React.Component {
             <div>
                 {/* <ScriptTag>{this.print()}</ScriptTag> */}
                 <ScriptTag>{this.dummyToSetState()}</ScriptTag>
+                <ScriptTag>{this.dummyToSetStateEdge()}</ScriptTag>
                 <ScriptTag>{this.handleComponentSelection()}</ScriptTag>
                 <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
                 <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
