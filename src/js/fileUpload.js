@@ -112,7 +112,6 @@ function CreateNewFileUpload(FromExisting = null, kwargs = null) {
             x: FromExisting ? FromExisting.X : newcomp.X,
             y: FromExisting ? FromExisting.Y : newcomp.Y,
         }])
-        .call(dragHandler);
 
     var InputGroup = node.append('g');
     for (let index = 0; index < newcomp.inputs.length; index++) {

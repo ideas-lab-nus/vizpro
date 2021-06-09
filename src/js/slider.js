@@ -27,7 +27,6 @@
 import {redrawDependents, selectComp, updateAll, moveComponent} from './functions.js';
 import {addEdge} from './handle';
 import {uuidv4} from './handle.js';
-import {edgeDragHandler} from './edge.js';
 var d3 = require('d3');
 
 var theRequiredSliderGroup = "";
@@ -110,16 +109,9 @@ function CreateNewSlider(FromExisting = null) {
             d.y = event.y;
         })
        .on("end", (event, d) => {
-           rect.attr("stroke", "#3a4c69");
-           
+           rect.attr("stroke", "#3a4c69");           
        })
        .on("start.update drag.update end.update", update)
-
-    var edgeDragHandlerf = d3.drag()
-    .on("start", (event, d) => rect.attr("stroke", "yellow"))
-    .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
-    .on("end", (event, d) => rect.attr("stroke", "#3a4c69"))
-//    .on("start.update drag.update end.update", update)
 
     var cont = allContents.append("g")
         .attr("class", "slider")
@@ -152,9 +144,6 @@ function CreateNewSlider(FromExisting = null) {
                 rectType: "slider",
             })
         })
-        // .call(dragHandler);
-    
-    var superNode = node.append("g");
 
     var OutputGroup = node.append('g');
 
@@ -176,15 +165,9 @@ function CreateNewSlider(FromExisting = null) {
             reactContext.setState({
                 targetcircleIN: false,
             })
-        })        
-        .data([{
-            x: FromExisting ? FromExisting.X : genX + newSlider.width,
-            y: FromExisting ? FromExisting.Y : genY + 10,
-        }])
-        // .call(edgeDragHandlerf);
-        // .call(edgeDragHandler);
+        })      
 
-    var rect = superNode.append('rect')
+    var rect = node.append('rect')
         .attr("class", "CompSBody " + newSlider.GUID)
         .attr("id", newSlider.GUID)
         .attr("rx", "3")
@@ -216,7 +199,7 @@ function CreateNewSlider(FromExisting = null) {
         });
 
 
-    var ValueTextGroup = superNode.append("g")
+    var ValueTextGroup = node.append("g")
         .attr("transform", () => {
             return ("translate(-80, 0)")
         });
@@ -238,7 +221,7 @@ function CreateNewSlider(FromExisting = null) {
         .attr("fill", "white")
         .text(newSlider.value.toString());
 
-    var Titlegroup = superNode.append("g")
+    var Titlegroup = node.append("g")
         .attr("transform", () => {
             return "translate(0, 15)";
         });
@@ -249,7 +232,7 @@ function CreateNewSlider(FromExisting = null) {
         .attr("fill", "black")
         .attr("transform", "translate(" + titleMarginLeft / 2.0 + ", 0)")
 
-    var SlidingGroup = superNode.append("g")
+    var SlidingGroup = node.append("g")
         .attr("transform", "translate(60, 0)");
 
     var slidingRectContainer = SlidingGroup.append("rect")

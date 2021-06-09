@@ -117,8 +117,7 @@ function manageGrid() {
         selection_box_y = d3.pointer(event, allContents.node())[1];        
         selection_box = allContents.append("polyline"); 
     })
-    .on('mousemove', function (event) {   
-        console.log(allContents.node())      
+    .on('mousemove', function (event) {       
         var mousex = d3.pointer(event, allContents.node())[0];
         var mousey = d3.pointer(event, allContents.node())[1];
         reactContext.setState({            
@@ -126,10 +125,7 @@ function manageGrid() {
             mousey: mousey,
         })        
         if (reactContext.state.startDrag) {
-            //A slider/panel/toggle/fileUpload/listView/optionList shouldn't enter this condition
-            console.log("Trying to drag the component");
-            // console.log(event);      
-            // console.log(mousex)      
+            console.log("Trying to drag the component");   
             var x = mousex - reactContext.state.componentClickX ;
             var y = mousey - reactContext.state.componentClickY ;
             moveComponent(reactContext.state.clickedId, x, y);
@@ -139,10 +135,8 @@ function manageGrid() {
                 .attr("d", function () {
                     return returnCurveString(reactContext.state.initEdgex1, 
                                              reactContext.state.initEdgey1, 
-                                            //  event.screenX,
-                                            //  event.screenY);
-                                             mousex - reactContext.state.canvasX, 
-                                             mousey - reactContext.state.canvasY);
+                                             mousex, 
+                                             mousey);
                 }).attr("fill", "none")
                 .attr("stroke-opacity", "0.2")
                 .attr("interpolate", "basis");
