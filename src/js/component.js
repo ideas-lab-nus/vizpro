@@ -25,9 +25,8 @@
  * @since  x.x.x
  */
 
-import {addcomponent, popupMessage} from './functions.js';
+import {addcomponent, popupMessage, redrawDependents} from './functions.js';
 import {uuidv4} from './handle.js';
-import {redrawDependents} from './testing.js';
 import $ from "jquery";
 
 var d3 = require('d3');
@@ -149,7 +148,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inp
             x: FromExisting ? FromExisting.X : ((kwargs.X !== undefined && kwargs.Y !== undefined) ? kwargs.X : genX),
             y: FromExisting ? FromExisting.Y : ((kwargs.X !== undefined && kwargs.Y !== undefined) ? kwargs.Y : genY),
         }])
-        .call(dragHandler);
+        // .call(dragHandler);
 
     var statusBar = node.append("g")
         .attr("transform", "translate(0," + (newcomp.height - 25) + ")");

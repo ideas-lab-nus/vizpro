@@ -183,7 +183,7 @@ function handleComponentSelection() {
 function handleTheClickOnAllComponents() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;
-    var allcomp = d3.selectAll("rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody")
+    var allcomp = d3.selectAll("rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody, rect.CompCBody")
         .on('mousedown', function(event) {
             var coordinates = d3.pointer(event);
             console.log(coordinates)

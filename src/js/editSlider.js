@@ -1,4 +1,3 @@
-import {SLIDER_START_POSITION, SLIDER_END_POSITION} from './constants.js';
 import {selectComp, redrawDependents} from './functions.js';
 import $ from "jquery";
 var d3 = require('d3');
@@ -10,6 +9,8 @@ var d3 = require('d3');
  */
 function submitSliderEdit(compKey) {
     var slider_component = selectComp(compKey);
+    const SLIDER_START_POSITION = 60;
+    const SLIDER_END_POSITION = 238;
     slider_component.min = parseFloat($("input#new_slider_min_value").val());
     slider_component.max = parseFloat($("input#new_slider_max_value").val());  
     slider_component.value = parseFloat($("input#new_slider_current_value").val());

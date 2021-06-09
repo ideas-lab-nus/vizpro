@@ -33,7 +33,6 @@ import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeE
     itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
 import {uuidv4} from './handle.js';
 import {jsonView} from './jsonview.js';
-import {edgeDragHandler} from './edge.js';
 import $ from "jquery";
 var d3 = require('d3');
 
