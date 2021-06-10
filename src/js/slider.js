@@ -103,7 +103,6 @@ function CreateNewSlider(FromExisting = null) {
     var dragHandler = d3.drag()
        .on("start", (event, d) => rect.attr("stroke", "red"))
        .on("drag", (event, d) => {           
-           console.log(reactContext.state.clickedId)
             moveComponent(reactContext.state.clickedId, event.x, event.y);
             d.x = event.x; 
             d.y = event.y;
@@ -190,7 +189,6 @@ function CreateNewSlider(FromExisting = null) {
             newSlider.rect = this;
         })
         .on("dblclick", () => {
-            //console.log("You double clicked me ");
         })
         .on("mousedown", () => {
             reactContext.setState({
@@ -312,14 +310,12 @@ function CreateNewSlider(FromExisting = null) {
             y: 3,
         }])
         .on("mouseover", function() {
-            console.log("tsk3");
             d3.select(this)
                 .attr("fill", "url(#gradientlsider)")
                 .attr("cursor", "pointer")
                 .attr("stroke", "black");
         })
         .on("mouseleave", function() {
-            console.log("tsk4");
             d3.select(this)
                 .attr("fill", "#3a4d69")
                 .attr("stroke", "none");

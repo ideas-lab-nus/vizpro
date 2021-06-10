@@ -60,17 +60,16 @@ function handleComponentSelection() {
     var allComp = reactContext.state.allComp;
     allComp.forEach(element => {
         if (element.type === "component" || element.type === "toggle" || element.type === "fileUpload") {
-            // Blue highlight
-            // d3.select("g#comp-" + element.GUID)
-            //     .on("click", function() {
-            //         d3.select("rect#" + element.GUID)
-            //             .attr("stroke-width", "15")
-            //             .attr("stroke", "#0064ffa8");
+            d3.select("g#comp-" + element.GUID)
+                .on("click", function() {
+                    // d3.select("rect#" + element.GUID)
+                    //     .attr("stroke-width", "15")
+                    //     .attr("stroke", "#0064ffa8");
 
-            //         reactContext.setState({  
-            //             selected_component_id: element.GUID,
-            //         });
-            //     })
+                    reactContext.setState({  
+                        selected_component_id: element.GUID,
+                    });
+                })
 
             d3.select("rect#" + element.GUID)
                 .on("focusout", () => {
@@ -184,9 +183,23 @@ function handleTheClickOnAllComponents() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;
     var allcomp = d3.selectAll("rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody, rect.CompCBody")
+        // .on('click', function(event) {
+        //     console.log("clicked")
+        //     if (event.defaultPrevented) return; // dragged
+        //     console.log("an actual click")
+        //     var coordinates = d3.pointer(event);            
+        //     reactContext.setState({
+        //         componentClickX: coordinates[0],
+        //         componentClickY: coordinates[1],
+        //         clicked: true,
+        //         startDrag : false,
+        //         clickedId : this.id.replace("overlaySelector", ""),
+        //         selected_components : [this.id.replace("overlaySelector", "")],
+        //         rectType : "component",
+        //     });   
+        // })
         .on('mousedown', function(event) {
             var coordinates = d3.pointer(event);
-            console.log(coordinates)
             
             var pos = $("g#comp-" + this.id.replace("overlaySelector", ""))
                 .attr("transform")
@@ -212,8 +225,6 @@ function handleTheClickOnAllComponents() {
 } // End of handleTheClickOnAllComponents
 
 function handleEdgeInitialization() {
-    // console.log(context +" vs" + this);
-    // var reactContext = context === 1 ? this : context;
     var reactContext = this;
     var allComp = reactContext.state.allComp;
     var allContents = d3.select("#allCanvasContents");
@@ -221,7 +232,6 @@ function handleEdgeInitialization() {
     var fromComponent = null;
     var allCircles = d3.selectAll("circle")
         .on('mousedown', function(event) {
-            console.log(this);
             reactContext.setState({
                 targetcircleId: this.id,
             })
@@ -235,9 +245,7 @@ function handleEdgeInitialization() {
             if (edgeStarted && targetcircleIN && this !== fromCircle.element) {
                 // DUMMY, Nothing to do in this version. :D :D 
             } else {
-                console.log("cond" + (this.classList[0] === "outputCir"))
                 if (this.classList[0] === "outputCir") {
-                    console.log(comp_output_edges);
                     if (comp_output_edges[this.classList[1]][this.classList[2]] === undefined) {
                         selectedcircleId = this.id;
                         reactContext.setState({
@@ -309,12 +317,7 @@ function handleEdgeInitialization() {
                 })
                 toComponent = selectComp(toCircle.element.classList[1]);
                 fromComponent = selectComp(fromCircle.element.classList[1]);
-                console.log(fromCircle.element.classList[2] +
-                    " " + fromCircle.element.classList[1] +
-                    " " + toCircle.element.classList[2] +
-                    " " + toCircle.element.classList[1]);
 
-                console.log(parent_child_matrix_fast_check)
                 if (!parent_child_matrix_fast_check.includes(fromCircle.element.classList[2] + " " + 
                                                              fromCircle.element.classList[1] + " " + 
                                                              toCircle.element.classList[2] + " " + 
@@ -379,16 +382,15 @@ function handleEdgeInitialization() {
                     updateAll();
                     redrawDependents(fromCircle.element.classList[1])
                 } else {
-                    console.log("The problem in line 677")
+                    console.log("Issue in parentchildmatrix (edgeInit)")
                 }
             } else {
-                console.log("There is something wrong , may be in the if conditions. ")
+                console.log("Not entering if (edgeInit)")
             }
         });
 } // End of handleEdgeInitialization
 
 function handleDoubleClick() {
-    // console.log("double clicked");
     const reactContext = this;
     var allComp = reactContext.state.allComp;
     allComp.forEach(element => {
@@ -425,7 +427,6 @@ function handleDoubleClick() {
 
                         var StringComp = selectComp(element.GUID);
                         $("input#string_radio_"+StringComp.inputs[0].type).prop("checked", true);
-                        console.log(StringComp.inputs[0].type)        
                         var newName;
                         $("input.stringPnanel.Name").on("change keyup paste", function () {
                             newName = $("input.stringPnanel.Name").val();
@@ -477,7 +478,7 @@ function handleDoubleClick() {
                         optionListStarted: true,
                         optionlistRectid: element.GUID,
                     });
-                    //console.log('option list double clicked');
+
                     if (!reactContext.state.doubleClicked) {
                         reactContext.setState({
                             doubleClicked: true,
@@ -505,7 +506,6 @@ function handleDoubleClick() {
                         submitOptionListEdit(compKey);
                         
                         $("button#applyChangeButton").on("click", function(e) {
-                            console.log('applying changes');
                             readyToGoSubmit(compKey);
                             reactContext.setState({
                                 doubleClicked: false,
@@ -516,7 +516,6 @@ function handleDoubleClick() {
         } else if (element.type === "slider") {
             d3.select("g#comp-" + element.GUID)
                 .on("dblclick", function() {
-                    console.log(element);
                     if (!reactContext.state.doubleClicked) {
                         reactContext.setState({
                             doubleClicked: true,

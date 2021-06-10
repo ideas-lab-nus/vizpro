@@ -45,7 +45,6 @@ var runDeep;
  * @param {*} color the color of the component. The default color is #F23322 (orange). This can be obtained by print out the udo_fill in the Django version.
  */
 function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inputList, outputList, color = "#F23322") {
-    console.log("Create new component called");
     //local title variables; Those should be later put in the visualization properties table.
     const reactContext = this;
     var IDLE_COLOR = reactContext.state.IDLE_COLOR;
@@ -53,7 +52,6 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inp
     var rectType = reactContext.state.rectType;
     runDeep = reactContext.state.runDeep;
 
-    console.log(this); 
     var one_character_width = 8;
     var padding = 20;
     var titleMargin = 30;
@@ -75,7 +73,6 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inp
         }, '')
 
         var ThisComponentName = type;
-        console.log(ThisComponentName);
         
         let n_inputs = inputList.length;
         let n_outputs = outputList.length;
@@ -389,7 +386,6 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inp
         .on("dblclick", () => {})
         .on("mousedown", () => {
             rectType = "component";
-            console.log(rectType);
         });
 
 
@@ -421,7 +417,6 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inp
             .on("click", function() {
                 console.log("start calculation")
                 runDeepFunction(newcomp.GUID)
-
             });
 
         var playrect = node.append("svg")
@@ -444,7 +439,7 @@ function CreateNewComponent(FromExisting = null, type = null, kwargs = null, inp
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log("Adding a list view" + newcomp);
+        console.log("Adding a generic comp" + newcomp);
         current_all_comp.push(newcomp);
         reactContext.setState({
             allComp: current_all_comp,

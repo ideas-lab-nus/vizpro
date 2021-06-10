@@ -10,7 +10,6 @@ function submitPanelEdit(compKey) {
     var StringComp = selectComp(compKey);
     var textVal = $("textarea.textarea.stringProperties").val();
     StringComp.inputs[0].type = $("input[name='type']:checked").val();
-    console.log("panel type:" + StringComp.inputs[0].type + "  "  + textVal);
     $("foreignObject#panel_status_" + StringComp.GUID).text("Type : " + StringComp.inputs[0].type);
     if (StringComp.inputs[0].type === "json") {
         $("foreignObject#textbody_" + StringComp.GUID).html('<div id="jsonTreeViewer' + StringComp.GUID +

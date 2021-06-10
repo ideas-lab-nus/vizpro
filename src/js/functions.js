@@ -329,7 +329,6 @@ function updateAll(FromExisting = null) {
     allEdges.forEach(element => {
 
         var thisD = $("path#" + element.path_id).attr("d");
-        // //////console.log(thisD)
         d3.select("#" + element.path_id)
             .attr("stroke-width", "5")
             .attr("d", function() {
@@ -506,10 +505,14 @@ function addOptionDropdownList(compId) {
                 .attr("opacity", "0.3")
                 .attr("stroke", "gray")
                 .on("mouseover", function() {
-                    mouseInsideOption = true;
+                    reactContext.setState({
+                        mouseInsideOption: true,
+                    })
                 })
                 .on("mouseout", function() {
-                    mouseInsideOption = false;
+                    reactContext.setState({
+                        mouseInsideOption: false,
+                    })
                 })
                 .on("click", function() {
                     changeOptionListFinalValue(this);
@@ -1017,30 +1020,33 @@ function objToHtmlTable(object) {
 } // End of objToHtmlTable
 
 function deleteComponent(component_to_be_deleted) {
+    console.log("deleting component now");
     var component_to_be_reset = selectComp(component_to_be_deleted);
+    if (component_to_be_reset.type === "optionList") {
+        reactContext.setState({
+            optionListStarted: false,
+        })
+    }
+    console.log(component_to_be_reset.type)
     component_to_be_reset.value = null;
 
     console.log(parent_child_matrix_fast_check);
     component_to_be_reset.inputs.forEach((input) => {
         input.value = null;
-
     });
 
     component_to_be_reset.outputs.forEach((output) => {
         output.value = null;
-
     });
+
     delete components_selection_data[component_to_be_deleted]
     redrawDependents(component_to_be_deleted);
-
-
 
     for (let i = 0; i < parent_child_matrix_fast_check.length; i++) {
         var current_parent_child_object_asList = parent_child_matrix_fast_check[i].split(" ");
         if (current_parent_child_object_asList[1] === component_to_be_deleted) {
             parent_child_matrix_fast_check.splice(i, 1);
         }
-
     }
 
     comp_input_edges[component_to_be_deleted].forEach(element => {
@@ -1049,7 +1055,10 @@ function deleteComponent(component_to_be_deleted) {
                 element.forEach(thisEdgeId => {
                     d3.select("path#" + thisEdgeId).remove();
                     if (thisEdgeId === allEdges[i]["path_id"]) {
-                        allEdges.splice(i, 1)
+                        allEdges.splice(i, 1);
+                        reactContext.setState({
+                            allEdges: allEdges,
+                        })
                     }
                     var otherComp = edge_comp_matrix[thisEdgeId]["from"];
                     var otherCompIndex = edge_comp_matrix[thisEdgeId]["from_index"];
@@ -1062,14 +1071,16 @@ function deleteComponent(component_to_be_deleted) {
         }
     });
 
-
     comp_output_edges[component_to_be_deleted].forEach(element => {
         try {
             for (let i = 0; i < allEdges.length; i++) {
                 element.forEach(thisEdgeId => {
                     d3.select("path#" + thisEdgeId).remove();
                     if (thisEdgeId === allEdges[i]["path_id"]) {
-                        allEdges.splice(i, 1)
+                        allEdges.splice(i, 1);
+                        reactContext.setState({
+                            allEdges: allEdges,
+                        })
                     }
                     var otherComp = edge_comp_matrix[thisEdgeId]["to"];
                     var otherCompIndex = edge_comp_matrix[thisEdgeId]["to_index"];
@@ -1079,13 +1090,20 @@ function deleteComponent(component_to_be_deleted) {
         } catch (err) {
             console.log(err);
         }
-
-
     });
+
+    reactContext.setState({
+        comp_input_edges: comp_input_edges,
+        comp_output_edges: comp_output_edges,
+        parent_child_matrix: parent_child_matrix
+    })
 
     for (let i = 0; i < allComp.length; i++) {
         if (allComp[i].GUID === component_to_be_deleted) {
-            allComp.splice(i, 1)
+            allComp.splice(i, 1);
+            reactContext.setState({
+                allComp: allComp,
+            })
         }
     }
     d3.select("#" + component_to_be_deleted).remove();
@@ -1225,7 +1243,6 @@ function moveComponent(id, x, y) {
         .attr("transform", function() {
             return "translate(" + x + "," + y + ")"
         });
-    console.log("walaoeh")
     handleEdgeMovement(id, x, y);
 } // End of moveComponent
 

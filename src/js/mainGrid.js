@@ -65,7 +65,7 @@ function manageGrid() {
     var selected_component_id = reactContext.state.selected_component_id;
     var allComp = reactContext.state.allComp;
 
-    var mainGrid = d3.select("#mainGrid")
+    var mainGrid = allContents
     .style("backgroud-color", function () {
         var xGrid = this.offsetLeft;
         var yGrid = this.offsetTop;
@@ -82,13 +82,17 @@ function manageGrid() {
         }
     })
     .on("keydown", function(event) {
+        console.log("deleting")
         if (event.keyCode === 46) { //delete
-            popupMessage("Delete")
-            console.log("I'm standing here ...");
             if (reactContext.state.selected_components.length > 1) {
                 console.log("You will delete ")
             }
-            if (selectComp(selected_component_id).type === "fileUpload") {
+            var elem = selectComp(selected_component_id);
+            if (elem == null) { 
+                console.log("Something went wrong, invalid selected component");
+                return;
+            }
+            if (elem.type === "fileUpload") {
                 if (window.confirm("Are you sure you want to delete this file from the database? ")) {
                     console.log("You should delete the file from the database now... ")
                     deleteComponent(selected_component_id);
@@ -108,7 +112,7 @@ function manageGrid() {
         })
         d3.select("body").append("option")
     })
-    .on("contextmenu", function (event, d, i) {
+    .on("contextmenu", function (event) {
         //context menu event raised on right click
         event.preventDefault();
         popupMessage("RMB");
@@ -126,8 +130,8 @@ function manageGrid() {
         })        
         if (reactContext.state.startDrag) {
             console.log("Trying to drag the component");   
-            var x = mousex - reactContext.state.componentClickX ;
-            var y = mousey - reactContext.state.componentClickY ;
+            var x = mousex - reactContext.state.componentClickX;
+            var y = mousey - reactContext.state.componentClickY;
             moveComponent(reactContext.state.clickedId, x, y);
         }
         if (reactContext.state.edgeStarted) {
@@ -313,7 +317,7 @@ function manageGrid() {
         handleEdgeMovement(reactContext.state.StringAnchorId);
     })
     .on('mouseup', function () {
-        if (reactContext.state.startDrag) {            
+        if (reactContext.state.startDrag) {         
             try {           
                 //This needs to move to a separate function .     
                 var clickedId = reactContext.state.clickedId;
@@ -435,7 +439,6 @@ function highlightSelection(components_list, temp_selected_xs, temp_selected_ys)
         min_selected_y = Math.min(...temp_selected_ys);
         max_selected_y = Math.max(...temp_selected_ys) - min_selected_y;
 
-        console.log(temp_selected_xs)
         someCircle= allContents.append("circle")
         .attr("cx", (min_selected_x + min_selected_x + max_selected_x)/2.0)
         .attr("cy", (min_selected_y + min_selected_y + max_selected_y)/2.0)
