@@ -238,7 +238,7 @@ function manageCanvas() {
             })
             allComp.forEach(element => {
                 if (element.type === "component")
-                    CreateNewComponent(element);
+                    CreateNewComponent(reactContext, element); //to be handle later
                 else if (element.type === "slider")
                     CreateNewSlider(element);
                 else if (element.type === "string")

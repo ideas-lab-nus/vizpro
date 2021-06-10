@@ -3,10 +3,6 @@ function getGeometryData(project_api_key, tracking) {
         branch_id,
         commit_id;
 
-        
-    
-
-
     var socket = new WebSocket("wss://my.buildsim.io/GeometryGenerator?project_api_key=" + project_api_key + "&tracking=" + tracking)
     // console.log(socket)
     socket.onmessage = function (event) {

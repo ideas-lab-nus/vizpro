@@ -1,5 +1,4 @@
 import React from 'react';
-import $ from "jquery";
 import ScriptTag from 'react-script-tag';
 import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
 import {CreateNewSlider} from './js/slider.js';
@@ -17,6 +16,7 @@ import {globalVars} from './js/constants.js';
 import Grid from './Grid';      
 import {handleComponentSelection, handleTheClickOnAllComponents, 
     handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
+import {addGenericComponentIcon} from './js/leftPropertyBar.js'
 
 export default class Canvas extends React.Component {
     constructor(props) {
@@ -37,7 +37,7 @@ export default class Canvas extends React.Component {
         this.CreateNewComponent = CreateNewComponent.bind(this);
         this.manageGrid = manageGrid.bind(this);
         this.dummyToSetState = dummyToSetState.bind(this);
-        this.addGenericComponentIcon = this.addGenericComponentIcon.bind(this);
+        this.addGenericComponentIcon = addGenericComponentIcon.bind(this);
     }
 
     componentDidMount() {
@@ -62,18 +62,6 @@ export default class Canvas extends React.Component {
 
     print() {
         console.log("all Comp is " + this.state.allComp);
-    }
-
-    addGenericComponentIcon() {
-        console.log('added');
-        this.CreateNewComponent = CreateNewComponent.bind(this);
-        var r = $('<div id="addComp" name="Average" shname="AVG" desc="The average between two values" type="component" dftype="shlow" class="mainButtonItem 1 1" style="background-image:url(https://storage.googleapis.com/ghostbucket111/icons/958f17e5cfad4cdbbe26dd5affbbbfa2.png)">&nbsp;<span id="hint">Average</span></div>');
-        r.on("click", () => {
-            console.log('Average clicked');
-            console.log(this);
-            CreateNewComponent(this, null, "Average", {"shortName": "AVG", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["average", "log_"], "#F23322");
-        });
-        $("div.toolbarbuttonsContainer.b066a5eb-26dc-4359-8d22-3643444d08e4.d2312a8b-63dc-4112-8a66-76996c150b0e").append(r);
     }
 
     render() {

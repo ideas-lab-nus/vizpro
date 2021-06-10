@@ -361,7 +361,9 @@ function CreateNewSlider(FromExisting = null) {
     };  
     reactContext.setState({
         components_selection_data: current_components_selection,
-    })
+    });
+
+    //console.log(reactContext.parent_child_matrix);
 }
 
 export {CreateNewSlider};

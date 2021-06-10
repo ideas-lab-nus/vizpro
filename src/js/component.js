@@ -55,6 +55,8 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
     var rectType = reactContext.state.rectType;
     runDeep = reactContext.state.runDeep;
 
+    //console.log(reactContext.parent_child_matrix);
+
     var one_character_width = 8;
     var padding = 20;
     var titleMargin = 30;
