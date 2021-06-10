@@ -104,7 +104,6 @@ function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = 
             x: FromExisting ? FromExisting.X : genX,
             y: FromExisting ? FromExisting.Y : genY,
         }])
-        .call(dragHandler);
 
     var InputGroup = node.append('g');
     for (let index = 0; index < newcomp.inputs.length; index++) {

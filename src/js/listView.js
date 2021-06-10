@@ -71,11 +71,9 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
     newcomp.height = 200;
     newcomp.type = "listView";
     newcomp.dftype = "shlow";
-
+    newcomp.width = 200;
 
     // TODO : get the longest text in the component. and set the width based on this. 
-
-    newcomp.width = 200;
 
     var allContents = d3.select("#allCanvasContents");
 
@@ -116,7 +114,6 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
             x: FromExisting ? FromExisting.X : genX,
             y: FromExisting ? FromExisting.Y : genY,
         }])
-        .call(dragHandler);
 
     var InputGroup = node.append('g');
     for (let index = 0; index < newcomp.inputs.length; index++) {
@@ -179,7 +176,7 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
 
     //listbox items
     node.append("foreignObject")
-        .attr("class", "listView " + newcomp.GUID)
+        .attr("class", "listView CompLBody" + newcomp.GUID)
         .attr("id", "listView-" + newcomp.GUID)
         .attr("y", 20)
         .attr("x", 1)

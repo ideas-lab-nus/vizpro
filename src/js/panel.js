@@ -115,7 +115,6 @@ function CreateNewPanel(FromExisting = null) {
             x: FromExisting ? FromExisting.X : genX,
             y: FromExisting ? FromExisting.Y : genY,
         }])
-        .call(dragHandler);
 
     var rect = node.append('rect')
         .attr("class", "CompPBody " + newcomp.GUID)
@@ -151,7 +150,19 @@ function CreateNewPanel(FromExisting = null) {
                     newcomp.inputs[index].type = "text";
                 }
                 return "input";
-            }).lower();
+            })
+            .on("mouseover", function() {
+                console.log("panel edge in focus");
+                reactContext.setState({
+                    targetcircleIN: true,
+                })
+            })
+            .on("mouseout", function() {
+                reactContext.setState({
+                    targetcircleIN: false,
+                })
+            })
+            .lower();
     }
 
     var OutputGroup = node.append('g');
@@ -169,6 +180,16 @@ function CreateNewPanel(FromExisting = null) {
                 newcomp.outputs[index].circle = this;
                 newcomp.outputs[index].type = "output";
                 return "output";
+            })
+            .on("mouseover", function() {
+                reactContext.setState({
+                    targetcircleIN: true,
+                })
+            })
+            .on("mouseout", function() {
+                reactContext.setState({
+                    targetcircleIN: false,
+                })
             }).lower();
     }
 
@@ -279,74 +300,74 @@ function CreateNewPanel(FromExisting = null) {
     var resize = d3.drag()    
         .on("start", (event, d) => Dummyrect.attr("stroke", "red"))
         .on("end", (event, d) => Dummyrect.attr("stroke", "#3a4c69"))
-            .on('drag', function (event, d) {
-                var anchorMouseYpos = reactContext.state.anchorMouseYpos;
-                var anchorMouseXpos = reactContext.state.anchorMouseXpos;
-                var StringAnchorId = reactContext.state.StringAnchorId;
-                var newHeight = event.y - anchorMouseYpos;
-                if (newHeight <= 50) {
-                    newHeight = 52;
-                }
-                var newWidth = event.x - anchorMouseXpos;
-                if (newWidth <= 300) {
-                    newWidth = 301;
-                }
+        .on('drag', function (event, d) {
+            var anchorMouseYpos = reactContext.state.anchorMouseYpos;
+            var anchorMouseXpos = reactContext.state.anchorMouseXpos;
+            var StringAnchorId = reactContext.state.StringAnchorId;
+            var newHeight = event.y - anchorMouseYpos;
+            if (newHeight <= 50) {
+                newHeight = 52;
+            }
+            var newWidth = event.x - anchorMouseXpos;
+            if (newWidth <= 300) {
+                newWidth = 301;
+            }
 
-                d.x = newWidth;
-                d.y = newHeight;
-                d.width = newWidth;
-                d.height = newHeight;
+            d.x = newWidth;
+            d.y = newHeight;
+            d.width = newWidth;
+            d.height = newHeight;
 
-                var thisComp = selectComp(StringAnchorId)
-                thisComp.height = newHeight;
-                thisComp.width = newWidth;
+            var thisComp = selectComp(StringAnchorId)
+            thisComp.height = newHeight;
+            thisComp.width = newWidth;
 
-                d3.select("rect#dummyRect_" + StringAnchorId)
-                .attr("height", newHeight)
-                .attr("width", newWidth);
+            d3.select("rect#dummyRect_" + StringAnchorId)
+            .attr("height", newHeight)
+            .attr("width", newWidth);
 
-                d3.select("rect#" + StringAnchorId)
-                .attr("height", newHeight);
+            d3.select("rect#" + StringAnchorId)
+            .attr("height", newHeight);
 
-                d3.select("rect.CompPBody." + StringAnchorId+".a")
-                .attr("width", newWidth);
+            d3.select("rect.CompPBody." + StringAnchorId+".a")
+            .attr("width", newWidth);
 
-                d3.select("rect#statusRect" + StringAnchorId)
-                .attr("y", newHeight - 20)
-                .attr("width", newWidth - 50);
+            d3.select("rect#statusRect" + StringAnchorId)
+            .attr("y", newHeight - 20)
+            .attr("width", newWidth - 50);
 
-                d3.select("foreignObject#panel_status_" + StringAnchorId)
-                .attr("y", newHeight + 2)
-                .attr("width", newWidth - 50);
+            d3.select("foreignObject#panel_status_" + StringAnchorId)
+            .attr("y", newHeight + 2)
+            .attr("width", newWidth - 50);
 
-                d3.select("rect#overlaySelector" + StringAnchorId)
-                .attr("height", newHeight - 5)
+            d3.select("rect#overlaySelector" + StringAnchorId)
+            .attr("height", newHeight - 5)
 
-                d3.select("rect.xyAnchor." + StringAnchorId)
-                .attr("x", thisComp.width-ANCHOR_WIDTH)
-                .attr("y", thisComp.height-ANCHOR_WIDTH);
+            d3.select("rect.xyAnchor." + StringAnchorId)
+            .attr("x", thisComp.width-ANCHOR_WIDTH)
+            .attr("y", thisComp.height-ANCHOR_WIDTH);
 
-                d3.select("foreignObject#textbody_" + StringAnchorId)
-                .attr("height", thisComp.height - ANCHOR_WIDTH - 5)
-                .attr("width", thisComp.width - 4 - ANCHOR_WIDTH)
+            d3.select("foreignObject#textbody_" + StringAnchorId)
+            .attr("height", thisComp.height - ANCHOR_WIDTH - 5)
+            .attr("width", thisComp.width - 4 - ANCHOR_WIDTH)
 
-                d3.select("foreignObject#panel_edit_mode" + StringAnchorId)
-                .attr("y", newHeight + 2)
-                .attr("x", newWidth - 30)
+            d3.select("foreignObject#panel_edit_mode" + StringAnchorId)
+            .attr("y", newHeight + 2)
+            .attr("x", newWidth - 30)
 
-                d3.select("g#logCirGroup_" + StringAnchorId)
-                .attr("transform", () => {
-                    var x = thisComp.width;
-                    var y = thisComp.height;
-                    return "translate(" + (x).toString() + "," + (y - 10).toString() + ")";
-                });
-                d3.select("circle#outputCir" + StringAnchorId + "_0")
-                .attr("cy", thisComp.height / 2)
-                .attr("cx", thisComp.width);
-
-                d3.select("circle#inputCir" + StringAnchorId + "_0")
-                .attr("cy", thisComp.height / 2);
+            d3.select("g#logCirGroup_" + StringAnchorId)
+            .attr("transform", () => {
+                var x = thisComp.width;
+                var y = thisComp.height;
+                return "translate(" + (x).toString() + "," + (y - 10).toString() + ")";
             });
+            d3.select("circle#outputCir" + StringAnchorId + "_0")
+            .attr("cy", thisComp.height / 2)
+            .attr("cx", thisComp.width);
+
+            d3.select("circle#inputCir" + StringAnchorId + "_0")
+            .attr("cy", thisComp.height / 2);
+        });
 
     var rectanchorXY = node.append('rect')
         .attr("class", "xyAnchor " + newcomp.GUID)
