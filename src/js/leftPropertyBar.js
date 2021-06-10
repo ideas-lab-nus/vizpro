@@ -1,8 +1,11 @@
 import $ from 'jquery';
 import {CreateNewComponent} from './component.js';
+import {details} from './componentDetail.js';
 
 function addGenericComponentIcon() {
     console.log('added');
+    console.log(details);
+    console.log(details.length);
     var r = addNewComponentIcon(this, "addComp", "Average", "AVG", "The average between two values", "component", "shlow", "mainButtonItem 1 1", 
             "https://storage.googleapis.com/ghostbucket111/icons/958f17e5cfad4cdbbe26dd5affbbbfa2.png", "hint", 
             [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["average", "log_"], "#F23322");
