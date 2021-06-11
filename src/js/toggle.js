@@ -122,7 +122,7 @@ function CreateNewToggle(FromExisting = null) {
         var out = OutputGroup.append('circle')
             .attr("cx", newcomp.width)
             .attr("cy", newcomp.height / 2)
-            .attr("fill", "gray") //newcomp.fill)
+            .attr("fill", "gray")
             .attr("r", "5")
             .attr("stroke", "black")
             .attr("stroke-width", "2")
@@ -131,7 +131,6 @@ function CreateNewToggle(FromExisting = null) {
             .attr("type", function() {
                 newcomp.outputs[index].circle = this;
                 newcomp.outputs[index].type = "output";
-                // //////////console.log(newcomp.outputs[index]);
                 return "output";
             }).lower();
     }

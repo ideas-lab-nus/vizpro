@@ -207,7 +207,6 @@ function manageCanvas() {
                 reactContext.state.edgeStarted || 
                 reactContext.state.selection_groud_selected) && event.button === 0;
     }).on("zoom", function(event) {
-        //console.log(event.transform.k);
         if (!reactContext.state.startDrag) {             
             reactContext.setState({
                 canvasX:  event.transform.x,

@@ -47,14 +47,9 @@ var runDeep;
 function CreateNewComponent(reactContext, FromExisting = null, type = null, kwargs = null, inputList, outputList, color = "#F23322") {
     console.log("Create new component called");
     //local title variables; Those should be later put in the visualization properties table.
-    //const reactContext = this;
-    console.log(reactContext);
     var IDLE_COLOR = reactContext.state.IDLE_COLOR;
     var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
-    var rectType = reactContext.state.rectType;
     runDeep = reactContext.state.runDeep;
-
-    //console.log(reactContext.parent_child_matrix);
 
     var one_character_width = 8;
     var padding = 20;
@@ -77,7 +72,6 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
         }, '')
 
         var ThisComponentName = type;
-        console.log(ThisComponentName);
         
         let n_inputs = inputList.length;
         let n_outputs = outputList.length;
@@ -265,7 +259,9 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
         .attr("height", newcomp.height)
         .attr("fill", "#E8E8E8")
         .on("mousedown", () => {
-            rectType = "component";
+            reactContext.setState({
+                rectType: "component",
+            });
         });
 
 
@@ -390,8 +386,9 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
         })
         .on("dblclick", () => {})
         .on("mousedown", () => {
-            rectType = "component";
-            console.log(rectType);
+            reactContext.setState({
+                rectType: "component",
+            });
         });
 
 
@@ -423,7 +420,6 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
             .on("click", function() {
                 console.log("start calculation")
                 runDeepFunction(newcomp.GUID)
-
             });
 
         var playrect = node.append("svg")
@@ -446,7 +442,7 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log("Adding a list view" + newcomp);
+        console.log("Adding a generic comp" + newcomp);
         current_all_comp.push(newcomp);
         reactContext.setState({
             allComp: current_all_comp,

@@ -48,7 +48,6 @@ function CreateNewOptionList(reactContext, FromExisting = null, optionlist_prede
 
     } else {
         newcomp = FromExisting;
-        console.log(newcomp)
     }
 
     newcomp.fill = "white";
@@ -63,7 +62,6 @@ function CreateNewOptionList(reactContext, FromExisting = null, optionlist_prede
     // TODO : get the longest text in the component. and set the width based on this. 
 
     var allContents = d3.select("#allCanvasContents");
-    console.log(allContents);
 
     function update() {
         node.attr("transform", d => `translate(${d.x},${d.y})`);
@@ -204,7 +202,6 @@ function CreateNewOptionList(reactContext, FromExisting = null, optionlist_prede
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log(current_all_comp);
         console.log("Adding an option list" + newcomp);
         current_all_comp.push(newcomp);
         reactContext.setState({

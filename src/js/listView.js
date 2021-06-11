@@ -58,9 +58,8 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
         ]
 
         if (optionlist_predefined_items != null) {
-            newcomp.optionListValues = JSON.parse(optionlist_predefined_items)
+            newcomp.optionListValues = JSON.parse(optionlist_predefined_items);
         }
-
     } else {
         newcomp = FromExisting;
     }
@@ -136,7 +135,6 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
             });
     }
 
-
     var OutputGroup = node.append('g');
     for (let index = 0; index < newcomp.outputs.length; index++) {
         var out = OutputGroup.append('circle')
@@ -184,7 +182,6 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
         .attr("height", newcomp.height - 20)
         .html(() => {
             var selectedOptions = [];
-            console.log(newcomp.value)
             var ListItemsvalueReturn = `<select id="listviewSelect" class="listView ` + newcomp.GUID + `" size="5"  multiple>`;
             newcomp.value.forEach(option => {
 

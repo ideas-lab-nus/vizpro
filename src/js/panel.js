@@ -152,7 +152,6 @@ function CreateNewPanel(FromExisting = null) {
                 return "input";
             })
             .on("mouseover", function() {
-                console.log("panel edge in focus");
                 reactContext.setState({
                     targetcircleIN: true,
                 })

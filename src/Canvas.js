@@ -136,8 +136,8 @@ export default class Canvas extends React.Component {
 
     componentDidMount() {
         this.manageCanvas();
-        this.manageGrid();
         this.addGenericComponentIcon();
+        // this.manageGrid();
         this.timerID = setInterval(
           () => this.tick(),
           1000
@@ -155,7 +155,7 @@ export default class Canvas extends React.Component {
     }
 
     print() {
-        console.log("all Comp is " + this.state.allComp);
+        console.log( this.state.components_selection_data);
     }
 
     render() {
@@ -163,6 +163,7 @@ export default class Canvas extends React.Component {
             <div>
                 {/* <ScriptTag>{this.print()}</ScriptTag> */}
                 <ScriptTag>{this.dummyToSetState()}</ScriptTag>
+                <ScriptTag>{this.manageGrid()}</ScriptTag>
                 <ScriptTag>{this.handleComponentSelection()}</ScriptTag>
                 <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
                 <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
