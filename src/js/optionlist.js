@@ -28,8 +28,8 @@
 import {uuidv4, addCircle} from './handle.js';
 var d3 = require('d3');
 
-function CreateNewOptionList(FromExisting = null, optionlist_predefined_items = null) {
-    const reactContext = this;
+function CreateNewOptionList(reactContext, FromExisting = null, optionlist_predefined_items = null) {
+    //const reactContext = this;
     var newcomp;
 
     if (FromExisting == null) {

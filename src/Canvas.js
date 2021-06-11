@@ -208,107 +208,22 @@ export default class Canvas extends React.Component {
                                     <span className="currentTab b066a5eb-26dc-4359-8d22-3643444d08e4" style={{marginLeft: "3px"}}> &nbsp;</span> 
                                 </div>
                                 
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 d2312a8b-63dc-4112-8a66-76996c150b0e 0" style={{display:"none"}}>
-                                        
-                                    
-                                        
-                                    <div onClick={() => this.CreateNewComponent(this, null, "Add", {"shortName": "+", "dfType": "shlow"}, [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["sum_", "log_"], "#F23322")} 
-                                    id="addComp" name="Add" shname="+" desc="Add two numbers." type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/e2c5a0d28dca45c38b0e96e6723e2bde.png)"}}>&nbsp;<span id="hint">Add</span></div>
-                                        
-                                    <div onClick={() => this.CreateNewComponent(this, null, "Max", {"shortName": "max", "dfType": "shlow"}, [{"name": "InputList", "shortName": "_list", "desc": "the input list", "default_value": "[0.0, 1.0, 2.0]"}], ["output_", "log_"], "#F23322")} 
-                                    id="addComp" name="Max" shname="max" desc="Maximum value of a list of inputs." type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/96524490dcdf4317a9a3e80b9d4762ba.png)"}}>&nbsp;<span id="hint">Max</span></div>
-                                        
-                                    <div onClick={() => this.CreateNewComponent(this, null, "Min", {"shortName": "min", "dfType": "shlow"}, [{"name": "InputList", "shortName": "_list", "desc": "the input list", "default_value": "[0.0, 1.0, 2.0]"}], ["output_", "log_"], "#F23322")} 
-                                    id="addComp" name="Min" shname="min" desc="Minimum value of a list of inputs" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/5d844dbee9f54f9ba9891082ac8a52c5.png)"}}>&nbsp;<span id="hint">Min</span></div>
-                                        
-                                    <div onClick={() => this.CreateNewComponent(this, null, "Difference 2", {"shortName": "Difference", "dfType": "shlow"}, [{"name": "in_01", "shortName": "in_01", "desc": "first input", "default_value": "10.0"}, {"name": "in_02", "shortName": "in_02", "desc": "second input", "default_value": "5.0"}], ["output_", "log_"], "#9B59B6")} 
-                                    id="addComp" name="Difference 2" shname="Difference" desc="Substraction" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/f4fbd2bace8d4fb6b8982ccfaf310f63.png)"}}>&nbsp;<span id="hint">Difference 2</span></div>
-                                                        
-                                    <div onClick={() => this.CreateNewComponent(this, null, "Json Navigator", {"shortName": "jsonNav", "dfType": "shlow"}, [{"name": "input_json", "shortName": "input_json", "desc": "input_json", "default_value": "null"}, {"name": "path", "shortName": "path", "desc": "path", "default_value": "null"}], ["output_", "log_"], "#C0392B")} 
-                                    id="addComp" name="Json Navigator" shname="jsonNav" desc="Select item from json object by path" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Json Navigator</div>
-                                                    
-                                    <div onClick={() => this.CreateNewComponent(this, null, "3dVisualizer", {"shortName": "3dvis", "dfType": "shlow"}, [{"name": "url", "shortName": "url", "default_value": "null"}], ["url"], "#E38A74")} 
-                                    id="addComp" name="3dVisualizer" shname="3dvis" desc="" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>3dVisualizer</div>
-                                        
-                                    <div onClick={() => this.CreateNewComponent(this, null, "Image Display", {"shortName": "imshow", "dfType": "shlow"}, [{"name": "_url", "shortName": "url", "desc": "url", "default_value": "https://user-images.githubusercontent.com/6969514/60951247-4bac1200-a32b-11e9-8b66-02bc19953461.png"}], ["output_", "log_"], "#F23322")} 
-                                    id="addComp" name="Image Display" shname="imshow" desc="" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Image Display</div>
-                                        
-                                    <div onClick={() => this.CreateNewComponent(this, null, "Youtube display", {"shortName": "Youtube", "dfType": "shlow"}, [{"name": "_url", "shortName": "_url", "desc": "youtube url","default_value": "null"}], ["url"], "#C0392B")} 
-                                    id="addComp" name="YouTube display" shname="YouTube" desc="" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>YouTube display</div>
-                                            
-                                    <div onClick={() => this.CreateNewComponent(this, null, "Plot Panel", {"shortName": "plot panel", "dfType": "shlow"}, [{"name": "inputs", "shortName": "in", "default_value": "null", "desc": "in"}], ["url"], "#F1C40F")} 
-                                    id="addComp" name="Plot Panel" shname="plot panel" desc="" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Plot Panel</div>
-                                        
-                                    <div onClick={() => this.CreateNewComponent(this, null, "Cloud", {"shortName": "Cloud", "dfType": "dp"}, [{"name": "number"}, {"name": "url"}], ["abs"], "#F0CA4D")} 
-                                    id="addComp" name="Cloud" shname="Cloud" desc="" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Cloud</div>
-                                    
-                                </div>
+                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 d2312a8b-63dc-4112-8a66-76996c150b0e 0" style={{display:"none"}} />
                                 
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 094290f2-edaf-4396-b7b9-098ff208257f -1" style={{display:"none"}}>
-                                    
-                                    <div id="addComp" name="BuildingSimulationModel" shname="BSimM" desc="Integrate cloud simulation into BuildSim&#x27;s automated workflow" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/a65cdbfc93a7436c9c8c83308ed9b100.png)"}}>&nbsp;<span id="hint">BuildingSimulationModel</span></div>
-                                        
-                                    <div id="addComp" name="HVAC" shname="hvac" desc="Heating, ventilation, and air conditioning (HVAC) is the technology of indoor and vehicular environmental comfort." type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/784e631b9ba748f28eba825362b3add9.png)"}}>&nbsp;<span id="hint">HVAC</span></div>
-                                                    
-                                    <div id="addComp" name="BSH Project Model List" shname="bshPrj" desc="Get list of models under a project" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>BSH Project Model List</div>
-                                        
-                                    <div id="addComp" name="BSH Model Commits" shname="bshModelCommits" desc="Access a model commit" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>BSH Model Commits</div>
-                                        
-                                    <div id="addComp" name="BSH Run" shname="bsh_run" desc="Run simulation job" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>BSH Run</div>
-                                        
-                                    <div id="addComp" name="BSH 3D Viewer" shname="3dviewer" desc="track_token" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>BSH 3D Viewer</div>
-                                        
-                                    <div id="addComp" name="Draw 3d Model" shname="None" desc="" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Draw 3d Model</div>
-                                                                
-                                    <div id="addComp" name="BSH Get Model Details" shname="ModelDetails" desc="Retrieves model info and simulation results." type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>BSH Get Model Details</div>
-                                        
-                                    <div id="addComp" name="BSH Parametric Study" shname="parametric_study" desc="" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>BSH Parametric Study</div>
-                                        
-                                    <div id="addComp" name="BSH Spatial Representation" shname="SpatialRepr" desc="" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>BSH Spatial Representation</div>
-                                        
-                                </div>
+                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 094290f2-edaf-4396-b7b9-098ff208257f -1" style={{display:"none"}} />
                                 
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 11b3c35e-76a6-4c6b-8743-e86fe7f02403 -1" style={{display:"none"}}>
-                                                    
-                                    <div id="addComp" name="get OsiSoft" shname="get OsiSoft" desc="get data from a url" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>get OsiSoft</div>
-                                                
-                                    <div id="addComp" name="Get Data Tree" shname="getDTr" desc="" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>Get Data Tree</div>
-                                        
-                                    <div id="addComp" name="OSI Get Data List" shname="getDList" desc="Main function to get the list of nodes of different levels. 
-            Arguments:
-                    url {string} -- url to the piwebapi asset server" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>OSI Get Data List</div>
-                                        
-                                    <div id="addComp" name="OSI Get Attribute" shname="osi_getAttribute" desc="" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>OSI Get Attribute</div>
-                                        
-                                    <div id="addComp" name="OSI_StartTime" shname="starttime" desc="{&quot;Last_1_hours&quot;:&quot;-1h&quot;,&quot;Last_6_hours&quot;:&quot;-6h&quot;,&quot;Last_12_hours&quot;:&quot;-12h&quot;,&quot;Last_24_hours&quot;:&quot;-24h&quot;,&quot;Last_7_days&quot;:&quot;-7d&quot;,&quot;Last_15_days&quot;:&quot;-15d&quot;,&quot;Last_30_days&quot;:&quot;-30d&quot;,&quot;This_Year&quot;:&quot;01/01&quot;}" type="optionList" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>OSI_StartTime</div>
-                                        
-                                    <div id="addComp" name="OSI End Time" shname="osi_endTime" desc="{&quot;Now&quot;:&quot;*&quot;,&quot;Last_1_hours&quot;:&quot;*-1h&quot;,&quot;Last_6_hours&quot;:&quot;*-6h&quot;,&quot;Last_12_hours&quot;:&quot;*-12h&quot;,&quot;Last_24_hours&quot;:&quot;*-24h&quot;,&quot;Last_7_days&quot;:&quot;*-7d&quot;,&quot;Last_15_days&quot;:&quot;*-15d&quot;,
-            &quot;Last_30_days&quot;:&quot;*-30d&quot;}" type="optionList" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>OSI End Time</div>
-                                        
-                                    <div id="addComp" name="OSI Extract TimeSeries Data" shname="timeSeriesData" desc="Extract timeseries data from a record" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>OSI Extract TimeSeries Data</div>
-                                                        
-                                </div>
+                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 11b3c35e-76a6-4c6b-8743-e86fe7f02403 -1" style={{display:"none"}} />
                                 
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 c0e53dd4-d351-4f87-9ef9-219fe3b108a4 -1" style={{display:"none"}}>
-                                                                                
-                                    <div id="addComp" name="PANDAS DataFrame" shname="pd_dataFrame" desc="" type="component" dftype="dp" className="mainButtonItem 1 1" style={{backgroundImage: "url()"}}>PANDAS DataFrame</div>
-                                                        
-                                </div>
+                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 c0e53dd4-d351-4f87-9ef9-219fe3b108a4 -1" style={{display:"none"}} />
                                 
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 d3903696-cae5-4b0c-b6c0-0f57649e9253 -1" style={{display:"none"}}>
-                                            
-                                    <div id="addComp" name="String_to_List" shname="str2list" desc="Converts a list-like string into a list object." type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/9c0712eb82084d33af0519131126d0e7.png)"}}>&nbsp;<span id="hint">String_to_List</span></div>
-                                                                        
-                                    <div id="addComp" name="Replace" shname="replace" desc="" type="component" dftype="shlow" className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/c5571f6199314a3daf2186534a545b13.png)"}}>&nbsp;<span id="hint">Replace</span></div>
-                                                    
-                                </div>
+                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 d3903696-cae5-4b0c-b6c0-0f57649e9253 -1" style={{display:"none"}} />
                                 
                                 <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 4949e5ab-6a97-4eed-b8a6-775b65053e41 0">
                                     
                                     <div id="addSlider" onClick={() => this.CreateNewSlider()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"}}>&nbsp;<span id="hint">Slider</span></div>
                                     <div id="addPanel" onClick={() => this.CreateNewPanel()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"}}>&nbsp;<span id="hint">Panel</span></div>
                                     <div id="addToggle" onClick={() => this.CreateNewToggle()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"}}>&nbsp;<span id="hint">Toggle</span></div>
-                                    <div id="addOptionList" onClick={() => this.CreateNewOptionList()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"}}>&nbsp;<span id="hint">Option list</span></div>
+                                    <div id="addOptionList" onClick={() => this.CreateNewOptionList(this)} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"}}>&nbsp;<span id="hint">Option list</span></div>
                                     <div id="addListView" onClick={() => this.CreateNewListView()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"}}>&nbsp;<span id="hint">List view</span></div>
                                     <div id="addFile" onClick={() => this.CreateNewFileUpload()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"}}>&nbsp;<span id="hint">File upload</span></div>
                                     

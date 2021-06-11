@@ -207,7 +207,7 @@ function manageCanvas() {
                 reactContext.state.edgeStarted || 
                 reactContext.state.selection_groud_selected) && event.button === 0;
     }).on("zoom", function(event) {
-        console.log(event.transform.k);
+        //console.log(event.transform.k);
         if (!reactContext.state.startDrag) {             
             reactContext.setState({
                 canvasX:  event.transform.x,
@@ -242,7 +242,7 @@ function manageCanvas() {
                 else if (element.type === "toggle")
                     CreateNewToggle(element);
                 else if (element.type === "optionList")
-                     CreateNewOptionList(element);
+                     CreateNewOptionList(reactContext, element); //to be handle later
                 else if (element.type === "fileUpload")
                     CreateNewFileUpload(element);
                 else if (element.type === "listView")

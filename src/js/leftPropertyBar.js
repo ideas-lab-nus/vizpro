@@ -1,30 +1,44 @@
 import $ from 'jquery';
 import {CreateNewComponent} from './component.js';
-import {details} from './componentDetail.js';
+import {details, tabIdMapping} from './componentDetail.js';
+import { CreateNewOptionList } from './optionlist.js';
 
 function addGenericComponentIcon() {
     console.log('added');
-    console.log(details);
-    console.log(details.length);
-    var r = addNewComponentIcon(this, "addComp", "Average", "AVG", "The average between two values", "component", "shlow", "mainButtonItem 1 1", 
-            "https://storage.googleapis.com/ghostbucket111/icons/958f17e5cfad4cdbbe26dd5affbbbfa2.png", "hint", 
-            [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}], ["average", "log_"], "#F23322");
-    $("div.toolbarbuttonsContainer.b066a5eb-26dc-4359-8d22-3643444d08e4.d2312a8b-63dc-4112-8a66-76996c150b0e").append(r);
+    for (let index = 0; index < details.length; index++) {
+        const currInfo = details[index];
+        var outputNameList = extractOutputName(currInfo.outputList);
+        var newComp = addNewComponentIcon(this, "addComp", currInfo.name, currInfo.shname, currInfo.desc, currInfo.type,
+                    currInfo.dftype, "mainButtonItem 1 1", currInfo.backgroundImage, currInfo.inputList, outputNameList, currInfo.color)
+        $(tabIdMapping[currInfo.category]).append(newComp);
+    }
 }
 
-function addNewComponentIcon(reactContext, id, name, shname, desc, type, dftype, className, imageUrl, spanId, inputList, outputList, color) {
-    var newCompString = '<div id="' + id + '" name="' + name + '" shname="' + shname + '" desc="' + desc + '" type="' + type 
-                + '" dftype="' + dftype + '" class="' + className + '" style="background-image:url(' + imageUrl + ')">&nbsp;<span id="' 
-                + spanId + '">' + name + '</span></div>';
-    console.log(newCompString);
+function addNewComponentIcon(reactContext, id, name, shname, desc, type, dftype, className, imageUrl, inputList, outputList, color) {
+    var newCompString = '<div id="' + id + '" name="' + name + '" shname="' + shname + '" desc="' + desc + '" type="' + type
+                + '" dftype="' + dftype + '" class="' + className + '" style="background-image:url(' + imageUrl + ')">' 
+                + (imageUrl === "" ? name : (' &nbsp; ' + '<span id="hint">' + name + '</span>' ))
+                + '</div>';
     var newComp = $(newCompString);
     newComp.on("click", () => {
-        console.log(reactContext);
         console.log(name + ' clicked');
-        let kwargs = {"shortName": shname, "dfType": dftype};
-        CreateNewComponent(reactContext, null, name, kwargs, inputList, outputList, color);
+        if (type === "component") {
+            let kwargs = {"shortName": shname, "dfType": dftype};
+            CreateNewComponent(reactContext, null, name, kwargs, inputList, outputList, color);
+        } else if (type === "optionList") {
+            CreateNewOptionList(reactContext, null, desc);
+        }
     });
     return newComp;
+}
+
+function extractOutputName(array) {
+    let output = [];
+    for (let index = 0; index < array.length; index++) {
+        const element = array[index];
+        output.push(element.name);
+    }
+    return output;
 }
 
 export {addGenericComponentIcon};
