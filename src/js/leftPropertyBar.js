@@ -1,10 +1,10 @@
 import $ from 'jquery';
 import {CreateNewComponent} from './component.js';
-import {details, tabIdMapping} from './componentDetail.js';
+import {details, tabIdMapping, toggleButtonInfo} from './componentDetail.js';
 import { CreateNewOptionList } from './optionlist.js';
+import {setCurrentCategory} from './insert.js';
 
 function addGenericComponentIcon() {
-    console.log('added');
     for (let index = 0; index < details.length; index++) {
         const currInfo = details[index];
         var outputNameList = extractOutputName(currInfo.outputList);
@@ -21,7 +21,6 @@ function addNewComponentIcon(reactContext, id, name, shname, desc, type, dftype,
                 + '</div>';
     var newComp = $(newCompString);
     newComp.on("click", () => {
-        console.log(name + ' clicked');
         if (type === "component") {
             let kwargs = {"shortName": shname, "dfType": dftype};
             CreateNewComponent(reactContext, null, name, kwargs, inputList, outputList, color);
@@ -41,4 +40,17 @@ function extractOutputName(array) {
     return output;
 }
 
-export {addGenericComponentIcon};
+function addRightToggleButton() {
+    var parentDiv = $("div.toolbarRightToggleNavigator.1");
+    for (let index = 0; index < toggleButtonInfo.length; index++) {
+        const currBtn = toggleButtonInfo[index];
+        let newToggleString = '<div class="rightToggleButton 1" style="background-image:url(' + currBtn.backgroundImage + '"><span id="hint">' + currBtn.name + '</span></div>';
+        let newToggle = $(newToggleString);
+        newToggle.on('click', () => {
+            setCurrentCategory('componentTab', currBtn.id, currBtn.name);
+        });
+        parentDiv.append(newToggle);
+    }
+}
+
+export {addGenericComponentIcon, addRightToggleButton};

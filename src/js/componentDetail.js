@@ -13,7 +13,8 @@ const details = [
         "category": "Basic", 
         "subcategory": "Lists",
         "inputList": [{"name": "InputList", "shortName": "in_01", "desc": "first input", "default_value": "1.0"}],
-        "outputList": [{"name":"sum_","shortName":"sum","desc":"sum of the two inputs"}, {"name":"log_","shortName":"log","desc":"output log"}], 
+        "outputList": [{"name":"average","shortName":"avg","desc":"the average between input1 and input 2"},
+                    {"name":"log_","shortName":"log","desc":"debugging logger"}], 
         "color": "#F23322",
         "backgroundImage": "https://storage.googleapis.com/ghostbucket111/icons/958f17e5cfad4cdbbe26dd5affbbbfa2.png"
     },
@@ -521,10 +522,43 @@ const details = [
 ];
 
 const tabIdMapping = {
-    "Basic": "div.toolbarbuttonsContainer.A",
-    "BuildSimHub": "div.toolbarbuttonsContainer.B",
-    "OsiSoft": "div.toolbarbuttonsContainer.C",
-    "Pandas": 'div.toolbarbuttonsContainer.D',
-    "String Operations": 'div.toolbarbuttonsContainer.E'
+    "Basic": "div.toolbarbuttonsContainer.Basic",
+    "BuildSimHub": "div.toolbarbuttonsContainer.BSH",
+    "OsiSoft": "div.toolbarbuttonsContainer.Osi",
+    "Pandas": 'div.toolbarbuttonsContainer.Pandas',
+    "String Operations": 'div.toolbarbuttonsContainer.StringOps'
 }
-export {details, tabIdMapping};
+
+const toggleButtonInfo = [
+    {
+        "name": "Basic",
+        "id": "Basic",
+        "backgroundImage": "https://storage.googleapis.com/ghostbucket111/icons/7e35adc61ca94a94b72d205029bbaf55.png"
+    },
+    {
+        "name": "BuildSimHub",
+        "id": "BSH",
+        "backgroundImage": "https://storage.googleapis.com/ghostbucket111/icons/builsimhub.png"
+    },
+    {
+        "name": "OsiSoft",
+        "id": "Osi",
+        "backgroundImage": "https://storage.googleapis.com/ghostbucket111/icons/osisoft.png"
+    },
+    {
+        "name": "Pandas",
+        "id": "Pandas",
+        "backgroundImage": "https://storage.googleapis.com/ghostbucket111/icons/958e37827b33418ea03f1e9875c7aa39.png"
+    },
+    {
+        "name": "String Operations",
+        "id": "StringOps",
+        "backgroundImage": "https://storage.googleapis.com/ghostbucket111/icons/00cebc445ced4d8d89cf842609040d43.png"
+    },
+    {
+        "name": "Main Inputs",
+        "id": "Input",
+        "backgroundImage": "https://storage.googleapis.com/ghostbucket111/icons/input.png"
+    }
+];
+export {details, tabIdMapping, toggleButtonInfo};

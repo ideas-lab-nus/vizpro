@@ -188,6 +188,7 @@ function KeyPress(event, e) {
 document.onkeydown = KeyPress;
 
 $("a#saveTheDef").on("click", function(e) {
+    console.log('save clicked');
     e.preventDefault();
     saveFile();
 
