@@ -7,7 +7,7 @@ import {CreateNewPanel} from './js/panel.js';
 import {CreateNewToggle} from './js/toggle.js';
 import {CreateNewFileUpload, handleFileUpload} from './js/fileUpload.js';
 import {CreateNewListView} from './js/listView.js';
-import {setCurrentCagegory, showThisPanel} from './js/insert.js';  
+import {setCurrentCategory, showThisPanel} from './js/insert.js';  
 import {CreateNewComponent} from './js/component.js'; 
 import {manageCanvas} from './js/layout.js'; 
 import {manageGrid} from './js/mainGrid.js';
@@ -195,31 +195,25 @@ export default class Canvas extends React.Component {
                             <div id="toolbar_container_1_1" className="toolBarContainer 1 1">
                                 <div id="toolbar_container_1_1_1" className="toolbarTopToggleContainer">
                                     <div className="toolbarTopToggleItem 1">
-                                        <div className="toptoggleitem b066a5eb-26dc-4359-8d22-3643444d08e4 00492f59-092c-4ee5-affb-8a5e36495e59 selected" 
-                                        onClick={() => showThisPanel('b066a5eb-26dc-4359-8d22-3643444d08e4', '00492f59-092c-4ee5-affb-8a5e36495e59')}> 
+                                        <div className="toptoggleitem componentTab selected"> 
                                             Components 
                                         </div>
                                     </div>      
                                 </div>
                             </div>
                             
-                            <div id="toolbar_container_1_2" className="TabToolBox b066a5eb-26dc-4359-8d22-3643444d08e4 00492f59-092c-4ee5-affb-8a5e36495e59">
+                            <div id="toolbar_container_1_2" className="TabToolBox componentTab">
                                 <div id="toolbar_container_1_2_0" className="toolbarbuttonsContainer">
-                                    &nbsp; Components {'>'} 
-                                    <span className="currentTab b066a5eb-26dc-4359-8d22-3643444d08e4" style={{marginLeft: "3px"}}> &nbsp;</span> 
+                                    &nbsp; Components {'>'}
+                                    <span className="currentTab componentTab" style={{marginLeft: "3px"}}> &nbsp;Main Inputs</span> 
                                 </div>
                                 
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 d2312a8b-63dc-4112-8a66-76996c150b0e 0" style={{display:"none"}} />
-                                
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 094290f2-edaf-4396-b7b9-098ff208257f -1" style={{display:"none"}} />
-                                
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 11b3c35e-76a6-4c6b-8743-e86fe7f02403 -1" style={{display:"none"}} />
-                                
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 c0e53dd4-d351-4f87-9ef9-219fe3b108a4 -1" style={{display:"none"}} />
-                                
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 d3903696-cae5-4b0c-b6c0-0f57649e9253 -1" style={{display:"none"}} />
-                                
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer b066a5eb-26dc-4359-8d22-3643444d08e4 4949e5ab-6a97-4eed-b8a6-775b65053e41 0">
+                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer componentTab A 0" style={{display:"none"}} />                                
+                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer componentTab B -1" style={{display:"none"}} />                                
+                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer componentTab C -1" style={{display:"none"}} />                                
+                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer componentTab D -1" style={{display:"none"}} />                                
+                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer componentTab E -1" style={{display:"none"}} />  
+                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer componentTab F 0">
                                     
                                     <div id="addSlider" onClick={() => this.CreateNewSlider()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"}}>&nbsp;<span id="hint">Slider</span></div>
                                     <div id="addPanel" onClick={() => this.CreateNewPanel()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"}}>&nbsp;<span id="hint">Panel</span></div>
@@ -232,17 +226,24 @@ export default class Canvas extends React.Component {
                                 
                                 <div id="toolbar_container_1_2_2" className="toolbarRightToggleNavigator">
                                     
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/7e35adc61ca94a94b72d205029bbaf55.png)"}} onClick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', 'd2312a8b-63dc-4112-8a66-76996c150b0e', 'Basic')}><span id="hint">Basic</span></div>
-                                    
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/builsimhub.png)"}} onClick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', '094290f2-edaf-4396-b7b9-098ff208257f', 'BuildSimHub')}><span id="hint">BuildSimHub</span></div>
-                                    
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/osisoft.png)"}} onClick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', '11b3c35e-76a6-4c6b-8743-e86fe7f02403', 'OsiSoft')}><span id="hint">OsiSoft</span></div>
-                                    
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/958e37827b33418ea03f1e9875c7aa39.png)"}} onClick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', 'c0e53dd4-d351-4f87-9ef9-219fe3b108a4', 'Pandas')}><span id="hint">Pandas</span></div>
-                                    
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/00cebc445ced4d8d89cf842609040d43.png)"}} onClick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', 'd3903696-cae5-4b0c-b6c0-0f57649e9253', 'String Operations')}><span id="hint">String Operations</span></div>
-                                    
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/input.png)"}} onClick={() => setCurrentCagegory('b066a5eb-26dc-4359-8d22-3643444d08e4', '4949e5ab-6a97-4eed-b8a6-775b65053e41', 'Main Inputs')}><span id="hint">Main Inputs</span></div>
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/7e35adc61ca94a94b72d205029bbaf55.png)"}} 
+                                        onClick={() => setCurrentCategory('componentTab', 'A', 'Basic')}><span id="hint">Basic</span>
+                                    </div>                                    
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/builsimhub.png)"}} 
+                                        onClick={() => setCurrentCategory('componentTab', 'B', 'BuildSimHub')}><span id="hint">BuildSimHub</span>
+                                    </div>                                    
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/osisoft.png)"}} 
+                                        onClick={() => setCurrentCategory('componentTab', 'C', 'OsiSoft')}><span id="hint">OsiSoft</span>
+                                    </div>                                    
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/958e37827b33418ea03f1e9875c7aa39.png)"}} 
+                                        onClick={() => setCurrentCategory('componentTab', 'D', 'Pandas')}><span id="hint">Pandas</span>
+                                    </div>                                    
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/00cebc445ced4d8d89cf842609040d43.png)"}} 
+                                        onClick={() => setCurrentCategory('componentTab', 'E', 'String Operations')}><span id="hint">String Operations</span>
+                                    </div>                                    
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/input.png)"}} 
+                                        onClick={() => setCurrentCategory('componentTab', 'F', 'Main Inputs')}><span id="hint">Main Inputs</span>
+                                    </div>
                                     
                                 </div>
                             </div>                        
@@ -274,7 +275,7 @@ export default class Canvas extends React.Component {
                                 
                                 <div id="toolbar_container_1_2_2" className="toolbarRightToggleNavigator">
                                     
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/404b5524d84a49838ce63a1fe8a2b7e7.png)"}} onClick={() => setCurrentCagegory('99098379-d5ab-4bc3-bc0e-b8353c952845', '140dfea1-7a19-4663-a905-38ff58c8c82f', 'Properties')}><span id="hint">Properties</span></div>
+                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/404b5524d84a49838ce63a1fe8a2b7e7.png)"}} onClick={() => setCurrentCategory('99098379-d5ab-4bc3-bc0e-b8353c952845', '140dfea1-7a19-4663-a905-38ff58c8c82f', 'Properties')}><span id="hint">Properties</span></div>
                                     
                                 </div>
                             </div>

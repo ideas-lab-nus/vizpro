@@ -521,10 +521,10 @@ const details = [
 ];
 
 const tabIdMapping = {
-    "Basic": "div.toolbarbuttonsContainer.b066a5eb-26dc-4359-8d22-3643444d08e4.d2312a8b-63dc-4112-8a66-76996c150b0e",
-    "BuildSimHub": "div.toolbarbuttonsContainer.b066a5eb-26dc-4359-8d22-3643444d08e4.094290f2-edaf-4396-b7b9-098ff208257f",
-    "OsiSoft": "div.toolbarbuttonsContainer.b066a5eb-26dc-4359-8d22-3643444d08e4.11b3c35e-76a6-4c6b-8743-e86fe7f02403",
-    "Pandas": 'div.toolbarbuttonsContainer.b066a5eb-26dc-4359-8d22-3643444d08e4.c0e53dd4-d351-4f87-9ef9-219fe3b108a4',
-    "String Operations": 'div.toolbarbuttonsContainer.b066a5eb-26dc-4359-8d22-3643444d08e4.d3903696-cae5-4b0c-b6c0-0f57649e9253'
+    "Basic": "div.toolbarbuttonsContainer.A",
+    "BuildSimHub": "div.toolbarbuttonsContainer.B",
+    "OsiSoft": "div.toolbarbuttonsContainer.C",
+    "Pandas": 'div.toolbarbuttonsContainer.D',
+    "String Operations": 'div.toolbarbuttonsContainer.E'
 }
 export {details, tabIdMapping};

@@ -13,7 +13,7 @@ function showThisPanel(panel_id, id) {
     }
 }
 
-function setCurrentCagegory(panel_id, id, name) {
+function setCurrentCategory(panel_id, id, name) {
     var toolbarbuttonsContainer = $("div.toolbarbuttonsContainer." + panel_id);
     for (var i = 0; i < toolbarbuttonsContainer.length; i++) {
         if (toolbarbuttonsContainer[i].classList[2] === id) {
@@ -33,4 +33,4 @@ window.onbeforeunload = function() {
 var csrftoken = '{{ csrf_token }}';
 //var RetrievedData = '{{def.definition_user_saved | safe}}';
 
-export {showThisPanel, setCurrentCagegory};
+export {showThisPanel, setCurrentCategory};
