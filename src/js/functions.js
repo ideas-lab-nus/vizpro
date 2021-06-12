@@ -307,7 +307,7 @@ function selectComp(value, by = "GUID") {
     return toreturn;
 } // End of selectComp
 
-function CreatePathes(theEdge) {
+function CreatePaths(theEdge) {
     d3.select("g#allPaths")
         .append("path")
         .attr("d", function() {
@@ -323,12 +323,50 @@ function CreatePathes(theEdge) {
         .attr("stroke-opacity", "0.6").lower();
 
     updateAll();
-} //End of CreatePathes
+} //End of CreatePaths
 
 function updateAll(FromExisting = null) {
+    console.log("updateAll")
     allEdges.forEach(element => {
-
         var thisD = $("path#" + element.path_id).attr("d");
+        d3.select("g#allPaths")
+            .append("rect")
+            .attr("id", "pathCircle" + element.path_id)
+            .attr("rx", 100)
+            .attr("ry", 100)
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("fill", "red")
+            // .attr("cursor", "pointer")
+            // .append("circle")
+            // .attr("id", "C" + element.path_id)
+            .attr("opacity", 0.3)
+            .attr("style", "display:none")
+            .on("mousemove", function(event) {
+                console.log("on")
+                d3.select(event.currentTarget).attr("opacity", 0.8)
+                d3.select("path#" + element.path_id)
+                    .attr("stroke", "red")
+                    .attr("stroke-width", 4)
+                    .attr("stroke-dasharray", "5 5")
+            })
+            .on("mouseout", function(event) {
+                d3.select(event.currentTarget)
+                    .attr("opacity", 0.3)
+                d3.select("path#" + element.path_id)
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 5)
+                    .attr("stroke-dasharray", 0)
+            })
+            .on("mousedown", function(event) {
+                deleteEdge(element.path_id);
+                d3.select(event.currentTarget)
+                    .remove()
+
+                d3.select("path#" + element.path_id)
+                    .remove();
+            })
+
         d3.select("#" + element.path_id)
             .attr("stroke-width", "5")
             .attr("d", function() {
@@ -336,41 +374,9 @@ function updateAll(FromExisting = null) {
             })
             .attr("stroke", "black")
             .attr("stroke-linecap", "round")
-            .attr("stroke-opacity", "0.5").lower();
-
-
-        d3.select("g#allPaths")
-            .append("circle")
-            .attr("id", "C" + element.path_id)
-            .attr("r", 5)
-            .attr("fill", "red")
-            .attr("opacity", 0.3)
-            .attr("style", "display:none")
-            .on("mouseover", function() {
-                d3.select(this).attr("opacity", 0.8)
-                d3.select("path#" + element.path_id)
-                    .attr("stroke", "red")
-                    .attr("stroke-width", 4)
-                    .attr("stroke-dasharray", "5 5")
-            })
-            .on("mouseout", function() {
-                d3.select(this)
-                    .attr("opacity", 0.3)
-                d3.select("path#" + element.path_id)
-                    .attr("stroke", "black")
-                    .attr("stroke-width", 5)
-                    .attr("stroke-dasharray", 0)
-            })
-            .on("mousedown", function() {
-
-                deleteEdge(element.path_id);
-                d3.select(this)
-                    .remove()
-
-                d3.select("path#" + element.path_id)
-                    .remove();
-
-            })
+            .attr("stroke-opacity", "0.5")
+            .lower();
+        
         try {
             handleEdgeMovement(element.toComp[1])
         } catch (error) {}
@@ -504,7 +510,7 @@ function addOptionDropdownList(compId) {
                 .attr("y", 20 * n)
                 .attr("opacity", "0.3")
                 .attr("stroke", "gray")
-                .on("mouseover", function() {
+                .on("mousemove", function() {
                     reactContext.setState({
                         mouseInsideOption: true,
                     })
@@ -856,7 +862,6 @@ function handleEdgeMovement(objID, x = null, y = null) {
             element.Y = y;
         }
 
-
         for (let index = 0; index < comp_input_edges[objID].length; index++) {
             if (comp_input_edges[objID][index] !== undefined) {
                 comp_input_edges[objID][index].forEach(inputElement => {
@@ -975,9 +980,9 @@ function handleEdgeMovement(objID, x = null, y = null) {
 } // End of handleEdgeMovement
 
 function handlePathDeleteMovement(pathId, xy1, xy2) {
-    d3.select("circle#C" + pathId)
-        .attr("cx", ((xy1[0] + xy2[0]) / 2.0).toString())
-        .attr("cy", ((xy1[1] + xy2[1]) / 2.0).toString())
+    d3.select("rect#pathCircle" + pathId)
+        .attr("x", ((xy1[0] + xy2[0]) / 2.0).toString() - 7.5)
+        .attr("y", ((xy1[1] + xy2[1]) / 2.0).toString() - 7.5)
         .attr("style", "display:block");
 } // End of handlePathDeleteMovement
 
@@ -1110,6 +1115,7 @@ function deleteComponent(component_to_be_deleted) {
 } // End of deleteComponent
 
 function deleteEdge(edge_to_be_deleted) {
+    console.log("deleteEdge")
     var components_of_the_edge = edge_comp_matrix[edge_to_be_deleted];
 
     var fromComp = selectComp(components_of_the_edge["from"]) //.outputs[components_of_the_edge["from_index"]])
@@ -1268,7 +1274,7 @@ function moveComponent(id, x, y) {
 //     });
 // }
 
-export {dummyToSetState, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
+export {dummyToSetState, addcomponent, selectComp, CreatePaths, updateAll, toMoveEdgeEnds, returnCurveString,
     getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
     addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
     updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 

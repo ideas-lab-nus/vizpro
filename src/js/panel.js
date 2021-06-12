@@ -24,7 +24,7 @@
  * @since  x.x.x
  */
 
-import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
+import {KeyPress, addcomponent, selectComp, CreatePaths, updateAll, toMoveEdgeEnds, returnCurveString,
     getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
     addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
     updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
@@ -128,8 +128,8 @@ function CreateNewPanel(FromExisting = null) {
         .attr("height", newcomp.height + 10)
         .attr("fill", "#525252")
         .attr("fill-opacity", "1.0")
-        .on("mouseover", function() {
-            d3.select(this)
+        .on("mouseover", function(event) {
+            d3.select(event.currentTarget)
                 .attr("cursor", "pointer");
         })
 
@@ -151,7 +151,7 @@ function CreateNewPanel(FromExisting = null) {
                 }
                 return "input";
             })
-            .on("mouseover", function() {
+            .on("mousemove", function() {
                 reactContext.setState({
                     targetcircleIN: true,
                 })
@@ -180,7 +180,7 @@ function CreateNewPanel(FromExisting = null) {
                 newcomp.outputs[index].type = "output";
                 return "output";
             })
-            .on("mouseover", function() {
+            .on("mousemove", function() {
                 reactContext.setState({
                     targetcircleIN: true,
                 })
@@ -291,8 +291,8 @@ function CreateNewPanel(FromExisting = null) {
         .attr("height", newcomp.height - 5)
         .attr("fill", "white") //"#ffeec7")
         .attr("fill-opacity", "0.15")
-        .on("mouseover", function() {
-            d3.select(this)
+        .on("mousemove", function(event) {
+            d3.select(event.currentTarget)
                 .attr("cursor", "pointer");
         })
 

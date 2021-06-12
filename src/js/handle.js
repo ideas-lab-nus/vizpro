@@ -286,7 +286,7 @@ function handleEdgeInitialization() {
                 }
             }
         })
-        .on("mouseover", function() {
+        .on("mousemove", function() {
             reactContext.setState({
                 targetcircleIN: true,
             })

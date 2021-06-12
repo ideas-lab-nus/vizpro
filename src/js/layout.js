@@ -23,7 +23,7 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
-import {CreatePathes} from './functions.js';
+import {CreatePaths} from './functions.js';
 import {CreateNewComponent} from './component.js';
 import {CreateNewOptionList} from './optionlist.js';
 import {CreateNewSlider} from './slider.js';
@@ -200,21 +200,21 @@ function manageCanvas() {
     allContents.append("g")
         .attr("id", "allPaths");
 
-    svgContainer.call(d3.zoom().filter(function(event) {
-        return !(reactContext.state.startDrag || 
-                reactContext.state.StringAnchorclicked || 
-                reactContext.state.SliderAnchorclicked || 
-                reactContext.state.edgeStarted || 
-                reactContext.state.selection_groud_selected) && event.button === 0;
-    }).on("zoom", function(event) {
-        if (!reactContext.state.startDrag) {             
-            reactContext.setState({
-                canvasX:  event.transform.x,
-                canvasY:  event.transform.y,
-            })
-            allContents.attr("transform", event.transform); 
-        }
-    }));
+    // svgContainer.call(d3.zoom().filter(function(event) {
+    //     return !(reactContext.state.startDrag || 
+    //             reactContext.state.StringAnchorclicked || 
+    //             reactContext.state.SliderAnchorclicked || 
+    //             reactContext.state.edgeStarted || 
+    //             reactContext.state.selection_groud_selected) && event.button === 0;
+    // }).on("zoom", function(event) {
+    //     if (!reactContext.state.startDrag) {             
+    //         reactContext.setState({
+    //             canvasX:  event.transform.x,
+    //             canvasY:  event.transform.y,
+    //         })
+    //         allContents.attr("transform", event.transform); 
+    //     }
+    // }));
 
     if (reactContext.state.RetrievedData !== undefined) {
         if (reactContext.state.RetrievedData.canvas_transform !== undefined) {
@@ -261,7 +261,7 @@ function manageCanvas() {
             var parent_child_matrix = reactContext.state.RetrievedData.parent_child_matrix
             var parent_child_matrix_fast_check = reactContext.state.RetrievedData.parent_child_matrix_fast_check
             var root_components = reactContext.state.RetrievedData.root_components
-            allEdges.forEach(element => { CreatePathes(element); })
+            allEdges.forEach(element => { CreatePaths(element); })
         }    
     } catch (err) {
         console.log(err);
@@ -348,7 +348,7 @@ function manageCanvas() {
 
     d3.select("body")
     .on("mousemove", function(event) {
-        d3.select(this).style("cursor", "auto");
+        d3.select(event.currentTarget).style("cursor", "auto");
         currentRightColWidth = window.innerWidth - 16 - event.clientX;
         currentLeftColWidth = event.clientX;
         if (rightColumnIsSelected) {

@@ -155,7 +155,7 @@ function CreateNewSlider(FromExisting = null) {
         .attr("stroke-width", "2")
         .attr("id", "outputCir" + newSlider.GUID)
         .attr("class", "outputCir " + newSlider.GUID + " 0")
-        .on("mouseover", function() {
+        .on("mousemove", function() {
             reactContext.setState({
                 targetcircleIN: true,
             })
@@ -176,7 +176,7 @@ function CreateNewSlider(FromExisting = null) {
         .attr("width", newSlider.width)
         .attr("height", newSlider.height)
         .attr("fill", '#dddddd')
-        .on("mouseover", function() {
+        .on("mousemove", function() {
             var current_slider = { ...reactContext.state.selectedSliderComponent };            
             current_slider.rect = this;
             reactContext.setState({
@@ -309,14 +309,14 @@ function CreateNewSlider(FromExisting = null) {
             x: newSlider.anchorValue,
             y: 3,
         }])
-        .on("mouseover", function() {
-            d3.select(this)
+        .on("mousemove", function(event) {
+            d3.select(event.currentTarget)
                 .attr("fill", "url(#gradientlsider)")
                 .attr("cursor", "pointer")
                 .attr("stroke", "black");
         })
-        .on("mouseleave", function() {
-            d3.select(this)
+        .on("mouseleave", function(event) {
+            d3.select(event.currentTarget)
                 .attr("fill", "#3a4d69")
                 .attr("stroke", "none");
         })
