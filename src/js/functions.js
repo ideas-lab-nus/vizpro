@@ -148,7 +148,7 @@ function KeyPress(event, e) {
                     "dfType": new_copied_component.dfType,
                     "X": mousex,
                     "Y": mousey
-                });
+                }); //to be handle later (since additional parameters are passed to CreateNewComponent function)
 
         } else if (is_there_item_cut) {
             if (cut_component_type === "component")

@@ -5,6 +5,8 @@ Need to fix later:
 - `url` in `req` variable in `deep.js`, which is depended on a variable that is defined in Django HTML, so it needs to be extracted later.
 - `saveUrl` and `thisDefId` in `resss` variable in `function.js`, which is depended on a variable that is defined in Django HTML, so it needs to be extracted later.
 - `initEdgex1` and `initEdgey1` in `mainGrid.js` are not global variables.
+- All the information about the components is stored in `componentDetail.js` file.
+- All the hardcoded generic components are handled using `addGenericComponentIcon` in `leftPropertyBar.js` file.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

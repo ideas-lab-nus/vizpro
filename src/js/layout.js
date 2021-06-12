@@ -23,13 +23,7 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
-import {KeyPress, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
-    getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
-    addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
-    updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
-    drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
-    edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
-    itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
+import {CreatePathes} from './functions.js';
 import {CreateNewComponent} from './component.js';
 import {CreateNewOptionList} from './optionlist.js';
 import {CreateNewSlider} from './slider.js';
@@ -239,7 +233,7 @@ function manageCanvas() {
             })
             allComp.forEach(element => {
                 if (element.type === "component")
-                    CreateNewComponent(element);
+                    CreateNewComponent(reactContext, element); //to be handle later
                 else if (element.type === "slider")
                     CreateNewSlider(element);
                 else if (element.type === "string")
@@ -247,7 +241,7 @@ function manageCanvas() {
                 else if (element.type === "toggle")
                     CreateNewToggle(element);
                 else if (element.type === "optionList")
-                     CreateNewOptionList(element);
+                     CreateNewOptionList(reactContext, element); //to be handle later
                 else if (element.type === "fileUpload")
                     CreateNewFileUpload(element);
                 else if (element.type === "listView")
