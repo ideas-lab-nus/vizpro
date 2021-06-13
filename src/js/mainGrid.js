@@ -129,7 +129,6 @@ function manageGrid() {
             mousey: mousey,
         })        
         if (reactContext.state.startDrag) {
-            console.log("Trying to drag the component");   
             var x = mousex - reactContext.state.componentClickX;
             var y = mousey - reactContext.state.componentClickY;
             moveComponent(reactContext.state.clickedId, x, y);

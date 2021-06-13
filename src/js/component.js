@@ -25,12 +25,11 @@
  * @since  x.x.x
  */
 
-import {addcomponent, popupMessage, redrawDependents} from './functions.js';
+import {addcomponent, popupMessage, runDeepFunction} from './functions.js';
 import {uuidv4} from './handle.js';
 import $ from "jquery";
 
 var d3 = require('d3');
-var runDeep;
 
 /**
  * Create a new generic component (everything except slider, option list, panel, file upload, toogle, list view).
@@ -49,7 +48,6 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
     //local title variables; Those should be later put in the visualization properties table.
     var IDLE_COLOR = reactContext.state.IDLE_COLOR;
     var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
-    runDeep = reactContext.state.runDeep;
 
     var one_character_width = 8;
     var padding = 20;
@@ -468,12 +466,6 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
     reactContext.setState({
         components_selection_data: current_components_selection,
     });
-}
-
-function runDeepFunction(compId) {
-    runDeep = true;
-    redrawDependents(compId);
-    runDeep = false;
 }
 
 export {CreateNewComponent};

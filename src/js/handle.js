@@ -306,7 +306,8 @@ function handleEdgeInitialization() {
             var comp_input_edges = { ...reactContext.state.comp_input_edges };
             var comp_output_edges = { ...reactContext.state.comp_output_edges };
             var root_components = reactContext.state.root_components;
-            var parent_child_matrix = { ...reactContext.state.parent_child_matrix };
+            //What.
+            var parent_child_matrix = reactContext.state.parent_child_matrix;
             var parent_child_matrix_fast_check = [ ...reactContext.state.parent_child_matrix_fast_check ];
             var selectedcircleId = reactContext.state.selectedcircleId;
 

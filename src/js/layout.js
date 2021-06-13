@@ -200,21 +200,21 @@ function manageCanvas() {
     allContents.append("g")
         .attr("id", "allPaths");
 
-    // svgContainer.call(d3.zoom().filter(function(event) {
-    //     return !(reactContext.state.startDrag || 
-    //             reactContext.state.StringAnchorclicked || 
-    //             reactContext.state.SliderAnchorclicked || 
-    //             reactContext.state.edgeStarted || 
-    //             reactContext.state.selection_groud_selected) && event.button === 0;
-    // }).on("zoom", function(event) {
-    //     if (!reactContext.state.startDrag) {             
-    //         reactContext.setState({
-    //             canvasX:  event.transform.x,
-    //             canvasY:  event.transform.y,
-    //         })
-    //         allContents.attr("transform", event.transform); 
-    //     }
-    // }));
+    svgContainer.call(d3.zoom().filter(function(event) {
+        return !(reactContext.state.startDrag || 
+                reactContext.state.StringAnchorclicked || 
+                reactContext.state.SliderAnchorclicked || 
+                reactContext.state.edgeStarted || 
+                reactContext.state.selection_groud_selected) && event.button === 0;
+    }).on("zoom", function(event) {
+        if (!reactContext.state.startDrag) {             
+            reactContext.setState({
+                canvasX:  event.transform.x,
+                canvasY:  event.transform.y,
+            })
+            allContents.attr("transform", event.transform); 
+        }
+    }));
 
     if (reactContext.state.RetrievedData !== undefined) {
         if (reactContext.state.RetrievedData.canvas_transform !== undefined) {

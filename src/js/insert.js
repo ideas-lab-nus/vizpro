@@ -17,7 +17,6 @@ function setCurrentCategory(panel_id, id, name) {
     var toolbarbuttonsContainer = $("div.toolbarbuttonsContainer." + panel_id);
     for (var i = 0; i < toolbarbuttonsContainer.length; i++) {
         if (toolbarbuttonsContainer[i].classList[2] === id) {
-            console.log("div.toolbarbuttonsContainer." + panel_id + "." + id);
             $("div.toolbarbuttonsContainer." + panel_id + "." + id).show();
             $("span.currentTab." + panel_id).text(name) // <span class="currentTab {{panel.panel_guid}}">&nbsp;</span>
         } else {
