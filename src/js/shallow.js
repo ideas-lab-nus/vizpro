@@ -934,15 +934,12 @@ function plot_panel_comp(args) {
  */
 function calculateShallow(compId) {
     var thisComp = selectComp(compId); // selects the component that is under test.
-    console.log(thisComp);
     var inputGroup = []; // reads the inputs from the component and put them in a list to be mapped to the corresponding shallow function.
     thisComp.inputs.forEach(input => {
         inputGroup.push(input.value);
     });
 
     var d = shallow_functions[thisComp.Name](inputGroup);
-
-    console.log("I don't know")
 
     thisComp.outputs.forEach(function (output, i) {
         output.value = d["value"][i];

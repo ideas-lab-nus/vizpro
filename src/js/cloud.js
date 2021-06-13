@@ -14,7 +14,6 @@ function calculateCloud(compId) {
     var functionName = thisComp.Name;
     var args = inputGroup;
 
-    console.log(functionName)
     const result = mapFunction[functionName](args);
     try {
         // console.log(requestReturn)

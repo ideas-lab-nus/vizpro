@@ -4,7 +4,6 @@ import {details, tabIdMapping} from './componentDetail.js';
 import { CreateNewOptionList } from './optionlist.js';
 
 function addGenericComponentIcon() {
-    console.log('added');
     for (let index = 0; index < details.length; index++) {
         const currInfo = details[index];
         var outputNameList = extractOutputName(currInfo.outputList);
@@ -21,7 +20,6 @@ function addNewComponentIcon(reactContext, id, name, shname, desc, type, dftype,
                 + '</div>';
     var newComp = $(newCompString);
     newComp.on("click", () => {
-        console.log(name + ' clicked');
         if (type === "component") {
             let kwargs = {"shortName": shname, "dfType": dftype};
             CreateNewComponent(reactContext, null, name, kwargs, inputList, outputList, color);
