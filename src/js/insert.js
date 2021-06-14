@@ -25,11 +25,4 @@ function setCurrentCategory(panel_id, id, name) {
     }
 }
 
-window.onbeforeunload = function() {
-    return 'Are you sure you want to leave?';
-};
-
-var csrftoken = '{{ csrf_token }}';
-//var RetrievedData = '{{def.definition_user_saved | safe}}';
-
 export {showThisPanel, setCurrentCategory};

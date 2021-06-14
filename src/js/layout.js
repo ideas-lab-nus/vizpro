@@ -216,56 +216,59 @@ function manageCanvas() {
         }
     }));
 
-    if (reactContext.state.RetrievedData !== undefined) {
-        if (reactContext.state.RetrievedData.canvas_transform !== undefined) {
-            allContents.attr("transform", reactContext.state.RetrievedData.canvas_transform.transform);
-            svgContainer._groups[0][0].__zoom.k = reactContext.state.RetrievedData.canvas_transform.kXY.k;
-            svgContainer._groups[0][0].__zoom.x = reactContext.state.RetrievedData.canvas_transform.kXY.x;
-            svgContainer._groups[0][0].__zoom.y = reactContext.state.RetrievedData.canvas_transform.kXY.y;
-        }
-    }
+    //This part is about loading the data that is saved and draw it to the canvas
+    //This part is moved to loadData function in saveData.js file
+    // if (reactContext.state.RetrievedData !== undefined) {
+    //     if (reactContext.state.RetrievedData.canvas_transform !== undefined) {
+    //         allContents.attr("transform", reactContext.state.RetrievedData.canvas_transform.transform);
+    //         svgContainer._groups[0][0].__zoom.k = reactContext.state.RetrievedData.canvas_transform.kXY.k;
+    //         svgContainer._groups[0][0].__zoom.x = reactContext.state.RetrievedData.canvas_transform.kXY.x;
+    //         svgContainer._groups[0][0].__zoom.y = reactContext.state.RetrievedData.canvas_transform.kXY.y;
+    //     }
+    // }
     
-    try {
-        if (reactContext.state.RetrievedData.components !== undefined) {
-            var allComp = reactContext.state.RetrievedData.components;    
-            reactContext.setState({
-                allComp: allComp,
-            })
-            allComp.forEach(element => {
-                if (element.type === "component")
-                    CreateNewComponent(reactContext, element); //to be handle later
-                else if (element.type === "slider")
-                    CreateNewSlider(element);
-                else if (element.type === "string")
-                    CreateNewPanel(element);
-                else if (element.type === "toggle")
-                    CreateNewToggle(element);
-                else if (element.type === "optionList")
-                     CreateNewOptionList(reactContext, element); //to be handle later
-                else if (element.type === "fileUpload")
-                    CreateNewFileUpload(element);
-                else if (element.type === "listView")
-                    CreateNewListView(element);
-            });
-        }    
-    } catch (err) {
-        console.log(err);
-    }    
+    // try {
+    //     console.log(reactContext.state.RetrievedData);
+    //     if (reactContext.state.RetrievedData.components !== undefined) {
+    //         var allComp = reactContext.state.RetrievedData.components;    
+    //         reactContext.setState({
+    //             allComp: allComp,
+    //         })
+    //         allComp.forEach(element => {
+    //             if (element.type === "component")
+    //                 CreateNewComponent(reactContext, element); //to be handle later
+    //             else if (element.type === "slider")
+    //                 CreateNewSlider(element);
+    //             else if (element.type === "string")
+    //                 CreateNewPanel(element);
+    //             else if (element.type === "toggle")
+    //                 CreateNewToggle(element);
+    //             else if (element.type === "optionList")
+    //                  CreateNewOptionList(reactContext, element); //to be handle later
+    //             else if (element.type === "fileUpload")
+    //                 CreateNewFileUpload(element);
+    //             else if (element.type === "listView")
+    //                 CreateNewListView(element);
+    //         });
+    //     }    
+    // } catch (err) {
+    //     console.log(err);
+    // }    
     
-    try {
-        if (reactContext.state.RetrievedData.edges !== undefined) {
-            var allEdges = reactContext.state.RetrievedData.edges;
-            var comp_input_edges = reactContext.state.RetrievedData.comp_input_edges
-            var comp_output_edges = reactContext.state.RetrievedData.comp_output_edges
-            var edge_comp_matrix = reactContext.state.RetrievedData.edge_comp_matrix
-            var parent_child_matrix = reactContext.state.RetrievedData.parent_child_matrix
-            var parent_child_matrix_fast_check = reactContext.state.RetrievedData.parent_child_matrix_fast_check
-            var root_components = reactContext.state.RetrievedData.root_components
-            allEdges.forEach(element => { CreatePaths(element); })
-        }    
-    } catch (err) {
-        console.log(err);
-    }    
+    // try {
+    //     if (reactContext.state.RetrievedData.edges !== undefined) {
+    //         var allEdges = reactContext.state.RetrievedData.edges;
+    //         var comp_input_edges = reactContext.state.RetrievedData.comp_input_edges
+    //         var comp_output_edges = reactContext.state.RetrievedData.comp_output_edges
+    //         var edge_comp_matrix = reactContext.state.RetrievedData.edge_comp_matrix
+    //         var parent_child_matrix = reactContext.state.RetrievedData.parent_child_matrix
+    //         var parent_child_matrix_fast_check = reactContext.state.RetrievedData.parent_child_matrix_fast_check
+    //         var root_components = reactContext.state.RetrievedData.root_components
+    //         allEdges.forEach(element => { CreatePaths(element); })
+    //     }    
+    // } catch (err) {
+    //     console.log(err);
+    // }    
     
     $("div#definedComp").html(function() {
         var somearr = reactContext.state.udo_names;
@@ -302,28 +305,6 @@ function manageCanvas() {
         }
         return text;
     });   
-    
-    /*
-    $("div#addComp").on('click', function(e) {
-        var ThisComponentName = $(this).attr("name");
-        var ThisComponenShortName = $(this).attr("shName");
-        var ThisComponentDfType = $(this).attr("dftype");
-        var ThisComponentType = $(this).attr("type");
-        var ThisComponentDesc = $(this).attr("desc");
-    
-        console.log(ThisComponentDesc)
-    
-        if (ThisComponentType === "component") {
-            console.log('in here');
-            CreateNewComponent(null, ThisComponentName, {
-                "shortName": ThisComponenShortName,
-                "dfType": ThisComponentDfType
-            });
-        } else if (ThisComponentType === "optionList") {
-            // CreateNewOptionList(null, ThisComponentDesc);
-        }
-    
-    }); */
     
     d3.select("div#LeftPropertiesBar").style("width", () => { return currentLeftColWidth + "px" }).style("top", () => { return (currentTopBarHeight).toString() + "px" })
     d3.select("div#LeftPropertiesBarSelector").style("top", () => { return (currentTopBarHeight).toString() + "px" }).style("left", currentLeftColWidth + "px")

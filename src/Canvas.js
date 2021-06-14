@@ -16,7 +16,7 @@ import Grid from './Grid';
 import {handleComponentSelection, handleTheClickOnAllComponents, 
     handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
 import {addGenericComponentIcon, addRightToggleButton} from './js/leftPropertyBar.js';
-import { saveData } from './js/saveData.js';
+import { saveData, loadData } from './js/saveData.js';
 
 export default class Canvas extends React.Component {
     constructor(props) {
@@ -39,12 +39,15 @@ export default class Canvas extends React.Component {
         this.dummyToSetState = dummyToSetState.bind(this);
         this.addGenericComponentIcon = addGenericComponentIcon.bind(this);
         this.saveData = saveData.bind(this);
+        this.loadData = loadData.bind(this);
     }
 
     componentDidMount() {
+        this.loadData();
         this.manageCanvas();
         this.addGenericComponentIcon();
         addRightToggleButton();
+        
         // this.manageGrid();
         this.timerID = setInterval(
           () => this.tick(),
@@ -123,8 +126,8 @@ export default class Canvas extends React.Component {
                                 <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer componentTab StringOps -1" style={{display:"none"}} />  
                                 <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer componentTab Input 0">
                                     
-                                    <div id="addSlider" onClick={() => this.CreateNewSlider()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"}}>&nbsp;<span id="hint">Slider</span></div>
-                                    <div id="addPanel" onClick={() => this.CreateNewPanel()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"}}>&nbsp;<span id="hint">Panel</span></div>
+                                    <div id="addSlider" onClick={() => this.CreateNewSlider(this)} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"}}>&nbsp;<span id="hint">Slider</span></div>
+                                    <div id="addPanel" onClick={() => this.CreateNewPanel(this)} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"}}>&nbsp;<span id="hint">Panel</span></div>
                                     <div id="addToggle" onClick={() => this.CreateNewToggle()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"}}>&nbsp;<span id="hint">Toggle</span></div>
                                     <div id="addOptionList" onClick={() => this.CreateNewOptionList(this)} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"}}>&nbsp;<span id="hint">Option list</span></div>
                                     <div id="addListView" onClick={() => this.CreateNewListView()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"}}>&nbsp;<span id="hint">List view</span></div>

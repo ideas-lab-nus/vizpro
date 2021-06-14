@@ -37,8 +37,7 @@ import $ from "jquery";
 var d3 = require('d3');
 
 //TODO : check this for the text overflow : https://bl.ocks.org/mbostock/1424037 
-function CreateNewPanel(FromExisting = null) {
-    var reactContext = this;
+function CreateNewPanel(reactContext, FromExisting = null) {
     var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
     var ANCHOR_WIDTH = reactContext.state.ANCHOR_WIDTH;
     var XANCHOR = reactContext.state.XANCHOR;
@@ -57,6 +56,7 @@ function CreateNewPanel(FromExisting = null) {
         newcomp.Name = "Panel";
         newcomp.width = 300;
     } else {
+        console.log(FromExisting);
         newcomp = FromExisting;
         newcomp.value = newcomp.outputs[0].value;
         // newcomp.Name = FromExisting.Name;

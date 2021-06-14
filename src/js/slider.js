@@ -62,15 +62,14 @@ function addSlider(guid, min = 0, max = 100, step = 1.0) {
 } //End of addSlider
 
 //TODO : save and retrieve the slider values. 
-function CreateNewSlider(FromExisting = null) {
-    var reactContext = this;
-    
+function CreateNewSlider(reactContext, FromExisting = null) {
     var SLIDER_END_POSITION = reactContext.state.SLIDER_END_POSITION;
     var SLIDER_START_POSITION = reactContext.state.SLIDER_START_POSITION;
     var newSlider;
 
     if (FromExisting != null) {
         newSlider = FromExisting;
+        console.log(newSlider);
     } else {
         newSlider = addSlider(uuidv4("S"), 0, 100, 1.0);
         //Fix dict creation
@@ -115,6 +114,8 @@ function CreateNewSlider(FromExisting = null) {
     var cont = allContents.append("g")
         .attr("class", "slider")
         .attr("id", newSlider.GUID);
+
+    console.log(cont);
  
     var genX;
     var genY;
