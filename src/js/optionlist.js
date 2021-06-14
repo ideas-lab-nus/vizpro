@@ -180,8 +180,8 @@ function CreateNewOptionList(reactContext, FromExisting = null, optionlist_prede
         .attr("fill", "white")
         .attr("stroke", "black")
         .attr("stroke-width", "1")
-        .on("mouseover", function() {
-            d3.select(this)
+        .on("mousemove", function(event) {
+            d3.select(event.currentTarget)
                 .attr("cursor", "pointer");
         });
     

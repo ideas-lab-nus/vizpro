@@ -184,15 +184,15 @@ function CreateNewToggle(FromExisting = null) {
         .attr("fill", newcomp.fill)
         .attr("fill-opacity", "0.01")
         // .attr("filter", "url('#svgshadow')")
-        .on("mouseover", function() {
+        .on("mousemove", function(event) {
             // newcomp.rect = this;
-            d3.select(this)
+            d3.select(event.currentTarget)
                 // .attr("fill", "#303952")
                 .attr("cursor", "pointer");
         })
-        .on("mouseout", function() {
+        .on("mouseout", function(event) {
             // newcomp.rect = this;
-            d3.select(this).attr("fill", newcomp.fill)
+            d3.select(event.currentTarget).attr("fill", newcomp.fill)
         })
         
     newcomp.value = newcomp.Name;

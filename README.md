@@ -1,10 +1,17 @@
 # Getting Started with Create React App
 
-Need to fix later:
-- Dragging of sliders and panels use d3 now. Component data may not be updated (currently updated in mainGrid with startDrag and StringAnchorClicked)
-- `url` in `req` variable in `deep.js`, which is depended on a variable that is defined in Django HTML, so it needs to be extracted later.
-- `saveUrl` and `thisDefId` in `resss` variable in `function.js`, which is depended on a variable that is defined in Django HTML, so it needs to be extracted later.
-- `initEdgex1` and `initEdgey1` in `mainGrid.js` are not global variables.
+Issues to address:
+- Save function
+- Canvas zoom on double click
+- Slider value not updated in properties bar accordingly
+- ** Call to cloud function url is blocked by CORS issue. Temp workaround -> Install Chrome CORS extension
+- ** Request for cloud function is sync. Make it async and add a `loading` indicator
+- Unable to delete listView
+- Edit/Drag toggle in the Panel
+- File Upload feature
+- Factor out local title variables into constants file instead of state dictionary
+
+To note:
 - All the information about the components is stored in `componentDetail.js` file.
 - All the hardcoded generic components are handled using `addGenericComponentIcon` in `leftPropertyBar.js` file.
 

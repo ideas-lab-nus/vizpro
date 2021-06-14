@@ -29,6 +29,8 @@
 
 import {CreateNewComponent} from './component.js';
 import {jsonView} from './jsonview.js';
+import {calculateShallow} from './shallow.js';
+import {calculateCloud} from './cloud.js';
 import Plotly from 'plotly';
 import $ from "jquery";
 
@@ -308,7 +310,7 @@ function selectComp(value, by = "GUID") {
     return toreturn;
 } // End of selectComp
 
-function CreatePathes(theEdge) {
+function CreatePaths(theEdge) {
     d3.select("g#allPaths")
         .append("path")
         .attr("d", function() {
@@ -324,12 +326,50 @@ function CreatePathes(theEdge) {
         .attr("stroke-opacity", "0.6").lower();
 
     updateAll();
-} //End of CreatePathes
+} //End of CreatePaths
 
 function updateAll(FromExisting = null) {
+    console.log("updateAll")
     allEdges.forEach(element => {
-
         var thisD = $("path#" + element.path_id).attr("d");
+        d3.select("g#allPaths")
+            .append("rect")
+            .attr("id", "pathCircle" + element.path_id)
+            .attr("rx", 100)
+            .attr("ry", 100)
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("fill", "red")
+            // .attr("cursor", "pointer")
+            // .append("circle")
+            // .attr("id", "C" + element.path_id)
+            .attr("opacity", 0.3)
+            .attr("style", "display:none")
+            .on("mousemove", function(event) {
+                console.log("on")
+                d3.select(event.currentTarget).attr("opacity", 0.8)
+                d3.select("path#" + element.path_id)
+                    .attr("stroke", "red")
+                    .attr("stroke-width", 4)
+                    .attr("stroke-dasharray", "5 5")
+            })
+            .on("mouseout", function(event) {
+                d3.select(event.currentTarget)
+                    .attr("opacity", 0.3)
+                d3.select("path#" + element.path_id)
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 5)
+                    .attr("stroke-dasharray", 0)
+            })
+            .on("mousedown", function(event) {
+                deleteEdge(element.path_id);
+                d3.select(event.currentTarget)
+                    .remove()
+
+                d3.select("path#" + element.path_id)
+                    .remove();
+            })
+
         d3.select("#" + element.path_id)
             .attr("stroke-width", "5")
             .attr("d", function() {
@@ -337,41 +377,9 @@ function updateAll(FromExisting = null) {
             })
             .attr("stroke", "black")
             .attr("stroke-linecap", "round")
-            .attr("stroke-opacity", "0.5").lower();
-
-
-        d3.select("g#allPaths")
-            .append("circle")
-            .attr("id", "C" + element.path_id)
-            .attr("r", 5)
-            .attr("fill", "red")
-            .attr("opacity", 0.3)
-            .attr("style", "display:none")
-            .on("mouseover", function() {
-                d3.select(this).attr("opacity", 0.8)
-                d3.select("path#" + element.path_id)
-                    .attr("stroke", "red")
-                    .attr("stroke-width", 4)
-                    .attr("stroke-dasharray", "5 5")
-            })
-            .on("mouseout", function() {
-                d3.select(this)
-                    .attr("opacity", 0.3)
-                d3.select("path#" + element.path_id)
-                    .attr("stroke", "black")
-                    .attr("stroke-width", 5)
-                    .attr("stroke-dasharray", 0)
-            })
-            .on("mousedown", function() {
-
-                deleteEdge(element.path_id);
-                d3.select(this)
-                    .remove()
-
-                d3.select("path#" + element.path_id)
-                    .remove();
-
-            })
+            .attr("stroke-opacity", "0.5")
+            .lower();
+        
         try {
             handleEdgeMovement(element.toComp[1])
         } catch (error) {}
@@ -505,7 +513,7 @@ function addOptionDropdownList(compId) {
                 .attr("y", 20 * n)
                 .attr("opacity", "0.3")
                 .attr("stroke", "gray")
-                .on("mouseover", function() {
+                .on("mousemove", function() {
                     reactContext.setState({
                         mouseInsideOption: true,
                     })
@@ -542,78 +550,74 @@ function showDropDownList(hh) {
     addOptionDropdownList(hh)
 } // End of showDropDownList
 
-function redrawDependents(parent) {
+function redrawDependents(parentComp) {
     // on a parent changes, only draws all the children tree .
     // all the components --- inputs outpts object (to be sent later to the backend should be modified as well)
-    // shallow values should be updated instantaniously 
-    console.log('inside redraw dep function');
-    let par = selectComp(parent);
-    console.log(parent_child_matrix);
+    // shallow values should be updated instantaneously 
+    var parent_child_matrix = reactContext.state.parent_child_matrix;
+    console.log('redrawing dependents');
+    let parent = selectComp(parentComp);
 
-    if (parent_child_matrix[parent].length > 0) { // This means that this parent has already childs
-    
-        if (par.dftype === "shlow") {
-            parent_child_matrix[parent].forEach(function(element, i) { //iterate through all those childs.
-                let ch = selectComp(element[1]);
-                if (par.type === "slider") {
-                    ch.inputs[element[2]].value = par.value;
-                } else if (par.type === "string" || par.type === "fileUpload") {
-                    ch.inputs[element[2]].value = par.outputs[element[0]].value;
-                } else if (par.type === "listView") {
-                    ch.inputs[element[2]].value = par.outputs[element[0]].value;
-                    console.log(ch.inputs[element[2]])
-                    ch.inputs[element[2]].type = "json";
-                } else if (par.type === "toggle" || par.type === "optionList") {
-                    ch.inputs[element[2]].value = par.value;
-                } else if (par.type === "component") {
-                    try {
-                        //calculateShallow(par.GUID);
-                        ch.inputs[element[2]].value = par.outputs[element[0]].value;
-                        ch.inputs[element[2]].type = par.outputs[element[0]].type;
-                        componentStatus(par.GUID, ACTIVE_COLOR);
-
-                    } catch (error) {
-                        console.log(error)
-                        componentStatus(par.GUID, ERROR_COLOR);
-                    }
-
-                }
-                updatShallowCompRender(ch);
-                redrawDependents(ch.GUID);
-
-                console.log("case1 _ parent is shallow")
-            });
-        } else if (par.dftype === "dp") {
-            console.log("case 2")
-            par.state = "unbound"
-            parent_child_matrix[parent].forEach(function(element, i) { //iterate through all those childs.
-                let ch = selectComp(element[1]);
-                if (par.type === "component" && runDeep === true) {
-                    runDeep = false;
-
-                    if (par.state === "unbound") {
-                        //calculateDeep(par.GUID);
-                        par.state = "active"
-                    }
-                }
-                ch.inputs[element[2]].value = par.outputs[element[0]].value;
-                ch.inputs[element[2]].type = par.outputs[element[0]].type;
-                console.log(element)
-                console.log(par.outputs[element[0]])
-
-                componentStatus(par.GUID, ACTIVE_COLOR);
-                updatShallowCompRender(ch);
-                redrawDependents(ch.GUID);
-            });
-
-        }
-
+    if (parent_child_matrix[parentComp].length === 0) { // This means that this parent has no children    
+        return;
     }
 
+    if (parent.dftype === "shlow") {
+        console.log("Shallow comp")
+        parent_child_matrix[parentComp].forEach(function(element, i) { //iterate through all those childs.
+            let ch = selectComp(element[1]);
+            if (parent.type === "slider") {
+                ch.inputs[element[2]].value = parent.value;
+            } else if (parent.type === "string" || parent.type === "fileUpload") {
+                ch.inputs[element[2]].value = parent.outputs[element[0]].value;
+            } else if (parent.type === "listView") {
+                ch.inputs[element[2]].value = parent.outputs[element[0]].value;
+                console.log(ch.inputs[element[2]])
+                ch.inputs[element[2]].type = "json";
+            } else if (parent.type === "toggle" || parent.type === "optionList") {
+                ch.inputs[element[2]].value = parent.value;
+            } else if (parent.type === "component") {
+                try {
+                    calculateShallow(parent.GUID);
+                    ch.inputs[element[2]].value = parent.outputs[element[0]].value;
+                    ch.inputs[element[2]].type = parent.outputs[element[0]].type;
+                    componentStatus(parent.GUID, ACTIVE_COLOR);
+                } catch (error) {
+                    console.log(error)
+                    componentStatus(parent.GUID, ERROR_COLOR);
+                }
+            }
+            updatShallowCompRender(ch);
+            redrawDependents(ch.GUID);
+        });
+    } else if (parent.dftype === "dp") {
+        console.log("Cloud comp")
+        parent.state = "unbound"
+        parent_child_matrix[parentComp].forEach(function(element, i) { //iterate through all those childs.
+            let ch = selectComp(element[1]);
+            if (parent.type === "component" && runDeep === true) {
+                reactContext.setState({                    
+                    runDeep: false,
+                })
+                if (parent.state === "unbound") {
+                    //Previously calculate deep
+                    calculateCloud(parent.GUID);
+                    parent.state = "active"
+                }
+            }
+            ch.inputs[element[2]].value = parent.outputs[element[0]].value;
+            ch.inputs[element[2]].type = parent.outputs[element[0]].type;
+
+            componentStatus(parent.GUID, ACTIVE_COLOR);
+            updatShallowCompRender(ch);
+            redrawDependents(ch.GUID);
+        });
+    } else if (parent.dftype === "cloud") {
+        //TODO if deep and cloud functions remain separate
+    }    
 } // End of redrawDependents
 
 function updatShallowCompRender(ch) {
-    console.log(ch)
     if (ch.type === "string") {
         if (ch.inputs[0].type === "html") {
             $("foreignObject#textbody_" + ch.GUID).html(ch.inputs[0].value)
@@ -857,7 +861,6 @@ function handleEdgeMovement(objID, x = null, y = null) {
             element.Y = y;
         }
 
-
         for (let index = 0; index < comp_input_edges[objID].length; index++) {
             if (comp_input_edges[objID][index] !== undefined) {
                 comp_input_edges[objID][index].forEach(inputElement => {
@@ -976,9 +979,9 @@ function handleEdgeMovement(objID, x = null, y = null) {
 } // End of handleEdgeMovement
 
 function handlePathDeleteMovement(pathId, xy1, xy2) {
-    d3.select("circle#C" + pathId)
-        .attr("cx", ((xy1[0] + xy2[0]) / 2.0).toString())
-        .attr("cy", ((xy1[1] + xy2[1]) / 2.0).toString())
+    d3.select("rect#pathCircle" + pathId)
+        .attr("x", ((xy1[0] + xy2[0]) / 2.0).toString() - 7.5)
+        .attr("y", ((xy1[1] + xy2[1]) / 2.0).toString() - 7.5)
         .attr("style", "display:block");
 } // End of handlePathDeleteMovement
 
@@ -1111,25 +1114,21 @@ function deleteComponent(component_to_be_deleted) {
 } // End of deleteComponent
 
 function deleteEdge(edge_to_be_deleted) {
+    console.log("deleteEdge")
     var components_of_the_edge = edge_comp_matrix[edge_to_be_deleted];
 
     var fromComp = selectComp(components_of_the_edge["from"]) //.outputs[components_of_the_edge["from_index"]])
     var toComp = selectComp(components_of_the_edge["to"]) //.inputs[components_of_the_edge["to_index"]].value = null;
-    console.log(toComp);
     toComp.inputs[components_of_the_edge["to_index"]].value = null;
     toComp.value = null;
     comp_input_edges[toComp.GUID][components_of_the_edge["to_index"]] = undefined;
     comp_output_edges[fromComp.GUID][components_of_the_edge["from_index"]] = undefined;
 
     for (let i = 0; i < parent_child_matrix[fromComp.GUID].length; i++) {
-
-        console.log(parseInt(parent_child_matrix[fromComp.GUID][i][2]) === components_of_the_edge["to_index"])
         if (parseInt(parent_child_matrix[fromComp.GUID][i][2]) === components_of_the_edge["to_index"]) {
             parent_child_matrix[fromComp.GUID] = [];
         }
     }
-
-    console.log(comp_output_edges)
 
     console.log(parent_child_matrix[fromComp.GUID]);
     updatShallowCompRender(toComp);
@@ -1247,32 +1246,20 @@ function moveComponent(id, x, y) {
     handleEdgeMovement(id, x, y);
 } // End of moveComponent
 
-/**
- * This is the core function that runs all the calculations and return the outputs to the components.
- * @param    {string} compId The component GUID.
- */
-//  function calculateShallow(compId) {
-//     var thisComp = selectComp(compId); // selects the component that is under test.
-//     console.log(thisComp);
-//     var inputGroup = []; // reads the inputs from the component and put them in a list to be mapped to the corresponding shallow function.
-//     thisComp.inputs.forEach(input => {
-//         inputGroup.push(input.value);
-//     });
+function runDeepFunction(compId) {
+    reactContext.setState({
+        runDeep: true,
+    })
+    redrawDependents(compId);
+    reactContext.setState({
+        runDeep: false,
+    })
+}
 
-//     var d = shallow_functions[thisComp.Name](inputGroup);
-
-//     console.log("I don't know")
-
-//     thisComp.outputs.forEach(function (output, i) {
-//         output.value = d["value"][i];
-//         output.type = d["type"][i];
-//     });
-// }
-
-export {dummyToSetState, addcomponent, selectComp, CreatePathes, updateAll, toMoveEdgeEnds, returnCurveString,
+export {dummyToSetState, addcomponent, selectComp, CreatePaths, updateAll, toMoveEdgeEnds, returnCurveString,
     getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
     addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
     updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
     drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
     edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
-    itemListChangedFunction, componentStatus, moveComponent};
+    itemListChangedFunction, componentStatus, moveComponent, runDeepFunction};

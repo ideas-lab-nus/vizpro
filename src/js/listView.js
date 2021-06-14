@@ -207,12 +207,12 @@ function CreateNewListView(FromExisting = null, optionlist_predefined_items = nu
         .attr("height", 20)
         .attr("fill", newcomp.fill)
         .attr("fill-opacity", "0.01")
-        .on("mouseover", function() {
-            d3.select(this)
+        .on("mousemove", function(event) {
+            d3.select(event.currentTarget)
                 .attr("cursor", "pointer");
         })
-        .on("mouseout", function() {
-            d3.select(this).attr("fill", newcomp.fill)
+        .on("mouseout", function(event) {
+            d3.select(event.currentTarget).attr("fill", newcomp.fill)
         })
 
     node.append("g").attr("id", "optionListOption-" + newcomp.GUID)

@@ -25,12 +25,11 @@
  * @since  x.x.x
  */
 
-import {addcomponent, popupMessage, redrawDependents} from './functions.js';
+import {addcomponent, popupMessage, runDeepFunction} from './functions.js';
 import {uuidv4} from './handle.js';
 import $ from "jquery";
 
 var d3 = require('d3');
-var runDeep;
 
 /**
  * Create a new generic component (everything except slider, option list, panel, file upload, toogle, list view).
@@ -45,11 +44,8 @@ var runDeep;
  * @param {*} color the color of the component. The default color is #F23322 (orange). This can be obtained by print out the udo_fill in the Django version.
  */
 function CreateNewComponent(reactContext, FromExisting = null, type = null, kwargs = null, inputList, outputList, color = "#F23322") {
-    console.log("Create new component called");
-    //local title variables; Those should be later put in the visualization properties table.
     var IDLE_COLOR = reactContext.state.IDLE_COLOR;
     var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
-    runDeep = reactContext.state.runDeep;
 
     var one_character_width = 8;
     var padding = 20;
@@ -377,12 +373,12 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
         .attr("height", newcomp.height)
         .attr("fill", newcomp.fill)
         .attr("fill-opacity", "0.01")
-        .on("mouseover", function() {
-            d3.select(this)
+        .on("mousemove", function(event) {
+            d3.select(event.currentTargethis)
                 .attr("cursor", "pointer");
         })
-        .on("mouseout", function() {
-            d3.select(this).attr("fill", newcomp.fill)
+        .on("mouseout", function(event) {
+            d3.select(event.currentTarget).attr("fill", newcomp.fill)
         })
         .on("dblclick", () => {})
         .on("mousedown", () => {
@@ -468,12 +464,6 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
     reactContext.setState({
         components_selection_data: current_components_selection,
     });
-}
-
-function runDeepFunction(compId) {
-    runDeep = true;
-    redrawDependents(compId);
-    runDeep = false;
 }
 
 export {CreateNewComponent};

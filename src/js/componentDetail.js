@@ -5,6 +5,19 @@
  */
 const details = [ 
     {
+        "name": "Absolute", 
+        "shname": "ABS", 
+        "desc": "The absolute of a value", 
+        "type": "component", 
+        "dftype": "dp", 
+        "category": "Basic", 
+        "subcategory": "Lists",
+        "inputList": [{"name": "Input", "shortName": "in_01", "desc": "input", "default_value": "1.0"}, {'name': 'url'}],
+        "outputList": [{"name":"abs_","shortName":"abs","desc":"absolute of value"}, {"name":"log_","shortName":"log","desc":"output log"}], 
+        "color": "#0031E7",
+        "backgroundImage": ""
+    },
+    {
         "name": "Average", 
         "shname": "AVG", 
         "desc": "The average between two values", 
@@ -141,19 +154,6 @@ const details = [
                     {"name":"log_","shortName":"log_","desc":"log_"}], 
         "color": "#f1c40f",
         "backgroundImage": ""
-    },
-    {
-        "name": "Cloud", 
-        "shname": "Cloud", 
-        "desc": "", 
-        "type": "component", 
-        "dftype": "dp", 
-        "category": "Basic", 
-        "subcategory": "",
-        "inputList": [{'name': 'number'}, {'name': 'url'}], 
-        "outputList": [{"name":"abs", "type":"float"}], 
-        "color": "#F0CA4D",
-        "backgroundImage": "",
     },
     {
         "name": "BuildingSimulationModel", 
