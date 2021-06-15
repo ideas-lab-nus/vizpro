@@ -50,10 +50,10 @@ function loadData() {
     var allData = JSON.parse(window.localStorage.getItem("data"));
     console.log(allData);
     const reactContext = this;
-    console.log(allData.components);
+    //console.log(allData.components);
     var allContents = d3.select("#allCanvasContents");
     var svgContainer = d3.select("svg");
-    if (allData !== undefined) {
+    if (allData !== null) {
         if (allData.canvas_transform !== undefined) {
             console.log(allData.canvas_transform.kXY);
             //currently having error with this
@@ -63,7 +63,7 @@ function loadData() {
             // svgContainer._groups[0][0].__zoom.y = allData.canvas_transform.kXY.y;
         }
     }
-    if (allData.components !== undefined) {
+    if (allData !== null && allData.components !== undefined) {
         var allComp = allData.components;    
         reactContext.setState({
             allComp: allComp,
@@ -86,7 +86,7 @@ function loadData() {
                 CreateNewListView(element);
         });
     }
-    if (allData.edges !== undefined) {
+    if (allData !== null && allData.edges !== undefined) {
         var allEdges = allData.edges;
         allEdges.forEach(element => { CreatePaths(element); })
     }

@@ -43,11 +43,10 @@ export default class Canvas extends React.Component {
     }
 
     componentDidMount() {
-        this.loadData();
         this.manageCanvas();
         this.addGenericComponentIcon();
         addRightToggleButton();
-        
+        this.loadData();
         // this.manageGrid();
         this.timerID = setInterval(
           () => this.tick(),
