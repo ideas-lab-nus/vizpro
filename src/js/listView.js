@@ -29,8 +29,7 @@ import {HandleSelectedOption} from './layout.js';
 import "@fontsource/ubuntu-mono";
 var d3 = require('d3');
 
-function CreateNewListView(FromExisting = null, optionlist_predefined_items = null) {
-    var reactContext = this;
+function CreateNewListView(reactContext ,FromExisting = null, optionlist_predefined_items = null) {
     var newcomp;
 
     if (FromExisting == null) {

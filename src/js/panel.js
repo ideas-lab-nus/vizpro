@@ -24,13 +24,7 @@
  * @since  x.x.x
  */
 
-import {KeyPress, addcomponent, selectComp, CreatePaths, updateAll, toMoveEdgeEnds, returnCurveString,
-    getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
-    addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
-    updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
-    drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
-    edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
-    itemListChangedFunction, componentStatus, moveComponent} from './functions.js';
+import {addcomponent, selectComp, visualizeSpatialComponent, drawPlotComponent} from './functions.js';
 import {uuidv4} from './handle.js';
 import {jsonView} from './jsonview.js';
 import $ from "jquery";

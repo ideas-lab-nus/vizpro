@@ -42,8 +42,7 @@ import {uuidv4} from './handle.js';
 import $ from "jquery";
 var d3 = require('d3');
 
-function CreateNewFileUpload(FromExisting = null, kwargs = null) {
-    var reactContext = this;
+function CreateNewFileUpload(reactContext ,FromExisting = null, kwargs = null) {
     var newcomp;
 
     if (FromExisting == null) {

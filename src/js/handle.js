@@ -226,6 +226,7 @@ function handleTheClickOnAllComponents() {
 
 function handleEdgeInitialization() {
     var reactContext = this;
+    //console.log(reactContext.state);
     var allComp = reactContext.state.allComp;
     var allContents = d3.select("#allCanvasContents");
     var toComponent = null;
@@ -246,7 +247,10 @@ function handleEdgeInitialization() {
                 // DUMMY, Nothing to do in this version. :D :D 
             } else {
                 if (this.classList[0] === "outputCir") {
-                    if (comp_output_edges[this.classList[1]][this.classList[2]] === undefined) {
+                    console.log(reactContext.state);
+                    console.log(comp_output_edges[this.classList[1]][this.classList[2]])
+                    if (comp_output_edges[this.classList[1]][this.classList[2]] === undefined 
+                        || comp_output_edges[this.classList[1]][this.classList[2]] === null) {
                         selectedcircleId = this.id;
                         reactContext.setState({
                             selectedcircleId: selectedcircleId,
@@ -328,12 +332,14 @@ function handleEdgeInitialization() {
 
                     thisEdge.path_id = thisPath["_groups"][0][0].id;
 
-                    if (comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]] === undefined) {
+                    if (comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]] === undefined 
+                        || comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]] === null) {
                         comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]] = [thisEdge.path_id]
                     } else {
                         comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]].push(thisEdge.path_id)
                     }
-                    if (comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]] === undefined) {
+                    if (comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]] === undefined 
+                        || comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]] === null) {
                         comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]] = [thisEdge.path_id]
                     } else {
                         comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]].push(thisEdge.path_id)

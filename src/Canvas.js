@@ -52,6 +52,7 @@ export default class Canvas extends React.Component {
           () => this.tick(),
           1000
         );
+        console.log(this);
     }
     
     componentWillUnmount() {
@@ -85,10 +86,10 @@ export default class Canvas extends React.Component {
                     </div> 
                 </div>
                 <div id="TopPropertiesBar">
-                    <a href="#" id="fileTheDef" className="menubarButtons">File</a>
-                    <a href="#" id="fileTheDef" className="menubarButtons">Edit</a>
-                    <a href="#" id="fileTheDef" className="menubarButtons">Help</a>
-                    <a href="#" id="saveTheDef" className="menubarButtons" onClick={() => this.saveData()}>Save</a>
+                    <a id="fileTheDef" className="menubarButtons">File</a>
+                    <a id="fileTheDef" className="menubarButtons">Edit</a>
+                    <a id="fileTheDef" className="menubarButtons">Help</a>
+                    <a id="saveTheDef" className="menubarButtons" onClick={() => this.saveData()}>Save</a>
 
                     <div id="minimizeUpperBar" style={{display: "block"}} onClick={() => onMinimizeClick()}>
                         <i id="tominimize" className="fa fa-caret-up" aria-hidden="true"></i>
@@ -127,10 +128,10 @@ export default class Canvas extends React.Component {
                                     
                                     <div id="addSlider" onClick={() => this.CreateNewSlider(this)} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"}}>&nbsp;<span id="hint">Slider</span></div>
                                     <div id="addPanel" onClick={() => this.CreateNewPanel(this)} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"}}>&nbsp;<span id="hint">Panel</span></div>
-                                    <div id="addToggle" onClick={() => this.CreateNewToggle()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"}}>&nbsp;<span id="hint">Toggle</span></div>
+                                    <div id="addToggle" onClick={() => this.CreateNewToggle(this)} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"}}>&nbsp;<span id="hint">Toggle</span></div>
                                     <div id="addOptionList" onClick={() => this.CreateNewOptionList(this)} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"}}>&nbsp;<span id="hint">Option list</span></div>
-                                    <div id="addListView" onClick={() => this.CreateNewListView()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"}}>&nbsp;<span id="hint">List view</span></div>
-                                    <div id="addFile" onClick={() => this.CreateNewFileUpload()} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"}}>&nbsp;<span id="hint">File upload</span></div>
+                                    <div id="addListView" onClick={() => this.CreateNewListView(this)} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"}}>&nbsp;<span id="hint">List view</span></div>
+                                    <div id="addFile" onClick={() => this.CreateNewFileUpload(this)} className="mainButtonItem 1 1" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"}}>&nbsp;<span id="hint">File upload</span></div>
                                     
                                 </div>
                                 

@@ -1,5 +1,5 @@
 import {selectComp} from './functions.js';
-import $, { param } from "jquery";
+import $ from "jquery";
 
 var d3 = require('d3');
 
@@ -16,8 +16,6 @@ function calculateCloud(compId) {
 
     const result = mapFunction[functionName](args);
     try {
-        // console.log(requestReturn)
-        // var result = JSON.parse(requestReturn);
         thisComp.outputs.forEach(function(output, i) {
             output.type = result["type"][i];
             output.value = result["value"][i];
@@ -37,11 +35,10 @@ const mapFunction = {
 }
 
 function absolute(args) {
-    var log_ = "Success"
-    var parameters = args[0]
-    var url = args[1] + "/" + "there?p1=" + parameters;
-    var data = {"parameters": parameters.toString()}
-    var headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    var log_ = "Success";
+    var parameters = args[0];
+    var url = args[1] + "/" + "there?p1=" + parameters.toString();
+    var data = {"parameters": parameters.toString()};
 
     const req = $.ajax({
         "type": "POST",

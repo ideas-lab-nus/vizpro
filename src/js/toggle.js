@@ -27,8 +27,7 @@ import {addcomponent} from './functions.js';
 import {uuidv4} from './handle.js';
 var d3 = require('d3');
 
-function CreateNewToggle(FromExisting = null) {
-    var reactContext = this;
+function CreateNewToggle(reactContext, FromExisting = null) {
     var newcomp;
 
     if (FromExisting == null) {

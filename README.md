@@ -1,15 +1,15 @@
 # Getting Started with Create React App
 
 Issues to address:
-- Save function
+- Unable to delete edge when the saved data is loaded, need to add a new edge in order to delete the edges.
 - Canvas zoom on double click
-- Slider value not updated in properties bar accordingly
 - ** Call to cloud function url is blocked by CORS issue. Temp workaround -> Install Chrome CORS extension
 - ** Request for cloud function is sync. Make it async and add a `loading` indicator
 - Unable to delete listView
 - Edit/Drag toggle in the Panel
 - File Upload feature
 - Factor out local title variables into constants file instead of state dictionary
+- Unable to delete panel, toggle and list items.
 
 To note:
 - All the information about the components is stored in `componentDetail.js` file.

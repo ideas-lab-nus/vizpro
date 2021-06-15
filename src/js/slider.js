@@ -25,11 +25,8 @@
  */
 
 import {redrawDependents, selectComp, updateAll, moveComponent} from './functions.js';
-import {addEdge} from './handle';
 import {uuidv4} from './handle.js';
 var d3 = require('d3');
-
-var theRequiredSliderGroup = "";
 
 function addSlider(guid, min = 0, max = 100, step = 1.0) {
     var initSlider = {
@@ -69,7 +66,6 @@ function CreateNewSlider(reactContext, FromExisting = null) {
 
     if (FromExisting != null) {
         newSlider = FromExisting;
-        console.log(newSlider);
     } else {
         newSlider = addSlider(uuidv4("S"), 0, 100, 1.0);
         //Fix dict creation
@@ -114,8 +110,6 @@ function CreateNewSlider(reactContext, FromExisting = null) {
     var cont = allContents.append("g")
         .attr("class", "slider")
         .attr("id", newSlider.GUID);
-
-    console.log(cont);
  
     var genX;
     var genY;

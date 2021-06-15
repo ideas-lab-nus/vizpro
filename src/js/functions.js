@@ -311,6 +311,7 @@ function selectComp(value, by = "GUID") {
 } // End of selectComp
 
 function CreatePaths(theEdge) {
+    console.log(theEdge);
     d3.select("g#allPaths")
         .append("path")
         .attr("d", function() {
@@ -862,7 +863,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
         }
 
         for (let index = 0; index < comp_input_edges[objID].length; index++) {
-            if (comp_input_edges[objID][index] !== undefined) {
+            if (comp_input_edges[objID][index] !== undefined && comp_input_edges[objID][index] !== null) {
                 comp_input_edges[objID][index].forEach(inputElement => {
                     var circleindex = index;
 
@@ -911,7 +912,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
         }
         for (let index = 0; index < comp_output_edges[objID].length; index++) {
 
-            if (comp_output_edges[objID][index] !== undefined) {
+            if (comp_output_edges[objID][index] !== undefined && comp_output_edges[objID][index] !== null) {
                 comp_output_edges[objID][index].forEach(
                     outputElement => {
                         var circleindex = index;

@@ -82,7 +82,7 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
             popupMessage(ThisComponentName + " Component added");
         }
 
-        newcomp.fill = color; //allColors[Math.floor(Math.random() * allColors.length)];
+        newcomp.fill = color;
         newcomp.Name = ThisComponentName;
         newcomp.height = titleMargin + (Math.max(newcomp.inputs.length, newcomp.outputs.length + 1)) * padding;
         newcomp.width = (longestInput.length + longestOutput.length) * one_character_width + titleMarginLeft;
