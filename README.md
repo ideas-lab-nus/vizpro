@@ -1,7 +1,6 @@
 # Getting Started with Create React App
 
 Issues to address:
-- Unable to delete edge when the saved data is loaded, need to add a new edge in order to delete the edges.
 - Canvas zoom on double click
 - ** Call to cloud function url is blocked by CORS issue. Temp workaround -> Install Chrome CORS extension
 - ** Request for cloud function is sync. Make it async and add a `loading` indicator

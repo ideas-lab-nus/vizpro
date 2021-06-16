@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {CreatePaths, updateAll} from './functions.js';
+import {CreatePaths} from './functions.js';
 import {CreateNewComponent} from './component.js';
 import {CreateNewOptionList} from './optionlist.js';
 import {CreateNewSlider} from './slider.js';
@@ -15,6 +15,8 @@ function saveData() {
     var svgContainer = d3.select("svg");
     this.state.allEdges.forEach(element => {
         element["d"] = $("path#" + element.path_id).attr("d");
+        element["circleX"] = $("rect#pathCircle" + element.path_id).attr("x");
+        element["circleY"] = $("rect#pathCircle" + element.path_id).attr("y");
     });
     var data = {
         "components": this.state.allComp,
