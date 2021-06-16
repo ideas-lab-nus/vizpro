@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {CreatePaths} from './functions.js';
+import {addEdgeCircle} from './functions.js';
 import {CreateNewComponent} from './component.js';
 import {CreateNewOptionList} from './optionlist.js';
 import {CreateNewSlider} from './slider.js';
@@ -92,5 +92,25 @@ function loadData() {
         }
     }
 }
+
+function CreatePaths(theEdge) {
+    d3.select("g#allPaths")
+        .append("path")
+        .attr("d", function() {
+            return theEdge.d;
+        })
+        .attr('stroke', "black")
+        .attr("stroke-width", "5")
+        .attr("id", theEdge.path_id)
+        .attr("stroke-dasharray", "4")
+        .attr("stroke-linecap", "round")
+        .attr("fill", "none")
+        .attr("stroke-opacity", "0.5").lower()
+
+    addEdgeCircle(theEdge, theEdge.d)        
+        .attr("x", theEdge.circleX)
+        .attr("y", theEdge.circleY)
+        .attr("style", "display:block")
+} //End of CreatePaths
 
 export {saveData, loadData};

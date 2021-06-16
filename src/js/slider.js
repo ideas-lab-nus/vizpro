@@ -24,8 +24,9 @@
  * @since  x.x.x
  */
 
-import {redrawDependents, moveComponent} from './functions.js';
+import {redrawDependents, moveComponent, selectComp} from './functions.js';
 import {uuidv4} from './handle.js';
+import $ from "jquery";
 var d3 = require('d3');
 
 function addSlider(guid, min = 0, max = 100, step = 1.0) {
@@ -81,31 +82,12 @@ function CreateNewSlider(reactContext, FromExisting = null) {
     }
 
     newSlider.fill = "#bdc4c8";
-    var one_character_width = 8;
-    var padding = 20;
-    var titleMargin = 30;
     var titleMarginLeft = 5;
     newSlider.height = 20;
     newSlider.width = 250;
     newSlider.dftype = "shlow";
 
     var allContents = d3.select("#allCanvasContents");
-
-    function update() {
-        // node.attr("transform", d => `translate(${d.x},${d.y})`);
-    }
-
-    var dragHandler = d3.drag()
-       .on("start", (event, d) => rect.attr("stroke", "red"))
-       .on("drag", (event, d) => {           
-            moveComponent(reactContext.state.clickedId, event.x, event.y);
-            d.x = event.x; 
-            d.y = event.y;
-        })
-       .on("end", (event, d) => {
-           rect.attr("stroke", "#3a4c69");           
-       })
-       .on("start.update drag.update end.update", update)
 
     var cont = allContents.append("g")
         .attr("class", "slider")
@@ -229,7 +211,6 @@ function CreateNewSlider(reactContext, FromExisting = null) {
         .attr("transform", "translate(60, 0)");
 
     var slidingRectContainer = SlidingGroup.append("rect")
-        // .attr("fill", "#576579")
         .attr("height", "3")
         .attr("width", "185")
         .attr("rx", "2")
@@ -242,7 +223,6 @@ function CreateNewSlider(reactContext, FromExisting = null) {
         .attr("y1", "11")
         .attr("x2", "184")
         .attr("y2", "11")
-        // .attr("d", "M 0,0 L 190,0")
         .attr("stroke", "gray")
         .attr("stroke-width", "1")
 
@@ -370,4 +350,41 @@ function CreateNewSlider(reactContext, FromExisting = null) {
     });
 }
 
-export {CreateNewSlider};
+/**
+ * Double click the slider => the property bar appears
+ * Handles the event when the Save button on the property bar is clicked
+ * @param {String} compKey The ID of the clicked components
+ */
+ function submitSliderEdit(compKey) {
+    var slider_component = selectComp(compKey);
+    const SLIDER_START_POSITION = 60;
+    const SLIDER_END_POSITION = 238;
+    slider_component.min = parseFloat($("input#new_slider_min_value").val());
+    slider_component.max = parseFloat($("input#new_slider_max_value").val());  
+    slider_component.value = parseFloat($("input#new_slider_current_value").val());
+
+    var slider_anchor_slope = (SLIDER_END_POSITION-SLIDER_START_POSITION)/(slider_component.max-slider_component.min);
+    var slider_anchor_y_intersection = (SLIDER_END_POSITION-SLIDER_START_POSITION) - (slider_anchor_slope*slider_component.max); 
+    var slider_anchor_currrent_position = (slider_anchor_slope * slider_component.value) + slider_anchor_y_intersection;
+    
+    d3.select("rect#SliderAnchor_" + slider_component.GUID)
+        .attr("transform", function () {
+            return "translate(" + (slider_anchor_currrent_position).toString() + ",3)";
+        });
+
+    d3.select("#sliderValueText_"+slider_component.GUID.replace("SliderAnchor_",""))
+    .text((slider_component.value).toFixed(6));
+    
+    redrawDependents(slider_component.GUID);
+    $("div#propertiesBarContents").html("");        
+}
+
+/**
+ * Double click the slider => the property bar appears
+ * Handles the event when the Cancel button on the property bar is clicked
+ */
+function cancelSliderEdit() {
+    $("div#propertiesBarContents").html(""); 
+}
+
+export {CreateNewSlider ,submitSliderEdit, cancelSliderEdit};

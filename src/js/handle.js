@@ -1,7 +1,7 @@
 import {selectComp, updateAll, ViewListRedrawing, showDropDownList, redrawDependents} from './functions.js';
-import {submitOptionListEdit, readyToGoSubmit} from './editOptionList.js';
-import {cancelSliderEdit, submitSliderEdit} from './editSlider.js';
-import {cancelPanelEdit, submitPanelEdit} from './editPanel.js';
+import {submitOptionListEdit, readyToGoSubmit} from './optionlist.js';
+import {cancelSliderEdit, submitSliderEdit} from './slider.js';
+import {cancelPanelEdit, submitPanelEdit} from './panel.js';
 import $ from "jquery";
 var d3 = require('d3');
 
@@ -60,10 +60,6 @@ function handleComponentSelection() {
         if (element.type === "component" || element.type === "toggle" || element.type === "fileUpload") {
             d3.select("g#comp-" + element.GUID)
                 .on("click", function() {
-                    // d3.select("rect#" + element.GUID)
-                    //     .attr("stroke-width", "15")
-                    //     .attr("stroke", "#0064ffa8");
-
                     reactContext.setState({  
                         selected_component_id: element.GUID,
                     });

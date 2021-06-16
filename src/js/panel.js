@@ -24,7 +24,7 @@
  * @since  x.x.x
  */
 
-import {addcomponent, selectComp, visualizeSpatialComponent, drawPlotComponent} from './functions.js';
+import {addcomponent, selectComp, visualizeSpatialComponent, drawPlotComponent, redrawDependents} from './functions.js';
 import {uuidv4} from './handle.js';
 import {jsonView} from './jsonview.js';
 import $ from "jquery";
@@ -34,9 +34,6 @@ var d3 = require('d3');
 function CreateNewPanel(reactContext, FromExisting = null) {
     var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
     var ANCHOR_WIDTH = reactContext.state.ANCHOR_WIDTH;
-    var XANCHOR = reactContext.state.XANCHOR;
-    var YANCHOR = reactContext.state.YANCHOR;
-    var XYANCHOR = reactContext.state.XYANCHOR;
     var newcomp;
 
     if (FromExisting == null) {
@@ -50,38 +47,18 @@ function CreateNewPanel(reactContext, FromExisting = null) {
         newcomp.Name = "Panel";
         newcomp.width = 300;
     } else {
-        console.log(FromExisting);
         newcomp = FromExisting;
         newcomp.value = newcomp.outputs[0].value;
-        // newcomp.Name = FromExisting.Name;
-        // newcomp.Name = "Panel";
     }
 
     newcomp.fill = "white"; //"#fbedcc";
-    var one_character_width = 8;
-    var padding = 20;
-    var titleMargin = 30;
-    var titleMarginLeft = 30;
-    // newcomp.height = 100;//titleMargin + (Math.max(newcomp.inputs.length, newcomp.outputs.length + 1)) *padding;
     newcomp.type = "string";
     newcomp.dftype = "shlow";
 
-    // newcomp.width = 200;
     newcomp.inputs[0].value = newcomp.value;
     
     var allContents = d3.select("#allCanvasContents");
-
-    function update() {
-        node.attr("transform", d => `translate(${d.x},${d.y})`);
-    }
-
-    var dragHandler = d3.drag()
-       .on("start", (event, d) => Dummyrect.attr("stroke", "red"))
-       .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
-       .on("end", (event, d) => Dummyrect.attr("stroke", "#3a4c69"))
-       .on("start.update drag.update end.update", update)
-
-    // compPos = [Math.random() * 500 +200, Math.random() * 500 +200]
+    
     var cont = allContents.append("g")
         .attr("class", "component")
         .attr("id", newcomp.GUID);
@@ -207,7 +184,6 @@ function CreateNewPanel(reactContext, FromExisting = null) {
         .attr("width", newcomp.width - 50)
         .attr("height", 15)
         .attr("fill", "white")
-        // .attr("width", newcomp.width - 4 - ANCHOR_WIDTH);
 
     var Panel_staus2 = node.append('foreignObject')
         .attr("id", "panel_edit_mode" + newcomp.GUID)
@@ -220,7 +196,6 @@ function CreateNewPanel(reactContext, FromExisting = null) {
         .attr("width", 30)
         .attr("height", 15)
         .attr("fill", "white")
-        // .attr("width", newcomp.width - 4 - ANCHOR_WIDTH);
 
     var Dummyrect = node.append('rect')
         .attr("class", "CompPBodyDummy " + newcomp.GUID)
@@ -416,4 +391,41 @@ function CreateNewPanel(reactContext, FromExisting = null) {
     })
 }
 
-export {CreateNewPanel};
+//Need to save the new information?
+//Plot errors. in operator not recognized -> not json
+function submitPanelEdit(compKey) {
+    var StringComp = selectComp(compKey);
+    var textVal = $("textarea.textarea.stringProperties").val();
+    StringComp.inputs[0].type = $("input[name='type']:checked").val();
+    $("foreignObject#panel_status_" + StringComp.GUID).text("Type : " + StringComp.inputs[0].type);
+    if (StringComp.inputs[0].type === "json") {
+        $("foreignObject#textbody_" + StringComp.GUID).html('<div id="jsonTreeViewer' + StringComp.GUID +
+            '"></div>')
+        jsonView.format(JSON.stringify(StringComp.inputs[0].value), "div#jsonTreeViewer" + StringComp.GUID);
+    } else if (StringComp.inputs[0].type === "html") {
+        d3.select("foreignObject#textbody_" + compKey)
+            .html(textVal)
+            .attr("fill", "black");
+    } else if (StringComp.inputs[0].type === "plot") {
+        var data = JSON.parse(JSON.stringify(textVal));
+        drawPlotComponent(data, StringComp);
+    } else {
+        d3.select("foreignObject#textbody_" + compKey)
+            .text(textVal)
+            .attr("fill", "black");
+    }
+
+    StringComp.outputs[0].value = textVal;
+    StringComp.inputs[0].value = textVal;
+    StringComp.value = textVal;
+    StringComp.Name = $("input.stringPnanel.Name").val();
+
+    redrawDependents(compKey);
+    $("div#propertiesBarContents").html("");
+}
+
+function cancelPanelEdit() {
+    $("div#propertiesBarContents").html(""); 
+}
+
+export {CreateNewPanel, submitPanelEdit, cancelPanelEdit};

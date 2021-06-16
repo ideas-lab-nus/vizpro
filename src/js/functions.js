@@ -367,26 +367,6 @@ function addEdgeCircle(theEdge, thisD) {
     return circ;
 }
 
-function CreatePaths(theEdge) {
-    d3.select("g#allPaths")
-        .append("path")
-        .attr("d", function() {
-            return theEdge.d;
-        })
-        .attr('stroke', "black")
-        .attr("stroke-width", "5")
-        .attr("id", theEdge.path_id)
-        .attr("stroke-dasharray", "4")
-        .attr("stroke-linecap", "round")
-        .attr("fill", "none")
-        .attr("stroke-opacity", "0.5").lower()
-
-    addEdgeCircle(theEdge, theEdge.d)        
-        .attr("x", theEdge.circleX)
-        .attr("y", theEdge.circleY)
-        .attr("style", "display:block")
-} //End of CreatePaths
-
 function updateAll(FromExisting = null) {
     allEdges.forEach(element => {
         var thisD = $("path#" + element.path_id).attr("d");
@@ -1215,11 +1195,6 @@ function saveFile() {
     })
 } // End of saveFile
 
-function itemListChangedFunction(id, value) {
-    console.log(id);
-    console.log(value);
-} // End of itemListChangedFunction
-
 function componentStatus(id, Compstauts) {
     if (Compstauts === "green") {
         d3.select("rect#statusRect" + id)
@@ -1268,4 +1243,4 @@ export {dummyToSetState, addcomponent, selectComp, updateAll, toMoveEdgeEnds, re
     updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
     drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
     edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
-    itemListChangedFunction, componentStatus, moveComponent, runDeepFunction, CreatePaths};
+    componentStatus, moveComponent, runDeepFunction, addEdgeCircle};
