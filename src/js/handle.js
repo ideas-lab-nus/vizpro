@@ -384,9 +384,8 @@ function handleEdgeInitialization() {
                         root_components: root_components,
                         allEdges: allEdges,
                         edgeStarted: false,
-                    })
-
-                    updateAll();
+                    });
+                    updateAll(reactContext);
                     redrawDependents(fromCircle.element.classList[1])
                 } else {
                     console.log("Issue in parentchildmatrix (edgeInit)")

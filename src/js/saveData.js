@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {CreatePaths} from './functions.js';
+import {CreatePaths, updateAll} from './functions.js';
 import {CreateNewComponent} from './component.js';
 import {CreateNewOptionList} from './optionlist.js';
 import {CreateNewSlider} from './slider.js';
@@ -86,6 +86,8 @@ function loadData() {
                 root_components: allData.root_components,
             })
             allEdges.forEach(element => { CreatePaths(element); })
+            //console.log(this);
+            //updateAll(allData.edges);
         }
     }
 }

@@ -79,6 +79,7 @@ const globalVars = {
     currentRightColWidth: 50,
     defVars: {},
     messageshown: false,
+    dataLoad: 0,
 }
 
 export {globalVars};
