@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import {CreatePaths} from './functions.js';
 import {CreateNewComponent} from './component.js';
 import {CreateNewOptionList} from './optionlist.js';
 import {CreateNewSlider} from './slider.js';
@@ -14,6 +15,8 @@ function saveData() {
     var svgContainer = d3.select("svg");
     this.state.allEdges.forEach(element => {
         element["d"] = $("path#" + element.path_id).attr("d");
+        element["circleX"] = $("rect#pathCircle" + element.path_id).attr("x");
+        element["circleY"] = $("rect#pathCircle" + element.path_id).attr("y");
     });
     var data = {
         "components": this.state.allComp,
@@ -88,21 +91,6 @@ function loadData() {
             allEdges.forEach(element => { CreatePaths(element); })
         }
     }
-}
-
-function CreatePaths(theEdge) {
-    d3.select("g#allPaths")
-        .append("path")
-        .attr("d", function() {
-            return theEdge.d;
-
-        }).attr('stroke', "black")
-        .attr("stroke-width", "5")
-        .attr("id", theEdge.path_id)
-        .attr("stroke", "rgb(48, 57, 82)")
-        .attr("stroke-linecap", "round")
-        .attr("fill", "none")
-        .attr("stroke-opacity", "0.6").lower();
 }
 
 export {saveData, loadData};

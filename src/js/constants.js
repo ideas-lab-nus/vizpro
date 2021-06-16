@@ -1,4 +1,5 @@
 import {addCircle} from './handle.js';
+
 const globalVars = {
     initEdgex1: 0,
     initEdgey1: 0,

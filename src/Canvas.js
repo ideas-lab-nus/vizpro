@@ -10,7 +10,7 @@ import {CreateNewFileUpload, handleFileUpload} from './js/fileUpload.js';
 import {CreateNewListView} from './js/listView.js';
 import {manageCanvas} from './js/layout.js'; 
 import {manageGrid} from './js/mainGrid.js';
-import {dummyToSetState, updateAll} from './js/functions.js';
+import {dummyToSetState} from './js/functions.js';
 import Grid from './Grid';      
 import {handleComponentSelection, handleTheClickOnAllComponents, 
     handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
@@ -36,11 +36,9 @@ export default class Canvas extends React.Component {
 
     componentDidMount() {
         this.manageCanvas();
+        this.loadData();
         this.addGenericComponentIcon();
         addRightToggleButton();
-        this.loadData();
-        // this.manageGrid();
-        console.log(this.state); //somehow when I print the state at this point, the edge list is empty
         this.timerID = setInterval(
           () => this.tick(),
           1000
@@ -62,14 +60,6 @@ export default class Canvas extends React.Component {
     }
 
     render() {
-        //somehow I need to call update all twice in order for the red dot to appear. Call that function only once doesn't make the red dot appear
-        if (this.state.dataLoad < 2) {
-            console.log(this.state); // but when I print the state at this point, the edge list contains all the edge that I saved.
-            updateAll(this);
-            this.setState({
-                dataLoad: this.state.dataLoad + 1,
-            });
-        }
         return (
             <div>
                 {/* <ScriptTag>{this.print()}</ScriptTag> */}
