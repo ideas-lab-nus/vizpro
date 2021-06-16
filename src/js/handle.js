@@ -314,8 +314,7 @@ function handleEdgeInitialization() {
             var parent_child_matrix = reactContext.state.parent_child_matrix;
             var parent_child_matrix_fast_check = [ ...reactContext.state.parent_child_matrix_fast_check ];
             var selectedcircleId = reactContext.state.selectedcircleId;
-
-            if (edgeStarted && targetcircleIN && this !== fromCircle.element && comp_input_edges[this.classList[1]][this.classList[2]] === undefined) {
+            if (edgeStarted && targetcircleIN && this !== fromCircle.element && (comp_input_edges[this.classList[1]][this.classList[2]] === undefined || comp_input_edges[this.classList[1]][this.classList[2]] === null)) {
                 toCircle.element = this;
                 reactContext.setState({
                     toCircle: toCircle,

@@ -310,83 +310,7 @@ function selectComp(value, by = "GUID") {
     return toreturn;
 } // End of selectComp
 
-function CreatePaths(theEdge) {
-    //console.log(theEdge);
-    d3.select("g#allPaths")
-        .append("path")
-        .attr("d", function() {
-            return theEdge.d;
-
-        }).attr('stroke', "black")
-        .attr("stroke-width", "5")
-        .attr("id", theEdge.path_id)
-        // .attr("stroke-dasharray", "2 2")
-        .attr("stroke", "rgb(48, 57, 82)")
-        .attr("stroke-linecap", "round")
-        .attr("fill", "none")
-        .attr("stroke-opacity", "0.6").lower();
-
-    //updateAll();
-    var thisD = $("path#" + theEdge.path_id).attr("d");
-        d3.select("g#allPaths")
-            .append("rect")
-            .attr("id", "pathCircle" + theEdge.path_id)
-            .attr("rx", 100)
-            .attr("ry", 100)
-            .attr("width", 15)
-            .attr("height", 15)
-            .attr("fill", "red")
-            // .attr("cursor", "pointer")
-            // .append("circle")
-            // .attr("id", "C" + element.path_id)
-            .attr("opacity", 0.3)
-            .attr("style", "display:block")
-            .on("mousemove", function(event) {
-                console.log("on")
-                d3.select(event.currentTarget).attr("opacity", 0.8)
-                d3.select("path#" + theEdge.path_id)
-                    .attr("stroke", "red")
-                    .attr("stroke-width", 4)
-                    .attr("stroke-dasharray", "5 5")
-            })
-            .on("mouseout", function(event) {
-                d3.select(event.currentTarget)
-                    .attr("opacity", 0.3)
-                d3.select("path#" + theEdge.path_id)
-                    .attr("stroke", "black")
-                    .attr("stroke-width", 5)
-                    .attr("stroke-dasharray", 0)
-            })
-            .on("mousedown", function(event) {
-                deleteEdge(theEdge.path_id);
-                d3.select(event.currentTarget)
-                    .remove()
-
-                d3.select("path#" + theEdge.path_id)
-                    .remove();
-            })
-
-        d3.select("#" + theEdge.path_id)
-            .attr("stroke-width", "5")
-            .attr("d", function() {
-                return thisD.replace("L", "C");
-            })
-            .attr("stroke", "black")
-            .attr("stroke-linecap", "round")
-            .attr("stroke-opacity", "0.5")
-            .lower();
-        
-        try {
-            handleEdgeMovement(theEdge.toComp[1])
-        } catch (error) {}
-
-        try {
-            handleEdgeMovement(theEdge.fromComp[1])
-        } catch {}
-} //End of CreatePaths
-
 function updateAll(reactContext, FromExisting = null) {
-    //console.log("updateAll");
     console.log(reactContext.state.allEdges);
     reactContext.state.allEdges.forEach(element => {
         var thisD = $("path#" + element.path_id).attr("d");
@@ -398,11 +322,8 @@ function updateAll(reactContext, FromExisting = null) {
             .attr("width", 15)
             .attr("height", 15)
             .attr("fill", "red")
-            // .attr("cursor", "pointer")
-            // .append("circle")
-            // .attr("id", "C" + element.path_id)
             .attr("opacity", 0.3)
-            .attr("style", "display:block")
+            .attr("style", "display:none")
             .on("mousemove", function(event) {
                 console.log("on")
                 d3.select(event.currentTarget).attr("opacity", 0.8)
@@ -1314,7 +1235,7 @@ function runDeepFunction(compId) {
     })
 }
 
-export {dummyToSetState, addcomponent, selectComp, CreatePaths, updateAll, toMoveEdgeEnds, returnCurveString,
+export {dummyToSetState, addcomponent, selectComp, updateAll, toMoveEdgeEnds, returnCurveString,
     getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
     addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
     updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 

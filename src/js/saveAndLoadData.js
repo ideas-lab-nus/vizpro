@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import {CreatePaths, updateAll} from './functions.js';
 import {CreateNewComponent} from './component.js';
 import {CreateNewOptionList} from './optionlist.js';
 import {CreateNewSlider} from './slider.js';
@@ -36,7 +35,8 @@ function saveData() {
     const fileData = JSON.stringify(data);
     var storage = window.localStorage;
     storage.setItem("data", fileData);
-    console.log('successfully saved data');
+    //console.log('successfully saved data');
+    alert("Successfully save data");
 }
 
 function loadData() {
@@ -86,10 +86,23 @@ function loadData() {
                 root_components: allData.root_components,
             })
             allEdges.forEach(element => { CreatePaths(element); })
-            //console.log(this);
-            //updateAll(allData.edges);
         }
     }
+}
+
+function CreatePaths(theEdge) {
+    d3.select("g#allPaths")
+        .append("path")
+        .attr("d", function() {
+            return theEdge.d;
+
+        }).attr('stroke', "black")
+        .attr("stroke-width", "5")
+        .attr("id", theEdge.path_id)
+        .attr("stroke", "rgb(48, 57, 82)")
+        .attr("stroke-linecap", "round")
+        .attr("fill", "none")
+        .attr("stroke-opacity", "0.6").lower();
 }
 
 export {saveData, loadData};
