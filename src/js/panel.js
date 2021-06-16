@@ -189,13 +189,15 @@ function CreateNewPanel(reactContext, FromExisting = null) {
         .attr("id", "panel_edit_mode" + newcomp.GUID)
         .attr("class", "panel_edit_mode " + newcomp.GUID)
         .html(() => {
-            return '<a id="changeEditMoveMode_' + newcomp.GUID + '" href="#" onclick="edit_move_mode(\'' + newcomp.GUID + '\', 0)">Edit</a>';
+            return '<h5 id="changeEditMoveMode_' + newcomp.GUID + '" style="color:white; margin-top:1px" ">Edit</h5>';
         })
         .attr("x", newcomp.width - 30)
         .attr("y", newcomp.height + 2)
         .attr("width", 30)
         .attr("height", 15)
         .attr("fill", "white")
+        .on("click", () => edit_move_mode(newcomp.GUID, 0))
+        .attr("style", "cursor: pointer;");
 
     var Dummyrect = node.append('rect')
         .attr("class", "CompPBodyDummy " + newcomp.GUID)
@@ -426,6 +428,22 @@ function submitPanelEdit(compKey) {
 
 function cancelPanelEdit() {
     $("div#propertiesBarContents").html(""); 
+}
+
+function edit_move_mode(compId, mode) {
+    const EDIT_MODE = 0;
+    const DRAG_MODE = 1;
+    var disp = $("rect#overlaySelector" + compId).attr("style");
+    console.log(disp)
+    if (disp === "display: block;") {
+        d3.select("rect#overlaySelector" + compId)
+            .style("display", "none")
+        d3.select("h5#changeEditMoveMode_" + compId).text("Edit Mode")
+    } else {
+        d3.select("rect#overlaySelector" + compId)
+            .style("display", "block")
+        d3.select("h5#changeEditMoveMode_" + compId).text("Drag Mode")
+    }
 }
 
 export {CreateNewPanel, submitPanelEdit, cancelPanelEdit};

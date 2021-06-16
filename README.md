@@ -1,14 +1,10 @@
 # Getting Started with Create React App
 
 Issues to address:
-- Canvas zoom on double click
 - ** Call to cloud function url is blocked by CORS issue. Temp workaround -> Install Chrome CORS extension
 - ** Request for cloud function is sync. Make it async and add a `loading` indicator
-- Unable to delete listView
-- Edit/Drag toggle in the Panel
 - File Upload feature
 - Factor out local title variables into constants file instead of state dictionary
-- Unable to delete panel, toggle and list items.
 
 To note:
 - All the information about the components is stored in `componentDetail.js` file.

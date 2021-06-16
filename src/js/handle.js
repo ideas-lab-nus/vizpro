@@ -57,9 +57,13 @@ function handleComponentSelection() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;
     allComp.forEach(element => {
-        if (element.type === "component" || element.type === "toggle" || element.type === "fileUpload") {
+        if (element.type === "component" || element.type === "toggle" || element.type === "fileUpload" || element.type === "listView") {
             d3.select("g#comp-" + element.GUID)
                 .on("click", function() {
+                    d3.select("rect#" + element.GUID)
+                        .attr("stroke-width", "2")
+                        .attr("stroke", "#0064ffa8");
+
                     reactContext.setState({  
                         selected_component_id: element.GUID,
                     });
@@ -72,9 +76,8 @@ function handleComponentSelection() {
                         .attr("stroke", "none");
                 })
         } else if (element.type === "string") {
-            d3.select("rect#" + element.GUID)
+            d3.selectAll("rect#" + element.GUID + ", rect.CompPBody." + element.GUID + ".a")
                 .on("click", function() {
-
                     d3.select("rect#" + element.GUID)
                         .attr("stroke-width", "2")
                         .attr("stroke", "#0064ffa8");
@@ -87,22 +90,7 @@ function handleComponentSelection() {
                     });
                 })
 
-            d3.select("rect.CompBody." + element.GUID + ".a")
-                .on("click", function() {
-
-                    d3.select("rect#" + element.GUID)
-                        .attr("stroke-width", "2")
-                        .attr("stroke", "#0064ffa8");
-
-                    d3.select("rect#statusRect" + element.GUID)
-                        .attr("fill", "#0081ff")
-
-                    reactContext.setState({  
-                        selected_component_id: element.GUID,
-                    });
-                })
-
-            d3.select("rect#" + element.GUID)
+            d3.selectAll("rect#" + element.GUID + ", rect#overlaySelector" + element.GUID)
                 .on("focusout", () => {
                     d3.select("rect#" + element.GUID)
                         .attr("stroke-width", "0")
@@ -111,18 +99,6 @@ function handleComponentSelection() {
                     d3.select("rect#statusRect" + element.GUID)
                         .attr("fill", "#525252")
                 })
-
-            d3.select("rect#overlaySelector" + element.GUID)
-                .on("focusout", () => {
-                    d3.select("rect#" + element.GUID)
-                        .attr("stroke-width", "0")
-                        .attr("stroke", "none");
-
-
-                    d3.select("rect#statusRect" + element.GUID)
-                        .attr("fill", "#525252")
-                })
-
         } else if (element.type === "slider") {
             d3.select("rect#" + element.GUID)
                 .on("click", function() {
@@ -139,13 +115,12 @@ function handleComponentSelection() {
                         .attr("stroke-width", "1")
                         .attr("stroke", "black");
                 })
-
         } else if (element.type === "optionList") {
             d3.select("g#comp-" + element.GUID)
                 .on("click", function() {
                     d3.select("rect#" + element.GUID)
-                        .attr("stroke-width", "1")
-                        .attr("stroke", "black");
+                        .attr("stroke-width", "2")
+                        .attr("stroke", "#0064ffa8");
 
                     showDropDownList(element.GUID);
 
@@ -154,7 +129,7 @@ function handleComponentSelection() {
                         optionListStarted: true,
                         optionlistRectid: element.GUID,
                     }); 
-                });
+                })
 
             d3.select("rect#" + element.GUID)
                 .on("focusout", () => {
@@ -162,7 +137,6 @@ function handleComponentSelection() {
                         .attr("stroke-width", "0")
                         .attr("stroke", "none");
                 })
-
         }
     });
     ViewListRedrawing();
@@ -177,21 +151,6 @@ function handleTheClickOnAllComponents() {
     const reactContext = this;
     var allComp = reactContext.state.allComp;
     var allcomp = d3.selectAll("rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody, rect.CompCBody")
-        // .on('click', function(event) {
-        //     console.log("clicked")
-        //     if (event.defaultPrevented) return; // dragged
-        //     console.log("an actual click")
-        //     var coordinates = d3.pointer(event);            
-        //     reactContext.setState({
-        //         componentClickX: coordinates[0],
-        //         componentClickY: coordinates[1],
-        //         clicked: true,
-        //         startDrag : false,
-        //         clickedId : this.id.replace("overlaySelector", ""),
-        //         selected_components : [this.id.replace("overlaySelector", "")],
-        //         rectType : "component",
-        //     });   
-        // })
         .on('mousedown', function(event) {
             var coordinates = d3.pointer(event);
             

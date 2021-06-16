@@ -23,6 +23,7 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
+import { svg } from "d3";
 import $ from "jquery";
 var d3 = require("d3");
 
@@ -207,6 +208,8 @@ function manageCanvas() {
             allContents.attr("transform", event.transform); 
         }
     }));   
+
+    svgContainer.on("dblclick.zoom", null);
     
     $("div#definedComp").html(function() {
         var somearr = reactContext.state.udo_names;

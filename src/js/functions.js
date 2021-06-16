@@ -971,19 +971,6 @@ function handlePathDeleteMovement(pathId, xy1, xy2) {
         .attr("style", "display:block");
 } // End of handlePathDeleteMovement
 
-function edit_move_mode(compId, mode) {
-    const EDIT_MODE = 0;
-    const DRAG_MODE = 1;
-    if (mode === EDIT_MODE) {
-        d3.select("rect#overlaySelector" + compId).style("display", "none")
-        d3.select("a#changeEditMoveMode_" + compId).attr("onclick", "edit_move_mode('" + compId + "', 1)").text("Edit Mode")
-    } else {
-        d3.select("rect#overlaySelector" + compId).style("display", "block")
-        d3.select("a#changeEditMoveMode_" + compId).attr("onclick", "edit_move_mode('" + compId + "', 0)").text("Drag Mode")
-    }
-
-} // End of edit_move_mode
-
 function objToHtmlTable(object) {
     var col_length = 0;
     var keys = []
@@ -1242,5 +1229,5 @@ export {dummyToSetState, addcomponent, selectComp, updateAll, toMoveEdgeEnds, re
     addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
     updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
     drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
-    edit_move_mode, objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
+    objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
     componentStatus, moveComponent, runDeepFunction, addEdgeCircle};
