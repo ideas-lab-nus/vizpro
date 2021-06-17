@@ -24,7 +24,7 @@
  * @since  x.x.x
  */
 
-import {redrawDependents, moveComponent, selectComp} from './functions.js';
+import {redrawDependents, selectComp} from './functions.js';
 import {uuidv4} from './handle.js';
 import $ from "jquery";
 var d3 = require('d3');
@@ -243,15 +243,15 @@ function CreateNewSlider(reactContext, FromExisting = null) {
             var y_intersection = selectedSliderComponent.min - (the_slider_slope * SLIDER_START_POSITION);
 
             if (event.x <= SLIDER_START_POSITION) {
-                console.log("before")
+                //console.log("before")
                 slider_anchor_value = 0;
                 slider_value = selectedSliderComponent.min;                
             } else if (event.x >= SLIDER_END_POSITION) {
-                console.log("after")
+                //console.log("after")
                 slider_anchor_value = SLIDER_END_POSITION - SLIDER_START_POSITION;
                 slider_value = selectedSliderComponent.max;
             } else {
-                console.log("middle")
+                //console.log("middle")
                 slider_anchor_value = event.x - SLIDER_START_POSITION;
                 slider_value = event.x * the_slider_slope + y_intersection;
             }

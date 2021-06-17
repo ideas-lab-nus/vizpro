@@ -15,7 +15,7 @@ import Grid from './Grid';
 import {handleComponentSelection, handleTheClickOnAllComponents, 
     handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
 import {addGenericComponentIcon, addRightToggleButton} from './js/leftPropertyBar.js';
-import { saveData, loadData } from './js/saveAndLoadData.js';
+import { saveData, loadData, clearData } from './js/saveAndLoadData.js';
 
 export default class Canvas extends React.Component {
     constructor(props) {
@@ -80,6 +80,7 @@ export default class Canvas extends React.Component {
                     <a id="fileTheDef" className="menubarButtons">Edit</a>
                     <a id="fileTheDef" className="menubarButtons">Help</a>
                     <a id="saveTheDef" className="menubarButtons" onClick={() => this.saveData()}>Save</a>
+                    <a id="fileTheDef" className="menubarButtons" onClick={() => clearData()}>Clear</a>
 
                     <div id="minimizeUpperBar" style={{display: "block"}} onClick={() => onMinimizeClick()}>
                         <i id="tominimize" className="fa fa-caret-up" aria-hidden="true"></i>

@@ -44,10 +44,8 @@ function CreateNewToggle(reactContext, FromExisting = null) {
 
     newcomp.fill = "#2c3e50";
     newcomp.Name = "False";
-    var one_character_width = 8;
     var padding = 20;
     var titleMargin = 30;
-    var titleMarginLeft = 30;
     newcomp.height = 20;
     newcomp.type = "toggle";
     newcomp.dftype = "shlow";
@@ -56,16 +54,6 @@ function CreateNewToggle(reactContext, FromExisting = null) {
     newcomp.width = 80; //newcomp.Name.length * one_character_width + titleMarginLeft;
     
     var allContents = d3.select("#allCanvasContents");
-
-    function update() {
-        node.attr("transform", d => `translate(${d.x},${d.y})`);
-    }
-
-    var dragHandler = d3.drag()
-       .on("start", (event, d) => Dummyrect.attr("stroke", "red"))
-       .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
-       .on("end", (event, d) => Dummyrect.attr("stroke", "#3a4c69"))
-       .on("start.update drag.update end.update", update);
 
     var cont = allContents.append("g")
         .attr("class", "component")
@@ -139,7 +127,6 @@ function CreateNewToggle(reactContext, FromExisting = null) {
         .attr("id", "dummyRect_" + newcomp.GUID)
         .attr("rx", "3")
         .attr("ry", "3")
-        //.attr("filter", "url(#f2")
         .attr("stroke-width", "1")
         .attr("stroke", "black")
         .attr("width", newcomp.width)

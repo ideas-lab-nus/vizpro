@@ -78,7 +78,6 @@ const globalVars = {
     currentTopBarHeight: 30,
     currentLeftColWidth: 225,
     currentRightColWidth: 50,
-    defVars: {},
     messageshown: false,
     dataLoad: 0,
 }

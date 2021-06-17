@@ -25,7 +25,6 @@
  */
 import {addcomponent} from './functions.js';
 import {uuidv4, addCircle} from './handle.js';
-import {HandleSelectedOption} from './layout.js';
 import "@fontsource/ubuntu-mono";
 var d3 = require('d3');
 
@@ -184,7 +183,7 @@ function CreateNewListView(reactContext ,FromExisting = null, optionlist_predefi
             var ListItemsvalueReturn = `<select id="listviewSelect" class="listView ` + newcomp.GUID + `" size="5"  multiple>`;
             newcomp.value.forEach(option => {
 
-                if (option[1] == 0) {
+                if (option[1] === 0) {
                     ListItemsvalueReturn += `<option id="someSelection" class="listViewOption ` + newcomp.GUID + `" value="` + option[0] + `">` + option[0] + `</option>`
                 } else {
                     ListItemsvalueReturn += `<option id="someSelection" class="listViewOption ` + newcomp.GUID + `" value="` + option[0] + `" selected>` + option[0] + `</option>`
@@ -192,8 +191,7 @@ function CreateNewListView(reactContext ,FromExisting = null, optionlist_predefi
                 }
             });
             newcomp.outputs[0].value = JSON.stringify(selectedOptions);
-            ListItemsvalueReturn += `</select>`
-            HandleSelectedOption();
+            ListItemsvalueReturn += `</select>`;
             return ListItemsvalueReturn;
         })
 

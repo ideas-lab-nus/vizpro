@@ -10,7 +10,6 @@ import {CreateNewListView} from './listView.js';
 var d3 = require('d3');
 
 function saveData() {
-    console.log('Save button clicked');
     var allContents = d3.select("#allCanvasContents");
     var svgContainer = d3.select("svg");
     this.state.allEdges.forEach(element => {
@@ -34,17 +33,18 @@ function saveData() {
         "currentRightColWidth": parseFloat(d3.select("div#PropertiesBar").style("width")),
         "currentLeftColWidth": parseFloat(d3.select("div#LeftPropertiesBar").style("width"))
     }
-    console.log(data);
     const fileData = JSON.stringify(data);
     var storage = window.localStorage;
     storage.setItem("data", fileData);
-    //console.log('successfully saved data');
     alert("Successfully save data");
 }
 
+function clearData() {
+    window.localStorage.clear();
+    alert("All the saved data has been cleared. Please reload the page");
+}
+
 function loadData() {
-    //window.localStorage.clear();
-    console.log('inside load data');
     var allData = JSON.parse(window.localStorage.getItem("data"));
     var allContents = d3.select("#allCanvasContents");
     var svgContainer = d3.select("svg");
@@ -113,4 +113,4 @@ function CreatePaths(theEdge) {
         .attr("style", "display:block")
 } //End of CreatePaths
 
-export {saveData, loadData};
+export {saveData, loadData, clearData};

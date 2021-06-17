@@ -25,9 +25,6 @@
  * @since  x.x.x
  */
 
-//IMPORTANT : Fix for lines, 592, 617, 646 
-
-import {CreateNewComponent} from './component.js';
 import {jsonView} from './jsonview.js';
 import {calculateShallow} from './shallow.js';
 import {calculateCloud} from './cloud.js';
@@ -35,17 +32,6 @@ import Plotly from 'plotly';
 import $ from "jquery";
 
 var d3 = require('d3');
-
-var is_there_item_copied = false;
-var copiedItem = null;
-
-var is_there_item_cut = false;
-
-var new_copied_component = null;
-var cut_component_name = null;
-var cut_component_sName = null;
-var cut_component_dfType = null;
-var cut_component_type = null;
 
 var reactContext;
 var allComp;
@@ -57,23 +43,8 @@ var comp_output_edges;
 var edge_comp_matrix;
 var parent_child_matrix;
 var parent_child_matrix_fast_check;
-var root_components;
 var components_selection_data;
 var runDeep;
-var clickedId;
-var rectType;
-var deltaX;
-var deltaY;
-var clicked;
-var edgeStarted;
-var targetcircleIN;
-var selectedcircleId;
-var targetcircleId;
-var selectedSliderAnchorId;
-var xGrid;
-var yGrid;
-var mousex;
-var mousey;
 var messageshown;
 var mouseInsideOption;
 
@@ -88,119 +59,16 @@ function dummyToSetState() {
     edge_comp_matrix = reactContext.state.edge_comp_matrix;
     parent_child_matrix = reactContext.state.parent_child_matrix;
     parent_child_matrix_fast_check = reactContext.state.parent_child_matrix_fast_check;
-    root_components = reactContext.state.root_components;
     components_selection_data = reactContext.state.components_selection_data;
     runDeep = reactContext.state.runDeep;
-    clickedId = reactContext.state.clickedId;
-    rectType = reactContext.state.rectType;
-    deltaX = reactContext.state.deltaX;
-    deltaY = reactContext.state.deltaY;
-    clicked = reactContext.state.clicked;
-    edgeStarted = reactContext.state.edgeStarted;
-    targetcircleIN = reactContext.state.targetcircleIN;
-    selectedcircleId = reactContext.state.selectedcircleId;
-    targetcircleId = reactContext.state.targetcircleId;
-    selectedSliderAnchorId = reactContext.state.selectedSliderAnchorId;
-    xGrid = reactContext.state.xGrid;
-    yGrid = reactContext.state.yGrid;
-    mousex = reactContext.state.mousex
-    mousey = reactContext.state.mousey;
     mouseInsideOption = reactContext.state.mouseInsideOption;
     messageshown = reactContext.state.messageshown;
 }
-
-function KeyPress(event, e) {
-    var evtobj = window.event ? event : e
-    if (evtobj.keyCode === 90 && evtobj.ctrlKey) {
-        popupMessage("Ctrl+z");
-
-    };
-    if (evtobj.keyCode === 89 && evtobj.ctrlKey) {
-        popupMessage("Ctrl+y");
-    }
-    if (evtobj.keyCode === 67 && evtobj.ctrlKey) {//Ctrl + C copy
-        popupMessage("Ctrl+c");
-        is_there_item_copied = true;
-        is_there_item_cut = false;
-
-        copiedItem = clickedId;
-
-    }
-    if (evtobj.keyCode === 88 && evtobj.ctrlKey) {
-        popupMessage("Ctrl+x");
-        is_there_item_cut = true;
-        is_there_item_copied = false;
-
-        copiedItem = clickedId;
-        new_copied_component = selectComp(copiedItem)
-        cut_component_name = new_copied_component.Name;
-        cut_component_sName = new_copied_component.shortName;
-        cut_component_dfType = new_copied_component.dfType;
-        cut_component_type = new_copied_component.type;
-
-        deleteComponent(clickedId);
-
-    };
-    if (evtobj.keyCode === 86 && evtobj.ctrlKey) {
-        if (is_there_item_copied) {
-            new_copied_component = selectComp(copiedItem);
-            if (new_copied_component.type === "component")
-                CreateNewComponent(null, new_copied_component.Name, {
-                    "shortName": new_copied_component.shortName,
-                    "dfType": new_copied_component.dfType,
-                    "X": mousex,
-                    "Y": mousey
-                }); //to be handle later (since additional parameters are passed to CreateNewComponent function)
-
-        } else if (is_there_item_cut) {
-            if (cut_component_type === "component")
-                CreateNewComponent(null, cut_component_name, {
-                    "shortName": cut_component_sName,
-                    "dfType": cut_component_dfType,
-                    "X": mousex,
-                    "Y": mousey
-                });
-        }
-        popupMessage("Ctrl+v");
-    }
-
-    if (evtobj.keyCode === 83 && evtobj.ctrlKey) {
-        e.preventDefault();
-        saveFile();
-    }
-
-    if (evtobj.keyCode === 78 && evtobj.ctrlKey) {
-
-        $(document).on("keydown", (ev) => {
-            ev.preventDefault();
-        });
-        var answer = window.confirm("You are leaving, Save changes ?")
-        if (answer) {
-            saveFile();
-            window.location.href = '/def';
-        } else {
-            window.location.href = "/def";
-        }
-
-
-    }
-
-} // End of KeyPress
-
-document.onkeydown = KeyPress;
-
-$("a#saveTheDef").on("click", function(e) {
-    console.log('save clicked');
-    e.preventDefault();
-    saveFile();
-
-});
 
 function addcomponent(guid, n_inputs = 4, n_outputs = 5, inputsIn = 5 * ["input"], outputsIn = 5 * ["output"]) {
     var inputs = []
     var outputs = []
     for (let index = 0; index < n_inputs; index++) {
-
         try {
             inputs.push({
                 "id": index,
@@ -300,8 +168,14 @@ function addcomponent(guid, n_inputs = 4, n_outputs = 5, inputsIn = 5 * ["input"
     return initComp;
 } //End of addcomponent
 
+/**
+ * Gets the detail of a component given that the "by" value of that component equal to "value"
+ * @param {*} value the value of the component need to be searched
+ * @param {*} by the search field, by default, this field is the GUID of the component 
+ * @returns 
+ */
 function selectComp(value, by = "GUID") {
-    let toreturn = null
+    let toreturn = null;
     allComp.forEach(element => {
         if (element[by] === value) {
             toreturn = element
@@ -339,6 +213,7 @@ function addEdgeCircle(theEdge, thisD) {
         })
         .on("mousedown", function(event) {
             deleteEdge(theEdge.path_id);
+            console.log(theEdge.path_id)
             d3.select(event.currentTarget)
                 .remove()
 
@@ -367,16 +242,13 @@ function addEdgeCircle(theEdge, thisD) {
     return circ;
 }
 
-function updateAll(FromExisting = null) {
+function updateAll() {
     allEdges.forEach(element => {
         var thisD = $("path#" + element.path_id).attr("d");
         addEdgeCircle(element, thisD);
     });
 } // End of updateAll
 
-function toMoveEdgeEnds(mainObj) {
-    mainObj.inputs.forEach(input => {});
-} // End of toMoveEdgeEnds
 
 function returnCurveString(x1, y1, x2, y2) {
     var coalignValue;
@@ -437,30 +309,6 @@ function ViewListRedrawing() {
         redrawDependents(id);
     });
 } // End of ViewListRedrawing
-
-function getAllChildes(parent, n = 0) {
-    let par = selectComp(parent)
-    let text = ""
-    if (parent_child_matrix[parent].length > 0) // This means that this parent has already childs
-    {
-        parent_child_matrix[parent].forEach(function(element, i) { //iterate through all those childs. 
-            text += "\n" + repeatStringNumTimes("\t", n) + par.Name + "--> " + getAllChildes(element[1], n + 1);
-        });
-    } else {
-        text = par.Name;
-    }
-
-    return text
-} // End of getAllChildes
-
-function repeatStringNumTimes(string, times) {
-    if (times < 0)
-        return "";
-    if (times === 1)
-        return string;
-    else
-        return string + repeatStringNumTimes(string, times - 1);
-} // End of repeatStringNumTimes
 
 function addOptionDropdownList(compId) {
     var optionListComp = selectComp(compId)
@@ -534,12 +382,14 @@ function showDropDownList(hh) {
     addOptionDropdownList(hh)
 } // End of showDropDownList
 
+/**
+ * on a parent changes, only draws all the children tree .
+ * all the components --- inputs outpts object (to be sent later to the backend should be modified as well)
+ * shallow values should be updated instantaneously 
+ * @param {String} parentComp the id of parent component
+ */
 function redrawDependents(parentComp) {
-    // on a parent changes, only draws all the children tree .
-    // all the components --- inputs outpts object (to be sent later to the backend should be modified as well)
-    // shallow values should be updated instantaneously 
     var parent_child_matrix = reactContext.state.parent_child_matrix;
-    console.log('redrawing dependents');
     let parent = selectComp(parentComp);
 
     if (parent_child_matrix[parentComp].length === 0) { // This means that this parent has no children    
@@ -547,7 +397,6 @@ function redrawDependents(parentComp) {
     }
 
     if (parent.dftype === "shlow") {
-        console.log("Shallow comp")
         parent_child_matrix[parentComp].forEach(function(element, i) { //iterate through all those childs.
             let ch = selectComp(element[1]);
             if (parent.type === "slider") {
@@ -1092,37 +941,41 @@ function deleteEdge(edge_to_be_deleted) {
 
     var fromComp = selectComp(components_of_the_edge["from"]) //.outputs[components_of_the_edge["from_index"]])
     var toComp = selectComp(components_of_the_edge["to"]) //.inputs[components_of_the_edge["to_index"]].value = null;
-    toComp.inputs[components_of_the_edge["to_index"]].value = null;
-    toComp.value = null;
-    comp_input_edges[toComp.GUID][components_of_the_edge["to_index"]] = undefined;
-    comp_output_edges[fromComp.GUID][components_of_the_edge["from_index"]] = undefined;
+    console.log(toComp);
+    console.log(fromComp);
+    if (toComp !== null && fromComp !== null) {
+        toComp.inputs[components_of_the_edge["to_index"]].value = null;
+        toComp.value = null;
+        comp_input_edges[toComp.GUID][components_of_the_edge["to_index"]] = undefined;
+        comp_output_edges[fromComp.GUID][components_of_the_edge["from_index"]] = undefined;
 
-    for (let i = 0; i < parent_child_matrix[fromComp.GUID].length; i++) {
-        if (parseInt(parent_child_matrix[fromComp.GUID][i][2]) === components_of_the_edge["to_index"]) {
-            parent_child_matrix[fromComp.GUID] = [];
+        for (let i = 0; i < parent_child_matrix[fromComp.GUID].length; i++) {
+            if (parseInt(parent_child_matrix[fromComp.GUID][i][2]) === components_of_the_edge["to_index"]) {
+                parent_child_matrix[fromComp.GUID] = [];
+            }
         }
+
+        console.log(parent_child_matrix[fromComp.GUID]);
+        updatShallowCompRender(toComp);
+        updatShallowCompRender(fromComp);
+        redrawDependents(components_of_the_edge["to"]);
+
+        for (let i = 0; i < allEdges.length; i++) {
+            if (edge_to_be_deleted === allEdges[i]["path_id"]) {
+                allEdges.splice(i, 1)
+            }
+        };
+
+        for (let i = 0; i < parent_child_matrix_fast_check.length; i++) {
+            var current_parent_child_object_asList = parent_child_matrix_fast_check[i].split(" ");
+            if (current_parent_child_object_asList[0] === components_of_the_edge["from_index"] && current_parent_child_object_asList[1] === fromComp.GUID) {
+                parent_child_matrix_fast_check.splice(i, 1);
+            }
+
+        }
+        redrawDependents(components_of_the_edge["to"]);
+        delete edge_comp_matrix[edge_to_be_deleted];
     }
-
-    console.log(parent_child_matrix[fromComp.GUID]);
-    updatShallowCompRender(toComp);
-    updatShallowCompRender(fromComp);
-    redrawDependents(components_of_the_edge["to"]);
-
-    for (let i = 0; i < allEdges.length; i++) {
-        if (edge_to_be_deleted === allEdges[i]["path_id"]) {
-            allEdges.splice(i, 1)
-        }
-    };
-
-    for (let i = 0; i < parent_child_matrix_fast_check.length; i++) {
-        var current_parent_child_object_asList = parent_child_matrix_fast_check[i].split(" ");
-        if (current_parent_child_object_asList[0] === components_of_the_edge["from_index"] && current_parent_child_object_asList[1] === fromComp.GUID) {
-            parent_child_matrix_fast_check.splice(i, 1);
-        }
-
-    }
-    redrawDependents(components_of_the_edge["to"]);
-    delete edge_comp_matrix[edge_to_be_deleted];
 } // End of deleteEdge
 
 function popupMessage(message) {
@@ -1132,58 +985,13 @@ function popupMessage(message) {
     });
 } // End of popupMessage
 
-function saveFile() {
-    allEdges.forEach(element => {
-        element["d"] = $("path#" + element.path_id).attr("d");
-    });
-
-    console.log(parseFloat(d3.select("div#PropertiesBar").style("width")))
-    var svgContainer = d3.select("svg");
-    var allContents = d3.select("#allCanvasContents");
-    var resss = ""
-    $.ajax({
-        "type": "POST",
-        "dataType": "json",
-        "url": "saveUrl", //dummy. refer def.html
-        "accepts": "text",
-        "data": {
-            "api": "thisDefId", //dummy. refer def.html
-            "da": JSON.stringify({
-                "components": allComp,
-                "edges": allEdges,
-                "comp_input_edges": comp_input_edges,
-                "comp_output_edges": comp_output_edges,
-                "edge_comp_matrix": edge_comp_matrix,
-                "parent_child_matrix": parent_child_matrix,
-                "parent_child_matrix_fast_check": parent_child_matrix_fast_check,
-                "root_components": root_components,
-                "canvas_transform": {
-                    "transform": allContents.attr("transform"),
-                    "kXY": svgContainer._groups[0][0].__zoom
-                },
-                "currentRightColWidth": parseFloat(d3.select("div#PropertiesBar").style("width")),
-                "currentLeftColWidth": parseFloat(d3.select("div#LeftPropertiesBar").style("width"))
-            })
-        },
-        "beforeSend": function(xhr, settings) {
-            $.ajaxSettings.beforeSend(xhr, settings);
-
-        },
-        "complete": function(res) {
-            d3.select("div#Addedmessage")
-                .text("Saved")
-                .transition(1000)
-                .style("opacity", () => {
-                    messageshown = true;
-                    return 1;
-                })
-            console.log(res.responseText);
-        }
-    })
-} // End of saveFile
-
-function componentStatus(id, Compstauts) {
-    if (Compstauts === "green") {
+/**
+ * Set the status of a generic component (idle, active, error) based on its color
+ * @param {*} id the id of the component
+ * @param {*} Compstatus the text color of the component
+ */
+function componentStatus(id, Compstatus) {
+    if (Compstatus === "green") {
         d3.select("rect#statusRect" + id)
             .attr("fill", "#02521b");
 
@@ -1191,13 +999,13 @@ function componentStatus(id, Compstauts) {
             .text("Active")
             .attr("fill", "#6cff13");
 
-    } else if (Compstauts === "#ffca28") {
+    } else if (Compstatus === "#ffca28") {
         d3.select("rect#statusRect" + id)
-            .attr("fill", Compstauts);
+            .attr("fill", Compstatus);
         d3.select("text#statusText" + id)
             .text("Idle ...")
             .attr("fill", "black");
-    } else if (Compstauts === "red") {
+    } else if (Compstatus === "red") {
         d3.select("rect#statusRect" + id)
             .attr("fill", "#fceecc");
         d3.select("text#statusText" + id)
@@ -1224,10 +1032,9 @@ function runDeepFunction(compId) {
     })
 }
 
-export {dummyToSetState, addcomponent, selectComp, updateAll, toMoveEdgeEnds, returnCurveString,
-    getlocationFromTransform, ViewListRedrawing, getAllChildes, repeatStringNumTimes, 
-    addOptionDropdownList, changeOptionListFinalValue, showDropDownList, redrawDependents, 
-    updatShallowCompRender, visualizeSpatialComponent, displaySelection, highlightSpatialZone, 
+export {dummyToSetState, addcomponent, selectComp, updateAll, returnCurveString,
+    getlocationFromTransform, ViewListRedrawing, addOptionDropdownList, changeOptionListFinalValue, 
+    showDropDownList, redrawDependents, updatShallowCompRender, visualizeSpatialComponent,
     drawPlotComponent, updateListViewDrawing, handleEdgeMovement, handlePathDeleteMovement, 
-    objToHtmlTable, deleteComponent, deleteEdge, popupMessage, saveFile,
+    objToHtmlTable, deleteComponent, deleteEdge, popupMessage,
     componentStatus, moveComponent, runDeepFunction, addEdgeCircle};

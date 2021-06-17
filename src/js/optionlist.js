@@ -32,7 +32,6 @@ var optionListComp;
 var OptionListValues;
 
 function CreateNewOptionList(reactContext, FromExisting = null, optionlist_predefined_items = null) {
-    //const reactContext = this;
     var newcomp;
 
     if (FromExisting == null) {
@@ -54,10 +53,8 @@ function CreateNewOptionList(reactContext, FromExisting = null, optionlist_prede
     }
 
     newcomp.fill = "white";
-    var one_character_width = 8;
     var padding = 20;
     var titleMargin = 30;
-    var titleMarginLeft = 30;
     newcomp.height = 20;
     newcomp.type = "optionList";
     newcomp.dftype = "shlow";
@@ -65,16 +62,6 @@ function CreateNewOptionList(reactContext, FromExisting = null, optionlist_prede
     // TODO : get the longest text in the component. and set the width based on this. 
 
     var allContents = d3.select("#allCanvasContents");
-
-    function update() {
-        node.attr("transform", d => `translate(${d.x},${d.y})`);
-    }
-
-    var dragHandler = d3.drag()
-       .on("start", (event, d) => Dummyrect.attr("stroke", "red"))
-       .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
-       .on("end", (event, d) => Dummyrect.attr("stroke", "#3a4c69"))
-       .on("start.update drag.update end.update", update);
 
     newcomp.width = 200;
 
