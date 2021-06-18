@@ -179,7 +179,6 @@ function handleTheClickOnAllComponents() {
 
 function handleEdgeInitialization() {
     var reactContext = this;
-    var allComp = reactContext.state.allComp;
     var allContents = d3.select("#allCanvasContents");
     var toComponent = null;
     var fromComponent = null;
@@ -199,7 +198,6 @@ function handleEdgeInitialization() {
                 // DUMMY, Nothing to do in this version. :D :D 
             } else {
                 if (this.classList[0] === "outputCir") {
-                    // console.log(comp_output_edges[this.classList[1]][this.classList[2]])
                     if (comp_output_edges[this.classList[1]][this.classList[2]] === undefined 
                         || comp_output_edges[this.classList[1]][this.classList[2]] === null) {
                         selectedcircleId = this.id;
@@ -339,7 +337,7 @@ function handleEdgeInitialization() {
                         allEdges: allEdges,
                         edgeStarted: false,
                     });
-                    updateAll(reactContext);
+                    updateAll();
                     redrawDependents(fromCircle.element.classList[1])
                 } else {
                     console.log("Issue in parentchildmatrix (edgeInit)")

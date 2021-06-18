@@ -674,16 +674,14 @@ function draw3dModel(args) {
 
 }
 
-
+/**
+ * This function allow user to select specific branch of a json object
+ * @param {array} args
+ * @param args[0]: input_json [string], the json input e.g. {0: "Google", 1: "Facebook", 2:{"data": "no-data", "value": 123}}
+ * @param args[1]: path [list], a list or a list-like string that represents the path to the requird object . eg: [2, "data"]
+ * @return {json} json string indicating the 3d geometry
+*/
 function jsonNavigator(args) {
-    /**
-     * This function allow user to select specific branch of a json object
-     * @param {array} args
-     * @param args[0]: input_json [string], the json input e.g. {0: "Google", 1: "Facebook", 2:{"data": "no-data", "value": 123}}
-     * @param args[1]: path [list], a list or a list-like string that represents the path to the requird object . eg: [2, "data"]
-     * @return {json} json string indicating the 3d geometry
-     */
-
     var input_json = args[0];
     var path = args[1];
 
@@ -716,13 +714,12 @@ function jsonNavigator(args) {
     }
 }
 
+/**
+ * This function draws iframe 
+ * @param {array} args
+ * @return {json}
+*/
 function draw3dObject(args){
-    /**
-     * This function draws iframe 
-     * @param {array} args
-     * @return {json}
-     */
-
     var input_url = args[0];
     var outpur_iframe = '<iframe src="'+input_url+'"></iframe>'; 
 
@@ -736,14 +733,12 @@ function draw3dObject(args){
 
 }
 
-
+/**
+ * This function accepts the OSI-soft data record and return a plot-ly
+ * @param {array} args
+ * @return {json}
+*/
 function osiExtractTimeSeriesData(args) {
-    /**
-     * This function accepts the OSI-soft data record and return a plot-ly
-     * @param {array} args
-     * @return {json}
-     */
-
     var input_data = args[0]
     var x = [];
     var y = [];

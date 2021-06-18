@@ -51,7 +51,6 @@ const horizontal_align_box = {"W": 150.0, "H": 30.0 , "color": "#373f46", "opaci
 const vertical_align_box = {"W": 30.0, "H": 150.0 , "color": "#373f46", "opacity": 0.8, "radius":5.0}
 
 var selection_box_started = false;
-var items_are_selected  = false; 
 var selection_box = null;
 
 var reactContext;
@@ -63,7 +62,6 @@ function manageGrid() {
     var startDrag = reactContext.state.startDrag;
     var mouseInsideOption = reactContext.state.mouseInsideOption;
     var selected_component_id = reactContext.state.selected_component_id;
-    var allComp = reactContext.state.allComp;
 
     var mainGrid = allContents
     .style("backgroud-color", function () {
@@ -147,13 +145,6 @@ function manageGrid() {
 
         var textAreaRectId = reactContext.state.textAreaRectId;
         var optionlistRectid = reactContext.state.optionlistRectid;
-        var StringAnchorType = reactContext.state.StringAnchorType;
-        var YANCHOR = reactContext.state.YANCHOR;
-        var XANCHOR = reactContext.state.XANCHOR;
-        var anchorMouseXpos = reactContext.state.anchorMouseXpos;
-        var anchorMouseYpos = reactContext.state.anchorMouseYpos;
-        var StringAnchorId = reactContext.state.StringAnchorId;
-        var ANCHOR_WIDTH = reactContext.state.ANCHOR_WIDTH;
 
         if (reactContext.state.textareaStarted) {
             var selectedRect = getlocationFromTransform(d3.select("g#comp-" + textAreaRectId).attr("transform"));

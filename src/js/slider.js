@@ -24,7 +24,7 @@
  * @since  x.x.x
  */
 
-import {redrawDependents, moveComponent, selectComp} from './functions.js';
+import {redrawDependents, selectComp} from './functions.js';
 import {uuidv4} from './handle.js';
 import $ from "jquery";
 var d3 = require('d3');

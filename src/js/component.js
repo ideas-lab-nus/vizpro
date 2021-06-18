@@ -98,16 +98,6 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
 
     var allContents = d3.select("#allCanvasContents");
 
-    function update() {
-        node.attr("transform", d => `translate(${d.x},${d.y})`);
-    }
-
-    var dragHandler = d3.drag()
-       .on("start", (event, d) => Dummyrect.attr("stroke", "red"))
-       .on("drag", (event, d) => {d.x = event.x; d.y = event.y})
-       .on("end", (event, d) => Dummyrect.attr("stroke", "#3a4c69"))
-       .on("start.update drag.update end.update", update);
-
     var cont = allContents.append("g")
         .attr("class", "component")
         .attr("id", newcomp.GUID);
@@ -150,9 +140,8 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
         .attr("width", newcomp.width + 2)
         .attr("x", -1.0)
         .attr("height", 40)
-        .attr("fill", IDLE_COLOR) //"#525252")// newcomp.fill)//
+        .attr("fill", IDLE_COLOR)
         .attr("stroke-width", 1)
-        // .attr("stroke", "#525252")
         .attr("rx", COMPONENT_RADIUS)
         .attr("ry", COMPONENT_RADIUS)
         .attr("opacity", 0.5);

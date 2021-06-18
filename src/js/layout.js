@@ -23,57 +23,8 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
-import { svg } from "d3";
 import $ from "jquery";
 var d3 = require("d3");
-
-function changedefTitle() {
-
-    let theguid = $("a#changeTitleName").attr("guid");
-    let currentText = $("a#changeTitleName").text();
-
-    $("span#DefenitionMainTitle").html(() => {
-        return '<input id="TitleToBeChangedInput" type="text" value="' + currentText + '">'
-    });
-    d3.select("#TitleToBeChangedInput").node().focus();
-    d3.select("#TitleToBeChangedInput")
-        .on("focusout", function() {
-            let newText = $("#TitleToBeChangedInput").val();
-            $("span#DefenitionMainTitle").html(() => {
-                editDefName(theguid, newText);
-                return '<a href="#" id="changeTitleName" onclick="changedefTitle()" guid="' + theguid + '">' + newText + '</a> </span>'
-            })
-        })
-        .on("keydown", function() {
-            if (d3.event.keyCode === 13) {
-                let newText = $("#TitleToBeChangedInput").val();
-                $("span#DefenitionMainTitle").html(() => {
-                    editDefName(theguid, newText)
-                    return '<a href="#" id="changeTitleName" onclick="changedefTitle()" guid="' + theguid + '">' + newText + '</a> </span>'
-                })
-            } else if (d3.event.keyCode === 27) {
-                $("span#DefenitionMainTitle").html(() => {
-                    return '<a href="#" id="changeTitleName" onclick="changedefTitle()" guid="' + theguid + '">' + currentText + '</a> </span>'
-                })
-            }
-
-        });
-}
-
-function editDefName(api_key, newName) {
-    $.ajax({
-        "type": "POST",
-        "dataType": "json",
-        "data": {
-            "guid": api_key,
-            "name": newName
-        },
-        "beforeSend": function(xhr, settings) {
-            $.ajaxSettings.beforeSend(xhr, settings);
-        },
-        "success": function(result) {}
-    })
-}
 
 function onMinimizeClick() {
     d3.select("#maximizeUpperBar").transition()
@@ -180,7 +131,6 @@ function manageCanvas() {
     var rightColIsdisplayed = reactContext.state.rightColIsdisplayed;
     var rightColumnIsSelected = reactContext.state.rightColumnIsSelected;
     var leftColIsdisplayed = reactContext.state.leftColIsdisplayed;
-    var startDrag = reactContext.state.startDrag;
 
     var backgroundRectangle = allContents.append("rect")
         .attr("fill", "url(#img122)")
@@ -354,17 +304,5 @@ function manageCanvas() {
     })
 }
 
-function HandleSelectedOption() {
-    $("select#listviewSelect").on("change", function(e) {
-        console.log("hello world ");
-    });
-}
 
-function handleEdgeSelection() {
-    d3.selectAll("path")
-        .on("mousemove", function() {
-            console.log("hello world")
-        })
-}
-
-export {onMaximizeClick, onMinimizeClick, manageCanvas, HandleSelectedOption};
+export {onMaximizeClick, onMinimizeClick, manageCanvas};
