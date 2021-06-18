@@ -56,7 +56,7 @@ export default class Canvas extends React.Component {
     }
 
     print() {
-        console.log( this.state.parent_child_matrix);
+        console.log(this.state);
     }
 
     render() {

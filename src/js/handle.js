@@ -179,7 +179,6 @@ function handleTheClickOnAllComponents() {
 
 function handleEdgeInitialization() {
     var reactContext = this;
-    //console.log(reactContext.state);
     var allComp = reactContext.state.allComp;
     var allContents = d3.select("#allCanvasContents");
     var toComponent = null;
@@ -200,8 +199,7 @@ function handleEdgeInitialization() {
                 // DUMMY, Nothing to do in this version. :D :D 
             } else {
                 if (this.classList[0] === "outputCir") {
-                    console.log(reactContext.state);
-                    console.log(comp_output_edges[this.classList[1]][this.classList[2]])
+                    // console.log(comp_output_edges[this.classList[1]][this.classList[2]])
                     if (comp_output_edges[this.classList[1]][this.classList[2]] === undefined 
                         || comp_output_edges[this.classList[1]][this.classList[2]] === null) {
                         selectedcircleId = this.id;
@@ -267,7 +265,11 @@ function handleEdgeInitialization() {
             var parent_child_matrix = reactContext.state.parent_child_matrix;
             var parent_child_matrix_fast_check = [ ...reactContext.state.parent_child_matrix_fast_check ];
             var selectedcircleId = reactContext.state.selectedcircleId;
-            if (edgeStarted && targetcircleIN && this !== fromCircle.element && (comp_input_edges[this.classList[1]][this.classList[2]] === undefined || comp_input_edges[this.classList[1]][this.classList[2]] === null)) {
+            if (edgeStarted && 
+                    targetcircleIN && 
+                        this !== fromCircle.element && 
+                            (comp_input_edges[this.classList[1]][this.classList[2]] === undefined || 
+                                comp_input_edges[this.classList[1]][this.classList[2]] === null)) {
                 toCircle.element = this;
                 reactContext.setState({
                     toCircle: toCircle,

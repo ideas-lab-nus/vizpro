@@ -322,7 +322,6 @@ function addEdgeCircle(theEdge, thisD) {
         .attr("opacity", 0.3)
         .attr("style", "display:none")
         .on("mousemove", function(event) {
-            console.log("on")
             d3.select(event.currentTarget).attr("opacity", 0.8)
             d3.select("path#" + theEdge.path_id)
                 .attr("stroke", "red")
@@ -538,8 +537,8 @@ function redrawDependents(parentComp) {
     // on a parent changes, only draws all the children tree .
     // all the components --- inputs outpts object (to be sent later to the backend should be modified as well)
     // shallow values should be updated instantaneously 
-    var parent_child_matrix = reactContext.state.parent_child_matrix;
     console.log('redrawing dependents');
+    console.log(parent_child_matrix)
     let parent = selectComp(parentComp);
 
     if (parent_child_matrix[parentComp].length === 0) { // This means that this parent has no children    
@@ -551,6 +550,7 @@ function redrawDependents(parentComp) {
         parent_child_matrix[parentComp].forEach(function(element, i) { //iterate through all those childs.
             let ch = selectComp(element[1]);
             if (parent.type === "slider") {
+                console.log("setting slider value to child")
                 ch.inputs[element[2]].value = parent.value;
             } else if (parent.type === "string" || parent.type === "fileUpload") {
                 ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -1095,34 +1095,39 @@ function deleteEdge(edge_to_be_deleted) {
     toComp.inputs[components_of_the_edge["to_index"]].value = null;
     toComp.value = null;
     comp_input_edges[toComp.GUID][components_of_the_edge["to_index"]] = undefined;
-    comp_output_edges[fromComp.GUID][components_of_the_edge["from_index"]] = undefined;
+    comp_output_edges[fromComp.GUID][components_of_the_edge["from_index"]] = 
+        comp_output_edges[fromComp.GUID][components_of_the_edge["from_index"]].filter((pathId) => pathId !== edge_to_be_deleted);
 
     for (let i = 0; i < parent_child_matrix[fromComp.GUID].length; i++) {
-        if (parseInt(parent_child_matrix[fromComp.GUID][i][2]) === components_of_the_edge["to_index"]) {
-            parent_child_matrix[fromComp.GUID] = [];
+        if (parent_child_matrix[fromComp.GUID][i][2] === components_of_the_edge["to_index"] && parent_child_matrix[fromComp.GUID][i][1] === toComp.GUID) { 
+            parent_child_matrix[fromComp.GUID].splice(i, 1);
         }
     }
 
-    console.log(parent_child_matrix[fromComp.GUID]);
     updatShallowCompRender(toComp);
     updatShallowCompRender(fromComp);
     redrawDependents(components_of_the_edge["to"]);
 
-    for (let i = 0; i < allEdges.length; i++) {
-        if (edge_to_be_deleted === allEdges[i]["path_id"]) {
-            allEdges.splice(i, 1)
-        }
-    };
+    allEdges = allEdges.filter((edge) => edge["path_id"] !== edge_to_be_deleted);
 
     for (let i = 0; i < parent_child_matrix_fast_check.length; i++) {
-        var current_parent_child_object_asList = parent_child_matrix_fast_check[i].split(" ");
-        if (current_parent_child_object_asList[0] === components_of_the_edge["from_index"] && current_parent_child_object_asList[1] === fromComp.GUID) {
+        var parent_child_info = parent_child_matrix_fast_check[i].split(" ");
+        if (parent_child_info[0] === components_of_the_edge["from_index"] && parent_child_info[1] === fromComp.GUID) { // && parent_child_info[3] === toComp.GUID 
             parent_child_matrix_fast_check.splice(i, 1);
         }
-
     }
+
     redrawDependents(components_of_the_edge["to"]);
     delete edge_comp_matrix[edge_to_be_deleted];
+
+    reactContext.setState({
+        comp_input_edges: comp_input_edges,
+        comp_output_edges: comp_output_edges,
+        parent_child_matrix: parent_child_matrix,
+        edge_comp_matrix: edge_comp_matrix,
+        allEdges: allEdges,
+        parent_child_matrix_fast_check: parent_child_matrix_fast_check
+    })
 } // End of deleteEdge
 
 function popupMessage(message) {

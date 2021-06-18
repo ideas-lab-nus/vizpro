@@ -434,7 +434,6 @@ function edit_move_mode(compId, mode) {
     const EDIT_MODE = 0;
     const DRAG_MODE = 1;
     var disp = $("rect#overlaySelector" + compId).attr("style");
-    console.log(disp)
     if (disp === "display: block;") {
         d3.select("rect#overlaySelector" + compId)
             .style("display", "none")
