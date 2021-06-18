@@ -1,983 +1,983 @@
 body {
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-o-user-select: none;
-	user-select: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 svg {
-	border: solid 1px #565656;
+    border: solid 1px #565656;
 }
 
 #checks {
-	margin: 10px;
+    margin: 10px;
 }
 
 text {
-	pointer-events: none;
-	user-select: none;
-	font-size: small;
-	font-family: 'ubuntu mono';
+    pointer-events: none;
+    user-select: none;
+    font-size: small;
+    font-family: 'ubuntu mono';
 }
 
 .nodeLog {
-	font-size: small;
-	font-family: monospace;
-	pointer-events: none;
+    font-size: small;
+    font-family: monospace;
+    pointer-events: none;
 }
 
 input:focus,
 select:focus,
 textarea:focus,
 button:focus {
-	outline: none;
+    outline: none;
 }
 
 rect:focus {
-	outline: none;
+    outline: none;
 }
 
 .output {
-	font-family: monospace;
-	font-size: small;
-	color: white;
+    font-family: monospace;
+    font-size: small;
+    color: white;
 }
 
 .input {
-	font-family: monospace;
-	font-size: small;
+    font-family: monospace;
+    font-size: small;
 }
 
 .nodetitle {
-	font-family: 'ubuntu mono';
-	font-size: 13px;
-	font-weight: bold;
-	color: white;
-	pointer-events: none;
-	text-align: center;
+    font-family: 'ubuntu mono';
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+    pointer-events: none;
+    text-align: center;
 }
 
 div#someData {
-	padding: 8px;
-	padding-top: 25px;
-	font-size: x-small;
-	font-family: monospace;
+    padding: 8px;
+    padding-top: 25px;
+    font-size: x-small;
+    font-family: monospace;
 }
 
 circle {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 div#PropertiesBarSelector {
-	width: 4px;
-	position: fixed;
-	right: 501px;
-	background-color: #000000;
-	height: 100%;
-	top: 0px;
-	cursor: ew-resize;
+    width: 4px;
+    position: fixed;
+    right: 501px;
+    background-color: #000000;
+    height: 100%;
+    top: 0px;
+    cursor: ew-resize;
 }
 
 div#PropertiesBar {
-	width: 500px;
-	background-color: #2b3d50;
-	position: fixed;
-	right: 0px;
-	box-shadow: 0px 11px 10px #0000006e;
-	top: 0px;
-	min-height: 35%;
-	transition-timing-function: ease-in-out;
-	transition: height 2s;
-	transition-delay: 1s;
+    width: 500px;
+    background-color: #2b3d50;
+    position: fixed;
+    right: 0px;
+    box-shadow: 0px 11px 10px #0000006e;
+    top: 0px;
+    min-height: 35%;
+    transition-timing-function: ease-in-out;
+    transition: height 2s;
+    transition-delay: 1s;
 }
 
 div#mainGrid {
-	position: relative;
-	top: 0px;
-	left: 0px;
-	background-color: #ececec;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    background-color: #ececec;
 }
 
 div#textAreaBox {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	opacity: 0.8;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    opacity: 0.8;
 }
 
 div#optionlistBox {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	opacity: 0.8;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    opacity: 0.8;
 }
 
 select#optionListSelectItems {
-	background: white;
-	opacity: 1;
-	font-family: monospace;
-	font-weight: bold;
-	border: 1px solid black;
-	border-radius: 3px;
+    background: white;
+    opacity: 1;
+    font-family: monospace;
+    font-weight: bold;
+    border: 1px solid black;
+    border-radius: 3px;
 }
 
 h5 {
-	font-family: monospace;
-	margin-top: 1px;
-	margin-bottom: 4px;
-	text-align: center;
+    font-family: monospace;
+    margin-top: 1px;
+    margin-bottom: 4px;
+    text-align: center;
 }
 
 div#LeftPropertiesBar {
-	width: 200px;
-	position: fixed;
-	background-color: #2b3d50;
-	left: 0px;
-	top: 0px;
+    width: 200px;
+    position: fixed;
+    background-color: #2b3d50;
+    left: 0px;
+    top: 0px;
 }
 
 .additionalData {
-	border-radius: 7px;
-	font-size: x-small;
-	width: 222px;
-	background-color: #ffffff47;
-	font-family: monospace;
-	color: #5d5d5d;
-	padding: 3px;
-	border: none;
+    border-radius: 7px;
+    font-size: x-small;
+    width: 222px;
+    background-color: #ffffff47;
+    font-family: monospace;
+    color: #5d5d5d;
+    padding: 3px;
+    border: none;
 }
 
 div#LeftPropertiesBarSelector {
-	width: 5px;
-	height: 100%;
-	display: none;
-	position: fixed;
-	left: 200px;
-	background-color: #252525;
-	top: 0px;
-	cursor: ew-resize;
+    width: 5px;
+    height: 100%;
+    display: none;
+    position: fixed;
+    left: 200px;
+    background-color: #252525;
+    top: 0px;
+    cursor: ew-resize;
 }
 
 div#TopPropertiesBar {
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	height: 30px;
-	background-color: #e6e6e6;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 30px;
+    background-color: #e6e6e6;
 }
 
 div#TopPropertiesBarSelector {
-	height: 2px;
-	width: 100%;
-	position: fixed;
-	left: 0px;
-	border-bottom: 1px solid #858585;
-	top: 47px;
-	cursor: ns-resize;
+    height: 2px;
+    width: 100%;
+    position: fixed;
+    left: 0px;
+    border-bottom: 1px solid #858585;
+    top: 47px;
+    cursor: ns-resize;
 }
 
 button.menubarButtons {
-	background-color: #6d6d6d;
-	border: none;
-	cursor: pointer;
-	color: #444444;
-	color: #cacaca;
-	font-family: 'Poppins', sans-serif;
+    background-color: #6d6d6d;
+    border: none;
+    cursor: pointer;
+    color: #444444;
+    color: #cacaca;
+    font-family: 'Poppins', sans-serif;
 }
 
 button.menubarButtons:hover {
-	background-color: #aaabaa;
+    background-color: #aaabaa;
 }
 
 div#DefName {
-	width: 100%;
-	height: 32px;
-	padding: 0px 0px;
-	background: #2b3d50;
-	border-bottom: 1px solid #434343;
+    width: 100%;
+    height: 32px;
+    padding: 0px 0px;
+    background: #2b3d50;
+    border-bottom: 1px solid #434343;
 }
 
 div#BottomPropertiesBar {
-	position: fixed;
-	bottom: 0px;
-	height: 20px;
-	left: 0px;
-	border-top: 1px solid #757575;
-	box-shadow: 0px -1px 0px #313131;
-	background-color: #525252;
-	background: linear-gradient(180deg, rgba(96, 96, 96, 1) 0%, rgba(82, 82, 82, 1) 100%);
-	width: 100%;
+    position: fixed;
+    bottom: 0px;
+    height: 20px;
+    left: 0px;
+    border-top: 1px solid #757575;
+    box-shadow: 0px -1px 0px #313131;
+    background-color: #525252;
+    background: linear-gradient(180deg, rgba(96, 96, 96, 1) 0%, rgba(82, 82, 82, 1) 100%);
+    width: 100%;
 }
 
 a#changeTitleName {
-	color: #cfd8dc;
-	text-decoration: none;
+    color: #cfd8dc;
+    text-decoration: none;
 }
 
 .ccbody {
-	width: 100%;
+    width: 100%;
 }
 
 .ccatheader {
-	padding: 0px 3px;
-	font-family: 'Ubuntu', sans-serif;
-	font-size: small;
-	border: 1px solid #2c67a5;
-	color: #e7e7e7;
-	padding: 4px;
-	cursor: pointer;
-	overflow: hidden;
+    padding: 0px 3px;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: small;
+    border: 1px solid #2c67a5;
+    color: #e7e7e7;
+    padding: 4px;
+    cursor: pointer;
+    overflow: hidden;
 }
 
 button.standardcat.button {
-	vertical-align: middle;
-	border: 1px solid #444444;
-	width: 32px;
-	height: 32px;
-	margin: 1px;
-	background: none;
-	background: -moz-linear-gradient(top, #d6d4d4 0%, #adadad 100%);
-	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d6d4d4', endColorstr='#adadad', GradientType=0);
-	font-family: 'Ubuntu', sans-serif;
-	font-size: x-small;
-	color: #ffffff;
-	cursor: pointer;
-	display: inline-grid;
+    vertical-align: middle;
+    border: 1px solid #444444;
+    width: 32px;
+    height: 32px;
+    margin: 1px;
+    background: none;
+    background: -moz-linear-gradient(top, #d6d4d4 0%, #adadad 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d6d4d4', endColorstr='#adadad', GradientType=0);
+    font-family: 'Ubuntu', sans-serif;
+    font-size: x-small;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-grid;
 }
 
 div#topLeftLogo {
-	width: 27px;
-	height: 32px;
-	float: left;
-	background-image: url(https://user-images.githubusercontent.com/6969514/70302709-af822a80-1838-11ea-913b-5f935ea282ed.png);
-	background-repeat: no-repeat;
-	background-size: 26px;
-	background-position: center;
-	cursor: pointer;
+    width: 27px;
+    height: 32px;
+    float: left;
+    background-image: url(https://user-images.githubusercontent.com/6969514/70302709-af822a80-1838-11ea-913b-5f935ea282ed.png);
+    background-repeat: no-repeat;
+    background-size: 26px;
+    background-position: center;
+    cursor: pointer;
 }
 
 div#settingsIcon {
-	float: right;
-	position: fixed;
-	top: 0px;
-	color: #c5c5c5;
-	right: 0px;
-	text-align: center;
-	padding: 11px;
+    float: right;
+    position: fixed;
+    top: 0px;
+    color: #c5c5c5;
+    right: 0px;
+    text-align: center;
+    padding: 11px;
 }
 
 button.standardcat.button:hover {
-	background: #c1c1c1;
+    background: #c1c1c1;
 }
 
 div#Addedmessage {
-	font-family: monospace;
-	color: white;
-	padding: 2px;
+    font-family: monospace;
+    color: white;
+    padding: 2px;
 }
 
 #minimizeUpperBar {
-	width: 36px;
-	text-align: center;
-	background-color: #2b3d50;
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	height: 16px;
-	border-radius: 0px 0px 2px 2px;
-	color: #c5c5c5;
-	cursor: pointer;
-	border-left: 1px solid #464646;
-	border-bottom: 1px solid #464646;
-	margin-top: -4px;
+    width: 36px;
+    text-align: center;
+    background-color: #2b3d50;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 16px;
+    border-radius: 0px 0px 2px 2px;
+    color: #c5c5c5;
+    cursor: pointer;
+    border-left: 1px solid #464646;
+    border-bottom: 1px solid #464646;
+    margin-top: -4px;
 }
 
 div#maximizeUpperBar {
-	width: 36px;
-	text-align: center;
-	background-color: #5d5d5d;
-	position: absolute;
-	top: 38px;
-	right: 0px;
-	height: 16px;
-	border-radius: 0px 0px 2px 2px;
-	color: #ababab;
-	cursor: pointer;
-	margin-top: -4px;
-	text-shadow: 1px 1px 1px #4b4b4b;
+    width: 36px;
+    text-align: center;
+    background-color: #5d5d5d;
+    position: absolute;
+    top: 38px;
+    right: 0px;
+    height: 16px;
+    border-radius: 0px 0px 2px 2px;
+    color: #ababab;
+    cursor: pointer;
+    margin-top: -4px;
+    text-shadow: 1px 1px 1px #4b4b4b;
 }
 
 .propertiesbar.title {
-	font-family: 'Ubuntu', sans-serif;
-	font-size: small;
-	margin: 0px;
-	padding: 3px;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: small;
+    margin: 0px;
+    padding: 3px;
 }
 
 .propertiesbarheader.title {
-	font-family: 'Ubuntu', sans-serif;
-	font-size: small;
-	margin: 0px;
-	padding: 3px;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: small;
+    margin: 0px;
+    padding: 3px;
 }
 
 .propertiesbar.label {
-	font-family: 'Ubuntu', sans-serif;
-	font-size: small;
-	width: 98%;
-	color: #2f2f2f;
-	padding: 3px 10px;
-	background-color: gray;
-	border-bottom: 1px solid #909090;
-	border-radius: 6px 6px 0px 0px;
-	text-shadow: 1px 1px 0px #a5a5a5;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: small;
+    width: 98%;
+    color: #2f2f2f;
+    padding: 3px 10px;
+    background-color: gray;
+    border-bottom: 1px solid #909090;
+    border-radius: 6px 6px 0px 0px;
+    text-shadow: 1px 1px 0px #a5a5a5;
 }
 
 textarea.textarea.optionlistProperties {
-	width: 98%;
-	font-family: 'Ubuntu Mono', monospace;
-	height: 150px;
-	border-radius: 0px 0px 6px 6px;
-	border: 1px solid gray;
-	background-color: gainsboro;
+    width: 98%;
+    font-family: 'Ubuntu Mono', monospace;
+    height: 150px;
+    border-radius: 0px 0px 6px 6px;
+    border: 1px solid gray;
+    background-color: gainsboro;
 }
 
 textarea.textarea.stringProperties {
-	width: 100%;
-	padding: 0px;
-	font-family: 'Ubuntu Mono', monospace;
-	min-height: 10vh;
-	border: none;
-	border-radius: 3px;
-	background-color: #ffffffc7;
+    width: 100%;
+    padding: 0px;
+    font-family: 'Ubuntu Mono', monospace;
+    min-height: 10vh;
+    border: none;
+    border-radius: 3px;
+    background-color: #ffffffc7;
 }
 
 .propertiesbarheader.label {
-	font-family: 'Ubuntu', sans-serif;
-	font-size: small;
-	font-weight: bold;
-	width: 100%;
-	color: #bcbcbc;
-	padding: 3px;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: small;
+    font-weight: bold;
+    width: 100%;
+    color: #bcbcbc;
+    padding: 3px;
 }
 
 select#propertisBarSelecId {
-	width: 99%;
-	padding: 1px 2px;
-	background-color: gainsboro;
-	border-radius: 0px 0px 6px 6px;
+    width: 99%;
+    padding: 1px 2px;
+    background-color: gainsboro;
+    border-radius: 0px 0px 6px 6px;
 }
 
 div#propertiesBarLog {
-	width: 100%;
-	font-family: 'Ubuntu Mono', monospace;
-	font-size: small;
-	padding: 2px;
+    width: 100%;
+    font-family: 'Ubuntu Mono', monospace;
+    font-size: small;
+    padding: 2px;
 }
 
 rect.optionListoption {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 rect.optionListoption:hover {
-	fill: #d9e3e6;
-	stroke: #989898;
+    fill: #d9e3e6;
+    stroke: #989898;
 }
 
 div#error {
-	color: #c0392b;
-	padding: 8px;
+    color: #c0392b;
+    padding: 8px;
 }
 
 foreignObject.textbody {
-	font-family: 'ubuntu mono', monospace;
-	font-size: x-small;
-	color: #4e4e4e;
-	overflow: auto;
+    font-family: 'ubuntu mono', monospace;
+    font-size: x-small;
+    color: #4e4e4e;
+    overflow: auto;
 }
 
 div#catHead {
-	font-family: 'ubuntu';
-	font-size: small;
-	width: fit-content;
-	padding: 2px 6px;
-	color: white;
-	font-weight: bold;
-	margin-top: 5px;
-	margin-left: 3px;
+    font-family: 'ubuntu';
+    font-size: small;
+    width: fit-content;
+    padding: 2px 6px;
+    color: white;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-left: 3px;
 }
 
 div#catbody {
-	margin: 0px;
-	border-bottom: none;
-	border-right: none;
+    margin: 0px;
+    border-bottom: none;
+    border-right: none;
 }
 
 div#catcard {
-	margin-bottom: 4px;
-	padding: 0px;
+    margin-bottom: 4px;
+    padding: 0px;
 }
 
 rect.xAnchor {
-	cursor: ew-resize;
+    cursor: ew-resize;
 }
 
 rect.yAnchor {
-	cursor: ns-resize;
+    cursor: ns-resize;
 }
 
 rect.xyAnchor {
-	cursor: nwse-resize;
+    cursor: nwse-resize;
 }
 
 ::-webkit-scrollbar {
-	width: 6px;
-	height: 10px;
+    width: 6px;
+    height: 10px;
 }
 
 /* Track */
 
 ::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
 }
 
 /* Handle */
 
 ::-webkit-scrollbar-thumb {
-	-webkit-border-radius: 4px;
-	background: rgb(0, 0, 0);
+    -webkit-border-radius: 4px;
+    background: rgb(0, 0, 0);
 }
 
 ::-webkit-scrollbar-thumb:window-inactive {
-	background: rgba(255, 0, 0, 0.4);
+    background: rgba(255, 0, 0, 0.4);
 }
 
 path.play {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 path.play:hover {
-	fill: gray;
+    fill: gray;
 }
 
 th {
-	border: none;
-	background-color: gainsboro;
+    border: none;
+    background-color: gainsboro;
 }
 
 td {
-	border: none;
-	background-color: whitesmoke;
-	overflow: hidden;
+    border: none;
+    background-color: whitesmoke;
+    overflow: hidden;
 }
 
 tbody {
-	font-family: ubuntu;
-	font-size: small;
+    font-family: ubuntu;
+    font-size: small;
 }
 
 th {
-	font-family: ubuntu;
-	text-align: left;
-	font-size: small;
+    font-family: ubuntu;
+    text-align: left;
+    font-size: small;
 }
 
 div#propertiesBarContents {
-	font-family: 'ubuntu mono';
-	font-size: small;
-	font-weight: normal;
-	color: #ffffff;
-	margin: 2px 0px 10px 0px;
+    font-family: 'ubuntu mono';
+    font-size: small;
+    font-weight: normal;
+    color: #ffffff;
+    margin: 2px 0px 10px 0px;
 }
 
 foreignObject.panel_status {
-	font-family: 'ubuntu mono';
-	font-size: x-small;
-	color: #afefff;
-	text-shadow: 1px 1px 1px #3d3d3d73;
+    font-family: 'ubuntu mono';
+    font-size: x-small;
+    color: #afefff;
+    text-shadow: 1px 1px 1px #3d3d3d73;
 }
 
 tbody {
-	border: none;
+    border: none;
 }
 
 table.dataframe {
-	border: none;
+    border: none;
 }
 
 rect {
-	cursor: move;
+    cursor: move;
 }
 
 input.stringPnanel.Name {
-	width: 100%;
-	border: none;
-	font-size: small;
-	font-family: 'ubuntu';
+    width: 100%;
+    border: none;
+    font-size: small;
+    font-family: 'ubuntu';
 }
 
 foreignObject.panel_edit_mode a {
-	font-size: x-small;
-	color: #bdbdbd;
-	font-family: 'ubuntu mono';
-	position: relative;
-	text-decoration: none;
-	top: -8px;
+    font-size: x-small;
+    color: #bdbdbd;
+    font-family: 'ubuntu mono';
+    position: relative;
+    text-decoration: none;
+    top: -8px;
 }
 
 div#numerical_slider_container {
-	padding: 7px;
-	font-family: 'ubuntu';
+    padding: 7px;
+    font-family: 'ubuntu';
 }
 
 div#help_t3 {
-	line-height: 1em;
-	color: #ec5f66;
-	margin-top: 5px;
-	margin-bottom: 3px;
-	font-weight: bold;
+    line-height: 1em;
+    color: #ec5f66;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    font-weight: bold;
 }
 
 div#help_t4 {
-	color: #009688;
-	margin-left: 18px;
-	font-weight: bold;
-	margin-top: 5px;
-	margin-bottom: 5px;
+    color: #009688;
+    margin-left: 18px;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 div#help_p {
-	margin-left: 36px;
-	margin-right: 8px;
-	text-align: justify;
+    margin-left: 36px;
+    margin-right: 8px;
+    text-align: justify;
 }
 
 span#code {
-	color: #c23d51;
-	border-radius: 2px;
-	font-family: Courier;
-	font-size: xx-small;
-	vertical-align: middle;
-	padding: 1px 4px;
-	background-color: #32c8ac2e;
+    color: #c23d51;
+    border-radius: 2px;
+    font-family: Courier;
+    font-size: xx-small;
+    vertical-align: middle;
+    padding: 1px 4px;
+    background-color: #32c8ac2e;
 }
 
 table.dataframe {
-	font-size: x-small;
+    font-size: x-small;
 }
 
 thead {
-	font-size: x-small;
+    font-size: x-small;
 }
 
 th {
-	font-size: x-small;
+    font-size: x-small;
 }
 
 td {
-	font-size: x-small;
+    font-size: x-small;
 }
 
 span#errorTitle {
-	color: #e91e63;
-	font-weight: bold;
-	background-color: #f4433638;
-	border-radius: 3px;
+    color: #e91e63;
+    font-weight: bold;
+    background-color: #f4433638;
+    border-radius: 3px;
 }
 
 a.menubarButtons {
-	text-decoration: unset;
-	color: #000000;
-	text-shadow: 1px 1px 4px #4b4b4b;
-	font-size: small;
-	padding: 0px 6px;
-	margin: 1px 1px;
-	float: left;
+    text-decoration: unset;
+    color: #000000;
+    text-shadow: 1px 1px 4px #4b4b4b;
+    font-size: small;
+    padding: 0px 6px;
+    margin: 1px 1px;
+    float: left;
 }
 
 div#buttonClickedname {
-	color: white;
-	font-size: small;
-	padding: 0px 8px;
-	margin: 0px;
-	float: left;
-	position: absolute;
-	bottom: 25px;
-	left: 224px;
-	background-color: #3d3d3d;
+    color: white;
+    font-size: small;
+    padding: 0px 8px;
+    margin: 0px;
+    float: left;
+    position: absolute;
+    bottom: 25px;
+    left: 224px;
+    background-color: #3d3d3d;
 }
 
 pre {
-	margin: 0px;
+    margin: 0px;
 }
 
 input.inputFileUpload {
-	border: none;
-	border-radius: 4px;
-	margin: 2px 2px;
-	background: #2b3d50;
-	height: 20px;
-	font-family: 'ubuntu mono';
-	color: white;
+    border: none;
+    border-radius: 4px;
+    margin: 2px 2px;
+    background: #2b3d50;
+    height: 20px;
+    font-family: 'ubuntu mono';
+    color: white;
 }
 
 input.submitFileUpload {
-	border-radius: 4px;
-	float: right;
-	margin: 3px;
+    border-radius: 4px;
+    float: right;
+    margin: 3px;
 }
 
 foreignObject.fileUpload_status {
-	font-family: 'ubuntu mono';
-	font-size: x-small;
-	color: #afefff;
-	text-shadow: 1px 1px 1px #3d3d3d73;
+    font-family: 'ubuntu mono';
+    font-size: x-small;
+    color: #afefff;
+    text-shadow: 1px 1px 1px #3d3d3d73;
 }
 
 input#fileUploadFormToTheCloud {
-	border-radius: 1px;
-	margin-left: 1px;
-	/* height: 20px; */
+    border-radius: 1px;
+    margin-left: 1px;
+    /* height: 20px; */
 }
 
 a.open_uploadedFile_link {
-	text-decoration: none;
-	color: black;
-	padding: 0px 6px;
-	position: relative;
-	top: 1px;
-	border-radius: 2px;
-	margin-left: 3px;
-	background-color: #e8e8e8;
+    text-decoration: none;
+    color: black;
+    padding: 0px 6px;
+    position: relative;
+    top: 1px;
+    border-radius: 2px;
+    margin-left: 3px;
+    background-color: #e8e8e8;
 }
 
 div#TheContainedFile {
-	color: white;
-	padding: 2px 5px;
-	font-family: 'ubuntu';
-	display: inline;
-	font-size: small;
-	border-right: 1px solid gray;
+    color: white;
+    padding: 2px 5px;
+    font-family: 'ubuntu';
+    display: inline;
+    font-size: small;
+    border-right: 1px solid gray;
 }
 
 div#PleaseWaitOverLay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: #ffffff8a;
-	color: black;
-	text-align: center;
-	margin: auto;
-	line-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff8a;
+    color: black;
+    text-align: center;
+    margin: auto;
+    line-height: 100vh;
 }
 
 select.listView {
-	width: 198px;
-	height: 179px;
-	background-color: #f0f0f0;
-	border: 1px solid gray;
-	border-radius: 3px;
-	font-family: 'ubuntu mono';
-	font-size: small;
+    width: 198px;
+    height: 179px;
+    background-color: #f0f0f0;
+    border: 1px solid gray;
+    border-radius: 3px;
+    font-family: 'ubuntu mono';
+    font-size: small;
 }
 
 option#someSelection {
-	background-color: #e0e0e0;
-	box-shadow: 0px 1px 0px white;
-	margin-bottom: 1px;
+    background-color: #e0e0e0;
+    box-shadow: 0px 1px 0px white;
+    margin-bottom: 1px;
 }
 
 text.statusTextClass {
-	font-size: x-small;
+    font-size: x-small;
 }
 
 .subcatheader {
-	padding-left: 1em;
-	color: #ffca28;
-	font-size: small;
-	font-weight: bold;
+    padding-left: 1em;
+    color: #ffca28;
+    font-size: small;
+    font-weight: bold;
 }
 
 div#help_quote {
-	border: 1px solid #cfcfcf;
-	padding: 2px;
-	border-radius: 3px;
-	background-color: #f4f4f4;
-	font-family: courier new;
-	font-size: xx-small;
+    border: 1px solid #cfcfcf;
+    padding: 2px;
+    border-radius: 3px;
+    background-color: #f4f4f4;
+    font-family: courier new;
+    font-size: xx-small;
 }
 
 foreignObject#halign_box {
-	font-size: 20px;
-	color: white;
-	text-decoration: none;
-	text-align: center;
+    font-size: 20px;
+    color: white;
+    text-decoration: none;
+    text-align: center;
 }
 
 foreignObject#halign_box a {
-	text-decoration: none;
-	color: #b7b7b7;
-	margin: 0px 4px;
+    text-decoration: none;
+    color: #b7b7b7;
+    margin: 0px 4px;
 }
 
 foreignObject#halign_box a:hover {
-	text-decoration: none;
-	color: #ffc107;
+    text-decoration: none;
+    color: #ffc107;
 }
 
 i.fa.fa-pause {
-	margin-left: -1px;
-	padding: 0px;
+    margin-left: -1px;
+    padding: 0px;
 }
 
 foreignObject#valign_box {
-	font-size: 20px;
-	text-align: center;
-	vertical-align: middle;
-	padding: 4px 2px;
+    font-size: 20px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 4px 2px;
 }
 
 foreignObject#valign_box a {
-	text-decoration: none;
-	color: #b7b7b7;
-	font-size: 20px;
-	display: inline-grid;
+    text-decoration: none;
+    color: #b7b7b7;
+    font-size: 20px;
+    display: inline-grid;
 }
 
 foreignObject#valign_box a:hover {
-	color: #ffc107;
+    color: #ffc107;
 }
 
 a#valign_icon {
-	float: left;
-	margin: 5px 4px;
+    float: left;
+    margin: 5px 4px;
 }
 
 a.standardcat.button {
-	width: 32px;
-	height: 32px;
-	border: 1px solid black;
-	display: inline-grid;
+    width: 32px;
+    height: 32px;
+    border: 1px solid black;
+    display: inline-grid;
 }
 
 div#leftbarcontainer {
-	width: 225px;
-	min-height: 250px;
-	float: left;
-	margin-top: 2.5px;
+    width: 225px;
+    min-height: 250px;
+    float: left;
+    margin-top: 2.5px;
 }
 
 .toolbarTopToggleItem {
-	height: 25px;
-	display: block;
-	line-height: 25px;
-	color: #1c1c1c;
-	font-size: small;
-	float: left;
+    height: 25px;
+    display: block;
+    line-height: 25px;
+    color: #1c1c1c;
+    font-size: small;
+    float: left;
 }
 
 .toolbarTopToggleContainer {
-	width: 225px;
-	background-color: #aaaaaa;
-	height: 25px;
-	text-align: center;
-	float: left;
+    width: 225px;
+    background-color: #aaaaaa;
+    height: 25px;
+    text-align: center;
+    float: left;
 }
 
 div#toolbar_container_1_1_2 {
-	width: 25px;
-	float: left;
-	background-color: red;
-	height: 25px;
-	text-align: center;
+    width: 25px;
+    float: left;
+    background-color: red;
+    height: 25px;
+    text-align: center;
 }
 
 div#toolbar_container_1_2 {
-	background-color: #2d2d2d;
-	width: 225px;
-	height: 250px;
+    background-color: #2d2d2d;
+    width: 225px;
+    height: 250px;
 }
 
 div#toolbar_container_1_2_1 {
-	box-sizing: border-box;
-	width: 200px;
-	background-color: #e6e6e6;
-	min-height: 200px;
-	float: left;
-	border: 1px solid #cfcfcf;
+    box-sizing: border-box;
+    width: 200px;
+    background-color: #e6e6e6;
+    min-height: 200px;
+    float: left;
+    border: 1px solid #cfcfcf;
 }
 
 .mainButtonItem {
-	box-sizing: border-box;
-	width: 49.5px;
-	height: 49.5px;
-	float: left;
-	background-color: #6060601f;
-	display: inline-block;
-	vertical-align: middle;
-	background-image: url(https://user-images.githubusercontent.com/6969514/70328473-107b2400-1874-11ea-88ff-dcca67fd98a9.png);
-	line-height: 50px;
-	text-align: center;
-	border: 1px solid #252525;
-	color: #ffffffed;
-	background-size: 36px;
-	font-size: x-small;
-	background-position: center;
-	background-repeat: no-repeat;
-	overflow: hidden;
+    box-sizing: border-box;
+    width: 49.5px;
+    height: 49.5px;
+    float: left;
+    background-color: #6060601f;
+    display: inline-block;
+    vertical-align: middle;
+    background-image: url(https://user-images.githubusercontent.com/6969514/70328473-107b2400-1874-11ea-88ff-dcca67fd98a9.png);
+    line-height: 50px;
+    text-align: center;
+    border: 1px solid #252525;
+    color: #ffffffed;
+    background-size: 36px;
+    font-size: x-small;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
 }
 
 div#toolbar_container_1_2_2 {
-	width: 25px;
-	float: left;
-	height: 200px;
-	background-color: #c1c1c1;
-	box-sizing: border-box;
-	border-right: 1px solid #373737;
+    width: 25px;
+    float: left;
+    height: 200px;
+    background-color: #c1c1c1;
+    box-sizing: border-box;
+    border-right: 1px solid #373737;
 }
 
 .rightToggleButton {
-	background-image: url(https://www.corasupport.org/wp-content/uploads/2015/11/placeholder-icon-300x300-v1b.png);
-	background-size: 20px;
-	background-position: center;
-	background-repeat: no-repeat;
-	cursor: pointer;
-	font-size: small;
-	background-color: #a3a3a3;
-	width: 23px;
-	height: 23px;
-	text-align: center;
-	line-height: 25px;
-	border: 1px solid #2d2d2d;
-	border-bottom: 1px solid #565656;
+    background-image: url(https://www.corasupport.org/wp-content/uploads/2015/11/placeholder-icon-300x300-v1b.png);
+    background-size: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    font-size: small;
+    background-color: #a3a3a3;
+    width: 23px;
+    height: 23px;
+    text-align: center;
+    line-height: 25px;
+    border: 1px solid #2d2d2d;
+    border-bottom: 1px solid #565656;
 }
 
 div#toolbar_container_1_2_0 {
-	background-color: #707070;
-	font-size: small;
-	color: white;
-	line-height: 25px;
-	font-size: xx-small;
+    background-color: #707070;
+    font-size: small;
+    color: white;
+    line-height: 25px;
+    font-size: xx-small;
 }
 
 .mainButtonItem:hover {
-	background-color: #252525;
-	transition: 0.2s;
-	cursor: pointer;
-	border: 1px solid #818181;
+    background-color: #252525;
+    transition: 0.2s;
+    cursor: pointer;
+    border: 1px solid #818181;
 }
 
 .toptoggleitem {
-	background-color: #d1d1d1;
-	margin: 3px 4px 0px 0px;
-	height: 20px;
-	padding: 0px 5px;
-	line-height: 20px;
-	border: 1px solid #aaaaaa;
+    background-color: #d1d1d1;
+    margin: 3px 4px 0px 0px;
+    height: 20px;
+    padding: 0px 5px;
+    line-height: 20px;
+    border: 1px solid #aaaaaa;
 }
 
 .toptoggleitem.selected {
-	background-color: #2b3d50;
-	border-color: #2b3d50;
-	color: #cfd8dc;
+    background-color: #2b3d50;
+    border-color: #2b3d50;
+    color: #cfd8dc;
 }
 
 .rightToggleButton:hover {
-	background-color: #565656;
-	transition: 0.5s;
-	color: #ffffff;
-	border: 1px solid #cecece;
+    background-color: #565656;
+    transition: 0.5s;
+    color: #ffffff;
+    border: 1px solid #cecece;
 }
 
 .rightToggleButton:focus {
-	background-color: #ffc107;
-	color: black;
-	text-shadow: 0px 0px 4px black;
+    background-color: #ffc107;
+    color: black;
+    text-shadow: 0px 0px 4px black;
 }
 
 .toptoggleitem:hover {
-	border-color: #ffc107;
-	cursor: pointer;
+    border-color: #ffc107;
+    cursor: pointer;
 }
 
 div#NoneTabbedToolBoxText {
-	position: relative;
-	top: 50%;
-	transform: rotate(-90deg);
-	font-size: small;
-	line-height: 25px;
-	text-shadow: 0px 0px 4px #000000;
+    position: relative;
+    top: 50%;
+    transform: rotate(-90deg);
+    font-size: small;
+    line-height: 25px;
+    text-shadow: 0px 0px 4px #000000;
 }
 
 span#hint {
-	position: relative;
-	left: 30px;
-	padding: 0px 4px;
-	border-radius: 5px;
-	width: fit-content;
-	display: none;
-	background-color: #00000066;
-	border: 1px solid #565656;
-	opacity: 0;
+    position: relative;
+    left: 30px;
+    padding: 0px 4px;
+    border-radius: 5px;
+    width: fit-content;
+    display: none;
+    background-color: #00000066;
+    border: 1px solid #565656;
+    opacity: 0;
 }
 
 div.rightToggleButton:hover span#hint {
-	opacity: 1;
-	display: block;
+    opacity: 1;
+    display: block;
 }
 
 .canvas_container {
-	position: fixed;
-	top: 30px;
-	left: 225px;
-	width: 100%;
-	height: 100%;
+    position: fixed;
+    top: 30px;
+    left: 225px;
+    width: 100%;
+    height: 100%;
 }
 
 .canvas_container_inner {
-	margin: 3px;
+    margin: 3px;
 }
 
 .canvas_tab_container {
-	background-color: #aaaaaa;
-	height: 25px;
+    background-color: #aaaaaa;
+    height: 25px;
 }
 
 h1 {
-	margin: 0px;
+    margin: 0px;
 }
 
 div#somethingLater {
-	width: 100%;
-	height: 1000px;
-	background-color: #666666;
-	overflow: scroll;
+    width: 100%;
+    height: 1000px;
+    background-color: #666666;
+    overflow: scroll;
 }
 
 div.mainButtonItem:hover span#hint {
-	opacity: 1;
-	display: block;
+    opacity: 1;
+    display: block;
 }
 
 textarea#script_body_editor {
-	height: 100vh;
+    height: 100vh;
 }
 
 div#codeBody {
-	height: 100vh;
+    height: 100vh;
 }
 
 .toptoggleitem.selected {
-	transition: 2s;
+    transition: 2s;
 }
 
 .toptoggleitem.selected:hover {
-	transition: 2s;
-	min-height: 36%;
+    transition: 2s;
+    min-height: 36%;
 }

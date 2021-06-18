@@ -4,6 +4,9 @@
 .pnp.js
 
 /src/Canvas.js
+/src/Grid.js
+/src/App.js
+
 # testing
 /coverage
 

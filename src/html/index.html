@@ -1,122 +1,122 @@
 {% extends "./base.html" %} {% block title %}Home{% endblock %} {% block content %} {% if
 user.is_authenticated %}
 <style>
-	.table-sm td,
-	.table-sm th {
-		padding: 0px;
-	}
+    .table-sm td,
+    .table-sm th {
+        padding: 0px;
+    }
 </style>
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-12" style="text-align: center">
-			<div class="card text-center" style="border: none">
-				<div class="card-body">
-					<img
-						src="https://user-images.githubusercontent.com/6969514/70050008-effb6180-1608-11ea-93f4-8784faa3bc9c.png"
-					/>
-					<h5 class="card-title" style="font-size: 30px">Integrate.Model.Optimize</h5>
-					<p class="card-text">
-						Integrate your building intelligence modelling on the cloud
-					</p>
-					<button
-						type="button"
-						class="btn btn-primary btn-lg"
-						style="
-							text-align: center;
-							font-family: monospace;
-							font-weight: bold;
-							color: #fff;
-							background-color: #da4100;
-							border-color: #da4100;
-						"
-						id="startNewDefinition"
-						onclick="window.location.href='/def'"
-					>
-						Start new definition
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<table class="table table-sm">
-			<thead>
-				<tr>
-					<th scope="col">#</th>
-					<th scope="col">Definition Name</th>
-					<th scope="col">Last updated</th>
-					<th scope="col">owner</th>
-					<th scope="col">edit</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for k, definition in definitions.items %}
-				<tr>
-					<th scope="row">{{ k }}</th>
-					<td>
-						<a href="{% url 'def' %}{{definition.definition_guid}}"
-							>{{ definition.definition_name}}</a
-						>
-					</td>
-					<td>{{ definition.definition_last_update}}</td>
-					<td>{{ definition.definition_owner}}</td>
-					<td>
-						<a
-							href="#"
-							onclick="proceedToDelete(`{{definition.definition_name}}`,`{% url 'def_del' def_key=definition.definition_guid %}`)"
-							>delete</a
-						>
-					</td>
-				</tr>
+    <div class="row">
+        <div class="col-12" style="text-align: center">
+            <div class="card text-center" style="border: none">
+                <div class="card-body">
+                    <img
+                        src="https://user-images.githubusercontent.com/6969514/70050008-effb6180-1608-11ea-93f4-8784faa3bc9c.png"
+                    />
+                    <h5 class="card-title" style="font-size: 30px">Integrate.Model.Optimize</h5>
+                    <p class="card-text">
+                        Integrate your building intelligence modelling on the cloud
+                    </p>
+                    <button
+                        type="button"
+                        class="btn btn-primary btn-lg"
+                        style="
+                            text-align: center;
+                            font-family: monospace;
+                            font-weight: bold;
+                            color: #fff;
+                            background-color: #da4100;
+                            border-color: #da4100;
+                        "
+                        id="startNewDefinition"
+                        onclick="window.location.href='/def'"
+                    >
+                        Start new definition
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Definition Name</th>
+                    <th scope="col">Last updated</th>
+                    <th scope="col">owner</th>
+                    <th scope="col">edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for k, definition in definitions.items %}
+                <tr>
+                    <th scope="row">{{ k }}</th>
+                    <td>
+                        <a href="{% url 'def' %}{{definition.definition_guid}}"
+                            >{{ definition.definition_name}}</a
+                        >
+                    </td>
+                    <td>{{ definition.definition_last_update}}</td>
+                    <td>{{ definition.definition_owner}}</td>
+                    <td>
+                        <a
+                            href="#"
+                            onclick="proceedToDelete(`{{definition.definition_name}}`,`{% url 'def_del' def_key=definition.definition_guid %}`)"
+                            >delete</a
+                        >
+                    </td>
+                </tr>
 
-				{% endfor%}
-			</tbody>
-		</table>
-	</div>
+                {% endfor%}
+            </tbody>
+        </table>
+    </div>
 </div>
 <script>
-	function proceedToDelete(name, url) {
-		if (confirm('Are you sure you need to delete ' + name + ' ? ')) {
-			window.location.href = url;
-		} else {
-			console.log('canceled delete defininton. ');
-		}
-	}
-	$('button#startNewDefinition').on('click', function () {
-		//console.log("Ok, you should now start a new definition.")
-	});
+    function proceedToDelete(name, url) {
+        if (confirm('Are you sure you need to delete ' + name + ' ? ')) {
+            window.location.href = url;
+        } else {
+            console.log('canceled delete defininton. ');
+        }
+    }
+    $('button#startNewDefinition').on('click', function () {
+        //console.log("Ok, you should now start a new definition.")
+    });
 </script>
 {% else %}
 
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-12" style="text-align: center">
-			<div class="card text-center" style="border: none">
-				<div class="card-body">
-					<h5 class="card-title" style="font-size: 56px">Integrate.Model.Optimize</h5>
-					<p class="card-text">
-						Integrate your building intelligence modelling on the cloud
-					</p>
-					<button
-						type="button"
-						class="btn btn-primary btn-lg"
-						style="
-							text-align: center;
-							font-family: monospace;
-							font-weight: bold;
-							color: #fff;
-							background-color: #da4100;
-							border-color: #da4100;
-						"
-						id="startNewDefinition"
-						onclick="window.location.href='accounts/login/'"
-					>
-						Login
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-12" style="text-align: center">
+            <div class="card text-center" style="border: none">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-size: 56px">Integrate.Model.Optimize</h5>
+                    <p class="card-text">
+                        Integrate your building intelligence modelling on the cloud
+                    </p>
+                    <button
+                        type="button"
+                        class="btn btn-primary btn-lg"
+                        style="
+                            text-align: center;
+                            font-family: monospace;
+                            font-weight: bold;
+                            color: #fff;
+                            background-color: #da4100;
+                            border-color: #da4100;
+                        "
+                        id="startNewDefinition"
+                        onclick="window.location.href='accounts/login/'"
+                    >
+                        Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endif %} {% endblock %}

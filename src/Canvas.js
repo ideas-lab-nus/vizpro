@@ -1,20 +1,22 @@
 import React from 'react';
 import ScriptTag from 'react-script-tag';
-import {globalVars} from './js/constants.js';
-import {onMaximizeClick, onMinimizeClick} from './js/layout.js';
-import {CreateNewSlider} from './js/slider.js';
-import {CreateNewOptionList} from './js/optionlist.js';
-import {CreateNewPanel} from './js/panel.js';
-import {CreateNewToggle} from './js/toggle.js';
-import {CreateNewFileUpload, handleFileUpload} from './js/fileUpload.js';
-import {CreateNewListView} from './js/listView.js';
-import {manageCanvas} from './js/layout.js'; 
-import {manageGrid} from './js/mainGrid.js';
-import {dummyToSetState} from './js/functions.js';
+import { globalVars } from './js/constants.js';
+import { onMaximizeClick, onMinimizeClick } from './js/layout.js';
+import { CreateNewSlider } from './js/slider.js';
+import { CreateNewOptionList } from './js/optionlist.js';
+import { CreateNewPanel } from './js/panel.js';
+import { CreateNewToggle } from './js/toggle.js';
+import { CreateNewFileUpload, handleFileUpload } from './js/fileUpload.js';
+import { CreateNewListView } from './js/listView.js';
+import { manageCanvas } from './js/layout.js'; 
+import { manageGrid } from './js/mainGrid.js';
+import { dummyToSetState } from './js/functions.js';
 import Grid from './Grid';      
-import {handleComponentSelection, handleTheClickOnAllComponents, 
-    handleEdgeInitialization, handleDoubleClick} from './js/handle.js';
-import {addGenericComponentIcon, addRightToggleButton} from './js/leftPropertyBar.js';
+import { handleComponentSelection, 
+         handleTheClickOnAllComponents, 
+         handleEdgeInitialization, 
+         handleDoubleClick } from './js/handle.js';
+import { addGenericComponentIcon, addRightToggleButton } from './js/leftPropertyBar.js';
 import { saveData, loadData, clearData } from './js/saveAndLoadData.js';
 
 export default class Canvas extends React.Component {
