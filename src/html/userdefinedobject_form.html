@@ -1,354 +1,421 @@
-{% extends "./base.html" %}
-
-{% block title %}Add new User Defined Object{% endblock %}
-
-{% block content %}
+{% extends "./base.html" %} {% block title %}Add new User Defined Object{% endblock %} {% block
+content %}
 <style>
-        div#udo_container {
-            width: 53%;
-            background-color: #f9f9f9;
-            margin: 5px auto;
-            padding: 12px;
-            height: max-content;
-            border-radius: 3px;
-        }
-        .udo_fieldName {
-            width: 36%;
-            float: left;
-            /* background-color: green; */
-            height: 23px;
-        }
-        
-        .udo_filed {
-            width: 59%;
-            float: left;
-        }
-        
-        .udo_filed input {
-            border-radius: 3px;
-            width: 100%;
-            border: 1px solid gainsboro;
-        }
-        
-        .udo_filed textarea {
-    height: 69px;
-    border: 1px solid gainsboro;
-    border-radius: 5px;
-    width: 100%;
-    margin: 1px 0px 0px 0px;
-}
-.col{
-    /* border:1px solid black; */
-}
+    div#udo_container {
+        width: 53%;
+        background-color: #f9f9f9;
+        margin: 5px auto;
+        padding: 12px;
+        height: max-content;
+        border-radius: 3px;
+    }
+    .udo_fieldName {
+        width: 36%;
+        float: left;
+        /* background-color: green; */
+        height: 23px;
+    }
 
+    .udo_filed {
+        width: 59%;
+        float: left;
+    }
 
-li.colorBox {
-    float: left;
-    border-radius: 4px;
-    margin: 1px;
-    border: 1px solid gray;
-    width: 25px;
-    height: 25px;
-    list-style: none;
-    cursor:pointer;
-}
+    .udo_filed input {
+        border-radius: 3px;
+        width: 100%;
+        border: 1px solid gainsboro;
+    }
 
-input#id_component_fill {
-    border-radius: 5px;
-    border: 1px solid gray;
-    padding: 0px 5px;
-}
+    .udo_filed textarea {
+        height: 69px;
+        border: 1px solid gainsboro;
+        border-radius: 5px;
+        width: 100%;
+        margin: 1px 0px 0px 0px;
+    }
+    .col {
+        /* border:1px solid black; */
+    }
 
-div#inLabel {
-    width: 115px;
-    float: left;
-}
-        
-        div#udo_basicForm {
-            width: 50%;
-        }
-        </style>
+    li.colorBox {
+        float: left;
+        border-radius: 4px;
+        margin: 1px;
+        border: 1px solid gray;
+        width: 25px;
+        height: 25px;
+        list-style: none;
+        cursor: pointer;
+    }
+
+    input#id_component_fill {
+        border-radius: 5px;
+        border: 1px solid gray;
+        padding: 0px 5px;
+    }
+
+    div#inLabel {
+        width: 115px;
+        float: left;
+    }
+
+    div#udo_basicForm {
+        width: 50%;
+    }
+</style>
 
 <form action="" method="post">
-{% csrf_token %}
-<div class="container" style="    background-color: #f8f9fa; margin: 4px auto;border-radius: 5px; padding:5px;
-border: 1px solid #e8e8e8;">
+    {% csrf_token %}
+    <div
+        class="container"
+        style="
+            background-color: #f8f9fa;
+            margin: 4px auto;
+            border-radius: 5px;
+            padding: 5px;
+            border: 1px solid #e8e8e8;
+        "
+    >
         <div class="row justify-content-md-center">
-                <div class="col col-lg-10">
-                        <h1>Create new User Defined Object</h1>
-                </div>
-        </div>
-        <hr>
-        <div class="row justify-content-md-center">
-                <div class="col col-lg-10">
-                        <h2>Basic data</h2>
-
-                </div>
+            <div class="col col-lg-10">
+                <h1>Create new User Defined Object</h1>
             </div>
-              {% for field in form %}
-              {% if field != form.component_inputs and field != form.component_outputs and field != form.component_fill%}
-              <div class="row justify-content-md-center">
-                    
-              <div class="col col-lg-3">{{ field.label_tag }}</div> <div class="col col-lg-5">{{ field }}</div><div class="col col-lg-2">{{ field.errors }}</div>
-              {% if field.help_text %}
-                  <p class="help">{{ field.help_text|safe }}</p>
-                  {% endif %}
-                </div>
-                {% endif %}
-              {% endfor %}
+        </div>
+        <hr />
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-10">
+                <h2>Basic data</h2>
+            </div>
+        </div>
+        {% for field in form %} {% if field != form.component_inputs and field !=
+        form.component_outputs and field != form.component_fill%}
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-3">{{ field.label_tag }}</div>
+            <div class="col col-lg-5">{{ field }}</div>
+            <div class="col col-lg-2">{{ field.errors }}</div>
+            {% if field.help_text %}
+            <p class="help">{{ field.help_text|safe }}</p>
+            {% endif %}
+        </div>
+        {% endif %} {% endfor %}
 
-              <div style="display:none">{{ form.component_inputs }}</div>
-              <div style="display:none">{{ form.component_outputs }}</div>
-              <hr>
-              <div class="row justify-content-md-center">
-                    <div class="col col-lg-5">
-                            <div id="colorInput">color : {{ form.component_fill }}</div>
-                    </div>
-                    <div class="col col-lg-5">
-                            <div id="selectColorFromList"></div>
-                    </div>
-              </div>
-              <hr>
-              <div class="row justify-content-md-center">
-                    <div class="col col-lg-10">
-                            <h2>Inputs/Outputs</h2>
-                    </div>
-              </div>
-              
-              <div id="somethingToaddInputsOutputs">
+        <div style="display: none">{{ form.component_inputs }}</div>
+        <div style="display: none">{{ form.component_outputs }}</div>
+        <hr />
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-5">
+                <div id="colorInput">color : {{ form.component_fill }}</div>
+            </div>
+            <div class="col col-lg-5">
+                <div id="selectColorFromList"></div>
+            </div>
+        </div>
+        <hr />
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-10">
+                <h2>Inputs/Outputs</h2>
+            </div>
+        </div>
 
-              </div>
-              <div class="row justify-content-md-center" >
-                    <div class="col col-lg-10">
-                            <input type="submit" value="Save" class="btn btn-primary" />
-                    </div>
-              </div>
+        <div id="somethingToaddInputsOutputs"></div>
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-10">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
 
-      </div>
-    </form>
+<script>
+    tempinputs = {};
+    tempoutputs = {};
 
-    <script>
-
-        tempinputs = {}
-        tempoutputs = {}
-
-Object.size = function(obj) {
-    var size = 0, key;
-    for (key in obj) {
-        if (obj.hasOwnProperty(key)) size++;
-    }
-    return size;
-};
+    Object.size = function (obj) {
+        var size = 0,
+            key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    };
 
     onChangeValueofInputsOutputs();
 
-
-
-    $("input#id_component_n_inputs").on("change", function(e){
-        onChangeValueofInputsOutputs()
+    $('input#id_component_n_inputs').on('change', function (e) {
+        onChangeValueofInputsOutputs();
     });
-    $("input#id_component_n_outputs").on("change", function(e){
-        onChangeValueofInputsOutputs()
+    $('input#id_component_n_outputs').on('change', function (e) {
+        onChangeValueofInputsOutputs();
     });
 
     aacolors = [
-        "#1abc9c",
-        "#2ecc71",
-        "#3498db",
-        "#9b59b6",
-        "#34495e",
-        "#16a085",
-        "#27ae60",
-        "#2980b9",
-        "#8e44ad",
-        "#2c3e50",
-        "#f1c40f",
-        "#e67e22",
-        "#e74c3c",
-        "#ecf0f1",
-        "#95a5a6",
-        "#f39c12",
-        "#d35400",
-        "#c0392b",
-        "#bdc3c7",
-        "#7f8c8d",
-        "#324D5C",
-        "#46B39D",
-        "#F0CA4D",
-        "#E37B40",
-        "#DE4949",
-        "#2C3E50",
-        "#E74C3C",
-        "#ECF0F1",
-        "#3498DB",
-        "#2980B9",
-        "#8A867F",
-        "#FFE8B7",
-        "#FFBE87",
-        "#E38A74",
-        "#BF5967",
-        "#7FA696",
-        "#BA7670",
-        "#2A2B4A",
-        "#F68668",
-        "#EC6A51"
-    ]
+        '#1abc9c',
+        '#2ecc71',
+        '#3498db',
+        '#9b59b6',
+        '#34495e',
+        '#16a085',
+        '#27ae60',
+        '#2980b9',
+        '#8e44ad',
+        '#2c3e50',
+        '#f1c40f',
+        '#e67e22',
+        '#e74c3c',
+        '#ecf0f1',
+        '#95a5a6',
+        '#f39c12',
+        '#d35400',
+        '#c0392b',
+        '#bdc3c7',
+        '#7f8c8d',
+        '#324D5C',
+        '#46B39D',
+        '#F0CA4D',
+        '#E37B40',
+        '#DE4949',
+        '#2C3E50',
+        '#E74C3C',
+        '#ECF0F1',
+        '#3498DB',
+        '#2980B9',
+        '#8A867F',
+        '#FFE8B7',
+        '#FFBE87',
+        '#E38A74',
+        '#BF5967',
+        '#7FA696',
+        '#BA7670',
+        '#2A2B4A',
+        '#F68668',
+        '#EC6A51'
+    ];
 
-    var coldiv = d3.select("#selectColorFromList")
-    
+    var coldiv = d3.select('#selectColorFromList');
+
     aacolors.forEach(element => {
-        coldiv.append("li")
-        .attr("style", function(){
-            return 'background-color:'+element+''
-        }).html("&nbsp;&nbsp;&nbsp;").attr("class", "colorBox")
-        .on("click", ()=>
-        {
-           $("input#id_component_fill").val(element);
-           d3.select("input#id_component_fill").style("background-color", element)
-        });
+        coldiv
+            .append('li')
+            .attr('style', function () {
+                return 'background-color:' + element + '';
+            })
+            .html('&nbsp;&nbsp;&nbsp;')
+            .attr('class', 'colorBox')
+            .on('click', () => {
+                $('input#id_component_fill').val(element);
+                d3.select('input#id_component_fill').style('background-color', element);
+            });
     });
 
-    function onChangeValueofInputsOutputs()
-    {
-        numInp = $("input#id_component_n_inputs").val();
-        numOut = $("input#id_component_n_outputs").val();
+    function onChangeValueofInputsOutputs() {
+        numInp = $('input#id_component_n_inputs').val();
+        numOut = $('input#id_component_n_outputs').val();
 
-        var row = d3.select("#somethingToaddInputsOutputs").html("").append("div")
-            .attr("class","row justify-content-md-center");
+        var row = d3
+            .select('#somethingToaddInputsOutputs')
+            .html('')
+            .append('div')
+            .attr('class', 'row justify-content-md-center');
         for (let i = 0; i < Math.max(numInp, numOut); i++) {
+            var inpcol = row
+                .append('div')
+                .attr('class', 'col col-lg-5')
+                .attr('id', 'def_inp' + i.toString())
+                .attr('id_num', i);
 
-            var inpcol = row.append("div")
-            .attr("class","col col-lg-5")
-            .attr("id", "def_inp"+i.toString())
-            .attr("id_num", i);
-            
-
-            var oupcol = row.append("div")
-            .attr("class","col col-lg-5")
-            .attr("id", "def_oup"+i.toString())
-            .attr("id_num", i);
-
+            var oupcol = row
+                .append('div')
+                .attr('class', 'col col-lg-5')
+                .attr('id', 'def_oup' + i.toString())
+                .attr('id_num', i);
 
             // //console.log("outputs : ")
             // //console.log(tempoutputs)
             // //console.log("inputs : ")
             // //console.log(tempinputs)
 
-            if(i < Object.size(tempinputs) && i < numInp && tempinputs[i]!=undefined)
-            {
-                inpcol.html(()=>
-                {
-                    text = '<h5>Input '+(i+1)+'</h5>'+
-                           '<div id="inLabel">Input name:</div><input class="defInput '+i+' name" type="text" id="inpName_'+i.toString()+'" value="'+tempinputs[i].name+'"><br>'+
-                           '<div id="inLabel">short name:</div> <input class="defInput '+i+' shortName" type="text" id="inpSName_'+i.toString()+'" value="'+tempinputs[i].shortName+'"><br>'+
-                           '<div id="inLabel">Descriptoin:</div> <input class="defInput '+i+' desc" type="text" id="inpSDesc_'+i.toString()+'" value="'+tempinputs[i].desc+'"><br>'+
-                           '<div id="inLabel">Input Type:</div> <Select class="defInput '+i+' type" id="inpType_'+i.toString()+'>'+
-                                '<option value="int">int</option>'+
-                                '<option value="float">float</option>'+
-                                '<option value="double">double</option>'+
-                                '<option value="str">str</option>'+
-                                '<option value="bool">bool</option>'+
-                                '<option value="list">list</option>'+
-                                '<option value="dict">dict</option>'+
-                                '<option value="np_array">np_array</option>'+
-                                '<option value="generic">generic</option>'+
-                            '</select><br>'+
-                            '<div id="inLabel">Default vlaue:</div> <input class="defInput '+i+' default_value" type="text" id="inpDefValue_'+i.toString()+'" value="'+tempinputs[i].default_value+'"><hr>'
-                            ;
+            if (i < Object.size(tempinputs) && i < numInp && tempinputs[i] != undefined) {
+                inpcol.html(() => {
+                    text =
+                        '<h5>Input ' +
+                        (i + 1) +
+                        '</h5>' +
+                        '<div id="inLabel">Input name:</div><input class="defInput ' +
+                        i +
+                        ' name" type="text" id="inpName_' +
+                        i.toString() +
+                        '" value="' +
+                        tempinputs[i].name +
+                        '"><br>' +
+                        '<div id="inLabel">short name:</div> <input class="defInput ' +
+                        i +
+                        ' shortName" type="text" id="inpSName_' +
+                        i.toString() +
+                        '" value="' +
+                        tempinputs[i].shortName +
+                        '"><br>' +
+                        '<div id="inLabel">Descriptoin:</div> <input class="defInput ' +
+                        i +
+                        ' desc" type="text" id="inpSDesc_' +
+                        i.toString() +
+                        '" value="' +
+                        tempinputs[i].desc +
+                        '"><br>' +
+                        '<div id="inLabel">Input Type:</div> <Select class="defInput ' +
+                        i +
+                        ' type" id="inpType_' +
+                        i.toString() +
+                        '>' +
+                        '<option value="int">int</option>' +
+                        '<option value="float">float</option>' +
+                        '<option value="double">double</option>' +
+                        '<option value="str">str</option>' +
+                        '<option value="bool">bool</option>' +
+                        '<option value="list">list</option>' +
+                        '<option value="dict">dict</option>' +
+                        '<option value="np_array">np_array</option>' +
+                        '<option value="generic">generic</option>' +
+                        '</select><br>' +
+                        '<div id="inLabel">Default vlaue:</div> <input class="defInput ' +
+                        i +
+                        ' default_value" type="text" id="inpDefValue_' +
+                        i.toString() +
+                        '" value="' +
+                        tempinputs[i].default_value +
+                        '"><hr>';
                     return text;
-                })
-            }else if(i < numInp)
-            {
-                inpcol.html(()=>
-                {
-                    if (tempinputs[i]==undefined)
-                        tempinputs[i]={}
-                    text = '<h5>Input '+(i+1)+'</h5>'+
-                           '<div id="inLabel">Input name:</div><input class="defInput '+i+' name" type="text" id="inpName_'+i.toString()+'" value=""><br>'+
-                           '<div id="inLabel">Short name:</div> <input class="defInput '+i+' shortName" type="text" id="inpSName_'+i.toString()+'" value=""><br>'+
-                           '<div id="inLabel">Descriptoin:</div> <input class="defInput '+i+' desc" type="text" id="inpSDesc_'+i.toString()+'" value=""><br>'+
-                           '<div id="inLabel">Input Type:</div> <Select class="defInput '+i+' type" id="inpType_'+i.toString()+'>'+
-                                '<option value="int">int</option>'+
-                                '<option value="float">float</option>'+
-                                '<option value="double">double</option>'+
-                                '<option value="str">str</option>'+
-                                '<option value="bool">bool</option>'+
-                                '<option value="list">list</option>'+
-                                '<option value="dict">dict</option>'+
-                                '<option value="np_array">np_array</option>'+
-                                '<option value="generic">generic</option>'+
-                            '</select><br>'+
-                            '<div id="inLabel">Default vlaue:</div> <input class="defInput '+i+' default_value" type="text" id="inpDefValue_'+i.toString()+'" value=""><hr>'
-                            ;
+                });
+            } else if (i < numInp) {
+                inpcol.html(() => {
+                    if (tempinputs[i] == undefined) tempinputs[i] = {};
+                    text =
+                        '<h5>Input ' +
+                        (i + 1) +
+                        '</h5>' +
+                        '<div id="inLabel">Input name:</div><input class="defInput ' +
+                        i +
+                        ' name" type="text" id="inpName_' +
+                        i.toString() +
+                        '" value=""><br>' +
+                        '<div id="inLabel">Short name:</div> <input class="defInput ' +
+                        i +
+                        ' shortName" type="text" id="inpSName_' +
+                        i.toString() +
+                        '" value=""><br>' +
+                        '<div id="inLabel">Descriptoin:</div> <input class="defInput ' +
+                        i +
+                        ' desc" type="text" id="inpSDesc_' +
+                        i.toString() +
+                        '" value=""><br>' +
+                        '<div id="inLabel">Input Type:</div> <Select class="defInput ' +
+                        i +
+                        ' type" id="inpType_' +
+                        i.toString() +
+                        '>' +
+                        '<option value="int">int</option>' +
+                        '<option value="float">float</option>' +
+                        '<option value="double">double</option>' +
+                        '<option value="str">str</option>' +
+                        '<option value="bool">bool</option>' +
+                        '<option value="list">list</option>' +
+                        '<option value="dict">dict</option>' +
+                        '<option value="np_array">np_array</option>' +
+                        '<option value="generic">generic</option>' +
+                        '</select><br>' +
+                        '<div id="inLabel">Default vlaue:</div> <input class="defInput ' +
+                        i +
+                        ' default_value" type="text" id="inpDefValue_' +
+                        i.toString() +
+                        '" value=""><hr>';
                     return text;
-                })
+                });
             }
 
-            if(i<Object.size(tempoutputs) && i < numOut && tempoutputs[i]!=undefined)
-            {
-                oupcol.html(()=>
-                {
-
-                    text = '<h5>Output '+(i+1)+'</h5>'+
-                           '<div id="inLabel">Output name:</div><input class="defOutput '+i+' name" type="text" id="inpName_'+i.toString()+'" value="'+tempoutputs[i].name+'"><br>'+
-                           '<div id="inLabel">short name:</div> <input class="defOutput '+i+' shortName" type="text" id="inpSName_'+i.toString()+'" value="'+tempoutputs[i].shortName+'"><br>'+
-                           '<div id="inLabel">Descriptoin:</div> <input class="defOutput '+i+' desc" type="text" id="inpSDesc_'+i.toString()+'" value="'+tempoutputs[i].desc+'"><br>'+
-                           '<hr>';
+            if (i < Object.size(tempoutputs) && i < numOut && tempoutputs[i] != undefined) {
+                oupcol.html(() => {
+                    text =
+                        '<h5>Output ' +
+                        (i + 1) +
+                        '</h5>' +
+                        '<div id="inLabel">Output name:</div><input class="defOutput ' +
+                        i +
+                        ' name" type="text" id="inpName_' +
+                        i.toString() +
+                        '" value="' +
+                        tempoutputs[i].name +
+                        '"><br>' +
+                        '<div id="inLabel">short name:</div> <input class="defOutput ' +
+                        i +
+                        ' shortName" type="text" id="inpSName_' +
+                        i.toString() +
+                        '" value="' +
+                        tempoutputs[i].shortName +
+                        '"><br>' +
+                        '<div id="inLabel">Descriptoin:</div> <input class="defOutput ' +
+                        i +
+                        ' desc" type="text" id="inpSDesc_' +
+                        i.toString() +
+                        '" value="' +
+                        tempoutputs[i].desc +
+                        '"><br>' +
+                        '<hr>';
                     return text;
-                })
-            }else if(i<numOut)
-            {
-                oupcol.html(()=>
-                {
-                    if (tempoutputs[i]==undefined)
-                        tempoutputs[i]={}
+                });
+            } else if (i < numOut) {
+                oupcol.html(() => {
+                    if (tempoutputs[i] == undefined) tempoutputs[i] = {};
 
-                    text = '<h5>Output '+(i+1)+'</h5>'+
-                           '<div id="inLabel">Input name:</div><input class="defOutput '+i+' name" type="text" id="inpName_'+i.toString()+'" value=""><br>'+
-                           '<div id="inLabel">Short name:</div> <input class="defOutput '+i+' shortName" type="text" id="inpSName_'+i.toString()+'" value=""><br>'+
-                           '<div id="inLabel">Descriptoin:</div> <input class="defOutput '+i+' desc" type="text" id="inpSDesc_'+i.toString()+'" value=""><br>'+
-                           '<hr>';
+                    text =
+                        '<h5>Output ' +
+                        (i + 1) +
+                        '</h5>' +
+                        '<div id="inLabel">Input name:</div><input class="defOutput ' +
+                        i +
+                        ' name" type="text" id="inpName_' +
+                        i.toString() +
+                        '" value=""><br>' +
+                        '<div id="inLabel">Short name:</div> <input class="defOutput ' +
+                        i +
+                        ' shortName" type="text" id="inpSName_' +
+                        i.toString() +
+                        '" value=""><br>' +
+                        '<div id="inLabel">Descriptoin:</div> <input class="defOutput ' +
+                        i +
+                        ' desc" type="text" id="inpSDesc_' +
+                        i.toString() +
+                        '" value=""><br>' +
+                        '<hr>';
 
                     return text;
-                })
+                });
             }
-            
-
-            
         }
 
-        d3.selectAll("input.defInput")
-        .on("focusout", function()
-        {
+        d3.selectAll('input.defInput').on('focusout', function () {
             // //console.log(this.classList[0])
-                tempinputs[this.classList[1]][this.classList[2]] = $(this).val();
-                $("textarea#id_component_inputs").text(JSON.stringify(tempinputs));
-        })
+            tempinputs[this.classList[1]][this.classList[2]] = $(this).val();
+            $('textarea#id_component_inputs').text(JSON.stringify(tempinputs));
+        });
 
-        d3.selectAll("Select.defInput")
-        .on("focusout", function()
-        {
-                tempinputs[this.classList[1]][this.classList[2]] = this.options[this.options.selectedIndex].text;
-                $("textarea#id_component_inputs").text(JSON.stringify(tempinputs));
-        })
+        d3.selectAll('Select.defInput').on('focusout', function () {
+            tempinputs[this.classList[1]][this.classList[2]] =
+                this.options[this.options.selectedIndex].text;
+            $('textarea#id_component_inputs').text(JSON.stringify(tempinputs));
+        });
 
-        d3.selectAll("input.defOutput")
-        .on("focusout", function()
-        {
+        d3.selectAll('input.defOutput').on('focusout', function () {
             // //console.log(this.classList[0])
-                tempoutputs[this.classList[1]][this.classList[2]] = $(this).val()
-                $("textarea#id_component_outputs").text(JSON.stringify(tempoutputs));
-        })
+            tempoutputs[this.classList[1]][this.classList[2]] = $(this).val();
+            $('textarea#id_component_outputs').text(JSON.stringify(tempoutputs));
+        });
 
-        d3.selectAll("Select.defInput")
-        .on("focusout", function()
-        {
-                tempoutputs[this.classList[1]][this.classList[2]] = this.options[this.options.selectedIndex].text;
-                $("textarea#id_component_outputs").text(JSON.stringify(tempoutputs));
-        })
+        d3.selectAll('Select.defInput').on('focusout', function () {
+            tempoutputs[this.classList[1]][this.classList[2]] =
+                this.options[this.options.selectedIndex].text;
+            $('textarea#id_component_outputs').text(JSON.stringify(tempoutputs));
+        });
     }
-    </script>
-
-
+</script>
 
 {% endblock %}

@@ -1,19 +1,15 @@
-{% extends "./base.html" %}
-
-{% block title %}Your Projects{% endblock %}
-
-{% block content %}
+{% extends "./base.html" %} {% block title %}Your Projects{% endblock %} {% block content %}
 <style>
     div#component_title {
         margin-left: 26px;
     }
-    
+
     span#component_title_color_span {
         padding: 1px;
         margin: 6px;
         color: white;
     }
-    
+
     div#categoryHead {
         border-radius: 5px;
         margin-top: 5px;
@@ -23,36 +19,45 @@
         font-size: x-small;
         width: fit-content;
     }
-    
+
     div#component_title {
-    margin-left: 4px;
-    margin-top: 2px;
-    font-size: x-small;
-    font-family: "ubuntu";
-}
+        margin-left: 4px;
+        margin-top: 2px;
+        font-size: x-small;
+        font-family: 'ubuntu';
+    }
 
     div#content_all_wrapper {
-    margin: 21px;
-}
+        margin: 21px;
+    }
 
-div#addNewUDO {
-    text-align: center;
-    padding: 9px;
-}
-    </style>
+    div#addNewUDO {
+        text-align: center;
+        padding: 9px;
+    }
+</style>
 <div id="addNewUDO">
-<a type="button" class="btn btn-secondary" href="{% url 'udo_add' %}">Create New User defined Object</a>
+    <a type="button" class="btn btn-secondary" href="{% url 'udo_add' %}"
+        >Create New User defined Object</a
+    >
 </div>
-    <div id="content_all_wrapper">
-{% for cat in cats %}
+<div id="content_all_wrapper">
+    {% for cat in cats %}
 
-<div id="categoryHead" style="background-color:{{cat.category_color}}">{{ cat }}</div>
-{% for obj in udo %}
-{% if obj.component_category == cat %}
-    <div id="component"> 
-    <!-- </div>style="width:50%; background-color:{{obj.component_fill}}"> -->
-    <div id="component_title"><span id="component_title_color_span" style="background-color:{{obj.component_fill}}; color:{{obj.component_fill}}; border:1px solid black;">|</span><span style="background-color: #d2d2d2;padding: 2px 7px;color: #101010;">{{obj.component_name}}</span></div>
-    <!-- {{obj.component_shortName}} <BR>
+    <div id="categoryHead" style="background-color:{{cat.category_color}}">{{ cat }}</div>
+    {% for obj in udo %} {% if obj.component_category == cat %}
+    <div id="component">
+        <!-- </div>style="width:50%; background-color:{{obj.component_fill}}"> -->
+        <div id="component_title">
+            <span
+                id="component_title_color_span"
+                style="background-color:{{obj.component_fill}}; color:{{obj.component_fill}}; border:1px solid black;"
+                >|</span
+            ><span style="background-color: #d2d2d2; padding: 2px 7px; color: #101010"
+                >{{obj.component_name}}</span
+            >
+        </div>
+        <!-- {{obj.component_shortName}} <BR>
     {{obj.component_description}} <BR>
     {{obj.component_n_inputs}} <BR>
     {{obj.component_n_outputs}} <BR>
@@ -60,13 +65,7 @@ div#addNewUDO {
     {{obj.component_outputs}} <BR>
     {{obj.component_fill}} <BR> -->
     </div>
-{% endif %}
-
-{% endfor %}
-
-
-{% endfor %}
-
+    {% endif %} {% endfor %} {% endfor %}
 </div>
 
 {% endblock %}

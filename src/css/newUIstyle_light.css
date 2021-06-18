@@ -18,7 +18,7 @@ text {
     pointer-events: none;
     user-select: none;
     font-size: small;
-    font-family: "ubuntu mono";
+    font-family: 'ubuntu mono';
 }
 
 .nodeLog {
@@ -50,7 +50,7 @@ rect:focus {
 }
 
 .nodetitle {
-    font-family: "ubuntu mono";
+    font-family: 'ubuntu mono';
     font-size: 13px;
     font-weight: bold;
     color: white;
@@ -212,7 +212,7 @@ div#BottomPropertiesBar {
 }
 
 a#changeTitleName {
-    color: #CFD8DC;
+    color: #cfd8dc;
     text-decoration: none;
 }
 
@@ -392,14 +392,14 @@ div#error {
 }
 
 foreignObject.textbody {
-    font-family: "ubuntu mono", monospace;
+    font-family: 'ubuntu mono', monospace;
     font-size: x-small;
     color: #4e4e4e;
     overflow: auto;
 }
 
 div#catHead {
-    font-family: "ubuntu";
+    font-family: 'ubuntu';
     font-size: small;
     width: fit-content;
     padding: 2px 6px;
@@ -437,7 +437,6 @@ rect.xyAnchor {
     height: 10px;
 }
 
-
 /* Track */
 
 ::-webkit-scrollbar-track {
@@ -445,7 +444,6 @@ rect.xyAnchor {
     -webkit-border-radius: 4px;
     border-radius: 4px;
 }
-
 
 /* Handle */
 
@@ -489,7 +487,7 @@ th {
 }
 
 div#propertiesBarContents {
-    font-family: "ubuntu mono";
+    font-family: 'ubuntu mono';
     font-size: small;
     font-weight: normal;
     color: #ffffff;
@@ -497,7 +495,7 @@ div#propertiesBarContents {
 }
 
 foreignObject.panel_status {
-    font-family: "ubuntu mono";
+    font-family: 'ubuntu mono';
     font-size: x-small;
     color: #afefff;
     text-shadow: 1px 1px 1px #3d3d3d73;
@@ -519,13 +517,13 @@ input.stringPnanel.Name {
     width: 100%;
     border: none;
     font-size: small;
-    font-family: "ubuntu";
+    font-family: 'ubuntu';
 }
 
 foreignObject.panel_edit_mode a {
     font-size: x-small;
     color: #bdbdbd;
-    font-family: "ubuntu mono";
+    font-family: 'ubuntu mono';
     position: relative;
     text-decoration: none;
     top: -8px;
@@ -533,7 +531,7 @@ foreignObject.panel_edit_mode a {
 
 div#numerical_slider_container {
     padding: 7px;
-    font-family: "ubuntu";
+    font-family: 'ubuntu';
 }
 
 div#help_t3 {
@@ -585,7 +583,7 @@ td {
 }
 
 span#errorTitle {
-    color: #E91E63;
+    color: #e91e63;
     font-weight: bold;
     background-color: #f4433638;
     border-radius: 3px;
@@ -623,7 +621,7 @@ input.inputFileUpload {
     margin: 2px 2px;
     background: #2b3d50;
     height: 20px;
-    font-family: "ubuntu mono";
+    font-family: 'ubuntu mono';
     color: white;
 }
 
@@ -634,7 +632,7 @@ input.submitFileUpload {
 }
 
 foreignObject.fileUpload_status {
-    font-family: "ubuntu mono";
+    font-family: 'ubuntu mono';
     font-size: x-small;
     color: #afefff;
     text-shadow: 1px 1px 1px #3d3d3d73;
@@ -685,7 +683,7 @@ select.listView {
     background-color: #f0f0f0;
     border: 1px solid gray;
     border-radius: 3px;
-    font-family: "ubuntu mono";
+    font-family: 'ubuntu mono';
     font-size: small;
 }
 
@@ -701,7 +699,7 @@ text.statusTextClass {
 
 .subcatheader {
     padding-left: 1em;
-    color: #FFCA28;
+    color: #ffca28;
     font-size: small;
     font-weight: bold;
 }
@@ -730,7 +728,7 @@ foreignObject#halign_box a {
 
 foreignObject#halign_box a:hover {
     text-decoration: none;
-    color: #FFC107;
+    color: #ffc107;
 }
 
 i.fa.fa-pause {
@@ -753,7 +751,7 @@ foreignObject#valign_box a {
 }
 
 foreignObject#valign_box a:hover {
-    color: #FFC107;
+    color: #ffc107;
 }
 
 a#valign_icon {
@@ -887,7 +885,7 @@ div#toolbar_container_1_2_0 {
 .toptoggleitem.selected {
     background-color: #2b3d50;
     border-color: #2b3d50;
-    color: #CFD8DC;
+    color: #cfd8dc;
 }
 
 .rightToggleButton:hover {
@@ -898,13 +896,13 @@ div#toolbar_container_1_2_0 {
 }
 
 .rightToggleButton:focus {
-    background-color: #FFC107;
+    background-color: #ffc107;
     color: black;
     text-shadow: 0px 0px 4px black;
 }
 
 .toptoggleitem:hover {
-    border-color: #FFC107;
+    border-color: #ffc107;
     cursor: pointer;
 }
 
@@ -930,7 +928,7 @@ span#hint {
 }
 
 div.rightToggleButton:hover span#hint {
-    opacity: 1.0;
+    opacity: 1;
     display: block;
 }
 
@@ -963,7 +961,7 @@ div#somethingLater {
 }
 
 div.mainButtonItem:hover span#hint {
-    opacity: 1.0;
+    opacity: 1;
     display: block;
 }
 

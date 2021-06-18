@@ -1,14 +1,16 @@
 # Getting Started with Create React App
 
 Issues to address:
-- ** Call to cloud function url is blocked by CORS issue. Temp workaround -> Install Chrome CORS extension
-- ** Request for cloud function is sync. Make it async and add a `loading` indicator
-- File Upload feature
-- Factor out local title variables into constants file instead of state dictionary
+
+-   \*\* Call to cloud function url is blocked by CORS issue. Temp workaround -> Install Chrome CORS extension
+-   \*\* Request for cloud function is sync. Make it async and add a `loading` indicator
+-   File Upload feature
+-   Factor out local title variables into constants file instead of state dictionary
 
 To note:
-- All the information about the components is stored in `componentDetail.js` file.
-- All the hardcoded generic components are handled using `addGenericComponentIcon` in `leftPropertyBar.js` file.
+
+-   All the information about the components is stored in `componentDetail.js` file.
+-   All the hardcoded generic components are handled using `addGenericComponentIcon` in `leftPropertyBar.js` file.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

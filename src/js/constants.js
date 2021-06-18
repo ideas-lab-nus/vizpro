@@ -1,4 +1,4 @@
-import {addCircle} from './handle.js';
+import { addCircle } from './handle.js';
 
 const globalVars = {
     initEdgex1: 0,
@@ -7,10 +7,10 @@ const globalVars = {
     toCircle: addCircle(),
     selection_rectangle_group_rect: null,
     doubleClicked: false,
-    date:"km now",
-    IDLE_COLOR: "#dfd4b1",
-    ACTIVE_COLOR: "green",
-    ERROR_COLOR: "red",
+    date: 'km now',
+    IDLE_COLOR: '#dfd4b1',
+    ACTIVE_COLOR: 'green',
+    ERROR_COLOR: 'red',
     COMPONENT_RADIUS: 1,
     allComp: [],
     allEdges: [],
@@ -25,7 +25,7 @@ const globalVars = {
     runDeep: false,
     StringAnchorclicked: false,
     StringAnchorType: null,
-    StringAnchorId: "",
+    StringAnchorId: '',
     XANCHOR: 0,
     YANCHOR: 1,
     XYANCHOR: 2,
@@ -38,37 +38,37 @@ const globalVars = {
     selectedSliderComponent: null,
     dragX: 0,
     dragY: 0,
-    sliderRectId: "",
+    sliderRectId: '',
     componentClickX: 0,
     componentClickY: 0,
     initPos: null,
     startDrag: false,
-    clickedId: "",
-    rectType: "",
+    clickedId: '',
+    rectType: '',
     deltaX: 0,
     deltaY: 0,
     clicked: false,
     edgeStarted: false,
     targetcircleIN: false,
-    selectedcircleId: "",
-    targetcircleId: "",
-    selectedSliderAnchorId: "",
+    selectedcircleId: '',
+    targetcircleId: '',
+    selectedSliderAnchorId: '',
     xGrid: 0,
     yGrid: 0,
     mousex: 0,
     mousey: 0,
-    
+
     // text global variables.
     textareaStarted: false,
-    textAreaRectId: "",
+    textAreaRectId: '',
     optionListStarted: false,
-    optionlistRectid: "",
+    optionlistRectid: '',
     justSelected: null,
     mouseInsideOption: false,
 
     //selected component variables.
     is_component_selected: false,
-    selected_component_id: "",
+    selected_component_id: '',
     rightColumnIsSelected: false,
     leftColumnIsSelected: false,
     topColumnIsSelected: false,
@@ -79,7 +79,7 @@ const globalVars = {
     currentLeftColWidth: 225,
     currentRightColWidth: 50,
     messageshown: false,
-    dataLoad: 0,
-}
+    dataLoad: 0
+};
 
-export {globalVars};
+export { globalVars };

@@ -1,366 +1,492 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>jQuery UI Draggable - Default functionality</title>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
-  <style>
-  #draggable {
-    width: 150px;
-    height: 53px;
-    padding: 0.5em;
-    border-radius: 4px;
-    color: #333333;
-    cursor: pointer;
-    }
-
-    .ui-widget-content {
-        width: 200px;
-        text-align: center;
-        border-radius: 2px;
-        height: 75px;
-        cursor: pointer;
-        font-family: monospace;
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>jQuery UI Draggable - Default functionality</title>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+        <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
+        <style>
+            #draggable {
+                width: 150px;
+                height: 53px;
+                padding: 0.5em;
+                border-radius: 4px;
+                color: #333333;
+                cursor: pointer;
             }
 
-    .input {
-        border: 1px solid gray;
-        width: 3px;
-        height: 4px;
-        /* border-radius: 50% 0px 0px 50%; */
-        position: absolute;
-        left: -5px;
-        background-color: gray;
-    }
-    .inputText {
-        position: absolute;
-        left: 2px;
-        font-family: monospace;
-    }
+            .ui-widget-content {
+                width: 200px;
+                text-align: center;
+                border-radius: 2px;
+                height: 75px;
+                cursor: pointer;
+                font-family: monospace;
+            }
 
-.Name {
-    transform: rotate(0deg);
-    /* background-color: #f1f0f3; */
-    width: 100%;
-    position: absolute;
-    text-align: center;
-    top: 0px;
-    height: 100%;
-}
+            .input {
+                border: 1px solid gray;
+                width: 3px;
+                height: 4px;
+                /* border-radius: 50% 0px 0px 50%; */
+                position: absolute;
+                left: -5px;
+                background-color: gray;
+            }
+            .inputText {
+                position: absolute;
+                left: 2px;
+                font-family: monospace;
+            }
 
-.outputText {
-    position: absolute;
-    right: 2px;
-}
+            .Name {
+                transform: rotate(0deg);
+                /* background-color: #f1f0f3; */
+                width: 100%;
+                position: absolute;
+                text-align: center;
+                top: 0px;
+                height: 100%;
+            }
 
+            .outputText {
+                position: absolute;
+                right: 2px;
+            }
 
-.output {
-    border: 1px solid #5f5f5f;
-    background-color: #717171;
-    width: 3px;
-    height: 4px;
-    border-radius: 0px;
-    position: absolute;
-    right: -6px;
-}
+            .output {
+                border: 1px solid #5f5f5f;
+                background-color: #717171;
+                width: 3px;
+                height: 4px;
+                border-radius: 0px;
+                position: absolute;
+                right: -6px;
+            }
 
-div#textName {
-    font-weight: bold;
-}
-  </style>
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script src="https://d3js.org/d3-path.v1.min.js"></script>
-  <script src="https://d3js.org/d3-shape.v1.min.js"></script>
-  <script src="https://d3js.org/d3.v5.min.js"></script>
+            div#textName {
+                font-weight: bold;
+            }
+        </style>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://d3js.org/d3-path.v1.min.js"></script>
+        <script src="https://d3js.org/d3-shape.v1.min.js"></script>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+    </head>
+    <body>
+        <button id="add_comp">Addcomp</button>
 
-
-</head>
-<body>
-
-
-<button id="add_comp">Addcomp</button>
-
-<div id="allComponents">
-        Components : 
-    </div>
-
-</body>
+        <div id="allComponents">Components :</div>
+    </body>
 </html>
 
 <script>
+    function uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (Math.random() * 16) | 0,
+                v = c == 'x' ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+        });
+    }
 
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
+    var allComp = [];
 
-var allComp = []
-
-function updateCompList()
-{
-    $("div#allComponents").html(function(){
+    function updateCompList() {
+        $('div#allComponents').html(function () {
             // TODO : This should contain a function that draws all the components. another should be done for all the links.
-            text = ""
+            text = '';
             allComp.forEach(function (element, i) {
-            // //console.log(element);
+                // //console.log(element);
 
-            // TODO : this is hard coded, to be soft-coded later
-            text += '<div id="comp-'+element.GUID+'" class="ui-widget-content" style="position:absolute; top:'+element.Y+'px; left:'+element.X+'px;">'+element.Name;
+                // TODO : this is hard coded, to be soft-coded later
+                text +=
+                    '<div id="comp-' +
+                    element.GUID +
+                    '" class="ui-widget-content" style="position:absolute; top:' +
+                    element.Y +
+                    'px; left:' +
+                    element.X +
+                    'px;">' +
+                    element.Name;
 
-            var h = element.height/(2*element.inputs.length);
+                var h = element.height / (2 * element.inputs.length);
+                //console.log(h);
+
+                for (let index = 0; index < element.inputs.length; index++) {
+                    if (index == 0) {
+                        text +=
+                            '<div class="input ' +
+                            element.GUID +
+                            ' ' +
+                            index.toString() +
+                            '" style="top:' +
+                            (h - 2).toString() +
+                            'px"></div>';
+                        text +=
+                            '<div class="inputText ' +
+                            element.GUID +
+                            ' ' +
+                            index.toString() +
+                            '" style="top:' +
+                            (h - 2 * element.inputs.length).toString() +
+                            'px">' +
+                            element.inputs[index].Name +
+                            '</div>';
+                    } else {
+                        text +=
+                            '<div class="input ' +
+                            element.GUID +
+                            ' ' +
+                            index.toString() +
+                            '" style="top:' +
+                            (index * (h - 2) + ((index + 1) * h - 2)).toString() +
+                            'px"></div>';
+                        text +=
+                            '<div class="inputText ' +
+                            element.GUID +
+                            ' ' +
+                            index.toString() +
+                            '" style="top:' +
+                            (
+                                index * (h - element.inputs.length) +
+                                ((index + 1) * h - 2 * element.inputs.length)
+                            ).toString() +
+                            'px">' +
+                            element.inputs[index].Name +
+                            '</div>';
+                    }
+                }
+
+                for (let index = 0; index < element.outputs.length; index++) {
+                    if (index == 0) {
+                        text +=
+                            '<div class="input ' +
+                            element.GUID +
+                            ' ' +
+                            index.toString() +
+                            '" style="top:' +
+                            (h - 2).toString() +
+                            'px"></div>';
+                        text +=
+                            '<div class="inputText ' +
+                            element.GUID +
+                            ' ' +
+                            index.toString() +
+                            '" style="top:' +
+                            (h - 2 * element.outputs.length).toString() +
+                            'px">' +
+                            element.outputs[index].Name +
+                            '</div>';
+                    } else {
+                        text +=
+                            '<div class="input ' +
+                            element.GUID +
+                            ' ' +
+                            index.toString() +
+                            '" style="top:' +
+                            (index * (h - 2) + ((index + 1) * h - 2)).toString() +
+                            'px"></div>';
+                        text +=
+                            '<div class="inputText ' +
+                            element.GUID +
+                            ' ' +
+                            index.toString() +
+                            '" style="top:' +
+                            (
+                                index * (h - element.outputs.length) +
+                                ((index + 1) * h - 2 * element.outputs.length)
+                            ).toString() +
+                            'px">' +
+                            element.outputs[index].Name +
+                            '</div>';
+                    }
+                }
+
+                text += '</div>';
+            });
+            return text;
+        });
+    }
+
+    function updateFunction() {
+        allComp.forEach(element => {
+            text = '';
+            text +=
+                '<div class="Name ' +
+                element.GUID +
+                '" class="ui-widget-content">' +
+                '<div id="textName">' +
+                element.Name +
+                '</div></div>';
+
+            var h = element.height / (2 * element.inputs.length);
             //console.log(h);
 
             for (let index = 0; index < element.inputs.length; index++) {
-                if(index == 0)
-                {
-                    text += '<div class="input '+element.GUID+' '+index.toString()+'" style="top:'+(h-2).toString()+'px"></div>';
-                    text += '<div class="inputText '+element.GUID+' '+index.toString()+'" style="top:'+(h-2*element.inputs.length).toString()+'px">'+element.inputs[index].Name+'</div>';
-
-                }else
-                {
-                    text += '<div class="input '+element.GUID+' '+index.toString()+'" style="top:'+(index*(h-2) +(((index+1)*h)-2)).toString()+'px"></div>';
-                    text += '<div class="inputText '+element.GUID+' '+index.toString()+'" style="top:'+(index*(h-element.inputs.length) +(((index+1)*h)-2*element.inputs.length)).toString()+'px">'+element.inputs[index].Name+'</div>';
+                if (index == 0) {
+                    text +=
+                        '<div class="input ' +
+                        element.GUID +
+                        ' ' +
+                        index.toString() +
+                        '" style="top:' +
+                        (h - 2).toString() +
+                        'px"></div>';
+                    text +=
+                        '<div class="inputText ' +
+                        element.GUID +
+                        ' ' +
+                        index.toString() +
+                        '" style="top:' +
+                        (h - 2 * element.inputs.length).toString() +
+                        'px">' +
+                        element.inputs[index].Name +
+                        '</div>';
+                } else {
+                    text +=
+                        '<div class="input ' +
+                        element.GUID +
+                        ' ' +
+                        index.toString() +
+                        '" style="top:' +
+                        (index * (h - 2) + ((index + 1) * h - 2)).toString() +
+                        'px"></div>';
+                    text +=
+                        '<div class="inputText ' +
+                        element.GUID +
+                        ' ' +
+                        index.toString() +
+                        '" style="top:' +
+                        (
+                            index * (h - element.inputs.length) +
+                            ((index + 1) * h - 2 * element.inputs.length)
+                        ).toString() +
+                        'px">' +
+                        element.inputs[index].Name +
+                        '</div>';
                 }
             }
 
+            var h = element.height / (2 * element.inputs.length);
 
             for (let index = 0; index < element.outputs.length; index++) {
-                if(index == 0)
-                {
-                    text += '<div class="input '+element.GUID+' '+index.toString()+'" style="top:'+(h-2).toString()+'px"></div>';
-                    text += '<div class="inputText '+element.GUID+' '+index.toString()+'" style="top:'+(h-2*element.outputs.length).toString()+'px">'+element.outputs[index].Name+'</div>';
-
-                }else
-                {
-                    text += '<div class="input '+element.GUID+' '+index.toString()+'" style="top:'+(index*(h-2) +(((index+1)*h)-2)).toString()+'px"></div>';
-                    text += '<div class="inputText '+element.GUID+' '+index.toString()+'" style="top:'+(index*(h-element.outputs.length) +(((index+1)*h)-2*element.outputs.length)).toString()+'px">'+element.outputs[index].Name+'</div>';
+                if (index == 0) {
+                    text +=
+                        '<div class="output ' +
+                        element.GUID +
+                        ' ' +
+                        index.toString() +
+                        '" style="top:' +
+                        (h - 2).toString() +
+                        'px"></div>';
+                    text +=
+                        '<div class="outputText ' +
+                        element.GUID +
+                        ' ' +
+                        index.toString() +
+                        '" style="top:' +
+                        (h - 2 * element.outputs.length).toString() +
+                        'px">' +
+                        element.outputs[index].Name +
+                        '</div>';
+                } else {
+                    text +=
+                        '<div class="output ' +
+                        element.GUID +
+                        ' ' +
+                        index.toString() +
+                        '" style="top:' +
+                        (index * (h - 2) + ((index + 1) * h - 2)).toString() +
+                        'px"></div>';
+                    text +=
+                        '<div class="outputText ' +
+                        element.GUID +
+                        ' ' +
+                        index.toString() +
+                        '" style="top:' +
+                        (
+                            index * (h - element.outputs.length) +
+                            ((index + 1) * h - 2 * element.outputs.length)
+                        ).toString() +
+                        'px">' +
+                        element.outputs[index].Name +
+                        '</div>';
                 }
             }
 
-
-            text+='</div>'
+            $('div#comp-' + element.GUID).html(text);
         });
-        return text;
-    });
-}
+    }
 
-function updateFunction()
-{
-    allComp.forEach(element => {
-        text = "";
-        text += '<div class="Name '+element.GUID+'" class="ui-widget-content">'
-        +'<div id="textName">'+element.Name+"</div></div>";
-
-        var h = element.height/(2*element.inputs.length);
-        //console.log(h);
-
-        for (let index = 0; index < element.inputs.length; index++) {
-            if(index == 0)
-            {
-                text += '<div class="input '+element.GUID+' '+index.toString()+'" style="top:'+(h-2).toString()+'px"></div>';
-                text += '<div class="inputText '+element.GUID+' '+index.toString()+'" style="top:'+(h-2*element.inputs.length).toString()+'px">'+element.inputs[index].Name+'</div>';
-            }else
-            {
-                text += '<div class="input '+element.GUID+' '+index.toString()+'" style="top:'+(index*(h-2) +(((index+1)*h)-2)).toString()+'px"></div>';
-                text += '<div class="inputText '+element.GUID+' '+index.toString()+'" style="top:'+(index*(h-element.inputs.length) +(((index+1)*h)-2*element.inputs.length)).toString()+'px">'+element.inputs[index].Name+'</div>';
-            }
-        }
-
-        var h = element.height/(2*element.inputs.length);
-
-        for (let index = 0; index < element.outputs.length; index++) {
-                if(index == 0)
-                {
-                    text += '<div class="output '+element.GUID+' '+index.toString()+'" style="top:'+(h-2).toString()+'px"></div>';
-                    text += '<div class="outputText '+element.GUID+' '+index.toString()+'" style="top:'+(h-2*element.outputs.length).toString()+'px">'+element.outputs[index].Name+'</div>';
-
-                }else
-                {
-                    text += '<div class="output '+element.GUID+' '+index.toString()+'" style="top:'+(index*(h-2) +(((index+1)*h)-2)).toString()+'px"></div>';
-                    text += '<div class="outputText '+element.GUID+' '+index.toString()+'" style="top:'+(index*(h-element.outputs.length) +(((index+1)*h)-2*element.outputs.length)).toString()+'px">'+element.outputs[index].Name+'</div>';
-                }
-            }
-
-
-
-        $("div#comp-"+element.GUID).html(text);
-});            
-}
-
-$("button#add_comp").on("click", function(ev)
-{
-    var newcomp = addcomponent(uuidv4());
-    allComp.push(newcomp);
-    allComp.forEach(element => {
-    $("#comp-"+element.GUID).css(
-        {top:element.Y, left:element.X, position:"relative"}
-        )});
+    $('button#add_comp').on('click', function (ev) {
+        var newcomp = addcomponent(uuidv4());
+        allComp.push(newcomp);
+        allComp.forEach(element => {
+            $('#comp-' + element.GUID).css({
+                top: element.Y,
+                left: element.X,
+                position: 'relative'
+            });
+        });
 
         updateCompList();
 
-    allComp.forEach(element => {
-        dims = d3.select("#comp-"+element.GUID)
-        .node().getBoundingClientRect();
-        // //console.log(dims);
-        element.width = dims.width;
-        element.height = dims.height;
+        allComp.forEach(element => {
+            dims = d3
+                .select('#comp-' + element.GUID)
+                .node()
+                .getBoundingClientRect();
+            // //console.log(dims);
+            element.width = dims.width;
+            element.height = dims.height;
 
-    $("#comp-"+element.GUID ).draggable({
-        stop : function(ev, ui)
-        {
-            var position = $(this).position();
-            element.X = position.left;
-            element.Y = position.top;
-        }
+            $('#comp-' + element.GUID).draggable({
+                stop: function (ev, ui) {
+                    var position = $(this).position();
+                    element.X = position.left;
+                    element.Y = position.top;
+                }
+            });
+        });
+        updateFunction();
     });
-});
-updateFunction();
-});
 
-function addcomponent(guid)
-{
+    function addcomponent(guid) {
+        initComp = {
+            GUID: guid,
+            X: 0,
+            Y: 0,
+            width: 20,
+            height: 20,
+            Name: 'Component',
+            ShortName: 'Comp',
+            Description: 'Dummy component',
+            Message: 'short description',
+            numInputs: 3,
+            numOutputs: 2,
+            typeName: null,
+            logo: null,
+
+            inputs: [
+                {
+                    id: 0,
+                    Name: 'Input1',
+                    ShortName: 'X',
+                    Description: 'input1',
+                    Message: 'short description',
+                    type: 'item',
+                    datatype: 'int',
+                    value: 0
+                },
+                {
+                    id: 1,
+                    Name: 'Input2',
+                    ShortName: 'Y',
+                    Description: 'input2',
+                    Message: 'short description',
+                    type: 'item',
+                    datatype: 'int',
+                    value: 0
+                },
+                {
+                    id: 2,
+                    Name: 'Input3',
+                    ShortName: 'Y',
+                    Description: 'input3',
+                    Message: 'short description',
+                    type: 'item',
+                    datatype: 'int',
+                    value: 0
+                }
+            ],
+            outputs: [
+                {
+                    id: 0,
+                    Name: 'output1',
+                    ShortName: 'A',
+                    Description: 'output1',
+                    Message: 'short description',
+                    type: 'item',
+                    datatype: 'int',
+                    value: 0
+                },
+                {
+                    id: 1,
+                    Name: 'output2',
+                    ShortName: 'B',
+                    Description: 'output2',
+                    Message: 'short description',
+                    type: 'item',
+                    datatype: 'int',
+                    value: 0
+                }
+            ]
+        };
+
+        return initComp;
+    }
+
     initComp = {
-        "GUID": guid,
-        "X" : 0 , 
-        "Y" : 0 , 
-        "width" : 20,
-        "height": 20,
-        "Name" : "Component", 
-        "ShortName" : "Comp", 
-        "Description": "Dummy component", 
-        "Message" : "short description", 
-        "numInputs" : 3,
-        "numOutputs":2,
-        "typeName": null,
-        "logo" : null, 
+        GUID: 'deffdd6c-97eb-441f-b958-751f3d89d529',
+        X: 0,
+        Y: 0,
+        width: 20,
+        height: 20,
+        Name: 'Component',
+        ShortName: 'Comp',
+        Description: 'Dummy component',
+        Message: 'short description',
+        numInputs: 2,
+        numOutputs: 2,
+        typeName: null,
+        logo: null,
 
-        "inputs" : [
+        inputs: [
             {
-                "id" : 0,
-                "Name" : "Input1", 
-                "ShortName" : "X", 
-                "Description": "input1", 
-                "Message" : "short description",
-                "type": "item",
-                "datatype": "int",
-                "value" : 0,
-            }, 
+                id: 0,
+                Name: 'Input1',
+                ShortName: 'X',
+                Description: 'input1',
+                Message: 'short description',
+                type: 'item',
+                datatype: 'int',
+                value: 0
+            },
             {
-                "id" : 1,
-                "Name" : "Input2", 
-                "ShortName" : "Y", 
-                "Description": "input2", 
-                "Message" : "short description",
-                "type": "item",
-                "datatype": "int",
-                "value" : 0,
-            }, 
-            {
-                "id" : 2,
-                "Name" : "Input3", 
-                "ShortName" : "Y", 
-                "Description": "input3", 
-                "Message" : "short description",
-                "type": "item",
-                "datatype": "int",
-                "value" : 0,
-            }
-        ],
-        "outputs" : [
-        {
-                "id" : 0,
-                "Name" : "output1", 
-                "ShortName" : "A", 
-                "Description": "output1", 
-                "Message" : "short description",
-                "type": "item",
-                "datatype": "int",
-                "value" : 0,
-            }, 
-            {
-                "id" : 1,
-                "Name" : "output2", 
-                "ShortName" : "B", 
-                "Description": "output2", 
-                "Message" : "short description",
-                "type": "item",
-                "datatype": "int",
-                "value" : 0,
-            }
-        ],
-};
-
-return initComp;
-}
-
-initComp = {
-        "GUID": "deffdd6c-97eb-441f-b958-751f3d89d529",
-        "X" : 0 , 
-        "Y" : 0 , 
-        "width" : 20,
-        "height": 20,
-        "Name" : "Component", 
-        "ShortName" : "Comp", 
-        "Description": "Dummy component", 
-        "Message" : "short description", 
-        "numInputs" : 2,
-        "numOutputs":2,
-        "typeName": null,
-        "logo" : null, 
-
-        "inputs" : [
-            {
-                "id" : 0,
-                "Name" : "Input1", 
-                "ShortName" : "X", 
-                "Description": "input1", 
-                "Message" : "short description",
-                "type": "item",
-                "datatype": "int",
-                "value" : 0,
-            }, 
-            {
-                "id" : 1,
-                "Name" : "Input2", 
-                "ShortName" : "Y", 
-                "Description": "input2", 
-                "Message" : "short description",
-                "type": "item",
-                "datatype": "int",
-                "value" : 0,
+                id: 1,
+                Name: 'Input2',
+                ShortName: 'Y',
+                Description: 'input2',
+                Message: 'short description',
+                type: 'item',
+                datatype: 'int',
+                value: 0
             }
         ],
 
-        "outputs" : [
+        outputs: [
             {
-                "id" : 0,
-                "Name" : "output1", 
-                "ShortName" : "A", 
-                "Description": "output1", 
-                "Message" : "short description",
-                "type": "item",
-                "datatype": "int",
-                "value" : 0,
-            }, 
+                id: 0,
+                Name: 'output1',
+                ShortName: 'A',
+                Description: 'output1',
+                Message: 'short description',
+                type: 'item',
+                datatype: 'int',
+                value: 0
+            },
             {
-                "id" : 1,
-                "Name" : "output2", 
-                "ShortName" : "B", 
-                "Description": "output2", 
-                "Message" : "short description",
-                "type": "item",
-                "datatype": "int",
-                "value" : 0,
+                id: 1,
+                Name: 'output2',
+                ShortName: 'B',
+                Description: 'output2',
+                Message: 'short description',
+                type: 'item',
+                datatype: 'int',
+                value: 0
             }
-        ],
-}
-
-
-
-
+        ]
+    };
 </script>

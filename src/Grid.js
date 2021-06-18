@@ -1,30 +1,7 @@
-import React, { Component } from 'react'
-// import {manageCanvas} from './js/layout.js';
-import grid2 from './img/grid2.png';                              
+import React, { Component } from 'react';
+import grid2 from './img/grid2.png';
 
 export default class Grid extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     // this.func = this.props.func;
-    // }
-
-    // componentDidMount() {
-    //     this.timerID = setInterval(
-    //       () => this.tick(),
-    //       1000
-    //     );
-    // }
-    
-    // componentWillUnmount() {
-    //     clearInterval(this.timerID);
-    // }
-    
-    // tick() {
-    //     this.setState({
-    //         date: new Date()
-    //     });
-    // }
-
     render() {
         return (
             <svg height="10000" width="10000" >
