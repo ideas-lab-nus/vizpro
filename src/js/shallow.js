@@ -67,7 +67,7 @@ var shallow_functions = {
     'OSI Extract TimeSeries Data': osiExtractTimeSeriesData,
     '3dVisualizer': draw3dObject,
     'Image Display': imDisplay,
-    'YouTube display': youTubeDisplay
+    'YouTube Display': youTubeDisplay
 };
 
 /**

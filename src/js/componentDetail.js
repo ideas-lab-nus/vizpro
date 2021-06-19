@@ -188,7 +188,7 @@ const details = [
         backgroundImage: ''
     },
     {
-        name: 'Youtube Display',
+        name: 'YouTube Display',
         shname: 'Youtube',
         desc: '',
         type: 'component',
