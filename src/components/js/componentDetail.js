@@ -130,6 +130,43 @@ const details = [
             'https://storage.googleapis.com/ghostbucket111/icons/f4fbd2bace8d4fb6b8982ccfaf310f63.png'
     },
     {
+        name: 'Multiply 2',
+        shname: 'Multiply',
+        desc: 'Multiply 2 numbers',
+        type: 'component',
+        dftype: 'shlow',
+        category: 'Basic',
+        subcategory: 'Math',
+        inputList: [
+            { name: 'in_01', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+            { name: 'in_02', shortName: 'in_02', desc: 'second input', default_value: '5.0' }
+        ],
+        outputList: [
+            { name: 'output_', shortName: 'out_', desc: 'product' },
+            { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
+        ],
+        color: '#F23322',
+        backgroundImage: ''
+    },
+    // {
+    //     name: 'Exponential',
+    //     shname: 'exp',
+    //     desc: 'e raise to the power x',
+    //     type: 'component',
+    //     dftype: 'shlow',
+    //     category: 'Basic',
+    //     subcategory: 'Math',
+    //     inputList: [
+    //         { name: 'in_01', shortName: 'in_01', desc: 'first input', default_value: '10.0' }
+    //     ],
+    //     outputList: [
+    //         { name: 'output_', shortName: 'out_', desc: 'product' },
+    //         { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
+    //     ],
+    //     color: '#F23322',
+    //     backgroundImage: ''
+    // },
+    {
         name: 'Json Navigator',
         shname: 'jsonNav',
         desc: 'Select item from json object by path',

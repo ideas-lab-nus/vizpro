@@ -543,6 +543,7 @@ var shallow_functions = {
   '==': equal,
   '>': greater,
   '<': less,
+  //'Exponential': exponential,
   // String operations
   Split: split,
   Join: join,
@@ -570,7 +571,7 @@ var shallow_functions = {
  * @return {boolean} True if n is a valid number and False otherwise
  */
 
-function isNumeric(n) {
+function isNumeric$1(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 /**
@@ -607,10 +608,7 @@ function inputPreconditions(args, n) {
   // args = parseString(args); // args is always a normal list
   if (!(args instanceof Array)) {
     throw new TypeError('args must be an array ');
-  } // if (args.length < n) {
-  //     throw new TypeError('args.length < ' + n);  ----> no need to add this condition, as `args` will always be a list from the backend auto generator with the exact number of inputs.
-  // }
-
+  }
 }
 /*
 ARITHMETIC OPERATORS
@@ -659,7 +657,7 @@ function accumulator(args, operator) {
     console.log(InputList[i]);
     n = parseFloat(InputList[i]); // convert string to float
 
-    if (!isNumeric(n)) {
+    if (!isNumeric$1(n)) {
       log = n + ' is not numeric';
       return {
         type: ['text', 'text'],
@@ -701,7 +699,7 @@ function mathOperator(args, operator) {
   var arg1 = parseFloat(args[1]);
   var output;
 
-  if (!isNumeric(arg0) || !isNumeric(arg1)) {
+  if (!isNumeric$1(arg0) || !isNumeric$1(arg1)) {
     log = arg0 + ' or ' + arg1 + ' is not numeric';
     output = null;
   }
@@ -1394,6 +1392,7 @@ function calculateShallow(compId) {
     inputGroup.push(input.value);
   });
   var d = shallow_functions[thisComp.Name](inputGroup);
+  console.log(d);
   thisComp.outputs.forEach(function (output, i) {
     output.value = d['value'][i];
     output.type = d['type'][i];
@@ -5333,6 +5332,55 @@ const details = [{
   color: '#9b59b6',
   backgroundImage: 'https://storage.googleapis.com/ghostbucket111/icons/f4fbd2bace8d4fb6b8982ccfaf310f63.png'
 }, {
+  name: 'Multiply 2',
+  shname: 'Multiply',
+  desc: 'Multiply 2 numbers',
+  type: 'component',
+  dftype: 'shlow',
+  category: 'Basic',
+  subcategory: 'Math',
+  inputList: [{
+    name: 'in_01',
+    shortName: 'in_01',
+    desc: 'first input',
+    default_value: '10.0'
+  }, {
+    name: 'in_02',
+    shortName: 'in_02',
+    desc: 'second input',
+    default_value: '5.0'
+  }],
+  outputList: [{
+    name: 'output_',
+    shortName: 'out_',
+    desc: 'product'
+  }, {
+    type: 'float',
+    name: 'log_',
+    shortName: 'log',
+    desc: 'log output'
+  }],
+  color: '#F23322',
+  backgroundImage: ''
+}, // {
+//     name: 'Exponential',
+//     shname: 'exp',
+//     desc: 'e raise to the power x',
+//     type: 'component',
+//     dftype: 'shlow',
+//     category: 'Basic',
+//     subcategory: 'Math',
+//     inputList: [
+//         { name: 'in_01', shortName: 'in_01', desc: 'first input', default_value: '10.0' }
+//     ],
+//     outputList: [
+//         { name: 'output_', shortName: 'out_', desc: 'product' },
+//         { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
+//     ],
+//     color: '#F23322',
+//     backgroundImage: ''
+// },
+{
   name: 'Json Navigator',
   shname: 'jsonNav',
   desc: 'Select item from json object by path',
@@ -6553,6 +6601,27 @@ function CreatePaths(theEdge) {
   addEdgeCircle(theEdge, theEdge.d).attr('x', theEdge.circleX).attr('y', theEdge.circleY).attr('style', 'display:block');
 } //End of CreatePaths
 
+function addNewUdo(name, shname, desc, type, dftype, category, subcategory, inputList, outputList, color, backgroundImage, calledFunc = null) {
+  let newComp = {
+    name: name,
+    shname: shname,
+    desc: desc,
+    type: type,
+    dftype: dftype,
+    category: category,
+    subcategory: subcategory,
+    inputList: inputList,
+    outputList: outputList,
+    color: color,
+    backgroundImage: backgroundImage
+  };
+  details.push(newComp);
+
+  if (dftype === 'shlow') {
+    shallow_functions[name] = calledFunc;
+  }
+}
+
 function styleInject(css, ref) {
   if ( ref === void 0 ) ref = {};
   var insertAt = ref.insertAt;
@@ -6583,327 +6652,319 @@ function styleInject(css, ref) {
 var css_248z = "body {\r\n    -webkit-user-select: none;\r\n    -khtml-user-select: none;\r\n    -moz-user-select: none;\r\n    -o-user-select: none;\r\n    user-select: none;\r\n}\r\n\r\nsvg {\r\n    border: solid 1px #565656;\r\n}\r\n\r\n#checks {\r\n    margin: 10px;\r\n}\r\n\r\ntext {\r\n    pointer-events: none;\r\n    user-select: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu mono';\r\n}\r\n\r\n.nodeLog {\r\n    font-size: small;\r\n    font-family: monospace;\r\n    pointer-events: none;\r\n}\r\n\r\ninput:focus,\r\nselect:focus,\r\ntextarea:focus,\r\nbutton:focus {\r\n    outline: none;\r\n}\r\n\r\nrect:focus {\r\n    outline: none;\r\n}\r\n\r\n.output {\r\n    font-family: monospace;\r\n    font-size: small;\r\n    color: white;\r\n}\r\n\r\n.input {\r\n    font-family: monospace;\r\n    font-size: small;\r\n}\r\n\r\n.nodetitle {\r\n    font-family: 'ubuntu mono';\r\n    font-size: 13px;\r\n    font-weight: bold;\r\n    color: white;\r\n    pointer-events: none;\r\n    text-align: center;\r\n}\r\n\r\ndiv#someData {\r\n    padding: 8px;\r\n    padding-top: 25px;\r\n    font-size: x-small;\r\n    font-family: monospace;\r\n}\r\n\r\ncircle {\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#PropertiesBarSelector {\r\n    width: 4px;\r\n    position: fixed;\r\n    right: 501px;\r\n    background-color: #000000;\r\n    height: 100%;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    width: 500px;\r\n    background-color: #2b3d50;\r\n    position: fixed;\r\n    right: 0px;\r\n    box-shadow: 0px 11px 10px #0000006e;\r\n    top: 0px;\r\n    min-height: 35%;\r\n    transition-timing-function: ease-in-out;\r\n    transition: height 2s;\r\n    transition-delay: 1s;\r\n}\r\n\r\ndiv#mainGrid {\r\n    position: relative;\r\n    top: 0px;\r\n    left: 0px;\r\n    background-color: #ececec;\r\n}\r\n\r\ndiv#textAreaBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\ndiv#optionlistBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\nselect#optionListSelectItems {\r\n    background: white;\r\n    opacity: 1;\r\n    font-family: monospace;\r\n    font-weight: bold;\r\n    border: 1px solid black;\r\n    border-radius: 3px;\r\n}\r\n\r\nh5 {\r\n    font-family: monospace;\r\n    margin-top: 1px;\r\n    margin-bottom: 4px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#LeftPropertiesBar {\r\n    width: 200px;\r\n    position: fixed;\r\n    background-color: #2b3d50;\r\n    left: 0px;\r\n    top: 0px;\r\n}\r\n\r\n.additionalData {\r\n    border-radius: 7px;\r\n    font-size: x-small;\r\n    width: 222px;\r\n    background-color: #ffffff47;\r\n    font-family: monospace;\r\n    color: #5d5d5d;\r\n    padding: 3px;\r\n    border: none;\r\n}\r\n\r\ndiv#LeftPropertiesBarSelector {\r\n    width: 5px;\r\n    height: 100%;\r\n    display: none;\r\n    position: fixed;\r\n    left: 200px;\r\n    background-color: #252525;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#TopPropertiesBar {\r\n    position: fixed;\r\n    top: 0px;\r\n    left: 0px;\r\n    width: 100%;\r\n    height: 30px;\r\n    background-color: #e6e6e6;\r\n}\r\n\r\ndiv#TopPropertiesBarSelector {\r\n    height: 2px;\r\n    width: 100%;\r\n    position: fixed;\r\n    left: 0px;\r\n    border-bottom: 1px solid #858585;\r\n    top: 47px;\r\n    cursor: ns-resize;\r\n}\r\n\r\nbutton.menubarButtons {\r\n    background-color: #6d6d6d;\r\n    border: none;\r\n    cursor: pointer;\r\n    color: #444444;\r\n    color: #cacaca;\r\n    font-family: 'Poppins', sans-serif;\r\n}\r\n\r\nbutton.menubarButtons:hover {\r\n    background-color: #aaabaa;\r\n}\r\n\r\ndiv#DefName {\r\n    width: 100%;\r\n    height: 32px;\r\n    padding: 0px 0px;\r\n    background: #2b3d50;\r\n    border-bottom: 1px solid #434343;\r\n}\r\n\r\ndiv#BottomPropertiesBar {\r\n    position: fixed;\r\n    bottom: 0px;\r\n    height: 20px;\r\n    left: 0px;\r\n    border-top: 1px solid #757575;\r\n    box-shadow: 0px -1px 0px #313131;\r\n    background-color: #525252;\r\n    background: linear-gradient(180deg, rgba(96, 96, 96, 1) 0%, rgba(82, 82, 82, 1) 100%);\r\n    width: 100%;\r\n}\r\n\r\na#changeTitleName {\r\n    color: #cfd8dc;\r\n    text-decoration: none;\r\n}\r\n\r\n.ccbody {\r\n    width: 100%;\r\n}\r\n\r\n.ccatheader {\r\n    padding: 0px 3px;\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    border: 1px solid #2c67a5;\r\n    color: #e7e7e7;\r\n    padding: 4px;\r\n    cursor: pointer;\r\n    overflow: hidden;\r\n}\r\n\r\nbutton.standardcat.button {\r\n    vertical-align: middle;\r\n    border: 1px solid #444444;\r\n    width: 32px;\r\n    height: 32px;\r\n    margin: 1px;\r\n    background: none;\r\n    background: -moz-linear-gradient(top, #d6d4d4 0%, #adadad 100%);\r\n    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d6d4d4', endColorstr='#adadad', GradientType=0);\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: x-small;\r\n    color: #ffffff;\r\n    cursor: pointer;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#topLeftLogo {\r\n    width: 27px;\r\n    height: 32px;\r\n    float: left;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70302709-af822a80-1838-11ea-913b-5f935ea282ed.png);\r\n    background-repeat: no-repeat;\r\n    background-size: 26px;\r\n    background-position: center;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#settingsIcon {\r\n    float: right;\r\n    position: fixed;\r\n    top: 0px;\r\n    color: #c5c5c5;\r\n    right: 0px;\r\n    text-align: center;\r\n    padding: 11px;\r\n}\r\n\r\nbutton.standardcat.button:hover {\r\n    background: #c1c1c1;\r\n}\r\n\r\ndiv#Addedmessage {\r\n    font-family: monospace;\r\n    color: white;\r\n    padding: 2px;\r\n}\r\n\r\n#minimizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #2b3d50;\r\n    position: absolute;\r\n    top: 0px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #c5c5c5;\r\n    cursor: pointer;\r\n    border-left: 1px solid #464646;\r\n    border-bottom: 1px solid #464646;\r\n    margin-top: -4px;\r\n}\r\n\r\ndiv#maximizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #5d5d5d;\r\n    position: absolute;\r\n    top: 38px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #ababab;\r\n    cursor: pointer;\r\n    margin-top: -4px;\r\n    text-shadow: 1px 1px 1px #4b4b4b;\r\n}\r\n\r\n.propertiesbar.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbarheader.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbar.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    width: 98%;\r\n    color: #2f2f2f;\r\n    padding: 3px 10px;\r\n    background-color: gray;\r\n    border-bottom: 1px solid #909090;\r\n    border-radius: 6px 6px 0px 0px;\r\n    text-shadow: 1px 1px 0px #a5a5a5;\r\n}\r\n\r\ntextarea.textarea.optionlistProperties {\r\n    width: 98%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    height: 150px;\r\n    border-radius: 0px 0px 6px 6px;\r\n    border: 1px solid gray;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntextarea.textarea.stringProperties {\r\n    width: 100%;\r\n    padding: 0px;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    min-height: 10vh;\r\n    border: none;\r\n    border-radius: 3px;\r\n    background-color: #ffffffc7;\r\n}\r\n\r\n.propertiesbarheader.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    font-weight: bold;\r\n    width: 100%;\r\n    color: #bcbcbc;\r\n    padding: 3px;\r\n}\r\n\r\nselect#propertisBarSelecId {\r\n    width: 99%;\r\n    padding: 1px 2px;\r\n    background-color: gainsboro;\r\n    border-radius: 0px 0px 6px 6px;\r\n}\r\n\r\ndiv#propertiesBarLog {\r\n    width: 100%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    font-size: small;\r\n    padding: 2px;\r\n}\r\n\r\nrect.optionListoption {\r\n    cursor: pointer;\r\n}\r\n\r\nrect.optionListoption:hover {\r\n    fill: #d9e3e6;\r\n    stroke: #989898;\r\n}\r\n\r\ndiv#error {\r\n    color: #c0392b;\r\n    padding: 8px;\r\n}\r\n\r\nforeignObject.textbody {\r\n    font-family: 'ubuntu mono', monospace;\r\n    font-size: x-small;\r\n    color: #4e4e4e;\r\n    overflow: auto;\r\n}\r\n\r\ndiv#catHead {\r\n    font-family: 'ubuntu';\r\n    font-size: small;\r\n    width: fit-content;\r\n    padding: 2px 6px;\r\n    color: white;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-left: 3px;\r\n}\r\n\r\ndiv#catbody {\r\n    margin: 0px;\r\n    border-bottom: none;\r\n    border-right: none;\r\n}\r\n\r\ndiv#catcard {\r\n    margin-bottom: 4px;\r\n    padding: 0px;\r\n}\r\n\r\nrect.xAnchor {\r\n    cursor: ew-resize;\r\n}\r\n\r\nrect.yAnchor {\r\n    cursor: ns-resize;\r\n}\r\n\r\nrect.xyAnchor {\r\n    cursor: nwse-resize;\r\n}\r\n\r\n::-webkit-scrollbar {\r\n    width: 6px;\r\n    height: 10px;\r\n}\r\n\r\n/* Track */\r\n\r\n::-webkit-scrollbar-track {\r\n    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\r\n    -webkit-border-radius: 4px;\r\n    border-radius: 4px;\r\n}\r\n\r\n/* Handle */\r\n\r\n::-webkit-scrollbar-thumb {\r\n    -webkit-border-radius: 4px;\r\n    background: rgb(0, 0, 0);\r\n}\r\n\r\n::-webkit-scrollbar-thumb:window-inactive {\r\n    background: rgba(255, 0, 0, 0.4);\r\n}\r\n\r\npath.play {\r\n    cursor: pointer;\r\n}\r\n\r\npath.play:hover {\r\n    fill: gray;\r\n}\r\n\r\nth {\r\n    border: none;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntd {\r\n    border: none;\r\n    background-color: whitesmoke;\r\n    overflow: hidden;\r\n}\r\n\r\ntbody {\r\n    font-family: ubuntu;\r\n    font-size: small;\r\n}\r\n\r\nth {\r\n    font-family: ubuntu;\r\n    text-align: left;\r\n    font-size: small;\r\n}\r\n\r\ndiv#propertiesBarContents {\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n    font-weight: normal;\r\n    color: #ffffff;\r\n    margin: 2px 0px 10px 0px;\r\n}\r\n\r\nforeignObject.panel_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ntbody {\r\n    border: none;\r\n}\r\n\r\ntable.dataframe {\r\n    border: none;\r\n}\r\n\r\nrect {\r\n    cursor: move;\r\n}\r\n\r\ninput.stringPnanel.Name {\r\n    width: 100%;\r\n    border: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\nforeignObject.panel_edit_mode a {\r\n    font-size: x-small;\r\n    color: #bdbdbd;\r\n    font-family: 'ubuntu mono';\r\n    position: relative;\r\n    text-decoration: none;\r\n    top: -8px;\r\n}\r\n\r\ndiv#numerical_slider_container {\r\n    padding: 7px;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\ndiv#help_t3 {\r\n    line-height: 1em;\r\n    color: #ec5f66;\r\n    margin-top: 5px;\r\n    margin-bottom: 3px;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_t4 {\r\n    color: #009688;\r\n    margin-left: 18px;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-bottom: 5px;\r\n}\r\n\r\ndiv#help_p {\r\n    margin-left: 36px;\r\n    margin-right: 8px;\r\n    text-align: justify;\r\n}\r\n\r\nspan#code {\r\n    color: #c23d51;\r\n    border-radius: 2px;\r\n    font-family: Courier;\r\n    font-size: xx-small;\r\n    vertical-align: middle;\r\n    padding: 1px 4px;\r\n    background-color: #32c8ac2e;\r\n}\r\n\r\ntable.dataframe {\r\n    font-size: x-small;\r\n}\r\n\r\nthead {\r\n    font-size: x-small;\r\n}\r\n\r\nth {\r\n    font-size: x-small;\r\n}\r\n\r\ntd {\r\n    font-size: x-small;\r\n}\r\n\r\nspan#errorTitle {\r\n    color: #e91e63;\r\n    font-weight: bold;\r\n    background-color: #f4433638;\r\n    border-radius: 3px;\r\n}\r\n\r\na.menubarButtons {\r\n    text-decoration: unset;\r\n    color: #000000;\r\n    text-shadow: 1px 1px 4px #4b4b4b;\r\n    font-size: small;\r\n    padding: 0px 6px;\r\n    margin: 1px 1px;\r\n    float: left;\r\n}\r\n\r\ndiv#buttonClickedname {\r\n    color: white;\r\n    font-size: small;\r\n    padding: 0px 8px;\r\n    margin: 0px;\r\n    float: left;\r\n    position: absolute;\r\n    bottom: 25px;\r\n    left: 224px;\r\n    background-color: #3d3d3d;\r\n}\r\n\r\npre {\r\n    margin: 0px;\r\n}\r\n\r\ninput.inputFileUpload {\r\n    border: none;\r\n    border-radius: 4px;\r\n    margin: 2px 2px;\r\n    background: #2b3d50;\r\n    height: 20px;\r\n    font-family: 'ubuntu mono';\r\n    color: white;\r\n}\r\n\r\ninput.submitFileUpload {\r\n    border-radius: 4px;\r\n    float: right;\r\n    margin: 3px;\r\n}\r\n\r\nforeignObject.fileUpload_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ninput#fileUploadFormToTheCloud {\r\n    border-radius: 1px;\r\n    margin-left: 1px;\r\n    /* height: 20px; */\r\n}\r\n\r\na.open_uploadedFile_link {\r\n    text-decoration: none;\r\n    color: black;\r\n    padding: 0px 6px;\r\n    position: relative;\r\n    top: 1px;\r\n    border-radius: 2px;\r\n    margin-left: 3px;\r\n    background-color: #e8e8e8;\r\n}\r\n\r\ndiv#TheContainedFile {\r\n    color: white;\r\n    padding: 2px 5px;\r\n    font-family: 'ubuntu';\r\n    display: inline;\r\n    font-size: small;\r\n    border-right: 1px solid gray;\r\n}\r\n\r\ndiv#PleaseWaitOverLay {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: #ffffff8a;\r\n    color: black;\r\n    text-align: center;\r\n    margin: auto;\r\n    line-height: 100vh;\r\n}\r\n\r\nselect.listView {\r\n    width: 198px;\r\n    height: 179px;\r\n    background-color: #f0f0f0;\r\n    border: 1px solid gray;\r\n    border-radius: 3px;\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n}\r\n\r\noption#someSelection {\r\n    background-color: #e0e0e0;\r\n    box-shadow: 0px 1px 0px white;\r\n    margin-bottom: 1px;\r\n}\r\n\r\ntext.statusTextClass {\r\n    font-size: x-small;\r\n}\r\n\r\n.subcatheader {\r\n    padding-left: 1em;\r\n    color: #ffca28;\r\n    font-size: small;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_quote {\r\n    border: 1px solid #cfcfcf;\r\n    padding: 2px;\r\n    border-radius: 3px;\r\n    background-color: #f4f4f4;\r\n    font-family: courier new;\r\n    font-size: xx-small;\r\n}\r\n\r\nforeignObject#halign_box {\r\n    font-size: 20px;\r\n    color: white;\r\n    text-decoration: none;\r\n    text-align: center;\r\n}\r\n\r\nforeignObject#halign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    margin: 0px 4px;\r\n}\r\n\r\nforeignObject#halign_box a:hover {\r\n    text-decoration: none;\r\n    color: #ffc107;\r\n}\r\n\r\ni.fa.fa-pause {\r\n    margin-left: -1px;\r\n    padding: 0px;\r\n}\r\n\r\nforeignObject#valign_box {\r\n    font-size: 20px;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n    padding: 4px 2px;\r\n}\r\n\r\nforeignObject#valign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    font-size: 20px;\r\n    display: inline-grid;\r\n}\r\n\r\nforeignObject#valign_box a:hover {\r\n    color: #ffc107;\r\n}\r\n\r\na#valign_icon {\r\n    float: left;\r\n    margin: 5px 4px;\r\n}\r\n\r\na.standardcat.button {\r\n    width: 32px;\r\n    height: 32px;\r\n    border: 1px solid black;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#leftbarcontainer {\r\n    width: 225px;\r\n    min-height: 250px;\r\n    float: left;\r\n    margin-top: 2.5px;\r\n}\r\n\r\n.toolbarTopToggleItem {\r\n    height: 25px;\r\n    display: block;\r\n    line-height: 25px;\r\n    color: #1c1c1c;\r\n    font-size: small;\r\n    float: left;\r\n}\r\n\r\n.toolbarTopToggleContainer {\r\n    width: 225px;\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n    text-align: center;\r\n    float: left;\r\n}\r\n\r\ndiv#toolbar_container_1_1_2 {\r\n    width: 25px;\r\n    float: left;\r\n    background-color: red;\r\n    height: 25px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#toolbar_container_1_2 {\r\n    background-color: #2d2d2d;\r\n    width: 225px;\r\n    height: 250px;\r\n}\r\n\r\ndiv#toolbar_container_1_2_1 {\r\n    box-sizing: border-box;\r\n    width: 200px;\r\n    background-color: #e6e6e6;\r\n    min-height: 200px;\r\n    float: left;\r\n    border: 1px solid #cfcfcf;\r\n}\r\n\r\n.mainButtonItem {\r\n    box-sizing: border-box;\r\n    width: 49.5px;\r\n    height: 49.5px;\r\n    float: left;\r\n    background-color: #6060601f;\r\n    display: inline-block;\r\n    vertical-align: middle;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70328473-107b2400-1874-11ea-88ff-dcca67fd98a9.png);\r\n    line-height: 50px;\r\n    text-align: center;\r\n    border: 1px solid #252525;\r\n    color: #ffffffed;\r\n    background-size: 36px;\r\n    font-size: x-small;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    overflow: hidden;\r\n}\r\n\r\ndiv#toolbar_container_1_2_2 {\r\n    width: 25px;\r\n    float: left;\r\n    height: 200px;\r\n    background-color: #c1c1c1;\r\n    box-sizing: border-box;\r\n    border-right: 1px solid #373737;\r\n}\r\n\r\n.rightToggleButton {\r\n    background-image: url(https://www.corasupport.org/wp-content/uploads/2015/11/placeholder-icon-300x300-v1b.png);\r\n    background-size: 20px;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    cursor: pointer;\r\n    font-size: small;\r\n    background-color: #a3a3a3;\r\n    width: 23px;\r\n    height: 23px;\r\n    text-align: center;\r\n    line-height: 25px;\r\n    border: 1px solid #2d2d2d;\r\n    border-bottom: 1px solid #565656;\r\n}\r\n\r\ndiv#toolbar_container_1_2_0 {\r\n    background-color: #707070;\r\n    font-size: small;\r\n    color: white;\r\n    line-height: 25px;\r\n    font-size: xx-small;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    background-color: #252525;\r\n    transition: 0.2s;\r\n    cursor: pointer;\r\n    border: 1px solid #818181;\r\n}\r\n\r\n.toptoggleitem {\r\n    background-color: #d1d1d1;\r\n    margin: 3px 4px 0px 0px;\r\n    height: 20px;\r\n    padding: 0px 5px;\r\n    line-height: 20px;\r\n    border: 1px solid #aaaaaa;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    background-color: #2b3d50;\r\n    border-color: #2b3d50;\r\n    color: #cfd8dc;\r\n}\r\n\r\n.rightToggleButton:hover {\r\n    background-color: #565656;\r\n    transition: 0.5s;\r\n    color: #ffffff;\r\n    border: 1px solid #cecece;\r\n}\r\n\r\n.rightToggleButton:focus {\r\n    background-color: #ffc107;\r\n    color: black;\r\n    text-shadow: 0px 0px 4px black;\r\n}\r\n\r\n.toptoggleitem:hover {\r\n    border-color: #ffc107;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#NoneTabbedToolBoxText {\r\n    position: relative;\r\n    top: 50%;\r\n    transform: rotate(-90deg);\r\n    font-size: small;\r\n    line-height: 25px;\r\n    text-shadow: 0px 0px 4px #000000;\r\n}\r\n\r\nspan#hint {\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n    display: none;\r\n    background-color: #00000066;\r\n    border: 1px solid #565656;\r\n    opacity: 0;\r\n}\r\n\r\ndiv.rightToggleButton:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\n.canvas_container {\r\n    position: fixed;\r\n    top: 30px;\r\n    left: 225px;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.canvas_container_inner {\r\n    margin: 3px;\r\n}\r\n\r\n.canvas_tab_container {\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n}\r\n\r\nh1 {\r\n    margin: 0px;\r\n}\r\n\r\ndiv#somethingLater {\r\n    width: 100%;\r\n    height: 1000px;\r\n    background-color: #666666;\r\n    overflow: scroll;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\ntextarea#script_body_editor {\r\n    height: 100vh;\r\n}\r\n\r\ndiv#codeBody {\r\n    height: 100vh;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    transition: 2s;\r\n}\r\n\r\n.toptoggleitem.selected:hover {\r\n    transition: 2s;\r\n    min-height: 36%;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    width: 50px;\r\n    top: 60px;\r\n    padding-left: 5px;\r\n    min-width: 250px;\r\n    padding-top: 5px;\r\n}\r\n";
 styleInject(css_248z);
 
-var Canvas = /*#__PURE__*/function (_React$Component) {
-  _inherits(Canvas, _React$Component);
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
-  var _super = _createSuper(Canvas);
+function exponential(args) {
+  console.log("inside exponential");
+  let input = args[0];
+  console.log(input);
 
-  function Canvas(props) {
-    var _this;
+  if (!isNumeric(input)) {
+    return {
+      type: ['text', 'text'],
+      value: [null, input + " is not a number"]
+    };
+  } else {
+    return {
+      type: ['text', 'text'],
+      value: [Math.E ** parseFloat(input), "Success"]
+    };
+  }
+}
 
-    _classCallCheck(this, Canvas);
-
-    _this = _super.call(this, props);
-    _this.state = globalVars;
-    _this.handleComponentSelection = handleComponentSelection.bind(_assertThisInitialized(_this));
-    _this.handleDoubleClick = handleDoubleClick.bind(_assertThisInitialized(_this));
-    _this.handleEdgeInitialization = handleEdgeInitialization.bind(_assertThisInitialized(_this));
-    _this.handleTheClickOnAllComponents = handleTheClickOnAllComponents.bind(_assertThisInitialized(_this));
-    _this.handleFileUpload = handleFileUpload.bind(_assertThisInitialized(_this));
-    _this.manageCanvas = manageCanvas.bind(_assertThisInitialized(_this));
-    _this.manageGrid = manageGrid.bind(_assertThisInitialized(_this));
-    _this.dummyToSetState = dummyToSetState.bind(_assertThisInitialized(_this));
-    _this.addGenericComponentIcon = addGenericComponentIcon.bind(_assertThisInitialized(_this));
-    _this.saveData = saveData.bind(_assertThisInitialized(_this));
-    _this.loadData = loadData.bind(_assertThisInitialized(_this));
-    _this.downloadData = downloadData.bind(_assertThisInitialized(_this));
-    return _this;
+class Canvas extends React__default['default'].Component {
+  constructor(props) {
+    super(props);
+    this.state = globalVars;
+    this.handleComponentSelection = handleComponentSelection.bind(this);
+    this.handleDoubleClick = handleDoubleClick.bind(this);
+    this.handleEdgeInitialization = handleEdgeInitialization.bind(this);
+    this.handleTheClickOnAllComponents = handleTheClickOnAllComponents.bind(this);
+    this.handleFileUpload = handleFileUpload.bind(this);
+    this.manageCanvas = manageCanvas.bind(this);
+    this.manageGrid = manageGrid.bind(this);
+    this.dummyToSetState = dummyToSetState.bind(this);
+    this.addGenericComponentIcon = addGenericComponentIcon.bind(this);
+    this.saveData = saveData.bind(this);
+    this.loadData = loadData.bind(this);
+    this.downloadData = downloadData.bind(this);
   }
 
-  _createClass(Canvas, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this2 = this;
+  componentDidMount() {
+    addNewUdo('Exponenetial', 'Exp', 'e raise to the power x', 'component', 'shlow', 'Basic', 'Math', [{
+      name: 'in_01',
+      shortName: 'in_01',
+      desc: 'first input',
+      default_value: '10.0'
+    }], [{
+      name: 'output_',
+      shortName: 'out_',
+      desc: 'product'
+    }, {
+      type: 'float',
+      name: 'log_',
+      shortName: 'log',
+      desc: 'log output'
+    }], "#F23322", "", exponential);
+    this.manageCanvas();
+    this.loadData();
+    this.addGenericComponentIcon();
+    addRightToggleButton();
+    this.timerID = setInterval(() => this.tick(), 1000);
+  }
 
-      this.manageCanvas();
-      this.loadData();
-      this.addGenericComponentIcon();
-      addRightToggleButton();
-      this.timerID = setInterval(function () {
-        return _this2.tick();
-      }, 1000);
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      clearInterval(this.timerID);
-    }
-  }, {
-    key: "tick",
-    value: function tick() {
-      this.setState({
-        date: new Date()
-      });
-    }
-  }, {
-    key: "print",
-    value: function print() {
-      console.log(this.state);
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this3 = this;
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
 
-      return /*#__PURE__*/React__default['default'].createElement("div", {
-        style: {
-          backgroundColor: '#2b3d50',
-          width: '100vw',
-          height: '100vh'
-        }
-      }, /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.dummyToSetState()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.manageGrid()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleComponentSelection()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleDoubleClick()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleEdgeInitialization()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleTheClickOnAllComponents()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleFileUpload()), /*#__PURE__*/React__default['default'].createElement("div", {
-        className: "canvas_container canvas_container_inner main_canvas_container canvas_body_container"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        className: "ui-designer-grid",
-        id: "mainGrid"
-      }, /*#__PURE__*/React__default['default'].createElement(Grid, null))), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "TopPropertiesBar"
-      }, /*#__PURE__*/React__default['default'].createElement("a", {
-        id: "fileTheDef",
-        className: "menubarButtons"
-      }, "File"), /*#__PURE__*/React__default['default'].createElement("a", {
-        id: "fileTheDef",
-        className: "menubarButtons"
-      }, "Edit"), /*#__PURE__*/React__default['default'].createElement("a", {
-        id: "fileTheDef",
-        className: "menubarButtons"
-      }, "Help"), /*#__PURE__*/React__default['default'].createElement("a", {
-        id: "saveTheDef",
-        className: "menubarButtons",
-        onClick: function onClick() {
-          return _this3.saveData();
-        }
-      }, "Save"), /*#__PURE__*/React__default['default'].createElement("a", {
-        id: "fileTheDef",
-        className: "menubarButtons",
-        onClick: function onClick() {
-          return clearData();
-        }
-      }, "Clear"), /*#__PURE__*/React__default['default'].createElement("a", {
-        id: "saveTheDef",
-        className: "menubarButtons",
-        onClick: function onClick() {
-          return _this3.downloadData();
-        }
-      }, "Download"), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "minimizeUpperBar",
-        style: {
-          display: "block"
-        },
-        onClick: function onClick() {
-          return onMinimizeClick();
-        }
-      }, /*#__PURE__*/React__default['default'].createElement("i", {
-        id: "tominimize",
-        className: "fa fa-caret-up",
-        "aria-hidden": "true"
-      })), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "maximizeUpperBar",
-        style: {
-          display: "none"
-        },
-        onClick: function onClick() {
-          return onMaximizeClick();
-        }
-      }, /*#__PURE__*/React__default['default'].createElement("i", {
-        id: "tomaximize",
-        className: "fa fa-caret-up",
-        "aria-hidden": "true",
-        style: {
-          transform: [{
-            rotate: '180deg'
-          }]
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "LeftPropertiesBar",
-        style: {
-          top: "30px"
-        }
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "leftbarcontainer"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1",
-        className: "toolBarContainer 1"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_1",
-        className: "toolBarContainer 1 1"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_1_1",
-        className: "toolbarTopToggleContainer"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        className: "toolbarTopToggleItem 1"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        className: "toptoggleitem componentTab selected"
-      }, "Components")))), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2",
-        className: "TabToolBox componentTab"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2_0",
-        className: "toolbarbuttonsContainer"
-      }, "\xA0 Components ", '>', /*#__PURE__*/React__default['default'].createElement("span", {
-        className: "currentTab componentTab",
-        style: {
-          marginLeft: "3px"
-        }
-      }, " Main Inputs")), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2_1",
-        className: "toolbarbuttonsContainer componentTab Basic 0",
-        style: {
-          display: "none"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2_1",
-        className: "toolbarbuttonsContainer componentTab BSH -1",
-        style: {
-          display: "none"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2_1",
-        className: "toolbarbuttonsContainer componentTab Osi -1",
-        style: {
-          display: "none"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2_1",
-        className: "toolbarbuttonsContainer componentTab Pandas -1",
-        style: {
-          display: "none"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2_1",
-        className: "toolbarbuttonsContainer componentTab StringOps -1",
-        style: {
-          display: "none"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2_1",
-        className: "toolbarbuttonsContainer componentTab Input 0"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "addSlider",
-        onClick: function onClick() {
-          return CreateNewSlider(_this3);
-        },
-        className: "mainButtonItem 1 1",
-        style: {
-          backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"
-        }
-      }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-        id: "hint"
-      }, "Slider")), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "addPanel",
-        onClick: function onClick() {
-          return CreateNewPanel(_this3);
-        },
-        className: "mainButtonItem 1 1",
-        style: {
-          backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"
-        }
-      }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-        id: "hint"
-      }, "Panel")), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "addToggle",
-        onClick: function onClick() {
-          return CreateNewToggle(_this3);
-        },
-        className: "mainButtonItem 1 1",
-        style: {
-          backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"
-        }
-      }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-        id: "hint"
-      }, "Toggle")), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "addOptionList",
-        onClick: function onClick() {
-          return CreateNewOptionList(_this3);
-        },
-        className: "mainButtonItem 1 1",
-        style: {
-          backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"
-        }
-      }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-        id: "hint"
-      }, "Option list")), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "addListView",
-        onClick: function onClick() {
-          return CreateNewListView(_this3);
-        },
-        className: "mainButtonItem 1 1",
-        style: {
-          backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"
-        }
-      }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-        id: "hint"
-      }, "List view")), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "addFile",
-        onClick: function onClick() {
-          return CreateNewFileUpload(_this3);
-        },
-        className: "mainButtonItem 1 1",
-        style: {
-          backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"
-        }
-      }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-        id: "hint"
-      }, "File upload"))), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2_2",
-        className: "toolbarRightToggleNavigator 1"
-      })))), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "leftbarcontainer"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1",
-        className: "toolBarContainer 1"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_1",
-        className: "toolBarContainer 1 1"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_1_1",
-        className: "toolbarTopToggleContainer"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        className: "toolbarTopToggleItem 1"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        className: "toptoggleitem 99098379-d5ab-4bc3-bc0e-b8353c952845 f56e635d-c2a6-48ec-9b93-26b76b890390 selected"
-      }, " Properties")))), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2",
-        className: "TabToolBox 99098379-d5ab-4bc3-bc0e-b8353c952845 f56e635d-c2a6-48ec-9b93-26b76b890390"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2_0",
-        className: "toolbarbuttonsContainer"
-      }, "\xA0 Properties ", /*#__PURE__*/React__default['default'].createElement("span", {
-        className: "currentTab 99098379-d5ab-4bc3-bc0e-b8353c952845"
-      }, "\xA0")), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2_1",
-        className: "toolbarbuttonsContainer 99098379-d5ab-4bc3-bc0e-b8353c952845 140dfea1-7a19-4663-a905-38ff58c8c82f 0"
-      }), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "toolbar_container_1_2_2",
-        className: "toolbarRightToggleNavigator 2"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        className: "rightToggleButton 1",
-        style: {
-          backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/404b5524d84a49838ce63a1fe8a2b7e7.png)"
-        }
-      }, /*#__PURE__*/React__default['default'].createElement("span", {
-        id: "hint"
-      }, "Properties"))))))), /*#__PURE__*/React__default['default'].createElement("div", {
-        id: "PropertiesBar",
-        className: "componentsCategory"
-      }, /*#__PURE__*/React__default['default'].createElement("div", {
-        className: "ccatheader"
-      }, /*#__PURE__*/React__default['default'].createElement("span", {
-        id: "customcomponentarrow"
-      }, /*#__PURE__*/React__default['default'].createElement("i", {
-        className: "fa fa-chevron-circle-down",
-        "aria-hidden": "true"
-      })), "  Properties"), /*#__PURE__*/React__default['default'].createElement("div", {
-        className: "ccbody",
-        id: "propertiesBarContents",
-        style: {
-          "width": "100%"
-        }
-      })));
-    }
-  }]);
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
 
-  return Canvas;
-}(React__default['default'].Component);
+  print() {
+    console.log(this.state);
+  }
+
+  render() {
+    return /*#__PURE__*/React__default['default'].createElement("div", {
+      style: {
+        backgroundColor: '#2b3d50',
+        width: '100vw',
+        height: '100vh'
+      }
+    }, /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.dummyToSetState()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.manageGrid()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleComponentSelection()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleDoubleClick()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleEdgeInitialization()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleTheClickOnAllComponents()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleFileUpload()), /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "canvas_container canvas_container_inner main_canvas_container canvas_body_container"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "ui-designer-grid",
+      id: "mainGrid"
+    }, /*#__PURE__*/React__default['default'].createElement(Grid, null))), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "TopPropertiesBar"
+    }, /*#__PURE__*/React__default['default'].createElement("a", {
+      id: "fileTheDef",
+      className: "menubarButtons"
+    }, "File"), /*#__PURE__*/React__default['default'].createElement("a", {
+      id: "fileTheDef",
+      className: "menubarButtons"
+    }, "Edit"), /*#__PURE__*/React__default['default'].createElement("a", {
+      id: "fileTheDef",
+      className: "menubarButtons"
+    }, "Help"), /*#__PURE__*/React__default['default'].createElement("a", {
+      id: "saveTheDef",
+      className: "menubarButtons",
+      onClick: () => this.saveData()
+    }, "Save"), /*#__PURE__*/React__default['default'].createElement("a", {
+      id: "fileTheDef",
+      className: "menubarButtons",
+      onClick: () => clearData()
+    }, "Clear"), /*#__PURE__*/React__default['default'].createElement("a", {
+      id: "saveTheDef",
+      className: "menubarButtons",
+      onClick: () => this.downloadData()
+    }, "Download"), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "minimizeUpperBar",
+      style: {
+        display: "block"
+      },
+      onClick: () => onMinimizeClick()
+    }, /*#__PURE__*/React__default['default'].createElement("i", {
+      id: "tominimize",
+      className: "fa fa-caret-up",
+      "aria-hidden": "true"
+    })), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "maximizeUpperBar",
+      style: {
+        display: "none"
+      },
+      onClick: () => onMaximizeClick()
+    }, /*#__PURE__*/React__default['default'].createElement("i", {
+      id: "tomaximize",
+      className: "fa fa-caret-up",
+      "aria-hidden": "true",
+      style: {
+        transform: [{
+          rotate: '180deg'
+        }]
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "LeftPropertiesBar",
+      style: {
+        top: "30px"
+      }
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "leftbarcontainer"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1",
+      className: "toolBarContainer 1"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_1",
+      className: "toolBarContainer 1 1"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_1_1",
+      className: "toolbarTopToggleContainer"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "toolbarTopToggleItem 1"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "toptoggleitem componentTab selected"
+    }, "Components")))), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2",
+      className: "TabToolBox componentTab"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_0",
+      className: "toolbarbuttonsContainer"
+    }, "\xA0 Components ", '>', /*#__PURE__*/React__default['default'].createElement("span", {
+      className: "currentTab componentTab",
+      style: {
+        marginLeft: "3px"
+      }
+    }, " Main Inputs")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer componentTab Basic 0",
+      style: {
+        display: "none"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer componentTab BSH -1",
+      style: {
+        display: "none"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer componentTab Osi -1",
+      style: {
+        display: "none"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer componentTab Pandas -1",
+      style: {
+        display: "none"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer componentTab StringOps -1",
+      style: {
+        display: "none"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer componentTab Input 0"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addSlider",
+      onClick: () => CreateNewSlider(this),
+      className: "mainButtonItem 1 1",
+      style: {
+        backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"
+      }
+    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "Slider")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addPanel",
+      onClick: () => CreateNewPanel(this),
+      className: "mainButtonItem 1 1",
+      style: {
+        backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"
+      }
+    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "Panel")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addToggle",
+      onClick: () => CreateNewToggle(this),
+      className: "mainButtonItem 1 1",
+      style: {
+        backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"
+      }
+    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "Toggle")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addOptionList",
+      onClick: () => CreateNewOptionList(this),
+      className: "mainButtonItem 1 1",
+      style: {
+        backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"
+      }
+    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "Option list")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addListView",
+      onClick: () => CreateNewListView(this),
+      className: "mainButtonItem 1 1",
+      style: {
+        backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"
+      }
+    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "List view")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addFile",
+      onClick: () => CreateNewFileUpload(this),
+      className: "mainButtonItem 1 1",
+      style: {
+        backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"
+      }
+    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "File upload"))), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_2",
+      className: "toolbarRightToggleNavigator 1"
+    })))), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "leftbarcontainer"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1",
+      className: "toolBarContainer 1"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_1",
+      className: "toolBarContainer 1 1"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_1_1",
+      className: "toolbarTopToggleContainer"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "toolbarTopToggleItem 1"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "toptoggleitem 99098379-d5ab-4bc3-bc0e-b8353c952845 f56e635d-c2a6-48ec-9b93-26b76b890390 selected"
+    }, " Properties")))), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2",
+      className: "TabToolBox 99098379-d5ab-4bc3-bc0e-b8353c952845 f56e635d-c2a6-48ec-9b93-26b76b890390"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_0",
+      className: "toolbarbuttonsContainer"
+    }, "\xA0 Properties ", /*#__PURE__*/React__default['default'].createElement("span", {
+      className: "currentTab 99098379-d5ab-4bc3-bc0e-b8353c952845"
+    }, "\xA0")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer 99098379-d5ab-4bc3-bc0e-b8353c952845 140dfea1-7a19-4663-a905-38ff58c8c82f 0"
+    }), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_2",
+      className: "toolbarRightToggleNavigator 2"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "rightToggleButton 1",
+      style: {
+        backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/404b5524d84a49838ce63a1fe8a2b7e7.png)"
+      }
+    }, /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "Properties"))))))), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "PropertiesBar",
+      className: "componentsCategory"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "ccatheader"
+    }, /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "customcomponentarrow"
+    }, /*#__PURE__*/React__default['default'].createElement("i", {
+      className: "fa fa-chevron-circle-down",
+      "aria-hidden": "true"
+    })), "  Properties"), /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "ccbody",
+      id: "propertiesBarContents",
+      style: {
+        "width": "100%"
+      }
+    })));
+  }
+
+}
 
 exports.Canvas = Canvas;

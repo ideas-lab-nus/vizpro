@@ -18,7 +18,29 @@ import { handleComponentSelection,
          handleDoubleClick } from './js/handle.js';
 import { addGenericComponentIcon, addRightToggleButton } from './js/leftPropertyBar.js';
 import { saveData, loadData, clearData, downloadData } from './js/saveAndLoadData.js';
+import {addNewUdo} from './js/userDefinedObject.js';
 import './App.css';
+
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function exponential(args) {
+    console.log("inside exponential");
+    let input = args[0];
+    console.log(input);
+    if (!isNumeric(input)) {
+        return {
+            type: ['text', 'text'],
+            value: [null, input + " is not a number"]
+        };
+    } else {
+        return {
+            type: ['text', 'text'],
+            value: [Math.E ** parseFloat(input), "Success"]
+        };
+    }
+}
 
 export default class Canvas extends React.Component {
     constructor(props) {
@@ -39,6 +61,10 @@ export default class Canvas extends React.Component {
     }
 
     componentDidMount() {
+        addNewUdo('Exponenetial', 'Exp', 'e raise to the power x', 'component', 'shlow', 'Basic', 'Math', 
+        [{ name: 'in_01', shortName: 'in_01', desc: 'first input', default_value: '10.0' }],
+        [{ name: 'output_', shortName: 'out_', desc: 'product' }, { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }],
+        "#F23322", "", exponential);
         this.manageCanvas();
         this.loadData();
         this.addGenericComponentIcon();
