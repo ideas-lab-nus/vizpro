@@ -3089,9 +3089,9 @@ function addEdge(from, to, fromComp, toComp) {
 }
 
 function handleComponentSelection() {
-  const reactContext = this;
+  var reactContext = this;
   var allComp = reactContext.state.allComp;
-  allComp.forEach(element => {
+  allComp.forEach(function (element) {
     if (element.type === 'component' || element.type === 'toggle' || element.type === 'fileUpload' || element.type === 'listView') {
       d3$7.select('g#comp-' + element.GUID).on('click', function () {
         d3$7.select('rect#' + element.GUID).attr('stroke-width', '2').attr('stroke', '#0064ffa8');
@@ -3099,7 +3099,7 @@ function handleComponentSelection() {
           selected_component_id: element.GUID
         });
       });
-      d3$7.select('rect#' + element.GUID).on('focusout', () => {
+      d3$7.select('rect#' + element.GUID).on('focusout', function () {
         d3$7.select('rect#' + element.GUID).attr('stroke-width', '0').attr('stroke', 'none');
       });
     } else if (element.type === 'string') {
@@ -3110,7 +3110,7 @@ function handleComponentSelection() {
           selected_component_id: element.GUID
         });
       });
-      d3$7.selectAll('rect#' + element.GUID + ', rect#overlaySelector' + element.GUID).on('focusout', () => {
+      d3$7.selectAll('rect#' + element.GUID + ', rect#overlaySelector' + element.GUID).on('focusout', function () {
         d3$7.select('rect#' + element.GUID).attr('stroke-width', '0').attr('stroke', 'none');
         d3$7.select('rect#statusRect' + element.GUID).attr('fill', '#525252');
       });
@@ -3120,7 +3120,7 @@ function handleComponentSelection() {
         reactContext.setState({
           selected_component_id: element.GUID
         });
-      }).on('focusout', () => {
+      }).on('focusout', function () {
         d3$7.select('rect#' + element.GUID).attr('stroke-width', '1').attr('stroke', 'black');
       });
     } else if (element.type === 'optionList') {
@@ -3133,7 +3133,7 @@ function handleComponentSelection() {
           optionlistRectid: element.GUID
         });
       });
-      d3$7.select('rect#' + element.GUID).on('focusout', () => {
+      d3$7.select('rect#' + element.GUID).on('focusout', function () {
         d3$7.select('rect#' + element.GUID).attr('stroke-width', '0').attr('stroke', 'none');
       });
     }
@@ -3148,7 +3148,7 @@ function handleComponentSelection() {
 
 
 function handleTheClickOnAllComponents() {
-  const reactContext = this;
+  var reactContext = this;
   reactContext.state.allComp;
   d3$7.selectAll('rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody, rect.CompCBody').on('mousedown', function (event) {
     var coordinates = d3$7.pointer(event);
@@ -3180,10 +3180,11 @@ function handleEdgeInitialization() {
     });
     var edgeStarted = reactContext.state.edgeStarted;
     var targetcircleIN = reactContext.state.targetcircleIN;
-    var fromCircle = { ...reactContext.state.fromCircle
-    };
-    var comp_output_edges = { ...reactContext.state.comp_output_edges
-    };
+
+    var fromCircle = _objectSpread2({}, reactContext.state.fromCircle);
+
+    var comp_output_edges = _objectSpread2({}, reactContext.state.comp_output_edges);
+
     var selectedcircleId;
 
     if (edgeStarted && targetcircleIN && this !== fromCircle.element) ; else {
@@ -3232,18 +3233,21 @@ function handleEdgeInitialization() {
     var edgeStarted = reactContext.state.edgeStarted;
     var allEdges = reactContext.state.allEdges;
     var targetcircleIN = reactContext.state.targetcircleIN;
-    var fromCircle = { ...reactContext.state.fromCircle
-    };
-    var toCircle = { ...reactContext.state.toCircle
-    };
-    var comp_input_edges = { ...reactContext.state.comp_input_edges
-    };
-    var comp_output_edges = { ...reactContext.state.comp_output_edges
-    };
+
+    var fromCircle = _objectSpread2({}, reactContext.state.fromCircle);
+
+    var toCircle = _objectSpread2({}, reactContext.state.toCircle);
+
+    var comp_input_edges = _objectSpread2({}, reactContext.state.comp_input_edges);
+
+    var comp_output_edges = _objectSpread2({}, reactContext.state.comp_output_edges);
+
     var root_components = reactContext.state.root_components; //What.
 
     var parent_child_matrix = reactContext.state.parent_child_matrix;
-    var parent_child_matrix_fast_check = [...reactContext.state.parent_child_matrix_fast_check];
+
+    var parent_child_matrix_fast_check = _toConsumableArray(reactContext.state.parent_child_matrix_fast_check);
+
     var selectedcircleId = reactContext.state.selectedcircleId;
 
     if (edgeStarted && targetcircleIN && this !== fromCircle.element && (comp_input_edges[this.classList[1]][this.classList[2]] === undefined || comp_input_edges[this.classList[1]][this.classList[2]] === null)) {
@@ -3272,8 +3276,8 @@ function handleEdgeInitialization() {
         } // Datatree control. FIX UNCOMMENR
 
 
-        var current_edge_comp_matrix = { ...reactContext.state.edge_comp_matrix
-        };
+        var current_edge_comp_matrix = _objectSpread2({}, reactContext.state.edge_comp_matrix);
+
         current_edge_comp_matrix[thisEdge.path_id] = {
           from: fromCircle.element.classList[1],
           to: toCircle.element.classList[1],
@@ -3323,36 +3327,16 @@ function handleEdgeInitialization() {
 
 
 function handleDoubleClick() {
-  const reactContext = this;
+  var reactContext = this;
   var allComp = reactContext.state.allComp;
-  allComp.forEach(element => {
+  allComp.forEach(function (element) {
     if (element.type === 'string') {
       d3$7.select('g#comp-' + element.GUID).on('dblclick', function () {
         if (!reactContext.state.doubleClicked) {
           reactContext.setState({
             doubleClicked: true
           });
-          $('div#propertiesBarContents').append(`
-                        <div class="propertiesbarheader title">String Panel Properties</div>
-                        <div class="propertiesbarheader label">Name</div>
-                        <input class="stringPnanel Name"></textarea>
-                        <hr>
-                        <div class="propertiesbarheader label">Value</div>
-                        <textarea class="textarea stringProperties"></textarea>
-                        <hr>
-                        <div class="propertiesbarheader label">Panel Type</div>
-                        <form>
-                            <input type="radio" name="type" id="string_radio_text" value="text"> text<br>
-                            <input type="radio" name="type" id="string_radio_html" value="html"> html<br>
-                            <input type="radio" name="type" id="string_radio_json" value="json"> json<br>
-                            <input type="radio" name="type" id="string_radio_lsit" value="lsit"> list<br>
-                            <input type="radio" name="type" id="string_radio_plot" value="plot"> plot <br>
-                        </form>
-                        <hr>
-                        <div class="propertiesbarheader label">Log</div>
-                        <div id="propertiesBarLog" class="log"></div>
-                        <button id="stringEditButton">Apply</button>
-                        <button id="cancelStringEdit">Cancel</button>`);
+          $('div#propertiesBarContents').append("\n                        <div class=\"propertiesbarheader title\">String Panel Properties</div>\n                        <div class=\"propertiesbarheader label\">Name</div>\n                        <input class=\"stringPnanel Name\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Value</div>\n                        <textarea class=\"textarea stringProperties\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Panel Type</div>\n                        <form>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_text\" value=\"text\"> text<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_html\" value=\"html\"> html<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_json\" value=\"json\"> json<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_lsit\" value=\"lsit\"> list<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_plot\" value=\"plot\"> plot <br>\n                        </form>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Log</div>\n                        <div id=\"propertiesBarLog\" class=\"log\"></div>\n                        <button id=\"stringEditButton\">Apply</button>\n                        <button id=\"cancelStringEdit\">Cancel</button>");
           element.outputs[0].value = element.value;
           var StringComp = selectComp(element.GUID);
           $('input#string_radio_' + StringComp.inputs[0].type).prop('checked', true);
@@ -3366,16 +3350,16 @@ function handleDoubleClick() {
 
           if (StringComp.child) {
             $('textarea.textarea.stringProperties').prop('disabled', true);
-            $('textarea.stringProperties').text(() => {
+            $('textarea.stringProperties').text(function () {
               return StringComp.inputs[0].value;
             });
-            $('body').on('mousemove', () => {
-              $('textarea.stringProperties').text(() => {
+            $('body').on('mousemove', function () {
+              $('textarea.stringProperties').text(function () {
                 return StringComp.inputs[0].value;
               });
             });
           } else {
-            $('textarea.stringProperties').text(() => {
+            $('textarea.stringProperties').text(function () {
               return StringComp.inputs[0].value;
             });
           }
@@ -3407,25 +3391,8 @@ function handleDoubleClick() {
           reactContext.setState({
             doubleClicked: true
           });
-          $('div#propertiesBarContents').append(`
-                        <div class="propertiesbar title">Option list properties.</div>
-                        <div class="propertiesbar label">options (as dictionary)</div>
-                        <textarea class="textarea optionlistProperties"></textarea>
-                        <hr>
-                        <div class="propertiesbar label">
-                            Preview:
-                        </div>
-                        <select id="propertisBarSelecId">
-
-                        </select>
-                        <hr>
-                        <div class="propertiesbar label">
-                            Log
-                        </div>
-                        <div id="propertiesBarLog" class="log"></div>
-                        <button id="applyChangeButton">Apply</button>
-                        `);
-          let compKey = element.GUID;
+          $('div#propertiesBarContents').append("\n                        <div class=\"propertiesbar title\">Option list properties.</div>\n                        <div class=\"propertiesbar label\">options (as dictionary)</div>\n                        <textarea class=\"textarea optionlistProperties\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbar label\">\n                            Preview:\n                        </div>\n                        <select id=\"propertisBarSelecId\">\n\n                        </select>\n                        <hr>\n                        <div class=\"propertiesbar label\">\n                            Log\n                        </div>\n                        <div id=\"propertiesBarLog\" class=\"log\"></div>\n                        <button id=\"applyChangeButton\">Apply</button>\n                        ");
+          var compKey = element.GUID;
           submitOptionListEdit(compKey);
           $('button#applyChangeButton').on('click', function (e) {
             readyToGoSubmit(compKey);
@@ -3441,15 +3408,7 @@ function handleDoubleClick() {
           reactContext.setState({
             doubleClicked: true
           });
-          $('div#propertiesBarContents').append(`
-                        <div class="propertiesbarheader label">Slider</div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Min-value : </div><input type="number" id="new_slider_min_value"></div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Max-value: </div><input type="number" id="new_slider_max_value"></div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Step: </div><input type="number" id="new_slider_step_value"></div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Current-value: </div><input type="number" id="new_slider_current_value"></div>
-                        <button id="sliderEditButton">Save</button>
-                        <button id="cancelSliderEdit">Cancel</button>
-                        `);
+          $('div#propertiesBarContents').append("\n                        <div class=\"propertiesbarheader label\">Slider</div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Min-value : </div><input type=\"number\" id=\"new_slider_min_value\"></div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Max-value: </div><input type=\"number\" id=\"new_slider_max_value\"></div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Step: </div><input type=\"number\" id=\"new_slider_step_value\"></div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Current-value: </div><input type=\"number\" id=\"new_slider_current_value\"></div>\n                        <button id=\"sliderEditButton\">Save</button>\n                        <button id=\"cancelSliderEdit\">Cancel</button>\n                        ");
           $('input#new_slider_min_value').val(element.min);
           $('input#new_slider_max_value').val(element.max);
           $('input#new_slider_step_value').val(element.step);
@@ -3483,7 +3442,7 @@ function handleDoubleClick() {
             currentToggle.outputs[0].value = 'True';
             return 'True';
           }
-        }).attr('fill', () => {
+        }).attr('fill', function () {
           if (toggleValue === 'True') {
             d3$7.select('#dummyRect_' + element.GUID).attr('fill', '#2c3e50');
             return '#ecf0f1';
@@ -4653,263 +4612,277 @@ function showVerticalAlignment(selectionBox) {
 
 var img = "data:image/png;base64,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";
 
-class Grid extends Component {
-  render() {
-    return /*#__PURE__*/React.createElement("svg", {
-      height: "10000",
-      width: "10000"
-    }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("pattern", {
-      id: "img122",
-      patternUnits: "userSpaceOnUse",
-      width: "500",
-      height: "500"
-    }, /*#__PURE__*/React.createElement("image", {
-      className: "rep",
-      xlinkHref: img,
-      x: "0",
-      y: "0",
-      width: "500",
-      height: "500"
-    })), /*#__PURE__*/React.createElement("filter", {
-      id: this.props.filter_id,
-      x: "-40",
-      y: "-40",
-      width: "150%",
-      height: "150%",
-      filterUnits: "userSpaceOnUse"
-    }, /*#__PURE__*/React.createElement("feOffset", {
-      result: "offOut",
-      in: "SourceGraphics",
-      dx: "0",
-      dy: "0"
-    }), /*#__PURE__*/React.createElement("feGaussianBlur", {
-      result: "blurOut",
-      in: "offOut",
-      stdDeviation: "1"
-    }), /*#__PURE__*/React.createElement("feBlend", {
-      in: "SourceGraphic",
-      in2: "blurOut",
-      mode: "normal"
-    })), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "grad1ient",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        'stopColour': '#dddddd',
-        'stopOpacity': '100%'
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "50%",
-      style: {
-        "stopColour": "#eeeeee",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#dddddd",
-        "stopOpacity": "100%"
-      }
-    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "fileUploadGradient",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#344b62",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "10%",
-      style: {
-        "stopColour": "#344b62",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "12%",
-      style: {
-        "stopColour": "#2b3d50",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "88%",
-      style: {
-        "stopColour": "#2b3d50",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "90%",
-      style: {
-        "stopColour": "#23364a",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#23364a",
-        "stopOpacity": "100%"
-      }
-    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "gradientlsider",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#eeeeee",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "20%",
-      style: {
-        "stopColour": "#eeeeee",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "30%",
-      style: {
-        "stopColour": "#dddddd",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "70%",
-      style: {
-        "stopColour": "#dddddd",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "80%",
-      style: {
-        "stopColour": "#cccccc",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#cccccc",
-        "stopOpacity": "100%"
-      }
-    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "gradient2",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "10%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "30%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "60%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "80%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "60%"
-      }
-    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "gradient2_2",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "50%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "0%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "70%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "0%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "30%"
-      }
-    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "gradient3",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#555555",
-        "stopOpacity": "0%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "28%",
-      style: {
-        "stopColour": "#555555",
-        "stopOpacity": "0%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "30%",
-      style: {
-        "stopColour": "#555555",
-        "stopOpacity": "20%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "80%",
-      style: {
-        "stopColour": "#555555",
-        "stopOpacity": "50%"
-      }
-    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "gradient4",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#373939",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#023939",
-        "stopOpacity": "100%"
-      }
-    })))));
+var Grid = /*#__PURE__*/function (_Component) {
+  _inherits(Grid, _Component);
+
+  var _super = _createSuper(Grid);
+
+  function Grid() {
+    _classCallCheck(this, Grid);
+
+    return _super.apply(this, arguments);
   }
 
-}
+  _createClass(Grid, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/React.createElement("svg", {
+        height: "10000",
+        width: "10000"
+      }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("pattern", {
+        id: "img122",
+        patternUnits: "userSpaceOnUse",
+        width: "500",
+        height: "500"
+      }, /*#__PURE__*/React.createElement("image", {
+        className: "rep",
+        xlinkHref: img,
+        x: "0",
+        y: "0",
+        width: "500",
+        height: "500"
+      })), /*#__PURE__*/React.createElement("filter", {
+        id: this.props.filter_id,
+        x: "-40",
+        y: "-40",
+        width: "150%",
+        height: "150%",
+        filterUnits: "userSpaceOnUse"
+      }, /*#__PURE__*/React.createElement("feOffset", {
+        result: "offOut",
+        in: "SourceGraphics",
+        dx: "0",
+        dy: "0"
+      }), /*#__PURE__*/React.createElement("feGaussianBlur", {
+        result: "blurOut",
+        in: "offOut",
+        stdDeviation: "1"
+      }), /*#__PURE__*/React.createElement("feBlend", {
+        in: "SourceGraphic",
+        in2: "blurOut",
+        mode: "normal"
+      })), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "grad1ient",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          'stopColour': '#dddddd',
+          'stopOpacity': '100%'
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "50%",
+        style: {
+          "stopColour": "#eeeeee",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#dddddd",
+          "stopOpacity": "100%"
+        }
+      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "fileUploadGradient",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#344b62",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "10%",
+        style: {
+          "stopColour": "#344b62",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "12%",
+        style: {
+          "stopColour": "#2b3d50",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "88%",
+        style: {
+          "stopColour": "#2b3d50",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "90%",
+        style: {
+          "stopColour": "#23364a",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#23364a",
+          "stopOpacity": "100%"
+        }
+      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "gradientlsider",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#eeeeee",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "20%",
+        style: {
+          "stopColour": "#eeeeee",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "30%",
+        style: {
+          "stopColour": "#dddddd",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "70%",
+        style: {
+          "stopColour": "#dddddd",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "80%",
+        style: {
+          "stopColour": "#cccccc",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#cccccc",
+          "stopOpacity": "100%"
+        }
+      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "gradient2",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "10%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "30%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "60%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "80%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "60%"
+        }
+      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "gradient2_2",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "50%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "0%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "70%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "0%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "30%"
+        }
+      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "gradient3",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#555555",
+          "stopOpacity": "0%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "28%",
+        style: {
+          "stopColour": "#555555",
+          "stopOpacity": "0%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "30%",
+        style: {
+          "stopColour": "#555555",
+          "stopOpacity": "20%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "80%",
+        style: {
+          "stopColour": "#555555",
+          "stopOpacity": "50%"
+        }
+      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "gradient4",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#373939",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#023939",
+          "stopOpacity": "100%"
+        }
+      })))));
+    }
+  }]);
+
+  return Grid;
+}(Component);
 
 /*
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -6468,7 +6441,7 @@ var d3 = require('d3');
 function getCurrentData(reactContext) {
   var allContents = d3.select('#allCanvasContents');
   var svgContainer = d3.select('svg');
-  reactContext.state.allEdges.forEach(element => {
+  reactContext.state.allEdges.forEach(function (element) {
     element['d'] = $('path#' + element.path_id).attr('d');
     element['circleX'] = $('rect#pathCircle' + element.path_id).attr('x');
     element['circleY'] = $('rect#pathCircle' + element.path_id).attr('y');
@@ -6489,12 +6462,12 @@ function getCurrentData(reactContext) {
     currentRightColWidth: parseFloat(d3.select('div#PropertiesBar').style('width')),
     currentLeftColWidth: parseFloat(d3.select('div#LeftPropertiesBar').style('width'))
   };
-  const fileData = JSON.stringify(data);
+  var fileData = JSON.stringify(data);
   return fileData;
 }
 
 function saveData() {
-  const fileData = getCurrentData(this);
+  var fileData = getCurrentData(this);
   var storage = window.localStorage;
   storage.setItem('data', fileData);
   alert('Successfully save data');
@@ -6506,18 +6479,20 @@ function clearData() {
 }
 
 function downloadData() {
-  const fileData = getCurrentData(this);
-  const blob = new Blob([fileData], {
+  var fileData = getCurrentData(this);
+  var blob = new Blob([fileData], {
     type: "text/plain"
   });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
+  var url = URL.createObjectURL(blob);
+  var link = document.createElement('a');
   link.download = "data.json";
   link.href = url;
   link.click();
 }
 
 function loadData() {
+  var _this = this;
+
   var allData = JSON.parse(window.localStorage.getItem('data'));
   var allContents = d3.select('#allCanvasContents');
   var svgContainer = d3.select('svg');
@@ -6535,10 +6510,10 @@ function loadData() {
       this.setState({
         allComp: allComponents
       });
-      allComponents.forEach(element => {
-        if (element.type === 'component') CreateNewComponent(this, element); //to be handle later
-        else if (element.type === 'slider') CreateNewSlider(this, element);else if (element.type === 'string') CreateNewPanel(this, element);else if (element.type === 'toggle') CreateNewToggle(this, element);else if (element.type === 'optionList') CreateNewOptionList(this, element); //to be handle later
-          else if (element.type === 'fileUpload') CreateNewFileUpload(this, element);else if (element.type === 'listView') CreateNewListView(this, element);
+      allComponents.forEach(function (element) {
+        if (element.type === 'component') CreateNewComponent(_this, element); //to be handle later
+        else if (element.type === 'slider') CreateNewSlider(_this, element);else if (element.type === 'string') CreateNewPanel(_this, element);else if (element.type === 'toggle') CreateNewToggle(_this, element);else if (element.type === 'optionList') CreateNewOptionList(_this, element); //to be handle later
+          else if (element.type === 'fileUpload') CreateNewFileUpload(_this, element);else if (element.type === 'listView') CreateNewListView(_this, element);
       });
     }
 
@@ -6553,7 +6528,7 @@ function loadData() {
         parent_child_matrix_fast_check: allData.parent_child_matrix_fast_check,
         root_components: allData.root_components
       });
-      allEdges.forEach(element => {
+      allEdges.forEach(function (element) {
         CreatePaths(element);
       });
     }
