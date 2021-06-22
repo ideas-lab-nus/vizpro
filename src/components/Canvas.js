@@ -18,6 +18,7 @@ import { handleComponentSelection,
          handleDoubleClick } from './js/handle.js';
 import { addGenericComponentIcon, addRightToggleButton } from './js/leftPropertyBar.js';
 import { saveData, loadData, clearData, downloadData } from './js/saveAndLoadData.js';
+import './App.css';
 
 export default class Canvas extends React.Component {
     constructor(props) {

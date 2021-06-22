@@ -1,34 +1,12 @@
 # Getting Started with Create React App
 
-# Usage:
-
-`playground` is an internal cra that should be used to test this React Component Library that
-currently exports the component `Canvas`
-
-Run at root:
-1. `npm update && npm run build`
-2. `npm run i-all` //This runs npm install for both the base and playground
-3. `npm run dev` //This builds the library to /dist and starts the playground
-
-# Issues to address:
-
--   \*\* Call to cloud function url is blocked by CORS issue. Temp workaround -> Install Chrome CORS extension
--   \*\* Request for cloud function is sync. Make it async and add a `loading` indicator
--   File Upload feature
--   Factor out local title variables into constants file instead of state dictionary
-
-# To note:
-
--   All the information about the components is stored in `componentDetail.js` file.
--   All the hardcoded generic components are handled using `addGenericComponentIcon` in `leftPropertyBar.js` file.
-
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+### `yarn start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -36,12 +14,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `npm test`
+### `yarn test`
 
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+### `yarn build`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -51,7 +29,7 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### `yarn eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
@@ -87,6 +65,6 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/a
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
+### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
