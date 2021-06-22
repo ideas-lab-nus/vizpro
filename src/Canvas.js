@@ -64,7 +64,11 @@ export default class Canvas extends React.Component {
 
     render() {
         return (
-            <div>
+            <div style={{
+                backgroundColor: '#2b3d50',
+                width: '100vw',
+                height: '100vh',
+              }}>
                 {/* <ScriptTag>{this.print()}</ScriptTag> */}
                 <ScriptTag>{this.dummyToSetState()}</ScriptTag>
                 <ScriptTag>{this.manageGrid()}</ScriptTag>
