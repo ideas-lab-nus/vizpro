@@ -42,28 +42,6 @@ function _objectSpread2(target) {
   return target;
 }
 
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-
-function _defineProperties(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
-  }
-}
-
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
-  return Constructor;
-}
-
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -77,85 +55,6 @@ function _defineProperty(obj, key, value) {
   }
 
   return obj;
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function");
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) _setPrototypeOf(subClass, superClass);
-}
-
-function _getPrototypeOf(o) {
-  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-    return o.__proto__ || Object.getPrototypeOf(o);
-  };
-  return _getPrototypeOf(o);
-}
-
-function _setPrototypeOf(o, p) {
-  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-    o.__proto__ = p;
-    return o;
-  };
-
-  return _setPrototypeOf(o, p);
-}
-
-function _isNativeReflectConstruct() {
-  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-  if (Reflect.construct.sham) return false;
-  if (typeof Proxy === "function") return true;
-
-  try {
-    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-function _assertThisInitialized(self) {
-  if (self === void 0) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return self;
-}
-
-function _possibleConstructorReturn(self, call) {
-  if (call && (typeof call === "object" || typeof call === "function")) {
-    return call;
-  }
-
-  return _assertThisInitialized(self);
-}
-
-function _createSuper(Derived) {
-  var hasNativeReflectConstruct = _isNativeReflectConstruct();
-
-  return function _createSuperInternal() {
-    var Super = _getPrototypeOf(Derived),
-        result;
-
-    if (hasNativeReflectConstruct) {
-      var NewTarget = _getPrototypeOf(this).constructor;
-
-      result = Reflect.construct(Super, arguments, NewTarget);
-    } else {
-      result = Super.apply(this, arguments);
-    }
-
-    return _possibleConstructorReturn(this, result);
-  };
 }
 
 function _toConsumableArray(arr) {
@@ -532,7 +431,6 @@ var shallow_functions = {
   '==': equal,
   '>': greater,
   '<': less,
-  //'Exponential': exponential,
   // String operations
   Split: split,
   Join: join,
@@ -4611,277 +4509,263 @@ function showVerticalAlignment(selectionBox) {
 
 var img = "data:image/png;base64,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";
 
-var Grid = /*#__PURE__*/function (_Component) {
-  _inherits(Grid, _Component);
-
-  var _super = _createSuper(Grid);
-
-  function Grid() {
-    _classCallCheck(this, Grid);
-
-    return _super.apply(this, arguments);
+class Grid extends Component {
+  render() {
+    return /*#__PURE__*/React.createElement("svg", {
+      height: "10000",
+      width: "10000"
+    }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("pattern", {
+      id: "img122",
+      patternUnits: "userSpaceOnUse",
+      width: "500",
+      height: "500"
+    }, /*#__PURE__*/React.createElement("image", {
+      className: "rep",
+      xlinkHref: img,
+      x: "0",
+      y: "0",
+      width: "500",
+      height: "500"
+    })), /*#__PURE__*/React.createElement("filter", {
+      id: this.props.filter_id,
+      x: "-40",
+      y: "-40",
+      width: "150%",
+      height: "150%",
+      filterUnits: "userSpaceOnUse"
+    }, /*#__PURE__*/React.createElement("feOffset", {
+      result: "offOut",
+      in: "SourceGraphics",
+      dx: "0",
+      dy: "0"
+    }), /*#__PURE__*/React.createElement("feGaussianBlur", {
+      result: "blurOut",
+      in: "offOut",
+      stdDeviation: "1"
+    }), /*#__PURE__*/React.createElement("feBlend", {
+      in: "SourceGraphic",
+      in2: "blurOut",
+      mode: "normal"
+    })), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+      id: "grad1ient",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React.createElement("stop", {
+      offset: "0%",
+      style: {
+        'stopColour': '#dddddd',
+        'stopOpacity': '100%'
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "50%",
+      style: {
+        "stopColour": "#eeeeee",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#dddddd",
+        "stopOpacity": "100%"
+      }
+    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+      id: "fileUploadGradient",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React.createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#344b62",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "10%",
+      style: {
+        "stopColour": "#344b62",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "12%",
+      style: {
+        "stopColour": "#2b3d50",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "88%",
+      style: {
+        "stopColour": "#2b3d50",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "90%",
+      style: {
+        "stopColour": "#23364a",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#23364a",
+        "stopOpacity": "100%"
+      }
+    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+      id: "gradientlsider",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React.createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#eeeeee",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "20%",
+      style: {
+        "stopColour": "#eeeeee",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "30%",
+      style: {
+        "stopColour": "#dddddd",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "70%",
+      style: {
+        "stopColour": "#dddddd",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "80%",
+      style: {
+        "stopColour": "#cccccc",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#cccccc",
+        "stopOpacity": "100%"
+      }
+    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+      id: "gradient2",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React.createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "10%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "30%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "60%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "80%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "60%"
+      }
+    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+      id: "gradient2_2",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React.createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "50%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "0%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "70%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "0%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "30%"
+      }
+    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+      id: "gradient3",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React.createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#555555",
+        "stopOpacity": "0%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "28%",
+      style: {
+        "stopColour": "#555555",
+        "stopOpacity": "0%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "30%",
+      style: {
+        "stopColour": "#555555",
+        "stopOpacity": "20%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "80%",
+      style: {
+        "stopColour": "#555555",
+        "stopOpacity": "50%"
+      }
+    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+      id: "gradient4",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React.createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#373939",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React.createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#023939",
+        "stopOpacity": "100%"
+      }
+    })))));
   }
 
-  _createClass(Grid, [{
-    key: "render",
-    value: function render() {
-      return /*#__PURE__*/React.createElement("svg", {
-        height: "10000",
-        width: "10000"
-      }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("pattern", {
-        id: "img122",
-        patternUnits: "userSpaceOnUse",
-        width: "500",
-        height: "500"
-      }, /*#__PURE__*/React.createElement("image", {
-        className: "rep",
-        xlinkHref: img,
-        x: "0",
-        y: "0",
-        width: "500",
-        height: "500"
-      })), /*#__PURE__*/React.createElement("filter", {
-        id: this.props.filter_id,
-        x: "-40",
-        y: "-40",
-        width: "150%",
-        height: "150%",
-        filterUnits: "userSpaceOnUse"
-      }, /*#__PURE__*/React.createElement("feOffset", {
-        result: "offOut",
-        in: "SourceGraphics",
-        dx: "0",
-        dy: "0"
-      }), /*#__PURE__*/React.createElement("feGaussianBlur", {
-        result: "blurOut",
-        in: "offOut",
-        stdDeviation: "1"
-      }), /*#__PURE__*/React.createElement("feBlend", {
-        in: "SourceGraphic",
-        in2: "blurOut",
-        mode: "normal"
-      })), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-        id: "grad1ient",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React.createElement("stop", {
-        offset: "0%",
-        style: {
-          'stopColour': '#dddddd',
-          'stopOpacity': '100%'
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "50%",
-        style: {
-          "stopColour": "#eeeeee",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#dddddd",
-          "stopOpacity": "100%"
-        }
-      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-        id: "fileUploadGradient",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React.createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#344b62",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "10%",
-        style: {
-          "stopColour": "#344b62",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "12%",
-        style: {
-          "stopColour": "#2b3d50",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "88%",
-        style: {
-          "stopColour": "#2b3d50",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "90%",
-        style: {
-          "stopColour": "#23364a",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#23364a",
-          "stopOpacity": "100%"
-        }
-      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-        id: "gradientlsider",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React.createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#eeeeee",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "20%",
-        style: {
-          "stopColour": "#eeeeee",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "30%",
-        style: {
-          "stopColour": "#dddddd",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "70%",
-        style: {
-          "stopColour": "#dddddd",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "80%",
-        style: {
-          "stopColour": "#cccccc",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#cccccc",
-          "stopOpacity": "100%"
-        }
-      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-        id: "gradient2",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React.createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "10%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "30%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "60%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "80%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "60%"
-        }
-      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-        id: "gradient2_2",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React.createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "50%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "0%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "70%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "0%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "30%"
-        }
-      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-        id: "gradient3",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React.createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#555555",
-          "stopOpacity": "0%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "28%",
-        style: {
-          "stopColour": "#555555",
-          "stopOpacity": "0%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "30%",
-        style: {
-          "stopColour": "#555555",
-          "stopOpacity": "20%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "80%",
-        style: {
-          "stopColour": "#555555",
-          "stopOpacity": "50%"
-        }
-      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-        id: "gradient4",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React.createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#373939",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React.createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#023939",
-          "stopOpacity": "100%"
-        }
-      })))));
-    }
-  }]);
-
-  return Grid;
-}(Component);
+}
 
 /*
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -5351,25 +5235,7 @@ const details = [{
   }],
   color: '#F23322',
   backgroundImage: ''
-}, // {
-//     name: 'Exponential',
-//     shname: 'exp',
-//     desc: 'e raise to the power x',
-//     type: 'component',
-//     dftype: 'shlow',
-//     category: 'Basic',
-//     subcategory: 'Math',
-//     inputList: [
-//         { name: 'in_01', shortName: 'in_01', desc: 'first input', default_value: '10.0' }
-//     ],
-//     outputList: [
-//         { name: 'output_', shortName: 'out_', desc: 'product' },
-//         { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
-//     ],
-//     color: '#F23322',
-//     backgroundImage: ''
-// },
-{
+}, {
   name: 'Json Navigator',
   shname: 'jsonNav',
   desc: 'Select item from json object by path',
@@ -6590,24 +6456,73 @@ function CreatePaths(theEdge) {
   addEdgeCircle(theEdge, theEdge.d).attr('x', theEdge.circleX).attr('y', theEdge.circleY).attr('style', 'display:block');
 } //End of CreatePaths
 
-function addNewUdo(name, shname, desc, type, dftype, category, subcategory, inputList, outputList, color, backgroundImage, calledFunc = null) {
-  let newComp = {
-    name: name,
-    shname: shname,
-    desc: desc,
-    type: type,
-    dftype: dftype,
-    category: category,
-    subcategory: subcategory,
-    inputList: inputList,
-    outputList: outputList,
-    color: color,
-    backgroundImage: backgroundImage
-  };
-  details.push(newComp);
+/**
+ * Adds a new user defined object. This function is called in componentDidMount in the main Canvas
+ * @param {String} name the component's name
+ * @param {String} shname the component's short name
+ * @param {String} desc the component's description
+ * @param {String} type the component's type (must be Component/OptionList/String)
+ * @param {String} dftype the component's depth type (must be shlow or dp)
+ * @param {String} category the component's category (must be either Basic/BuildSimHub/OsiSoft/Pandas/String Operations)
+ * @param {List} inputList the component's input list. It is a list of dictionary. "name" attribute is compulsory, 
+ * other attribute such as short name, description, input type and default value are optional
+ * @param {List} outputList the component's output list. It is a list of dictionary. "name" attribute is compulsory, 
+ * other attribute such as short name and description are optional
+ * @param {String} color the component's color in hex code. The default color is #F23322 (orange)
+ * @param {*} backgroundImage the component's icon in the left property bar. This field is optional.
+ * @param {*} calledFunc the corresponding function for that component
+ */
 
-  if (dftype === 'shlow') {
-    shallow_functions[name] = calledFunc;
+var typeList = ['component', 'optionList', 'string'];
+var dftypeList = ['shlow', 'dp'];
+var categoryList = ['Basic', 'BuildSimHub', 'OsiSoft', 'Pandas', 'String Operations'];
+
+function addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color = "#F23322", backgroundImage = "", calledFunc = null) {
+  //check requirements
+  if (typeList.includes(type) && dftypeList.includes(dftype) && categoryList.includes(category)) {
+    let nameCheck = true;
+
+    for (let index = 0; index < inputList.length; index++) {
+      const element = inputList[index];
+
+      if (element.name === undefined) {
+        nameCheck = false;
+        break;
+      }
+    }
+
+    for (let index = 0; index < outputList.length; index++) {
+      const element = outputList[index];
+
+      if (element.name === undefined) {
+        nameCheck = false;
+        break;
+      }
+    }
+
+    if (nameCheck) {
+      let newComp = {
+        name: name,
+        shname: shname,
+        desc: desc,
+        type: type,
+        dftype: dftype,
+        category: category,
+        inputList: inputList,
+        outputList: outputList,
+        color: color,
+        backgroundImage: backgroundImage
+      };
+      details.push(newComp);
+
+      if (dftype === 'shlow') {
+        shallow_functions[name] = calledFunc;
+      }
+    } else {
+      console.log('All elements in input and output list must have "name" attribute');
+    }
+  } else {
+    console.log("Check the type/dftype/category again");
   }
 }
 
@@ -6682,8 +6597,10 @@ class Canvas extends React.Component {
   }
 
   componentDidMount() {
-    addNewUdo('Exponenetial', 'Exp', 'e raise to the power x', 'component', 'shlow', 'Basic', 'Math', [{
-      name: 'in_01',
+    console.log(this.props.udo);
+    console.log(this.props.udo[0].title);
+    addNewUdo('Exponenetial', 'Exp', 'e raise to the power x', 'component', 'shlow', 'Basic', [{
+      name: 'input',
       shortName: 'in_01',
       desc: 'first input',
       default_value: '10.0'

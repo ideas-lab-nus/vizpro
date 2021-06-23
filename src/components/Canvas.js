@@ -61,8 +61,10 @@ export default class Canvas extends React.Component {
     }
 
     componentDidMount() {
-        addNewUdo('Exponenetial', 'Exp', 'e raise to the power x', 'component', 'shlow', 'Basic', 'Math', 
-        [{ name: 'in_01', shortName: 'in_01', desc: 'first input', default_value: '10.0' }],
+        console.log(this.props.udo);
+        console.log(this.props.udo[0].title);
+        addNewUdo('Exponenetial', 'Exp', 'e raise to the power x', 'component', 'shlow', 'Basic', 
+        [{ name: 'input', shortName: 'in_01', desc: 'first input', default_value: '10.0' }],
         [{ name: 'output_', shortName: 'out_', desc: 'product' }, { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }],
         "#F23322", "", exponential);
         this.manageCanvas();

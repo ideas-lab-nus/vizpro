@@ -148,24 +148,6 @@ const details = [
         color: '#F23322',
         backgroundImage: ''
     },
-    // {
-    //     name: 'Exponential',
-    //     shname: 'exp',
-    //     desc: 'e raise to the power x',
-    //     type: 'component',
-    //     dftype: 'shlow',
-    //     category: 'Basic',
-    //     subcategory: 'Math',
-    //     inputList: [
-    //         { name: 'in_01', shortName: 'in_01', desc: 'first input', default_value: '10.0' }
-    //     ],
-    //     outputList: [
-    //         { name: 'output_', shortName: 'out_', desc: 'product' },
-    //         { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
-    //     ],
-    //     color: '#F23322',
-    //     backgroundImage: ''
-    // },
     {
         name: 'Json Navigator',
         shname: 'jsonNav',

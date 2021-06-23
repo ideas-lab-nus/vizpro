@@ -45,7 +45,6 @@ var shallow_functions = {
     '==': equal,
     '>': greater,
     '<': less,
-    //'Exponential': exponential,
     // String operations
     Split: split,
     Join: join,
