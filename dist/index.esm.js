@@ -42,6 +42,28 @@ function _objectSpread2(target) {
   return target;
 }
 
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -55,6 +77,85 @@ function _defineProperty(obj, key, value) {
   }
 
   return obj;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) _setPrototypeOf(subClass, superClass);
+}
+
+function _getPrototypeOf(o) {
+  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  return _getPrototypeOf(o);
+}
+
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+function _isNativeReflectConstruct() {
+  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+  if (Reflect.construct.sham) return false;
+  if (typeof Proxy === "function") return true;
+
+  try {
+    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (call && (typeof call === "object" || typeof call === "function")) {
+    return call;
+  }
+
+  return _assertThisInitialized(self);
+}
+
+function _createSuper(Derived) {
+  var hasNativeReflectConstruct = _isNativeReflectConstruct();
+
+  return function _createSuperInternal() {
+    var Super = _getPrototypeOf(Derived),
+        result;
+
+    if (hasNativeReflectConstruct) {
+      var NewTarget = _getPrototypeOf(this).constructor;
+
+      result = Reflect.construct(Super, arguments, NewTarget);
+    } else {
+      result = Super.apply(this, arguments);
+    }
+
+    return _possibleConstructorReturn(this, result);
+  };
 }
 
 function _toConsumableArray(arr) {
@@ -440,7 +541,7 @@ var shallow_functions = {
   // List
   String_to_List: str2lst,
   Max: max,
-  Min: min,
+  //Min: min,
   // Json objects
   'Json Navigator': jsonNavigator,
   // Plotting
@@ -458,7 +559,7 @@ var shallow_functions = {
  * @return {boolean} True if n is a valid number and False otherwise
  */
 
-function isNumeric$1(n) {
+function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 /**
@@ -544,7 +645,7 @@ function accumulator(args, operator) {
     console.log(InputList[i]);
     n = parseFloat(InputList[i]); // convert string to float
 
-    if (!isNumeric$1(n)) {
+    if (!isNumeric(n)) {
       log = n + ' is not numeric';
       return {
         type: ['text', 'text'],
@@ -586,7 +687,7 @@ function mathOperator(args, operator) {
   var arg1 = parseFloat(args[1]);
   var output;
 
-  if (!isNumeric$1(arg0) || !isNumeric$1(arg1)) {
+  if (!isNumeric(arg0) || !isNumeric(arg1)) {
     log = arg0 + ' or ' + arg1 + ' is not numeric';
     output = null;
   }
@@ -969,36 +1070,6 @@ function max(args) {
 
     console.log(args[0]);
     output = Math.max(...args[0]);
-  } catch (error) {
-    log = error;
-    output = null;
-  }
-
-  return {
-    type: ['text', 'text'],
-    value: [output, log]
-  };
-}
-/**
- * This function returns the minimum value between a list of inputs.
- * @param {array} args
- * @return {float} the average of all numbers in an array.
- */
-
-
-function min(args) {
-  console.log(args); // initialize variables
-
-  var log = 'Success!';
-  var output;
-
-  try {
-    if (typeof args[0] === 'string' || args[0] instanceof String) {
-      args[0] = JSON.parse(args[0]);
-    }
-
-    console.log(args[0]);
-    output = Math.min(...args[0]);
   } catch (error) {
     log = error;
     output = null;
@@ -4509,263 +4580,277 @@ function showVerticalAlignment(selectionBox) {
 
 var img = "data:image/png;base64,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";
 
-class Grid extends Component {
-  render() {
-    return /*#__PURE__*/React.createElement("svg", {
-      height: "10000",
-      width: "10000"
-    }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("pattern", {
-      id: "img122",
-      patternUnits: "userSpaceOnUse",
-      width: "500",
-      height: "500"
-    }, /*#__PURE__*/React.createElement("image", {
-      className: "rep",
-      xlinkHref: img,
-      x: "0",
-      y: "0",
-      width: "500",
-      height: "500"
-    })), /*#__PURE__*/React.createElement("filter", {
-      id: this.props.filter_id,
-      x: "-40",
-      y: "-40",
-      width: "150%",
-      height: "150%",
-      filterUnits: "userSpaceOnUse"
-    }, /*#__PURE__*/React.createElement("feOffset", {
-      result: "offOut",
-      in: "SourceGraphics",
-      dx: "0",
-      dy: "0"
-    }), /*#__PURE__*/React.createElement("feGaussianBlur", {
-      result: "blurOut",
-      in: "offOut",
-      stdDeviation: "1"
-    }), /*#__PURE__*/React.createElement("feBlend", {
-      in: "SourceGraphic",
-      in2: "blurOut",
-      mode: "normal"
-    })), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "grad1ient",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        'stopColour': '#dddddd',
-        'stopOpacity': '100%'
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "50%",
-      style: {
-        "stopColour": "#eeeeee",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#dddddd",
-        "stopOpacity": "100%"
-      }
-    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "fileUploadGradient",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#344b62",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "10%",
-      style: {
-        "stopColour": "#344b62",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "12%",
-      style: {
-        "stopColour": "#2b3d50",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "88%",
-      style: {
-        "stopColour": "#2b3d50",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "90%",
-      style: {
-        "stopColour": "#23364a",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#23364a",
-        "stopOpacity": "100%"
-      }
-    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "gradientlsider",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#eeeeee",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "20%",
-      style: {
-        "stopColour": "#eeeeee",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "30%",
-      style: {
-        "stopColour": "#dddddd",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "70%",
-      style: {
-        "stopColour": "#dddddd",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "80%",
-      style: {
-        "stopColour": "#cccccc",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#cccccc",
-        "stopOpacity": "100%"
-      }
-    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "gradient2",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "10%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "30%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "60%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "80%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "60%"
-      }
-    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "gradient2_2",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "50%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "0%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "70%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "0%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "30%"
-      }
-    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "gradient3",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#555555",
-        "stopOpacity": "0%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "28%",
-      style: {
-        "stopColour": "#555555",
-        "stopOpacity": "0%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "30%",
-      style: {
-        "stopColour": "#555555",
-        "stopOpacity": "20%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "80%",
-      style: {
-        "stopColour": "#555555",
-        "stopOpacity": "50%"
-      }
-    }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
-      id: "gradient4",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React.createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#373939",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React.createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#023939",
-        "stopOpacity": "100%"
-      }
-    })))));
+var Grid = /*#__PURE__*/function (_Component) {
+  _inherits(Grid, _Component);
+
+  var _super = _createSuper(Grid);
+
+  function Grid() {
+    _classCallCheck(this, Grid);
+
+    return _super.apply(this, arguments);
   }
 
-}
+  _createClass(Grid, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/React.createElement("svg", {
+        height: "10000",
+        width: "10000"
+      }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("pattern", {
+        id: "img122",
+        patternUnits: "userSpaceOnUse",
+        width: "500",
+        height: "500"
+      }, /*#__PURE__*/React.createElement("image", {
+        className: "rep",
+        xlinkHref: img,
+        x: "0",
+        y: "0",
+        width: "500",
+        height: "500"
+      })), /*#__PURE__*/React.createElement("filter", {
+        id: this.props.filter_id,
+        x: "-40",
+        y: "-40",
+        width: "150%",
+        height: "150%",
+        filterUnits: "userSpaceOnUse"
+      }, /*#__PURE__*/React.createElement("feOffset", {
+        result: "offOut",
+        in: "SourceGraphics",
+        dx: "0",
+        dy: "0"
+      }), /*#__PURE__*/React.createElement("feGaussianBlur", {
+        result: "blurOut",
+        in: "offOut",
+        stdDeviation: "1"
+      }), /*#__PURE__*/React.createElement("feBlend", {
+        in: "SourceGraphic",
+        in2: "blurOut",
+        mode: "normal"
+      })), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "grad1ient",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          'stopColour': '#dddddd',
+          'stopOpacity': '100%'
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "50%",
+        style: {
+          "stopColour": "#eeeeee",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#dddddd",
+          "stopOpacity": "100%"
+        }
+      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "fileUploadGradient",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#344b62",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "10%",
+        style: {
+          "stopColour": "#344b62",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "12%",
+        style: {
+          "stopColour": "#2b3d50",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "88%",
+        style: {
+          "stopColour": "#2b3d50",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "90%",
+        style: {
+          "stopColour": "#23364a",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#23364a",
+          "stopOpacity": "100%"
+        }
+      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "gradientlsider",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#eeeeee",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "20%",
+        style: {
+          "stopColour": "#eeeeee",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "30%",
+        style: {
+          "stopColour": "#dddddd",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "70%",
+        style: {
+          "stopColour": "#dddddd",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "80%",
+        style: {
+          "stopColour": "#cccccc",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#cccccc",
+          "stopOpacity": "100%"
+        }
+      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "gradient2",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "10%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "30%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "60%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "80%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "60%"
+        }
+      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "gradient2_2",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "50%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "0%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "70%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "0%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "30%"
+        }
+      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "gradient3",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#555555",
+          "stopOpacity": "0%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "28%",
+        style: {
+          "stopColour": "#555555",
+          "stopOpacity": "0%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "30%",
+        style: {
+          "stopColour": "#555555",
+          "stopOpacity": "20%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "80%",
+        style: {
+          "stopColour": "#555555",
+          "stopOpacity": "50%"
+        }
+      }))), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+        id: "gradient4",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React.createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#373939",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React.createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#023939",
+          "stopOpacity": "100%"
+        }
+      })))));
+    }
+  }]);
+
+  return Grid;
+}(Component);
 
 /*
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -6465,19 +6550,19 @@ function CreatePaths(theEdge) {
  * @param {String} dftype the component's depth type (must be shlow or dp)
  * @param {String} category the component's category (must be either Basic/BuildSimHub/OsiSoft/Pandas/String Operations)
  * @param {List} inputList the component's input list. It is a list of dictionary. "name" attribute is compulsory, 
- * other attribute such as short name, description, input type and default value are optional
+ * other attributes such as short name, description, input type and default value are optional
  * @param {List} outputList the component's output list. It is a list of dictionary. "name" attribute is compulsory, 
- * other attribute such as short name and description are optional
+ * other attributes such as short name and description are optional
  * @param {String} color the component's color in hex code. The default color is #F23322 (orange)
- * @param {*} backgroundImage the component's icon in the left property bar. This field is optional.
- * @param {*} calledFunc the corresponding function for that component
+ * @param {String} backgroundImage the URL of the component's icon in the left property bar. This field is optional.
+ * @param {Function} calledFunc the corresponding function for that component.
  */
 
 var typeList = ['component', 'optionList', 'string'];
 var dftypeList = ['shlow', 'dp'];
 var categoryList = ['Basic', 'BuildSimHub', 'OsiSoft', 'Pandas', 'String Operations'];
 
-function addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color = "#F23322", backgroundImage = "", calledFunc = null) {
+function addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color = "#F23322", backgroundImage = "", calledFunc = undefined) {
   //check requirements
   if (typeList.includes(type) && dftypeList.includes(dftype) && categoryList.includes(category)) {
     let nameCheck = true;
@@ -6515,14 +6600,39 @@ function addNewUdo(name, shname, desc, type, dftype, category, inputList, output
       };
       details.push(newComp);
 
-      if (dftype === 'shlow') {
-        shallow_functions[name] = calledFunc;
+      if (calledFunc !== undefined) {
+        if (dftype === 'shlow') {
+          shallow_functions[name] = calledFunc;
+        }
       }
     } else {
       console.log('All elements in input and output list must have "name" attribute');
     }
   } else {
     console.log("Check the type/dftype/category again");
+  }
+}
+/**
+ * Take a list of components that are passed by props and append all of them to the database
+ * @param {List} list a list of dictionary, containing the information about the components
+ */
+
+
+function addAllUdo(list) {
+  for (let index = 0; index < list.length; index++) {
+    const element = list[index];
+    let name = element.name;
+    let shname = element.shname;
+    let desc = element.desc;
+    let type = element.type;
+    let dftype = element.dftype;
+    let category = element.category;
+    let inputList = element.inputList;
+    let outputList = element.outputList;
+    let color = element.color === undefined ? '#F23322' : element.color;
+    let backgroundImage = element.backgroundImage === undefined ? '' : element.backgroundImage;
+    let calledFunc = element.func;
+    addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color, backgroundImage, calledFunc);
   }
 }
 
@@ -6556,28 +6666,6 @@ function styleInject(css, ref) {
 var css_248z = "body {\r\n    -webkit-user-select: none;\r\n    -khtml-user-select: none;\r\n    -moz-user-select: none;\r\n    -o-user-select: none;\r\n    user-select: none;\r\n}\r\n\r\nsvg {\r\n    border: solid 1px #565656;\r\n}\r\n\r\n#checks {\r\n    margin: 10px;\r\n}\r\n\r\ntext {\r\n    pointer-events: none;\r\n    user-select: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu mono';\r\n}\r\n\r\n.nodeLog {\r\n    font-size: small;\r\n    font-family: monospace;\r\n    pointer-events: none;\r\n}\r\n\r\ninput:focus,\r\nselect:focus,\r\ntextarea:focus,\r\nbutton:focus {\r\n    outline: none;\r\n}\r\n\r\nrect:focus {\r\n    outline: none;\r\n}\r\n\r\n.output {\r\n    font-family: monospace;\r\n    font-size: small;\r\n    color: white;\r\n}\r\n\r\n.input {\r\n    font-family: monospace;\r\n    font-size: small;\r\n}\r\n\r\n.nodetitle {\r\n    font-family: 'ubuntu mono';\r\n    font-size: 13px;\r\n    font-weight: bold;\r\n    color: white;\r\n    pointer-events: none;\r\n    text-align: center;\r\n}\r\n\r\ndiv#someData {\r\n    padding: 8px;\r\n    padding-top: 25px;\r\n    font-size: x-small;\r\n    font-family: monospace;\r\n}\r\n\r\ncircle {\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#PropertiesBarSelector {\r\n    width: 4px;\r\n    position: fixed;\r\n    right: 501px;\r\n    background-color: #000000;\r\n    height: 100%;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    width: 500px;\r\n    background-color: #2b3d50;\r\n    position: fixed;\r\n    right: 0px;\r\n    box-shadow: 0px 11px 10px #0000006e;\r\n    top: 0px;\r\n    min-height: 35%;\r\n    transition-timing-function: ease-in-out;\r\n    transition: height 2s;\r\n    transition-delay: 1s;\r\n}\r\n\r\ndiv#mainGrid {\r\n    position: relative;\r\n    top: 0px;\r\n    left: 0px;\r\n    background-color: #ececec;\r\n}\r\n\r\ndiv#textAreaBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\ndiv#optionlistBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\nselect#optionListSelectItems {\r\n    background: white;\r\n    opacity: 1;\r\n    font-family: monospace;\r\n    font-weight: bold;\r\n    border: 1px solid black;\r\n    border-radius: 3px;\r\n}\r\n\r\nh5 {\r\n    font-family: monospace;\r\n    margin-top: 1px;\r\n    margin-bottom: 4px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#LeftPropertiesBar {\r\n    width: 200px;\r\n    position: fixed;\r\n    background-color: #2b3d50;\r\n    left: 0px;\r\n    top: 0px;\r\n}\r\n\r\n.additionalData {\r\n    border-radius: 7px;\r\n    font-size: x-small;\r\n    width: 222px;\r\n    background-color: #ffffff47;\r\n    font-family: monospace;\r\n    color: #5d5d5d;\r\n    padding: 3px;\r\n    border: none;\r\n}\r\n\r\ndiv#LeftPropertiesBarSelector {\r\n    width: 5px;\r\n    height: 100%;\r\n    display: none;\r\n    position: fixed;\r\n    left: 200px;\r\n    background-color: #252525;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#TopPropertiesBar {\r\n    position: fixed;\r\n    top: 0px;\r\n    left: 0px;\r\n    width: 100%;\r\n    height: 30px;\r\n    background-color: #e6e6e6;\r\n}\r\n\r\ndiv#TopPropertiesBarSelector {\r\n    height: 2px;\r\n    width: 100%;\r\n    position: fixed;\r\n    left: 0px;\r\n    border-bottom: 1px solid #858585;\r\n    top: 47px;\r\n    cursor: ns-resize;\r\n}\r\n\r\nbutton.menubarButtons {\r\n    background-color: #6d6d6d;\r\n    border: none;\r\n    cursor: pointer;\r\n    color: #444444;\r\n    color: #cacaca;\r\n    font-family: 'Poppins', sans-serif;\r\n}\r\n\r\nbutton.menubarButtons:hover {\r\n    background-color: #aaabaa;\r\n}\r\n\r\ndiv#DefName {\r\n    width: 100%;\r\n    height: 32px;\r\n    padding: 0px 0px;\r\n    background: #2b3d50;\r\n    border-bottom: 1px solid #434343;\r\n}\r\n\r\ndiv#BottomPropertiesBar {\r\n    position: fixed;\r\n    bottom: 0px;\r\n    height: 20px;\r\n    left: 0px;\r\n    border-top: 1px solid #757575;\r\n    box-shadow: 0px -1px 0px #313131;\r\n    background-color: #525252;\r\n    background: linear-gradient(180deg, rgba(96, 96, 96, 1) 0%, rgba(82, 82, 82, 1) 100%);\r\n    width: 100%;\r\n}\r\n\r\na#changeTitleName {\r\n    color: #cfd8dc;\r\n    text-decoration: none;\r\n}\r\n\r\n.ccbody {\r\n    width: 100%;\r\n}\r\n\r\n.ccatheader {\r\n    padding: 0px 3px;\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    border: 1px solid #2c67a5;\r\n    color: #e7e7e7;\r\n    padding: 4px;\r\n    cursor: pointer;\r\n    overflow: hidden;\r\n}\r\n\r\nbutton.standardcat.button {\r\n    vertical-align: middle;\r\n    border: 1px solid #444444;\r\n    width: 32px;\r\n    height: 32px;\r\n    margin: 1px;\r\n    background: none;\r\n    background: -moz-linear-gradient(top, #d6d4d4 0%, #adadad 100%);\r\n    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d6d4d4', endColorstr='#adadad', GradientType=0);\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: x-small;\r\n    color: #ffffff;\r\n    cursor: pointer;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#topLeftLogo {\r\n    width: 27px;\r\n    height: 32px;\r\n    float: left;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70302709-af822a80-1838-11ea-913b-5f935ea282ed.png);\r\n    background-repeat: no-repeat;\r\n    background-size: 26px;\r\n    background-position: center;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#settingsIcon {\r\n    float: right;\r\n    position: fixed;\r\n    top: 0px;\r\n    color: #c5c5c5;\r\n    right: 0px;\r\n    text-align: center;\r\n    padding: 11px;\r\n}\r\n\r\nbutton.standardcat.button:hover {\r\n    background: #c1c1c1;\r\n}\r\n\r\ndiv#Addedmessage {\r\n    font-family: monospace;\r\n    color: white;\r\n    padding: 2px;\r\n}\r\n\r\n#minimizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #2b3d50;\r\n    position: absolute;\r\n    top: 0px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #c5c5c5;\r\n    cursor: pointer;\r\n    border-left: 1px solid #464646;\r\n    border-bottom: 1px solid #464646;\r\n    margin-top: -4px;\r\n}\r\n\r\ndiv#maximizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #5d5d5d;\r\n    position: absolute;\r\n    top: 38px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #ababab;\r\n    cursor: pointer;\r\n    margin-top: -4px;\r\n    text-shadow: 1px 1px 1px #4b4b4b;\r\n}\r\n\r\n.propertiesbar.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbarheader.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbar.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    width: 98%;\r\n    color: #2f2f2f;\r\n    padding: 3px 10px;\r\n    background-color: gray;\r\n    border-bottom: 1px solid #909090;\r\n    border-radius: 6px 6px 0px 0px;\r\n    text-shadow: 1px 1px 0px #a5a5a5;\r\n}\r\n\r\ntextarea.textarea.optionlistProperties {\r\n    width: 98%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    height: 150px;\r\n    border-radius: 0px 0px 6px 6px;\r\n    border: 1px solid gray;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntextarea.textarea.stringProperties {\r\n    width: 100%;\r\n    padding: 0px;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    min-height: 10vh;\r\n    border: none;\r\n    border-radius: 3px;\r\n    background-color: #ffffffc7;\r\n}\r\n\r\n.propertiesbarheader.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    font-weight: bold;\r\n    width: 100%;\r\n    color: #bcbcbc;\r\n    padding: 3px;\r\n}\r\n\r\nselect#propertisBarSelecId {\r\n    width: 99%;\r\n    padding: 1px 2px;\r\n    background-color: gainsboro;\r\n    border-radius: 0px 0px 6px 6px;\r\n}\r\n\r\ndiv#propertiesBarLog {\r\n    width: 100%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    font-size: small;\r\n    padding: 2px;\r\n}\r\n\r\nrect.optionListoption {\r\n    cursor: pointer;\r\n}\r\n\r\nrect.optionListoption:hover {\r\n    fill: #d9e3e6;\r\n    stroke: #989898;\r\n}\r\n\r\ndiv#error {\r\n    color: #c0392b;\r\n    padding: 8px;\r\n}\r\n\r\nforeignObject.textbody {\r\n    font-family: 'ubuntu mono', monospace;\r\n    font-size: x-small;\r\n    color: #4e4e4e;\r\n    overflow: auto;\r\n}\r\n\r\ndiv#catHead {\r\n    font-family: 'ubuntu';\r\n    font-size: small;\r\n    width: fit-content;\r\n    padding: 2px 6px;\r\n    color: white;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-left: 3px;\r\n}\r\n\r\ndiv#catbody {\r\n    margin: 0px;\r\n    border-bottom: none;\r\n    border-right: none;\r\n}\r\n\r\ndiv#catcard {\r\n    margin-bottom: 4px;\r\n    padding: 0px;\r\n}\r\n\r\nrect.xAnchor {\r\n    cursor: ew-resize;\r\n}\r\n\r\nrect.yAnchor {\r\n    cursor: ns-resize;\r\n}\r\n\r\nrect.xyAnchor {\r\n    cursor: nwse-resize;\r\n}\r\n\r\n::-webkit-scrollbar {\r\n    width: 6px;\r\n    height: 10px;\r\n}\r\n\r\n/* Track */\r\n\r\n::-webkit-scrollbar-track {\r\n    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\r\n    -webkit-border-radius: 4px;\r\n    border-radius: 4px;\r\n}\r\n\r\n/* Handle */\r\n\r\n::-webkit-scrollbar-thumb {\r\n    -webkit-border-radius: 4px;\r\n    background: rgb(0, 0, 0);\r\n}\r\n\r\n::-webkit-scrollbar-thumb:window-inactive {\r\n    background: rgba(255, 0, 0, 0.4);\r\n}\r\n\r\npath.play {\r\n    cursor: pointer;\r\n}\r\n\r\npath.play:hover {\r\n    fill: gray;\r\n}\r\n\r\nth {\r\n    border: none;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntd {\r\n    border: none;\r\n    background-color: whitesmoke;\r\n    overflow: hidden;\r\n}\r\n\r\ntbody {\r\n    font-family: ubuntu;\r\n    font-size: small;\r\n}\r\n\r\nth {\r\n    font-family: ubuntu;\r\n    text-align: left;\r\n    font-size: small;\r\n}\r\n\r\ndiv#propertiesBarContents {\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n    font-weight: normal;\r\n    color: #ffffff;\r\n    margin: 2px 0px 10px 0px;\r\n}\r\n\r\nforeignObject.panel_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ntbody {\r\n    border: none;\r\n}\r\n\r\ntable.dataframe {\r\n    border: none;\r\n}\r\n\r\nrect {\r\n    cursor: move;\r\n}\r\n\r\ninput.stringPnanel.Name {\r\n    width: 100%;\r\n    border: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\nforeignObject.panel_edit_mode a {\r\n    font-size: x-small;\r\n    color: #bdbdbd;\r\n    font-family: 'ubuntu mono';\r\n    position: relative;\r\n    text-decoration: none;\r\n    top: -8px;\r\n}\r\n\r\ndiv#numerical_slider_container {\r\n    padding: 7px;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\ndiv#help_t3 {\r\n    line-height: 1em;\r\n    color: #ec5f66;\r\n    margin-top: 5px;\r\n    margin-bottom: 3px;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_t4 {\r\n    color: #009688;\r\n    margin-left: 18px;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-bottom: 5px;\r\n}\r\n\r\ndiv#help_p {\r\n    margin-left: 36px;\r\n    margin-right: 8px;\r\n    text-align: justify;\r\n}\r\n\r\nspan#code {\r\n    color: #c23d51;\r\n    border-radius: 2px;\r\n    font-family: Courier;\r\n    font-size: xx-small;\r\n    vertical-align: middle;\r\n    padding: 1px 4px;\r\n    background-color: #32c8ac2e;\r\n}\r\n\r\ntable.dataframe {\r\n    font-size: x-small;\r\n}\r\n\r\nthead {\r\n    font-size: x-small;\r\n}\r\n\r\nth {\r\n    font-size: x-small;\r\n}\r\n\r\ntd {\r\n    font-size: x-small;\r\n}\r\n\r\nspan#errorTitle {\r\n    color: #e91e63;\r\n    font-weight: bold;\r\n    background-color: #f4433638;\r\n    border-radius: 3px;\r\n}\r\n\r\na.menubarButtons {\r\n    text-decoration: unset;\r\n    color: #000000;\r\n    text-shadow: 1px 1px 4px #4b4b4b;\r\n    font-size: small;\r\n    padding: 0px 6px;\r\n    margin: 1px 1px;\r\n    float: left;\r\n}\r\n\r\ndiv#buttonClickedname {\r\n    color: white;\r\n    font-size: small;\r\n    padding: 0px 8px;\r\n    margin: 0px;\r\n    float: left;\r\n    position: absolute;\r\n    bottom: 25px;\r\n    left: 224px;\r\n    background-color: #3d3d3d;\r\n}\r\n\r\npre {\r\n    margin: 0px;\r\n}\r\n\r\ninput.inputFileUpload {\r\n    border: none;\r\n    border-radius: 4px;\r\n    margin: 2px 2px;\r\n    background: #2b3d50;\r\n    height: 20px;\r\n    font-family: 'ubuntu mono';\r\n    color: white;\r\n}\r\n\r\ninput.submitFileUpload {\r\n    border-radius: 4px;\r\n    float: right;\r\n    margin: 3px;\r\n}\r\n\r\nforeignObject.fileUpload_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ninput#fileUploadFormToTheCloud {\r\n    border-radius: 1px;\r\n    margin-left: 1px;\r\n    /* height: 20px; */\r\n}\r\n\r\na.open_uploadedFile_link {\r\n    text-decoration: none;\r\n    color: black;\r\n    padding: 0px 6px;\r\n    position: relative;\r\n    top: 1px;\r\n    border-radius: 2px;\r\n    margin-left: 3px;\r\n    background-color: #e8e8e8;\r\n}\r\n\r\ndiv#TheContainedFile {\r\n    color: white;\r\n    padding: 2px 5px;\r\n    font-family: 'ubuntu';\r\n    display: inline;\r\n    font-size: small;\r\n    border-right: 1px solid gray;\r\n}\r\n\r\ndiv#PleaseWaitOverLay {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: #ffffff8a;\r\n    color: black;\r\n    text-align: center;\r\n    margin: auto;\r\n    line-height: 100vh;\r\n}\r\n\r\nselect.listView {\r\n    width: 198px;\r\n    height: 179px;\r\n    background-color: #f0f0f0;\r\n    border: 1px solid gray;\r\n    border-radius: 3px;\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n}\r\n\r\noption#someSelection {\r\n    background-color: #e0e0e0;\r\n    box-shadow: 0px 1px 0px white;\r\n    margin-bottom: 1px;\r\n}\r\n\r\ntext.statusTextClass {\r\n    font-size: x-small;\r\n}\r\n\r\n.subcatheader {\r\n    padding-left: 1em;\r\n    color: #ffca28;\r\n    font-size: small;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_quote {\r\n    border: 1px solid #cfcfcf;\r\n    padding: 2px;\r\n    border-radius: 3px;\r\n    background-color: #f4f4f4;\r\n    font-family: courier new;\r\n    font-size: xx-small;\r\n}\r\n\r\nforeignObject#halign_box {\r\n    font-size: 20px;\r\n    color: white;\r\n    text-decoration: none;\r\n    text-align: center;\r\n}\r\n\r\nforeignObject#halign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    margin: 0px 4px;\r\n}\r\n\r\nforeignObject#halign_box a:hover {\r\n    text-decoration: none;\r\n    color: #ffc107;\r\n}\r\n\r\ni.fa.fa-pause {\r\n    margin-left: -1px;\r\n    padding: 0px;\r\n}\r\n\r\nforeignObject#valign_box {\r\n    font-size: 20px;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n    padding: 4px 2px;\r\n}\r\n\r\nforeignObject#valign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    font-size: 20px;\r\n    display: inline-grid;\r\n}\r\n\r\nforeignObject#valign_box a:hover {\r\n    color: #ffc107;\r\n}\r\n\r\na#valign_icon {\r\n    float: left;\r\n    margin: 5px 4px;\r\n}\r\n\r\na.standardcat.button {\r\n    width: 32px;\r\n    height: 32px;\r\n    border: 1px solid black;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#leftbarcontainer {\r\n    width: 225px;\r\n    min-height: 250px;\r\n    float: left;\r\n    margin-top: 2.5px;\r\n}\r\n\r\n.toolbarTopToggleItem {\r\n    height: 25px;\r\n    display: block;\r\n    line-height: 25px;\r\n    color: #1c1c1c;\r\n    font-size: small;\r\n    float: left;\r\n}\r\n\r\n.toolbarTopToggleContainer {\r\n    width: 225px;\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n    text-align: center;\r\n    float: left;\r\n}\r\n\r\ndiv#toolbar_container_1_1_2 {\r\n    width: 25px;\r\n    float: left;\r\n    background-color: red;\r\n    height: 25px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#toolbar_container_1_2 {\r\n    background-color: #2d2d2d;\r\n    width: 225px;\r\n    height: 250px;\r\n}\r\n\r\ndiv#toolbar_container_1_2_1 {\r\n    box-sizing: border-box;\r\n    width: 200px;\r\n    background-color: #e6e6e6;\r\n    min-height: 200px;\r\n    float: left;\r\n    border: 1px solid #cfcfcf;\r\n}\r\n\r\n.mainButtonItem {\r\n    box-sizing: border-box;\r\n    width: 49.5px;\r\n    height: 49.5px;\r\n    float: left;\r\n    background-color: #6060601f;\r\n    display: inline-block;\r\n    vertical-align: middle;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70328473-107b2400-1874-11ea-88ff-dcca67fd98a9.png);\r\n    line-height: 50px;\r\n    text-align: center;\r\n    border: 1px solid #252525;\r\n    color: #ffffffed;\r\n    background-size: 36px;\r\n    font-size: x-small;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    overflow: hidden;\r\n}\r\n\r\ndiv#toolbar_container_1_2_2 {\r\n    width: 25px;\r\n    float: left;\r\n    height: 200px;\r\n    background-color: #c1c1c1;\r\n    box-sizing: border-box;\r\n    border-right: 1px solid #373737;\r\n}\r\n\r\n.rightToggleButton {\r\n    background-image: url(https://www.corasupport.org/wp-content/uploads/2015/11/placeholder-icon-300x300-v1b.png);\r\n    background-size: 20px;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    cursor: pointer;\r\n    font-size: small;\r\n    background-color: #a3a3a3;\r\n    width: 23px;\r\n    height: 23px;\r\n    text-align: center;\r\n    line-height: 25px;\r\n    border: 1px solid #2d2d2d;\r\n    border-bottom: 1px solid #565656;\r\n}\r\n\r\ndiv#toolbar_container_1_2_0 {\r\n    background-color: #707070;\r\n    font-size: small;\r\n    color: white;\r\n    line-height: 25px;\r\n    font-size: xx-small;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    background-color: #252525;\r\n    transition: 0.2s;\r\n    cursor: pointer;\r\n    border: 1px solid #818181;\r\n}\r\n\r\n.toptoggleitem {\r\n    background-color: #d1d1d1;\r\n    margin: 3px 4px 0px 0px;\r\n    height: 20px;\r\n    padding: 0px 5px;\r\n    line-height: 20px;\r\n    border: 1px solid #aaaaaa;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    background-color: #2b3d50;\r\n    border-color: #2b3d50;\r\n    color: #cfd8dc;\r\n}\r\n\r\n.rightToggleButton:hover {\r\n    background-color: #565656;\r\n    transition: 0.5s;\r\n    color: #ffffff;\r\n    border: 1px solid #cecece;\r\n}\r\n\r\n.rightToggleButton:focus {\r\n    background-color: #ffc107;\r\n    color: black;\r\n    text-shadow: 0px 0px 4px black;\r\n}\r\n\r\n.toptoggleitem:hover {\r\n    border-color: #ffc107;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#NoneTabbedToolBoxText {\r\n    position: relative;\r\n    top: 50%;\r\n    transform: rotate(-90deg);\r\n    font-size: small;\r\n    line-height: 25px;\r\n    text-shadow: 0px 0px 4px #000000;\r\n}\r\n\r\nspan#hint {\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n    display: none;\r\n    background-color: #00000066;\r\n    border: 1px solid #565656;\r\n    opacity: 0;\r\n}\r\n\r\ndiv.rightToggleButton:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\n.canvas_container {\r\n    position: fixed;\r\n    top: 30px;\r\n    left: 225px;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.canvas_container_inner {\r\n    margin: 3px;\r\n}\r\n\r\n.canvas_tab_container {\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n}\r\n\r\nh1 {\r\n    margin: 0px;\r\n}\r\n\r\ndiv#somethingLater {\r\n    width: 100%;\r\n    height: 1000px;\r\n    background-color: #666666;\r\n    overflow: scroll;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\ntextarea#script_body_editor {\r\n    height: 100vh;\r\n}\r\n\r\ndiv#codeBody {\r\n    height: 100vh;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    transition: 2s;\r\n}\r\n\r\n.toptoggleitem.selected:hover {\r\n    transition: 2s;\r\n    min-height: 36%;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    width: 50px;\r\n    top: 60px;\r\n    padding-left: 5px;\r\n    min-width: 250px;\r\n    padding-top: 5px;\r\n}\r\n";
 styleInject(css_248z);
 
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
-function exponential(args) {
-  console.log("inside exponential");
-  let input = args[0];
-  console.log(input);
-
-  if (!isNumeric(input)) {
-    return {
-      type: ['text', 'text'],
-      value: [null, input + " is not a number"]
-    };
-  } else {
-    return {
-      type: ['text', 'text'],
-      value: [Math.E ** parseFloat(input), "Success"]
-    };
-  }
-}
-
 class Canvas extends React.Component {
   constructor(props) {
     super(props);
@@ -6598,22 +6686,7 @@ class Canvas extends React.Component {
 
   componentDidMount() {
     console.log(this.props.udo);
-    console.log(this.props.udo[0].title);
-    addNewUdo('Exponenetial', 'Exp', 'e raise to the power x', 'component', 'shlow', 'Basic', [{
-      name: 'input',
-      shortName: 'in_01',
-      desc: 'first input',
-      default_value: '10.0'
-    }], [{
-      name: 'output_',
-      shortName: 'out_',
-      desc: 'product'
-    }, {
-      type: 'float',
-      name: 'log_',
-      shortName: 'log',
-      desc: 'log output'
-    }], "#F23322", "", exponential);
+    addAllUdo(this.props.udo);
     this.manageCanvas();
     this.loadData();
     this.addGenericComponentIcon();
