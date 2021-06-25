@@ -54,7 +54,7 @@ var shallow_functions = {
     // List
     String_to_List: str2lst,
     Max: max,
-    //Min: min,
+    Min: min,
     // Json objects
     'Json Navigator': jsonNavigator,
     // Plotting

@@ -42,7 +42,7 @@ const newComps = [
         backgroundImage: '',
         func: exponential,
     },
-  ];
+];
 
 const App = ()  => {
 

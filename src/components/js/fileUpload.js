@@ -40,6 +40,7 @@
 import { addcomponent, redrawDependents, selectComp } from './functions.js';
 import { uuidv4 } from './handle.js';
 import $ from 'jquery';
+import axios from 'axios';
 var d3 = require('d3');
 
 function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
@@ -57,34 +58,18 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
         newcomp = FromExisting;
     }
 
-    newcomp.fill = 'url(#fileUploadGradient)';
+    newcomp.fill = '#5e6b7a';
     newcomp.Name = 'False';
-    var one_character_width = 8;
     var padding = 20;
     var titleMargin = 30;
-    var titleMarginLeft = 30;
     newcomp.height = 25;
     newcomp.type = 'fileUpload';
     newcomp.dftype = 'shlow';
 
     // TODO : get the longest text in the component. and set the width based on this.
-    newcomp.width = 300; //newcomp.Name.length * one_character_width + titleMarginLeft;
+    newcomp.width = 300; 
 
     var allContents = d3.select('#allCanvasContents');
-
-    function update() {
-        node.attr('transform', d => `translate(${d.x},${d.y})`);
-    }
-
-    var dragHandler = d3
-        .drag()
-        .on('start', (event, d) => Dummyrect.attr('stroke', 'red'))
-        .on('drag', (event, d) => {
-            d.x = event.x;
-            d.y = event.y;
-        })
-        .on('end', (event, d) => Dummyrect.attr('stroke', '#3a4c69'))
-        .on('start.update drag.update end.update', update);
 
     var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
 
@@ -105,15 +90,10 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
         .attr('id', 'comp-' + newcomp.GUID)
         .attr('transform', () => {
             if (FromExisting == null) {
-                // if (kwargs.X != undefined && kwargs.Y != undefined && kwargs != null){
-                //     newcomp.X = kwargs.X;
-                //     newcomp.Y = kwargs.Y;
-                // } else{
                 var mousex = reactContext.state.mousex;
                 var mousey = reactContext.state.mousey;
                 newcomp.X = mousex + Math.random() * 500;
                 newcomp.Y = mousey + Math.random() * 500;
-                // }
                 return 'translate(' + newcomp.X + ', ' + newcomp.Y + ')';
             } else {
                 return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
@@ -132,7 +112,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
             .lower()
             .attr('cx', '0')
             .attr('cy', newcomp.height / 2)
-            .attr('fill', 'gray') //newcomp.fill)
+            .attr('fill', 'gray')
             .attr('r', '5')
             .attr('stroke', 'black')
             .attr('stroke-width', '2')
@@ -245,7 +225,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
         .attr('fill', 'url(#gradient2)')
         .attr('fill-opacity', 0.4);
 
-    var uploadButtong = node
+    var uploadButton = node
         .append('foreignObject')
         .attr('id', 'foreignObject_fileUpload' + newcomp.GUID)
         .attr('class', 'foreignObject_fileUpload')
@@ -254,17 +234,17 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
         .attr('y', '-1.1px')
         .html(() => {
             if (newcomp.outputs[0].value == null || newcomp.outputs[0].value === undefined) {
-                return (
+                var form = 
                     `
-            <form method="post" enctype="multipart/form-data" id="form_` +
-                    newcomp.GUID +
-                    `">
-            <input id="fileUploadFormToTheCloud" class="` +
-                    newcomp.GUID +
-                    `" type="file" name="myFile">
-            </form>
-            `
-                );
+                    <form method="post" enctype="multipart/form-data" id="form_` +
+                            newcomp.GUID +
+                            `">
+                    <input id="fileUploadFormToTheCloud" class="` +
+                            newcomp.GUID +
+                            `" type="file" name="myFile">
+                    </form>
+                    `;
+                return form;
             } else {
                 return (
                     `
@@ -331,59 +311,58 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
 
 function handleFileUpload() {
     $('input#fileUploadFormToTheCloud').on('change', function (e) {
+        var selectedFile = e.target.files[0];
+        console.log(selectedFile);
         var thisFormId = $(this).attr('class');
+        console.log(thisFormId);
 
-        var this_form_elemnt = $('#form_' + thisFormId);
+        var this_form_element = $('#form_' + thisFormId);
+        console.log(this_form_element);
 
-        var form_data = new FormData(this_form_elemnt[0]);
-        console.log('uploading' + form_data);
+        var form_data = new FormData(this_form_element[0]);
+        console.log(form_data);
 
-        var fileName = $(this).val();
+        var reader = new FileReader();
+        reader.readAsText(selectedFile);
+        reader.onload = (event) => {
+            console.log('inside handle file read');
+            console.log(event.target.result);
+            //var save = JSON.parse(event.target.result);
+           // console.log(save)
+            window.localStorage.setItem(thisFormId, event.target.result);
+            console.log(window.localStorage);
+        };
+
+        var fileName = selectedFile.name;
+        var fileSize = selectedFile.size;
         console.log(fileName);
-
-        const thefileuploadajax = $.ajax({
-            type: 'POST',
-            accepts: 'text/json',
-            url: '../upload/',
-            data: form_data,
-            processData: false,
-            contentType: false,
-            beforeSend: function (xhr, settings) {
-                // $.beforeSend(xhr, settings);
-                d3.select('#fileUpload_status_' + thisFormId).html('Uploading ..... ');
-            },
-            success: function (res) {
-                console.log(res);
-                var theCurrentComp = selectComp(thisFormId);
-                theCurrentComp.outputs[0].Name = res.FileName;
-                theCurrentComp.outputs[0].Description = {
-                    Name: res.FileName,
-                    size: res.FileSize,
-                    url: res.publicURL
-                };
-                theCurrentComp.outputs[0].value = res.publicURL;
-                d3.select('#fileUpload_status_' + thisFormId).html(
-                    'File Size : ' +
-                        (res['FileSize'] / (1024 * 1024)).toString() +
-                        " MB <a class='open_uploadedFile_link' href='" +
-                        res.publicURL +
-                        "' target='blank'>open</a>"
-                );
-
-                d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
-                    return (
-                        `
-                    <div id="TheContainedFile">` +
-                        res.FileName +
-                        `</div>
-                    <div id="TheContainedFile">Size :` +
-                        (res.FileSize / (1024 * 1024)).toFixed(4).toString() +
-                        ` MB</div>
+        var theCurrentComp = selectComp(thisFormId);
+        theCurrentComp.outputs[0].Name = fileName;
+        theCurrentComp.outputs[0].Description = {
+            Name: fileName,
+            size: fileSize,
+            //url: res.publicURL
+        };
+        //theCurrentComp.outputs[0].value = res.publicURL; //to be handled later
+        console.log(theCurrentComp);
+        d3.select('#fileUpload_status_' + thisFormId).html(
+            'File Size : ' +
+                (selectedFile.size / (1024 * 1024)).toString() +
+                " MB <a class='open_uploadedFile_link' href='" +
+                //res.publicURL +
+                "' target='blank'>open</a>"
+        );
+        d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
+            return (
                 `
-                    );
-                });
-                redrawDependents(thisFormId);
-            }
+                <div id="TheContainedFile">` +
+                    fileName +
+                    `</div>
+                <div id="TheContainedFile">Size :` +
+                    (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
+                    ` MB</div>
+                `
+            );
         });
     });
 }

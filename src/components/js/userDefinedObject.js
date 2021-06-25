@@ -72,20 +72,22 @@ function addNewUdo(name, shname, desc, type, dftype, category, inputList, output
  * @param {List} list a list of dictionary, containing the information about the components
  */
 function addAllUdo(list) {
-    for (let index = 0; index < list.length; index++) {
-        const element = list[index];
-        let name = element.name;
-        let shname = element.shname;
-        let desc = element.desc;
-        let type = element.type;
-        let dftype = element.dftype;
-        let category = element.category;
-        let inputList = element.inputList;
-        let outputList = element.outputList;
-        let color = element.color === undefined ? '#F23322' : element.color;
-        let backgroundImage = element.backgroundImage === undefined ? '' : element.backgroundImage;
-        let calledFunc = element.func;
-        addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color, backgroundImage, calledFunc);
+    if (list !== undefined) {
+        for (let index = 0; index < list.length; index++) {
+            const element = list[index];
+            let name = element.name;
+            let shname = element.shname;
+            let desc = element.desc;
+            let type = element.type;
+            let dftype = element.dftype;
+            let category = element.category;
+            let inputList = element.inputList;
+            let outputList = element.outputList;
+            let color = element.color === undefined ? '#F23322' : element.color;
+            let backgroundImage = element.backgroundImage === undefined ? '' : element.backgroundImage;
+            let calledFunc = element.func;
+            addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color, backgroundImage, calledFunc);
+        }
     }
 }
-export {addNewUdo, addAllUdo};
+export {addAllUdo};
