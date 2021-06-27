@@ -82,16 +82,17 @@ div#PropertiesBarSelector {
 }
 
 div#PropertiesBar {
-    width: 500px;
     background-color: #2b3d50;
-    position: fixed;
     right: 0px;
-    box-shadow: 0px 11px 10px #0000006e;
     top: 0px;
     min-height: 35%;
     transition-timing-function: ease-in-out;
     transition: height 2s;
-    transition-delay: 1s;
+    transition-delay: 1s;  
+    width: 220px;
+    top: 60px;
+    padding-left: 5px;
+    padding-top: 5px;
 }
 
 div#mainGrid {
@@ -517,7 +518,7 @@ rect {
 }
 
 input.stringPnanel.Name {
-    width: 100%;
+    width: 98%;
     border: none;
     font-size: small;
     font-family: 'ubuntu';
@@ -983,12 +984,4 @@ div#codeBody {
 .toptoggleitem.selected:hover {
     transition: 2s;
     min-height: 36%;
-}
-
-div#PropertiesBar {
-    width: 50px;
-    top: 60px;
-    padding-left: 5px;
-    min-width: 250px;
-    padding-top: 5px;
 }

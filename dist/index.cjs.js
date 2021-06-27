@@ -53,28 +53,6 @@ function _objectSpread2(target) {
   return target;
 }
 
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-
-function _defineProperties(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
-  }
-}
-
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
-  return Constructor;
-}
-
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -88,85 +66,6 @@ function _defineProperty(obj, key, value) {
   }
 
   return obj;
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function");
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) _setPrototypeOf(subClass, superClass);
-}
-
-function _getPrototypeOf(o) {
-  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-    return o.__proto__ || Object.getPrototypeOf(o);
-  };
-  return _getPrototypeOf(o);
-}
-
-function _setPrototypeOf(o, p) {
-  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-    o.__proto__ = p;
-    return o;
-  };
-
-  return _setPrototypeOf(o, p);
-}
-
-function _isNativeReflectConstruct() {
-  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-  if (Reflect.construct.sham) return false;
-  if (typeof Proxy === "function") return true;
-
-  try {
-    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-function _assertThisInitialized(self) {
-  if (self === void 0) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return self;
-}
-
-function _possibleConstructorReturn(self, call) {
-  if (call && (typeof call === "object" || typeof call === "function")) {
-    return call;
-  }
-
-  return _assertThisInitialized(self);
-}
-
-function _createSuper(Derived) {
-  var hasNativeReflectConstruct = _isNativeReflectConstruct();
-
-  return function _createSuperInternal() {
-    var Super = _getPrototypeOf(Derived),
-        result;
-
-    if (hasNativeReflectConstruct) {
-      var NewTarget = _getPrototypeOf(this).constructor;
-
-      result = Reflect.construct(Super, arguments, NewTarget);
-    } else {
-      result = Super.apply(this, arguments);
-    }
-
-    return _possibleConstructorReturn(this, result);
-  };
 }
 
 function _toConsumableArray(arr) {
@@ -3553,142 +3452,6 @@ var globalVars = {
 
 var d3$6 = require('d3');
 
-function CreateNewToggle(reactContext) {
-  var FromExisting = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var newcomp;
-
-  if (FromExisting == null) {
-    newcomp = addcomponent(uuidv4('C'), 0, 1);
-    var guid = newcomp.GUID;
-
-    var data = _objectSpread2({}, reactContext.state.parent_child_matrix);
-
-    data[guid] = [];
-    reactContext.setState({
-      parent_child_matrix: data
-    });
-  } else {
-    newcomp = FromExisting;
-  }
-
-  newcomp.fill = '#2c3e50';
-  newcomp.Name = 'False';
-  var padding = 20;
-  var titleMargin = 30;
-  newcomp.height = 20;
-  newcomp.type = 'toggle';
-  newcomp.dftype = 'shlow'; // TODO : get the longest text in the component. and set the width based on this.
-
-  newcomp.width = 80; //newcomp.Name.length * one_character_width + titleMarginLeft;
-
-  var allContents = d3$6.select('#allCanvasContents');
-  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
-  var genX;
-  var genY;
-  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', function () {
-    if (FromExisting == null) {
-      genX = Math.random() * 500 + 200;
-      genY = Math.random() * 500 + 200;
-      newcomp.X = genX;
-      newcomp.Y = genY;
-      return 'translate(' + genX + ', ' + genY + ')';
-    } else {
-      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
-    }
-  }).data([{
-    x: FromExisting ? FromExisting.X : genX,
-    y: FromExisting ? FromExisting.Y : genY
-  }]);
-  var InputGroup = node.append('g');
-
-  var _loop = function _loop(index) {
-    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
-      newcomp.inputs[index].circle = reactContext.state.fromCircle;
-      newcomp.inputs[index].circle.element = this.id;
-      newcomp.inputs[index].circle.CX = 0;
-      newcomp.inputs[index].circle.CY = index * padding + titleMargin;
-      newcomp.inputs[index].type = 'input';
-      return 'input';
-    });
-  };
-
-  for (var index = 0; index < newcomp.inputs.length; index++) {
-
-    _loop(index);
-  }
-
-  var OutputGroup = node.append('g');
-
-  var _loop2 = function _loop2(_index) {
-    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + _index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + _index).attr('type', function () {
-      newcomp.outputs[_index].circle = this;
-      newcomp.outputs[_index].type = 'output';
-      return 'output';
-    }).lower();
-  };
-
-  for (var _index = 0; _index < newcomp.outputs.length; _index++) {
-
-    _loop2(_index);
-  }
-
-  node.append('rect').attr('class', 'CompTBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
-  var cirGroup = node.append('g').attr('transform', function () {
-    var x = newcomp.width;
-    var y = newcomp.height;
-    return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
-  });
-  cirGroup.append('text').attr('id', 'nodeLog' + newcomp.GUID).attr('class', 'nodeLog ' + newcomp.GUID).attr('transform', 'translate(10, 10)').text(newcomp.log.logText).attr('fill', 'black').style('display', 'none');
-  var Titlegroup = node.append('g').attr('transform', function () {
-    return 'translate(0, 15)';
-  });
-  Titlegroup.append('text').attr('class', 'nodetitle node_title' + newcomp.GUID).text(newcomp.Name).attr('fill', '#ecf0f1').attr('transform', 'translate(' + (newcomp.width / 2.0 - newcomp.Name.length * 4.0).toString() + ', 0)');
-  node.append('rect').attr('class', 'CompTBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01') // .attr("filter", "url('#svgshadow')")
-  .on('mousemove', function (event) {
-    // newcomp.rect = this;
-    d3$6.select(event.currentTarget) // .attr("fill", "#303952")
-    .attr('cursor', 'pointer');
-  }).on('mouseout', function (event) {
-    // newcomp.rect = this;
-    d3$6.select(event.currentTarget).attr('fill', newcomp.fill);
-  });
-  newcomp.value = newcomp.Name;
-
-  if (FromExisting == null) {
-    var current_all_comp = reactContext.state.allComp.slice();
-    console.log('Adding a toggle' + newcomp);
-    current_all_comp.push(newcomp);
-    reactContext.setState({
-      allComp: current_all_comp
-    });
-  }
-
-  var current_comp_out = _objectSpread2({}, reactContext.state.comp_output_edges);
-
-  var current_comp_in = _objectSpread2({}, reactContext.state.comp_input_edges);
-
-  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
-  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
-  reactContext.setState({
-    comp_input_edges: current_comp_in,
-    comp_output_edges: current_comp_out
-  });
-
-  var current_components_selection = _objectSpread2({}, reactContext.state.components_selection_data);
-
-  current_components_selection[newcomp.GUID] = {
-    x0: newcomp.X,
-    y0: newcomp.Y,
-    x1: newcomp.X + newcomp.width,
-    y1: newcomp.Y + newcomp.height
-  };
-  reactContext.setState({
-    components_selection_data: current_components_selection
-  });
-}
-
-var d3$5 = require('d3');
-
 function CreateNewFileUpload(reactContext) {
   var FromExisting = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
   var newcomp;
@@ -3717,7 +3480,7 @@ function CreateNewFileUpload(reactContext) {
 
   newcomp.width = 300; //newcomp.Name.length * one_character_width + titleMarginLeft;
 
-  var allContents = d3$5.select('#allCanvasContents');
+  var allContents = d3$6.select('#allCanvasContents');
 
   function update() {
     node.attr('transform', function (d) {
@@ -3725,7 +3488,7 @@ function CreateNewFileUpload(reactContext) {
     });
   }
 
-  d3$5.drag().on('start', function (event, d) {
+  d3$6.drag().on('start', function (event, d) {
     return Dummyrect.attr('stroke', 'red');
   }).on('drag', function (event, d) {
     d.x = event.x;
@@ -3816,9 +3579,9 @@ function CreateNewFileUpload(reactContext) {
     }
   });
   node.append('rect').attr('class', 'CompFBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('x', 90).attr('width', newcomp.width - 90).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
-    d3$5.select(event.currentTarget).attr('cursor', 'pointer');
+    d3$6.select(event.currentTarget).attr('cursor', 'pointer');
   }).on('mouseout', function (event) {
-    d3$5.select(event.currentTarget).attr('fill', newcomp.fill);
+    d3$6.select(event.currentTarget).attr('fill', newcomp.fill);
   });
   newcomp.value = newcomp.Name;
 
@@ -3872,7 +3635,7 @@ function handleFileUpload() {
       contentType: false,
       beforeSend: function beforeSend(xhr, settings) {
         // $.beforeSend(xhr, settings);
-        d3$5.select('#fileUpload_status_' + thisFormId).html('Uploading ..... ');
+        d3$6.select('#fileUpload_status_' + thisFormId).html('Uploading ..... ');
       },
       success: function success(res) {
         console.log(res);
@@ -3884,177 +3647,13 @@ function handleFileUpload() {
           url: res.publicURL
         };
         theCurrentComp.outputs[0].value = res.publicURL;
-        d3$5.select('#fileUpload_status_' + thisFormId).html('File Size : ' + (res['FileSize'] / (1024 * 1024)).toString() + " MB <a class='open_uploadedFile_link' href='" + res.publicURL + "' target='blank'>open</a>");
-        d3$5.select('#foreignObject_fileUpload' + thisFormId).html(function () {
+        d3$6.select('#fileUpload_status_' + thisFormId).html('File Size : ' + (res['FileSize'] / (1024 * 1024)).toString() + " MB <a class='open_uploadedFile_link' href='" + res.publicURL + "' target='blank'>open</a>");
+        d3$6.select('#foreignObject_fileUpload' + thisFormId).html(function () {
           return "\n                    <div id=\"TheContainedFile\">" + res.FileName + "</div>\n                    <div id=\"TheContainedFile\">Size :" + (res.FileSize / (1024 * 1024)).toFixed(4).toString() + " MB</div>\n                ";
         });
         redrawDependents(thisFormId);
       }
     });
-  });
-}
-
-var d3$4 = require('d3');
-
-function CreateNewListView(reactContext) {
-  var FromExisting = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var optionlist_predefined_items = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-  var newcomp;
-
-  if (FromExisting == null) {
-    newcomp = addcomponent(uuidv4('C'), 1, 1);
-    var guid = newcomp.GUID;
-
-    var data = _objectSpread2({}, reactContext.state.parent_child_matrix);
-
-    data[guid] = [];
-    reactContext.setState({
-      parent_child_matrix: data
-    });
-    newcomp.Name = 'Select item';
-    newcomp.value = [['dummy_Option1', 0], [1.022235, 1], [2235, 0], ['shouldBeSelected', 1], ['dummy_Option1', 0], [1.022235, 1], [2235, 0], ['shouldBeSelected', 1], ['dummy_Option1', 0], [1.022235, 1], [2235, 0], ['shouldBeSelected', 1]];
-
-    if (optionlist_predefined_items != null) {
-      newcomp.optionListValues = JSON.parse(optionlist_predefined_items);
-    }
-  } else {
-    newcomp = FromExisting;
-  }
-
-  newcomp.fill = 'url(#grad1ient)';
-  var padding = 20;
-  var titleMargin = 30;
-  newcomp.height = 200;
-  newcomp.type = 'listView';
-  newcomp.dftype = 'shlow';
-  newcomp.width = 200; // TODO : get the longest text in the component. and set the width based on this.
-
-  var allContents = d3$4.select('#allCanvasContents');
-
-  function update() {
-    node.attr('transform', function (d) {
-      return "translate(".concat(d.x, ",").concat(d.y, ")");
-    });
-  }
-
-  d3$4.drag().on('start', function (event, d) {
-    return Dummyrect.attr('stroke', 'red');
-  }).on('drag', function (event, d) {
-    d.x = event.x;
-    d.y = event.y;
-  }).on('end', function (event, d) {
-    return Dummyrect.attr('stroke', '#3a4c69');
-  }).on('start.update drag.update end.update', update);
-  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
-  var genX;
-  var genY;
-  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', function () {
-    if (FromExisting == null) {
-      genX = Math.random() * 500 + 200;
-      genY = Math.random() * 500 + 200;
-      newcomp.X = genX;
-      newcomp.Y = genY;
-      return 'translate(' + genX + ', ' + genY + ')';
-    } else {
-      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
-    }
-  }).data([{
-    x: FromExisting ? FromExisting.X : genX,
-    y: FromExisting ? FromExisting.Y : genY
-  }]);
-  var InputGroup = node.append('g');
-
-  var _loop = function _loop(index) {
-    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
-    . //newcomp.fill)
-    attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
-      newcomp.inputs[index].circle = addCircle();
-      newcomp.inputs[index].circle.element = this.id;
-      newcomp.inputs[index].circle.CX = 0;
-      newcomp.inputs[index].circle.CY = index * padding + titleMargin;
-      newcomp.inputs[index].type = 'input';
-      return 'input';
-    });
-  };
-
-  for (var index = 0; index < newcomp.inputs.length; index++) {
-
-    _loop(index);
-  }
-
-  var OutputGroup = node.append('g');
-
-  var _loop2 = function _loop2(_index) {
-    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
-    . //newcomp.fill)
-    attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + _index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + _index).attr('type', function () {
-      newcomp.outputs[_index].circle = this;
-      newcomp.outputs[_index].type = 'output';
-      return 'output';
-    }).lower();
-  };
-
-  for (var _index = 0; _index < newcomp.outputs.length; _index++) {
-
-    _loop2(_index);
-  }
-
-  var Dummyrect = node.append('rect').attr('class', 'CompLBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3') //.attr("filter", "url(#f2")
-  .attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', '#CECECE');
-  node.append('text').attr('x', 5).attr('y', 15).text('listItems').attr('fill', 'black').style('font-family', 'Ubuntu Mono'); //listbox items
-
-  node.append('foreignObject').attr('class', 'listView CompLBody' + newcomp.GUID).attr('id', 'listView-' + newcomp.GUID).attr('y', 20).attr('x', 1).attr('width', newcomp.width - 2).attr('height', newcomp.height - 20).html(function () {
-    var selectedOptions = [];
-    var ListItemsvalueReturn = "<select id=\"listviewSelect\" class=\"listView " + newcomp.GUID + "\" size=\"5\"  multiple>";
-    newcomp.value.forEach(function (option) {
-      if (option[1] === 0) {
-        ListItemsvalueReturn += "<option id=\"someSelection\" class=\"listViewOption " + newcomp.GUID + "\" value=\"" + option[0] + "\">" + option[0] + "</option>";
-      } else {
-        ListItemsvalueReturn += "<option id=\"someSelection\" class=\"listViewOption " + newcomp.GUID + "\" value=\"" + option[0] + "\" selected>" + option[0] + "</option>";
-        selectedOptions.push(option[0]);
-      }
-    });
-    newcomp.outputs[0].value = JSON.stringify(selectedOptions);
-    ListItemsvalueReturn += "</select>";
-    return ListItemsvalueReturn;
-  });
-  node.append('rect').attr('class', 'CompLBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', 20).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
-    d3$4.select(event.currentTarget).attr('cursor', 'pointer');
-  }).on('mouseout', function (event) {
-    d3$4.select(event.currentTarget).attr('fill', newcomp.fill);
-  });
-  node.append('g').attr('id', 'optionListOption-' + newcomp.GUID);
-
-  if (FromExisting == null) {
-    var current_all_comp = reactContext.state.allComp.slice();
-    console.log('Adding a list view' + newcomp);
-    current_all_comp.push(newcomp);
-    reactContext.setState({
-      allComp: current_all_comp
-    });
-  }
-
-  var current_comp_out = _objectSpread2({}, reactContext.state.comp_output_edges);
-
-  var current_comp_in = _objectSpread2({}, reactContext.state.comp_input_edges);
-
-  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
-  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
-  reactContext.setState({
-    comp_input_edges: current_comp_in,
-    comp_output_edges: current_comp_out
-  });
-
-  var current_components_selection = _objectSpread2({}, reactContext.state.components_selection_data);
-
-  current_components_selection[newcomp.GUID] = {
-    x0: newcomp.X,
-    y0: newcomp.Y,
-    x1: newcomp.X + newcomp.width,
-    y1: newcomp.Y + newcomp.height
-  };
-  reactContext.setState({
-    components_selection_data: current_components_selection
   });
 }
 
@@ -4074,38 +3673,38 @@ function CreateNewListView(reactContext) {
 ───────────────────────────────────────────────────────────────────────────────────────────────
 */
 
-var d3$3 = require('d3');
+var d3$5 = require('d3');
 
 function onMinimizeClick() {
-  d3$3.select('#maximizeUpperBar').transition().style('display', 'block');
-  d3$3.select('#minimizeUpperBar').style('display', 'none');
-  d3$3.select('#TopPropertiesBar').transition().duration(200).style('top', '-60px');
-  d3$3.select('#LeftPropertiesBar').transition().duration(200).style('top', '0px');
-  d3$3.select('#PropertiesBar').transition().duration(200).style('top', '0px');
-  d3$3.select('#LeftPropertiesBarSelector').transition().duration(200).style('top', '0px');
-  d3$3.select('#PropertiesBarSelector').transition().duration(200).style('top', '0px');
-  d3$3.select('.canvas_container').transition().duration(200).style('top', '0px');
-  d3$3.select('#maximizeUpperBar').transition().duration(200).style('right', '300px').style('top', '61px');
-  d3$3.select('#minimizeUpperBar').transition().duration(200).style('right', '300px').style('top', '61px');
+  d3$5.select('#maximizeUpperBar').transition().style('display', 'block');
+  d3$5.select('#minimizeUpperBar').style('display', 'none');
+  d3$5.select('#TopPropertiesBar').transition().duration(200).style('top', '-60px');
+  d3$5.select('#LeftPropertiesBar').transition().duration(200).style('top', '0px');
+  d3$5.select('#PropertiesBar').transition().duration(200).style('top', '0px');
+  d3$5.select('#LeftPropertiesBarSelector').transition().duration(200).style('top', '0px');
+  d3$5.select('#PropertiesBarSelector').transition().duration(200).style('top', '0px');
+  d3$5.select('.canvas_container').transition().duration(200).style('top', '0px');
+  d3$5.select('#maximizeUpperBar').transition().duration(200).style('right', '300px').style('top', '61px');
+  d3$5.select('#minimizeUpperBar').transition().duration(200).style('right', '300px').style('top', '61px');
 }
 
 function onMaximizeClick() {
-  d3$3.select('#maximizeUpperBar').style('display', 'none');
-  d3$3.select('#minimizeUpperBar').style('display', 'block');
-  d3$3.select('#TopPropertiesBar').transition().duration(200).style('top', '0px');
-  d3$3.select('#LeftPropertiesBar').transition().duration(200).style('top', '30px');
-  d3$3.select('#PropertiesBar').transition().duration(200).style('top', '30px');
-  d3$3.select('#LeftPropertiesBarSelector').transition().duration(200).style('top', '30px');
-  d3$3.select('#PropertiesBarSelector').transition().duration(200).style('top', '30px');
-  d3$3.select('.canvas_container').transition().duration(200).style('top', '30px');
-  d3$3.select('#maximizeeUpperBar').transition().duration(200).style('right', '0px').style('top', '38px');
-  d3$3.select('#minimizeUpperBar').transition().duration(200).style('right', '0px').style('top', '0px');
-  d3$3.select('i#tomaximize').transition().duration(200).style('transform', 'rotate(180deg)');
+  d3$5.select('#maximizeUpperBar').style('display', 'none');
+  d3$5.select('#minimizeUpperBar').style('display', 'block');
+  d3$5.select('#TopPropertiesBar').transition().duration(200).style('top', '0px');
+  d3$5.select('#LeftPropertiesBar').transition().duration(200).style('top', '30px');
+  d3$5.select('#PropertiesBar').transition().duration(200).style('top', '30px');
+  d3$5.select('#LeftPropertiesBarSelector').transition().duration(200).style('top', '30px');
+  d3$5.select('#PropertiesBarSelector').transition().duration(200).style('top', '30px');
+  d3$5.select('.canvas_container').transition().duration(200).style('top', '30px');
+  d3$5.select('#maximizeeUpperBar').transition().duration(200).style('right', '0px').style('top', '38px');
+  d3$5.select('#minimizeUpperBar').transition().duration(200).style('right', '0px').style('top', '0px');
+  d3$5.select('i#tomaximize').transition().duration(200).style('transform', 'rotate(180deg)');
 }
 
 function manageCanvas() {
-  var reactContext = this;
-  var svgContainer = d3$3.select('svg');
+  const reactContext = this;
+  var svgContainer = d3$5.select('svg');
   var allContents = svgContainer.append('g').attr('id', 'allCanvasContents');
   var currentLeftColWidth = reactContext.state.currentLeftColWidth;
   var currentTopBarHeight = reactContext.state.currentTopBarHeight;
@@ -4117,7 +3716,7 @@ function manageCanvas() {
   var leftColIsdisplayed = reactContext.state.leftColIsdisplayed;
   allContents.append('rect').attr('fill', 'url(#img122)').attr('x', -1000).attr('y', -1000).attr('width', 6000).attr('height', 6000).style('cursor', 'default');
   allContents.append('g').attr('id', 'allPaths');
-  svgContainer.call(d3$3.zoom().filter(function (event) {
+  svgContainer.call(d3$5.zoom().filter(function (event) {
     return !(reactContext.state.startDrag || reactContext.state.StringAnchorclicked || reactContext.state.SliderAnchorclicked || reactContext.state.edgeStarted || reactContext.state.selection_groud_selected) && event.button === 0;
   }).on('zoom', function (event) {
     if (!reactContext.state.startDrag) {
@@ -4133,7 +3732,7 @@ function manageCanvas() {
     var somearr = reactContext.state.udo_names;
     var text = '';
 
-    var _loop = function _loop(cat) {
+    for (const cat in reactContext.state.cats) {
       if (reactContext.state.cats.hasOwnProperty(cat)) {
         text += '<div id="catcard">';
         text += '<div id="catHead" style="background-color:' + reactContext.state.cats[cat] + '">' + cat + '</div>';
@@ -4146,60 +3745,58 @@ function manageCanvas() {
         });
         text += '</div></div>';
       }
-    };
-
-    for (var cat in reactContext.state.cats) {
-      _loop(cat);
     }
 
     return text;
   });
-  d3$3.select('div#LeftPropertiesBar').style('width', function () {
+  d3$5.select('div#LeftPropertiesBar').style('width', () => {
     return currentLeftColWidth + 'px';
-  }).style('top', function () {
+  }).style('top', () => {
     return currentTopBarHeight.toString() + 'px';
   });
-  d3$3.select('div#LeftPropertiesBarSelector').style('top', function () {
+  d3$5.select('div#LeftPropertiesBarSelector').style('top', () => {
     return currentTopBarHeight.toString() + 'px';
-  }).style('left', currentLeftColWidth + 'px');
-  d3$3.select('div#PropertiesBar').style('width', function () {
-    return currentRightColWidth + 'px';
-  }).style('top', function () {
-    return currentTopBarHeight.toString() + 'px';
-  });
-  d3$3.select('div#PropertiesBarSelector').style('top', function () {
+  }).style('left', currentLeftColWidth + 'px'); // d3.select('div#PropertiesBar')
+  //     .style('width', () => {
+  //         return currentRightColWidth + 'px';
+  //     })
+  //     .style('top', () => {
+  //         return currentTopBarHeight.toString() + 'px';
+  //     });
+
+  d3$5.select('div#PropertiesBarSelector').style('top', () => {
     return currentTopBarHeight.toString() + 'px';
   }).style('right', currentRightColWidth + 'px');
-  d3$3.select('div#TopPropertiesBar').style('height', function () {
+  d3$5.select('div#TopPropertiesBar').style('height', () => {
     return currentTopBarHeight + 'px';
   });
-  d3$3.select('div#PropertiesBarSelector').on('mousedown', function () {
+  d3$5.select('div#PropertiesBarSelector').on('mousedown', function () {
     currentRightColWidth = parseInt($__default['default']('div#PropertiesBar').css('width').replace('px', ''));
     rightColumnIsSelected = true;
   });
-  d3$3.select('div#LeftPropertiesBarSelector').on('mousedown', function () {
+  d3$5.select('div#LeftPropertiesBarSelector').on('mousedown', function () {
     currentLeftColWidth = parseInt($__default['default']('div#LeftPropertiesBar').css('width').replace('px', ''));
     leftColumnIsSelected = true;
   });
-  d3$3.select('body').on('mousemove', function (event) {
-    d3$3.select(event.currentTarget).style('cursor', 'auto');
+  d3$5.select('body').on('mousemove', function (event) {
+    d3$5.select(event.currentTarget).style('cursor', 'auto');
     currentRightColWidth = window.innerWidth - 16 - event.clientX;
     currentLeftColWidth = event.clientX;
 
     if (rightColumnIsSelected) {
-      d3$3.select('div#PropertiesBar').style('width', function () {
+      d3$5.select('div#PropertiesBar').style('width', () => {
         if (currentRightColWidth >= 50) {
-          if (!rightColIsdisplayed) d3$3.select('div#PropertiesBar').style('display', 'block');
-          d3$3.select('div#PropertiesBarSelector').style('background-color', '#252525');
+          if (!rightColIsdisplayed) d3$5.select('div#PropertiesBar').style('display', 'block');
+          d3$5.select('div#PropertiesBarSelector').style('background-color', '#252525');
           rightColIsdisplayed = true;
           return currentRightColWidth.toString() + 'px';
         } else {
           rightColIsdisplayed = false;
-          d3$3.select('div#PropertiesBar').style('display', 'none');
-          d3$3.select('div#PropertiesBarSelector').style('background-color', '#1abc9c');
+          d3$5.select('div#PropertiesBar').style('display', 'none');
+          d3$5.select('div#PropertiesBarSelector').style('background-color', '#1abc9c');
         }
       });
-      d3$3.select('div#PropertiesBarSelector').style('right', function () {
+      d3$5.select('div#PropertiesBarSelector').style('right', () => {
         if (currentRightColWidth >= 50) {
           return currentRightColWidth.toString() + 'px';
         } else {
@@ -4209,20 +3806,20 @@ function manageCanvas() {
     }
 
     if (leftColumnIsSelected) {
-      d3$3.select('body').style('cursor', 'ew-resize');
-      d3$3.select('div#LeftPropertiesBar').style('width', function () {
+      d3$5.select('body').style('cursor', 'ew-resize');
+      d3$5.select('div#LeftPropertiesBar').style('width', () => {
         if (currentLeftColWidth >= 50) {
-          if (!leftColIsdisplayed) d3$3.select('div#LeftPropertiesBar').style('display', 'block');
-          d3$3.select('div#LeftPropertiesBarSelector').style('background-color', '#252525');
+          if (!leftColIsdisplayed) d3$5.select('div#LeftPropertiesBar').style('display', 'block');
+          d3$5.select('div#LeftPropertiesBarSelector').style('background-color', '#252525');
           leftColIsdisplayed = true;
           return currentLeftColWidth.toString() + 'px';
         } else {
           leftColIsdisplayed = false;
-          d3$3.select('div#LeftPropertiesBar').style('display', 'none');
-          d3$3.select('div#LeftPropertiesBarSelector').style('background-color', '#1abc9c');
+          d3$5.select('div#LeftPropertiesBar').style('display', 'none');
+          d3$5.select('div#LeftPropertiesBarSelector').style('background-color', '#1abc9c');
         }
       });
-      d3$3.select('div#LeftPropertiesBarSelector').style('left', function () {
+      d3$5.select('div#LeftPropertiesBarSelector').style('left', () => {
         if (currentLeftColWidth >= 50) {
           return currentLeftColWidth.toString() + 'px';
         } else {
@@ -4232,23 +3829,23 @@ function manageCanvas() {
     }
 
     if (messageshown) {
-      var trns = d3$3.transition().duration(500).ease(d3$3.easeLinear);
-      d3$3.select('div#Addedmessage').transition(trns).style('opacity', function () {
+      let trns = d3$5.transition().duration(500).ease(d3$5.easeLinear);
+      d3$5.select('div#Addedmessage').transition(trns).style('opacity', () => {
         messageshown = false;
         return 0;
       });
-      d3$3.select('div#buttonClickedname').transition(trns).style('opacity', function () {
+      d3$5.select('div#buttonClickedname').transition(trns).style('opacity', () => {
         messageshown = false;
         return 0;
       });
     }
-  }).on('mouseup', function () {
+  }).on('mouseup', () => {
     if (rightColumnIsSelected) rightColumnIsSelected = false;
     if (leftColumnIsSelected) leftColumnIsSelected = false;
   });
 }
 
-var d3$2 = require('d3');
+var d3$4 = require('d3');
 
 var selection_box_x = 0;
 var selection_box_y = 0;
@@ -4282,7 +3879,7 @@ var reactContext;
 
 function manageGrid() {
   reactContext = this;
-  var allContents = d3$2.select('#allCanvasContents');
+  var allContents = d3$4.select('#allCanvasContents');
   var optionListStarted = reactContext.state.optionListStarted;
   var startDrag = reactContext.state.startDrag;
   var mouseInsideOption = reactContext.state.mouseInsideOption;
@@ -4293,8 +3890,8 @@ function manageGrid() {
     return 'white';
   }).on('mousedown', function () {
     if (optionListStarted && !startDrag && !mouseInsideOption) {
-      d3$2.selectAll('rect.optionListoption').style('display', 'none');
-      d3$2.selectAll('text.optionListoptiontext').style('display', 'none');
+      d3$4.selectAll('rect.optionListoption').style('display', 'none');
+      d3$4.selectAll('text.optionListoptiontext').style('display', 'none');
       reactContext.setState({
         optionListStarted: false,
         mouseInsideOption: false
@@ -4328,28 +3925,28 @@ function manageGrid() {
       }
     }
   }).on('dblclick', function (event) {
-    d3$2.select('div#buttonClickedname').text('dblclick').style('opacity', function () {
+    d3$4.select('div#buttonClickedname').text('dblclick').style('opacity', function () {
       reactContext.setState({
         messageshown: true
       });
       return 1;
     });
     reactContext.setState({
-      mousex: d3$2.pointer(event, allContents.node())[0],
-      mousey: d3$2.pointer(event, allContents.node())[1]
+      mousex: d3$4.pointer(event, allContents.node())[0],
+      mousey: d3$4.pointer(event, allContents.node())[1]
     });
-    d3$2.select('body').append('option');
+    d3$4.select('body').append('option');
   }).on('contextmenu', function (event) {
     //context menu event raised on right click
     event.preventDefault();
     popupMessage('RMB');
     selection_box_started = true;
-    selection_box_x = d3$2.pointer(event, allContents.node())[0];
-    selection_box_y = d3$2.pointer(event, allContents.node())[1];
+    selection_box_x = d3$4.pointer(event, allContents.node())[0];
+    selection_box_y = d3$4.pointer(event, allContents.node())[1];
     selection_box = allContents.append('polyline');
   }).on('mousemove', function (event) {
-    var mousex = d3$2.pointer(event, allContents.node())[0];
-    var mousey = d3$2.pointer(event, allContents.node())[1];
+    var mousex = d3$4.pointer(event, allContents.node())[0];
+    var mousey = d3$4.pointer(event, allContents.node())[1];
     reactContext.setState({
       mousex: mousex,
       mousey: mousey
@@ -4362,7 +3959,7 @@ function manageGrid() {
     }
 
     if (reactContext.state.edgeStarted) {
-      d3$2.select('#' + reactContext.state.selectedcircleId).attr('d', function () {
+      d3$4.select('#' + reactContext.state.selectedcircleId).attr('d', function () {
         return returnCurveString(reactContext.state.initEdgex1, reactContext.state.initEdgey1, mousex, mousey);
       }).attr('fill', 'none').attr('stroke-opacity', '0.2').attr('interpolate', 'basis');
     }
@@ -4371,13 +3968,13 @@ function manageGrid() {
     var optionlistRectid = reactContext.state.optionlistRectid;
 
     if (reactContext.state.textareaStarted) {
-      var selectedRect = getlocationFromTransform(d3$2.select('g#comp-' + textAreaRectId).attr('transform'));
-      d3$2.select('#TextAreaSelector').style('position', 'absolute').style('height', (parseFloat(d3$2.select('rect#' + textAreaRectId).attr('height')) - 50).toString() + 'px').style('left', selectedRect[0] + 4 + 'px').style('top', selectedRect[1] + 17 + 'px').style('border', 'none');
+      var selectedRect = getlocationFromTransform(d3$4.select('g#comp-' + textAreaRectId).attr('transform'));
+      d3$4.select('#TextAreaSelector').style('position', 'absolute').style('height', (parseFloat(d3$4.select('rect#' + textAreaRectId).attr('height')) - 50).toString() + 'px').style('left', selectedRect[0] + 4 + 'px').style('top', selectedRect[1] + 17 + 'px').style('border', 'none');
     }
 
     if (reactContext.state.optionListStarted) {
-      selectedRect = getlocationFromTransform(d3$2.select('g#comp-' + optionlistRectid).attr('transform'));
-      d3$2.select('#optionListSelectItems' + optionlistRectid).style('position', 'absolute').style('height', (parseFloat(d3$2.select('rect#' + optionlistRectid).attr('height')) - 50).toString() + 'px').style('left', selectedRect[0] + 20 + 'px').style('top', selectedRect[1] + 1 + 'px');
+      selectedRect = getlocationFromTransform(d3$4.select('g#comp-' + optionlistRectid).attr('transform'));
+      d3$4.select('#optionListSelectItems' + optionlistRectid).style('position', 'absolute').style('height', (parseFloat(d3$4.select('rect#' + optionlistRectid).attr('height')) - 50).toString() + 'px').style('left', selectedRect[0] + 20 + 'px').style('top', selectedRect[1] + 1 + 'px');
     } // if (reactContext.state.StringAnchorclicked) {
     //     if (StringAnchorType === YANCHOR) {
     //         //TODO : encabsulate this in a function.
@@ -4462,12 +4059,12 @@ function manageGrid() {
     if (selection_box_started) {
       var x1 = selection_box_x;
       var y1 = selection_box_y;
-      var x2 = d3$2.pointer(event, allContents.node())[0];
+      var x2 = d3$4.pointer(event, allContents.node())[0];
       var y2 = selection_box_y;
-      var x3 = d3$2.pointer(event, allContents.node())[0];
-      var y3 = d3$2.pointer(event, allContents.node())[1];
+      var x3 = d3$4.pointer(event, allContents.node())[0];
+      var y3 = d3$4.pointer(event, allContents.node())[1];
       var x4 = selection_box_x;
-      var y4 = d3$2.pointer(event, allContents.node())[1];
+      var y4 = d3$4.pointer(event, allContents.node())[1];
       selection_box.attr('x', selection_box_x).attr('points', function () {
         return x1 + ',' + y1 + ' ' + x2 + ',' + y2 + ' ' + x3 + ',' + y3 + ' ' + x4 + ',' + y4 + ' ' + x1 + ',' + y1 + ' ';
       }).attr('fill', function () {
@@ -4508,7 +4105,7 @@ function manageGrid() {
       reactContext.setState({
         edgeStarted: false
       });
-      d3$2.select('#' + reactContext.state.selectedcircleId).remove();
+      d3$4.select('#' + reactContext.state.selectedcircleId).remove();
     }
 
     if (reactContext.state.StringAnchorclicked) {
@@ -4551,7 +4148,7 @@ function manageGrid() {
 
       for (var key in components_selection_data) {
         if (components_selection_data.hasOwnProperty(key)) {
-          if (components_selection_data[key].x0 > selection_box_x && components_selection_data[key].y0 > selection_box_y && components_selection_data[key].x1 < d3$2.pointer(allContents.node())[0] && components_selection_data[key].y1 < d3$2.pointer(allContents.node())[1]) {
+          if (components_selection_data[key].x0 > selection_box_x && components_selection_data[key].y0 > selection_box_y && components_selection_data[key].x1 < d3$4.pointer(allContents.node())[0] && components_selection_data[key].y1 < d3$4.pointer(allContents.node())[1]) {
             temp_selected_xs.push(components_selection_data[key].x0);
             temp_selected_xs.push(components_selection_data[key].x1);
             temp_selected_ys.push(components_selection_data[key].y0);
@@ -4579,7 +4176,7 @@ function manageGrid() {
 var someCircle;
 
 function highlightSelection(components_list, temp_selected_xs, temp_selected_ys) {
-  var allContents = d3$2.select('#allCanvasContents');
+  var allContents = d3$4.select('#allCanvasContents');
 
   if (selection_rectangle_group != null) {
     selection_rectangle_group.remove();
@@ -4625,277 +4222,268 @@ function showVerticalAlignment(selectionBox) {
 
 var img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAAG80e8cAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAB+FJREFUeNrswQENAAAAwqD3T20PBxQAAAAAAAAAAAAAAAAAAAAnJoAA7MIBCQAAAICg/6/7EYoCAAAAAAAAAAAAAAAAAAAzCcAuHNMAAAAACOrf2hZeMAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4JwC4ckAAAAAAI+v+6HYGiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArCWAAOzCAQkAAACAoP+vG5KiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwFoCsFPHJgAAIRAEwRbsv1dbOMyUGT68SNhPX9vZ2d3dlT8M/hM6CB0QOiB0QOiA0AGhA0IHhA5CB4QOCB0QOiB0QOiA0AGhg9ABoQNCB4QOCB0QOiB0QOggdCcAoQNCB4QOCB0QOiB0QOiA0EHogNABoQNCB4QOCB0QOiB0EDogdEDogNABoQNCB4QOCB2EDggdEDogdEDogNABoQNCB4QOQgeEDggdEDogdEDogNABoYPQAaEDQgeEDggdEDogdEDoIHRA6IDQAaEDQgeEDggdEDogdBA6IHRA6IDQAaEDQgeEDggdhA4IHRA6IHRA6IDQAaEDQgehA0IHhA4IHRA6IHRA6IDQAaGD0AGhA0IHhA4IHRA6IHRA6CB0QOiA0AGhA0IHhA4IHRA6CB0QOiB0QOiA0AGhA0IHhA4IHYQOCB0QOiB0QOiA0AGhA0IHoQNCB4QOCB0QOiB0QOiA0EHogNABoQNCB4QOCB0QOiB0QOggdEDogNABoQNCB4QOCB0QOggdEDogdEDogNABoQNCB4QOQgeEDggdEDogdEDogNABoQNCB6EDQgeEDggdEDogdEDogNBB6IDQAaEDQgeEDggdEDogdBA6IHRA6IDQAaEDQgeEDggdEDoIHRA6IHRA6IDQAaEDQgeEDkIHhA4IHRA6IHRA6IDQAaGD0AGhA0IHhA4IHRA6IHRA6IDQQeiA0AGhA0IHhA4IHRA6IHQQOiB0QOiA0AGhA0IHNkYAAdq5YxMGoiCGgr4a3H+vLmBTccJiBscv1fHBm/599fT09PT09N7v+XIHgAEGHQAMOgBg0AEAgw4AGHQAMOgAgEEHAIKeT/7P7QDAn3PpR09PT09Pr9Dz5A4AAww6ABh0AMCgAwAGHQAw6ABg0AEAgw4ABLkUBwAcLv3o6enp6ekVep7cAWCAQQcAgw4AGHQAwKADAAYdAAw6AGDQAYAgl+IAgMOlHz09PT09vULPkzsADDDoAGDQAQCDDgAYdADAoAOAQQcADDoAEORSHABwuPSjp6enp6dX6HlyB4ABBh0ADDoAYNABAIMOABh0ADDoAIBBBwCCXIoDAA6XfvT09PT09Ao9T+4AMMCgA4BBBwAMOgBg0AEAgw4ABh0AMOgAQJBLcQDA4dKPnp6enp5eoefJHQAGGHQAMOgAgEEHAAw6AGDQAcCgAwAGHQAIcikOADhc+tHT09PT0yv0PLkDwACDDgAGHQAw6ACAQQcADDoAGHQAwKADAEEuxQEAh0s/enp6enp6hZ4ndwAYYNABwKADAAYdADDoAIBBBwCDDgAYdAAgyKU4AOBw6UdPT09PT6/Q8+QOAAMMOgAYdADAoAMABh0AMOgAYNABAIMOAAS5FAcAHC796Onp6enpFXqe3AFggEEHAIMOABh0AMCgAwAGHQAMOgBg0AGAIJfiAIDDpR89PT09Pb1Cz5M7AAww6ABg0AEAgw4AGHQAwKADgEEHAAw6ABDkUhwAcLj0o6enp6enV+h5cgeAAQYdAAw6AGDQAQCDDgAYdAAw6ACAQQcAglyKAwAOl3709PT09PQKPU/uADDAoAOAQQcADDoAYNABAIMOAAYdADDoAECQS3EAwOHSj56enp6eXqHnyR0ABhh0ADDoAIBBBwAMOgBg0AHAoAMABh0ACHIpDgA4XPrR09PT09Mr9Dy5A8AAgw4ABh0AMOgAgEEHAAw6ABh0AMCgAwBBLsUBAIdLP3p6enp6eoWeJ3cAGGDQAcCgAwAGHQAw6ACAQQcAgw4AGHQAIMilOADgcOlHT09PT0+v0PPkDgADDDoAGHQAwKADAAYdADDoAGDQAQCDDgAEuRQHABwu/ejp6enp6RV6ntwBYIBBBwCDDgAYdADAoAMABh0ADDoAYNABgCCX4gCAw6UfPT09PT29Qs+TOwAMMOgAYNABAIMOABh0AMCgA4BBBwAMOgAQ5FIcAHC49KOnp6enp1foeXIHgAEGHQAMOgBg0AEAgw4AGHQAMOgAgEEHAIJcigMADpd+9PT09PT0Cj1P7gAwwKADgEEHAAw6AGDQAQCDDgAGHQAw6ABAkEtxAMDh0o+enp6enl6h58kdAAYYdAAw6ACAQQcADDoAYNABwKADAAYdAAhyKQ4AOFz60dPT09PTK/Q8uQPAAIMOAAYdADDoAIBBBwAMOgAYdADAoAMAQS7FAQCHSz96enp6enqFnid3ABhg0AHAoAMABh0AMOgAgEEHAIMOABh0ACDIpTgAGPADp1M1teRFeWkAAAAASUVORK5CYII=";
 
-var Grid = /*#__PURE__*/function (_Component) {
-  _inherits(Grid, _Component);
-
-  var _super = _createSuper(Grid);
-
-  function Grid() {
-    _classCallCheck(this, Grid);
-
-    return _super.apply(this, arguments);
+class Grid extends React.Component {
+  render() {
+    return /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "canvas_container canvas_container_inner main_canvas_container canvas_body_container"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "ui-designer-grid",
+      id: "mainGrid"
+    }, /*#__PURE__*/React__default['default'].createElement("svg", {
+      height: "10000",
+      width: "10000"
+    }, /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("pattern", {
+      id: "img122",
+      patternUnits: "userSpaceOnUse",
+      width: "500",
+      height: "500"
+    }, /*#__PURE__*/React__default['default'].createElement("image", {
+      className: "rep",
+      xlinkHref: img,
+      x: "0",
+      y: "0",
+      width: "500",
+      height: "500"
+    })), /*#__PURE__*/React__default['default'].createElement("filter", {
+      id: this.props.filter_id,
+      x: "-40",
+      y: "-40",
+      width: "150%",
+      height: "150%",
+      filterUnits: "userSpaceOnUse"
+    }, /*#__PURE__*/React__default['default'].createElement("feOffset", {
+      result: "offOut",
+      in: "SourceGraphics",
+      dx: "0",
+      dy: "0"
+    }), /*#__PURE__*/React__default['default'].createElement("feGaussianBlur", {
+      result: "blurOut",
+      in: "offOut",
+      stdDeviation: "1"
+    }), /*#__PURE__*/React__default['default'].createElement("feBlend", {
+      in: "SourceGraphic",
+      in2: "blurOut",
+      mode: "normal"
+    })), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "grad1ient",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        'stopColour': '#dddddd',
+        'stopOpacity': '100%'
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "50%",
+      style: {
+        "stopColour": "#eeeeee",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#dddddd",
+        "stopOpacity": "100%"
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "fileUploadGradient",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#344b62",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "10%",
+      style: {
+        "stopColour": "#344b62",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "12%",
+      style: {
+        "stopColour": "#2b3d50",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "88%",
+      style: {
+        "stopColour": "#2b3d50",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "90%",
+      style: {
+        "stopColour": "#23364a",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#23364a",
+        "stopOpacity": "100%"
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "gradientlsider",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#eeeeee",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "20%",
+      style: {
+        "stopColour": "#eeeeee",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "30%",
+      style: {
+        "stopColour": "#dddddd",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "70%",
+      style: {
+        "stopColour": "#dddddd",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "80%",
+      style: {
+        "stopColour": "#cccccc",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#cccccc",
+        "stopOpacity": "100%"
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "gradient2",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "10%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "30%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "60%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "80%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "60%"
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "gradient2_2",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "50%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "0%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "70%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "0%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "30%"
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "gradient3",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#555555",
+        "stopOpacity": "0%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "28%",
+      style: {
+        "stopColour": "#555555",
+        "stopOpacity": "0%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "30%",
+      style: {
+        "stopColour": "#555555",
+        "stopOpacity": "20%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "80%",
+      style: {
+        "stopColour": "#555555",
+        "stopOpacity": "50%"
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "gradient4",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#373939",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#023939",
+        "stopOpacity": "100%"
+      }
+    })))))));
   }
 
-  _createClass(Grid, [{
-    key: "render",
-    value: function render() {
-      return /*#__PURE__*/React__default['default'].createElement("svg", {
-        height: "10000",
-        width: "10000"
-      }, /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("pattern", {
-        id: "img122",
-        patternUnits: "userSpaceOnUse",
-        width: "500",
-        height: "500"
-      }, /*#__PURE__*/React__default['default'].createElement("image", {
-        className: "rep",
-        xlinkHref: img,
-        x: "0",
-        y: "0",
-        width: "500",
-        height: "500"
-      })), /*#__PURE__*/React__default['default'].createElement("filter", {
-        id: this.props.filter_id,
-        x: "-40",
-        y: "-40",
-        width: "150%",
-        height: "150%",
-        filterUnits: "userSpaceOnUse"
-      }, /*#__PURE__*/React__default['default'].createElement("feOffset", {
-        result: "offOut",
-        in: "SourceGraphics",
-        dx: "0",
-        dy: "0"
-      }), /*#__PURE__*/React__default['default'].createElement("feGaussianBlur", {
-        result: "blurOut",
-        in: "offOut",
-        stdDeviation: "1"
-      }), /*#__PURE__*/React__default['default'].createElement("feBlend", {
-        in: "SourceGraphic",
-        in2: "blurOut",
-        mode: "normal"
-      })), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "grad1ient",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          'stopColour': '#dddddd',
-          'stopOpacity': '100%'
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "50%",
-        style: {
-          "stopColour": "#eeeeee",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#dddddd",
-          "stopOpacity": "100%"
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "fileUploadGradient",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#344b62",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "10%",
-        style: {
-          "stopColour": "#344b62",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "12%",
-        style: {
-          "stopColour": "#2b3d50",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "88%",
-        style: {
-          "stopColour": "#2b3d50",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "90%",
-        style: {
-          "stopColour": "#23364a",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#23364a",
-          "stopOpacity": "100%"
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "gradientlsider",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#eeeeee",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "20%",
-        style: {
-          "stopColour": "#eeeeee",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "30%",
-        style: {
-          "stopColour": "#dddddd",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "70%",
-        style: {
-          "stopColour": "#dddddd",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "80%",
-        style: {
-          "stopColour": "#cccccc",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#cccccc",
-          "stopOpacity": "100%"
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "gradient2",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "10%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "30%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "60%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "80%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "60%"
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "gradient2_2",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "50%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "0%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "70%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "0%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "30%"
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "gradient3",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#555555",
-          "stopOpacity": "0%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "28%",
-        style: {
-          "stopColour": "#555555",
-          "stopOpacity": "0%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "30%",
-        style: {
-          "stopColour": "#555555",
-          "stopOpacity": "20%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "80%",
-        style: {
-          "stopColour": "#555555",
-          "stopOpacity": "50%"
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "gradient4",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#373939",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#023939",
-          "stopOpacity": "100%"
-        }
-      })))));
-    }
-  }]);
-
-  return Grid;
-}(React.Component);
+}
 
 /*
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -4913,7 +4501,7 @@ var Grid = /*#__PURE__*/function (_Component) {
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 */
 
-var d3$1 = require('d3');
+var d3$3 = require('d3');
 /**
  * Create a new generic component (everything except slider, option list, panel, file upload, toogle, list view).
  * Example of calling this function for Average component:
@@ -4981,7 +4569,7 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
     });
   }
 
-  var allContents = d3$1.select('#allCanvasContents');
+  var allContents = d3$3.select('#allCanvasContents');
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
   var genY;
@@ -5113,9 +4701,9 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
   }
 
   node.append('rect').attr('class', 'CompCBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
-    d3$1.select(event.currentTargethis).attr('cursor', 'pointer');
+    d3$3.select(event.currentTargethis).attr('cursor', 'pointer');
   }).on('mouseout', function (event) {
-    d3$1.select(event.currentTarget).attr('fill', newcomp.fill);
+    d3$3.select(event.currentTarget).attr('fill', newcomp.fill);
   }).on('dblclick', () => {}).on('mousedown', () => {
     reactContext.setState({
       rectType: 'component'
@@ -5158,6 +4746,306 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
   });
   var current_components_selection = { ...reactContext.state.components_selection_data
   };
+  current_components_selection[newcomp.GUID] = {
+    x0: newcomp.X,
+    y0: newcomp.Y,
+    x1: newcomp.X + newcomp.width,
+    y1: newcomp.Y + newcomp.height
+  };
+  reactContext.setState({
+    components_selection_data: current_components_selection
+  });
+}
+
+var d3$2 = require('d3');
+
+function CreateNewToggle(reactContext) {
+  var FromExisting = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  var newcomp;
+
+  if (FromExisting == null) {
+    newcomp = addcomponent(uuidv4('C'), 0, 1);
+    var guid = newcomp.GUID;
+
+    var data = _objectSpread2({}, reactContext.state.parent_child_matrix);
+
+    data[guid] = [];
+    reactContext.setState({
+      parent_child_matrix: data
+    });
+  } else {
+    newcomp = FromExisting;
+  }
+
+  newcomp.fill = '#2c3e50';
+  newcomp.Name = 'False';
+  var padding = 20;
+  var titleMargin = 30;
+  newcomp.height = 20;
+  newcomp.type = 'toggle';
+  newcomp.dftype = 'shlow'; // TODO : get the longest text in the component. and set the width based on this.
+
+  newcomp.width = 80; //newcomp.Name.length * one_character_width + titleMarginLeft;
+
+  var allContents = d3$2.select('#allCanvasContents');
+  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
+  var genX;
+  var genY;
+  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', function () {
+    if (FromExisting == null) {
+      genX = Math.random() * 500 + 200;
+      genY = Math.random() * 500 + 200;
+      newcomp.X = genX;
+      newcomp.Y = genY;
+      return 'translate(' + genX + ', ' + genY + ')';
+    } else {
+      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
+    }
+  }).data([{
+    x: FromExisting ? FromExisting.X : genX,
+    y: FromExisting ? FromExisting.Y : genY
+  }]);
+  var InputGroup = node.append('g');
+
+  var _loop = function _loop(index) {
+    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      newcomp.inputs[index].circle = reactContext.state.fromCircle;
+      newcomp.inputs[index].circle.element = this.id;
+      newcomp.inputs[index].circle.CX = 0;
+      newcomp.inputs[index].circle.CY = index * padding + titleMargin;
+      newcomp.inputs[index].type = 'input';
+      return 'input';
+    });
+  };
+
+  for (var index = 0; index < newcomp.inputs.length; index++) {
+
+    _loop(index);
+  }
+
+  var OutputGroup = node.append('g');
+
+  var _loop2 = function _loop2(_index) {
+    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + _index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + _index).attr('type', function () {
+      newcomp.outputs[_index].circle = this;
+      newcomp.outputs[_index].type = 'output';
+      return 'output';
+    }).lower();
+  };
+
+  for (var _index = 0; _index < newcomp.outputs.length; _index++) {
+
+    _loop2(_index);
+  }
+
+  node.append('rect').attr('class', 'CompTBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
+  var cirGroup = node.append('g').attr('transform', function () {
+    var x = newcomp.width;
+    var y = newcomp.height;
+    return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
+  });
+  cirGroup.append('text').attr('id', 'nodeLog' + newcomp.GUID).attr('class', 'nodeLog ' + newcomp.GUID).attr('transform', 'translate(10, 10)').text(newcomp.log.logText).attr('fill', 'black').style('display', 'none');
+  var Titlegroup = node.append('g').attr('transform', function () {
+    return 'translate(0, 15)';
+  });
+  Titlegroup.append('text').attr('class', 'nodetitle node_title' + newcomp.GUID).text(newcomp.Name).attr('fill', '#ecf0f1').attr('transform', 'translate(' + (newcomp.width / 2.0 - newcomp.Name.length * 4.0).toString() + ', 0)');
+  node.append('rect').attr('class', 'CompTBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01') // .attr("filter", "url('#svgshadow')")
+  .on('mousemove', function (event) {
+    // newcomp.rect = this;
+    d3$2.select(event.currentTarget) // .attr("fill", "#303952")
+    .attr('cursor', 'pointer');
+  }).on('mouseout', function (event) {
+    // newcomp.rect = this;
+    d3$2.select(event.currentTarget).attr('fill', newcomp.fill);
+  });
+  newcomp.value = newcomp.Name;
+
+  if (FromExisting == null) {
+    var current_all_comp = reactContext.state.allComp.slice();
+    console.log('Adding a toggle' + newcomp);
+    current_all_comp.push(newcomp);
+    reactContext.setState({
+      allComp: current_all_comp
+    });
+  }
+
+  var current_comp_out = _objectSpread2({}, reactContext.state.comp_output_edges);
+
+  var current_comp_in = _objectSpread2({}, reactContext.state.comp_input_edges);
+
+  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
+  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
+  reactContext.setState({
+    comp_input_edges: current_comp_in,
+    comp_output_edges: current_comp_out
+  });
+
+  var current_components_selection = _objectSpread2({}, reactContext.state.components_selection_data);
+
+  current_components_selection[newcomp.GUID] = {
+    x0: newcomp.X,
+    y0: newcomp.Y,
+    x1: newcomp.X + newcomp.width,
+    y1: newcomp.Y + newcomp.height
+  };
+  reactContext.setState({
+    components_selection_data: current_components_selection
+  });
+}
+
+var d3$1 = require('d3');
+
+function CreateNewListView(reactContext) {
+  var FromExisting = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  var optionlist_predefined_items = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  var newcomp;
+
+  if (FromExisting == null) {
+    newcomp = addcomponent(uuidv4('C'), 1, 1);
+    var guid = newcomp.GUID;
+
+    var data = _objectSpread2({}, reactContext.state.parent_child_matrix);
+
+    data[guid] = [];
+    reactContext.setState({
+      parent_child_matrix: data
+    });
+    newcomp.Name = 'Select item';
+    newcomp.value = [['dummy_Option1', 0], [1.022235, 1], [2235, 0], ['shouldBeSelected', 1], ['dummy_Option1', 0], [1.022235, 1], [2235, 0], ['shouldBeSelected', 1], ['dummy_Option1', 0], [1.022235, 1], [2235, 0], ['shouldBeSelected', 1]];
+
+    if (optionlist_predefined_items != null) {
+      newcomp.optionListValues = JSON.parse(optionlist_predefined_items);
+    }
+  } else {
+    newcomp = FromExisting;
+  }
+
+  newcomp.fill = 'url(#grad1ient)';
+  var padding = 20;
+  var titleMargin = 30;
+  newcomp.height = 200;
+  newcomp.type = 'listView';
+  newcomp.dftype = 'shlow';
+  newcomp.width = 200; // TODO : get the longest text in the component. and set the width based on this.
+
+  var allContents = d3$1.select('#allCanvasContents');
+
+  function update() {
+    node.attr('transform', function (d) {
+      return "translate(".concat(d.x, ",").concat(d.y, ")");
+    });
+  }
+
+  d3$1.drag().on('start', function (event, d) {
+    return Dummyrect.attr('stroke', 'red');
+  }).on('drag', function (event, d) {
+    d.x = event.x;
+    d.y = event.y;
+  }).on('end', function (event, d) {
+    return Dummyrect.attr('stroke', '#3a4c69');
+  }).on('start.update drag.update end.update', update);
+  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
+  var genX;
+  var genY;
+  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', function () {
+    if (FromExisting == null) {
+      genX = Math.random() * 500 + 200;
+      genY = Math.random() * 500 + 200;
+      newcomp.X = genX;
+      newcomp.Y = genY;
+      return 'translate(' + genX + ', ' + genY + ')';
+    } else {
+      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
+    }
+  }).data([{
+    x: FromExisting ? FromExisting.X : genX,
+    y: FromExisting ? FromExisting.Y : genY
+  }]);
+  var InputGroup = node.append('g');
+
+  var _loop = function _loop(index) {
+    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
+    . //newcomp.fill)
+    attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      newcomp.inputs[index].circle = addCircle();
+      newcomp.inputs[index].circle.element = this.id;
+      newcomp.inputs[index].circle.CX = 0;
+      newcomp.inputs[index].circle.CY = index * padding + titleMargin;
+      newcomp.inputs[index].type = 'input';
+      return 'input';
+    });
+  };
+
+  for (var index = 0; index < newcomp.inputs.length; index++) {
+
+    _loop(index);
+  }
+
+  var OutputGroup = node.append('g');
+
+  var _loop2 = function _loop2(_index) {
+    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
+    . //newcomp.fill)
+    attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + _index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + _index).attr('type', function () {
+      newcomp.outputs[_index].circle = this;
+      newcomp.outputs[_index].type = 'output';
+      return 'output';
+    }).lower();
+  };
+
+  for (var _index = 0; _index < newcomp.outputs.length; _index++) {
+
+    _loop2(_index);
+  }
+
+  var Dummyrect = node.append('rect').attr('class', 'CompLBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3') //.attr("filter", "url(#f2")
+  .attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', '#CECECE');
+  node.append('text').attr('x', 5).attr('y', 15).text('listItems').attr('fill', 'black').style('font-family', 'Ubuntu Mono'); //listbox items
+
+  node.append('foreignObject').attr('class', 'listView CompLBody' + newcomp.GUID).attr('id', 'listView-' + newcomp.GUID).attr('y', 20).attr('x', 1).attr('width', newcomp.width - 2).attr('height', newcomp.height - 20).html(function () {
+    var selectedOptions = [];
+    var ListItemsvalueReturn = "<select id=\"listviewSelect\" class=\"listView " + newcomp.GUID + "\" size=\"5\"  multiple>";
+    newcomp.value.forEach(function (option) {
+      if (option[1] === 0) {
+        ListItemsvalueReturn += "<option id=\"someSelection\" class=\"listViewOption " + newcomp.GUID + "\" value=\"" + option[0] + "\">" + option[0] + "</option>";
+      } else {
+        ListItemsvalueReturn += "<option id=\"someSelection\" class=\"listViewOption " + newcomp.GUID + "\" value=\"" + option[0] + "\" selected>" + option[0] + "</option>";
+        selectedOptions.push(option[0]);
+      }
+    });
+    newcomp.outputs[0].value = JSON.stringify(selectedOptions);
+    ListItemsvalueReturn += "</select>";
+    return ListItemsvalueReturn;
+  });
+  node.append('rect').attr('class', 'CompLBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', 20).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
+    d3$1.select(event.currentTarget).attr('cursor', 'pointer');
+  }).on('mouseout', function (event) {
+    d3$1.select(event.currentTarget).attr('fill', newcomp.fill);
+  });
+  node.append('g').attr('id', 'optionListOption-' + newcomp.GUID);
+
+  if (FromExisting == null) {
+    var current_all_comp = reactContext.state.allComp.slice();
+    console.log('Adding a list view' + newcomp);
+    current_all_comp.push(newcomp);
+    reactContext.setState({
+      allComp: current_all_comp
+    });
+  }
+
+  var current_comp_out = _objectSpread2({}, reactContext.state.comp_output_edges);
+
+  var current_comp_in = _objectSpread2({}, reactContext.state.comp_input_edges);
+
+  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
+  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
+  reactContext.setState({
+    comp_input_edges: current_comp_in,
+    comp_output_edges: current_comp_out
+  });
+
+  var current_components_selection = _objectSpread2({}, reactContext.state.components_selection_data);
+
   current_components_selection[newcomp.GUID] = {
     x0: newcomp.X,
     y0: newcomp.Y,
@@ -5332,6 +5220,175 @@ class TopBar extends React.Component {
         }]
       }
     })));
+  }
+
+}
+
+class ComponentTab extends React.Component {
+  render() {
+    return /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2",
+      className: "TabToolBox componentTab"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_0",
+      className: "toolbarbuttonsContainer"
+    }, "\xA0 Components ", '>', /*#__PURE__*/React__default['default'].createElement("span", {
+      className: "currentTab componentTab",
+      style: {
+        marginLeft: "3px"
+      }
+    }, " Main Inputs")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer componentTab Basic 0",
+      style: {
+        display: "none"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer componentTab BSH -1",
+      style: {
+        display: "none"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer componentTab Osi -1",
+      style: {
+        display: "none"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer componentTab Pandas -1",
+      style: {
+        display: "none"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer componentTab StringOps -1",
+      style: {
+        display: "none"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_1",
+      className: "toolbarbuttonsContainer componentTab Input 0"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addSlider",
+      onClick: () => CreateNewSlider(this.props.context),
+      className: "mainButtonItem 1 1",
+      style: {
+        backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"
+      }
+    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "Slider")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addPanel",
+      onClick: () => CreateNewPanel(this.props.context),
+      className: "mainButtonItem 1 1",
+      style: {
+        backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"
+      }
+    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "Panel")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addToggle",
+      onClick: () => CreateNewToggle(this.props.context),
+      className: "mainButtonItem 1 1",
+      style: {
+        backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"
+      }
+    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "Toggle")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addOptionList",
+      onClick: () => CreateNewOptionList(this.props.context),
+      className: "mainButtonItem 1 1",
+      style: {
+        backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"
+      }
+    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "Option list")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addListView",
+      onClick: () => CreateNewListView(this.props.context),
+      className: "mainButtonItem 1 1",
+      style: {
+        backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"
+      }
+    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "List view")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addFile",
+      onClick: () => CreateNewFileUpload(this.props.context),
+      className: "mainButtonItem 1 1",
+      style: {
+        backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"
+      }
+    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
+      id: "hint"
+    }, "File upload"))), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_2_2",
+      className: "toolbarRightToggleNavigator 1"
+    }));
+  }
+
+}
+
+class PropertiesTab extends React.Component {
+  render() {
+    return /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "PropertiesBar"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "ccatheader"
+    }), /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "ccbody",
+      id: "propertiesBarContents",
+      style: {
+        "width": "100%"
+      }
+    }));
+  }
+
+}
+
+class LeftContainer extends React.Component {
+  render() {
+    return /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "LeftPropertiesBar",
+      style: {
+        top: "30px"
+      }
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "leftbarcontainer"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1",
+      className: "toolBarContainer 1"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_1",
+      className: "toolBarContainer 1 1"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_1_1",
+      className: "toolbarTopToggleContainer"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "toolbarTopToggleItem 1"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "toptoggleitem componentTab selected"
+    }, "Components")))), /*#__PURE__*/React__default['default'].createElement(ComponentTab, {
+      context: this.props.context
+    }))), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "leftbarcontainer"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1",
+      className: "toolBarContainer 1"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_1",
+      className: "toolBarContainer 1 1"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "toolbar_container_1_1_1",
+      className: "toolbarTopToggleContainer"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "toolbarTopToggleItem 1"
+    }, /*#__PURE__*/React__default['default'].createElement("div", {
+      className: "toptoggleitem propertiesTab selected"
+    }, "Properties")))), /*#__PURE__*/React__default['default'].createElement(PropertiesTab, null))));
   }
 
 }
@@ -6643,7 +6700,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z = "body {\r\n    -webkit-user-select: none;\r\n    -khtml-user-select: none;\r\n    -moz-user-select: none;\r\n    -o-user-select: none;\r\n    user-select: none;\r\n    overflow-y: hidden; /* Hide vertical scrollbar */\r\n    overflow-x: hidden;\r\n}\r\n\r\nsvg {\r\n    border: solid 1px #565656;\r\n}\r\n\r\n#checks {\r\n    margin: 10px;\r\n}\r\n\r\ntext {\r\n    pointer-events: none;\r\n    user-select: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu mono';\r\n}\r\n\r\n.nodeLog {\r\n    font-size: small;\r\n    font-family: monospace;\r\n    pointer-events: none;\r\n}\r\n\r\ninput:focus,\r\nselect:focus,\r\ntextarea:focus,\r\nbutton:focus {\r\n    outline: none;\r\n}\r\n\r\nrect:focus {\r\n    outline: none;\r\n}\r\n\r\n.output {\r\n    font-family: monospace;\r\n    font-size: small;\r\n    color: white;\r\n}\r\n\r\n.input {\r\n    font-family: monospace;\r\n    font-size: small;\r\n}\r\n\r\n.nodetitle {\r\n    font-family: 'ubuntu mono';\r\n    font-size: 13px;\r\n    font-weight: bold;\r\n    color: white;\r\n    pointer-events: none;\r\n    text-align: center;\r\n}\r\n\r\ndiv#someData {\r\n    padding: 8px;\r\n    padding-top: 25px;\r\n    font-size: x-small;\r\n    font-family: monospace;\r\n}\r\n\r\ncircle {\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#PropertiesBarSelector {\r\n    width: 4px;\r\n    position: fixed;\r\n    right: 501px;\r\n    background-color: #000000;\r\n    height: 100%;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    width: 500px;\r\n    background-color: #2b3d50;\r\n    position: fixed;\r\n    right: 0px;\r\n    box-shadow: 0px 11px 10px #0000006e;\r\n    top: 0px;\r\n    min-height: 35%;\r\n    transition-timing-function: ease-in-out;\r\n    transition: height 2s;\r\n    transition-delay: 1s;\r\n}\r\n\r\ndiv#mainGrid {\r\n    position: relative;\r\n    top: 0px;\r\n    left: 0px;\r\n    background-color: #ececec;\r\n}\r\n\r\ndiv#textAreaBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\ndiv#optionlistBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\nselect#optionListSelectItems {\r\n    background: white;\r\n    opacity: 1;\r\n    font-family: monospace;\r\n    font-weight: bold;\r\n    border: 1px solid black;\r\n    border-radius: 3px;\r\n}\r\n\r\nh5 {\r\n    font-family: monospace;\r\n    margin-top: 1px;\r\n    margin-bottom: 4px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#LeftPropertiesBar {\r\n    width: 200px;\r\n    position: fixed;\r\n    background-color: #2b3d50;\r\n    left: 0px;\r\n    top: 0px;\r\n}\r\n\r\n.additionalData {\r\n    border-radius: 7px;\r\n    font-size: x-small;\r\n    width: 222px;\r\n    background-color: #ffffff47;\r\n    font-family: monospace;\r\n    color: #5d5d5d;\r\n    padding: 3px;\r\n    border: none;\r\n}\r\n\r\ndiv#LeftPropertiesBarSelector {\r\n    width: 5px;\r\n    height: 100%;\r\n    display: none;\r\n    position: fixed;\r\n    left: 200px;\r\n    background-color: #252525;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#TopPropertiesBar {\r\n    position: fixed;\r\n    top: 0px;\r\n    left: 0px;\r\n    width: 100%;\r\n    height: 30px;\r\n    background-color: #e6e6e6;\r\n}\r\n\r\ndiv#TopPropertiesBarSelector {\r\n    height: 2px;\r\n    width: 100%;\r\n    position: fixed;\r\n    left: 0px;\r\n    border-bottom: 1px solid #858585;\r\n    top: 47px;\r\n    cursor: ns-resize;\r\n}\r\n\r\nbutton.menubarButtons {\r\n    background-color: #6d6d6d;\r\n    border: none;\r\n    cursor: pointer;\r\n    color: #444444;\r\n    color: #cacaca;\r\n    font-family: 'Poppins', sans-serif;\r\n}\r\n\r\nbutton.menubarButtons:hover {\r\n    background-color: #aaabaa;\r\n}\r\n\r\ndiv#DefName {\r\n    width: 100%;\r\n    height: 32px;\r\n    padding: 0px 0px;\r\n    background: #2b3d50;\r\n    border-bottom: 1px solid #434343;\r\n}\r\n\r\ndiv#BottomPropertiesBar {\r\n    position: fixed;\r\n    bottom: 0px;\r\n    height: 20px;\r\n    left: 0px;\r\n    border-top: 1px solid #757575;\r\n    box-shadow: 0px -1px 0px #313131;\r\n    background-color: #525252;\r\n    background: linear-gradient(180deg, rgba(96, 96, 96, 1) 0%, rgba(82, 82, 82, 1) 100%);\r\n    width: 100%;\r\n}\r\n\r\na#changeTitleName {\r\n    color: #cfd8dc;\r\n    text-decoration: none;\r\n}\r\n\r\n.ccbody {\r\n    width: 100%;\r\n}\r\n\r\n.ccatheader {\r\n    padding: 0px 3px;\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    /* border: 1px solid #2c67a5; */\r\n    color: #e7e7e7;\r\n    padding: 4px;\r\n    cursor: pointer;\r\n    overflow: hidden;\r\n}\r\n\r\nbutton.standardcat.button {\r\n    vertical-align: middle;\r\n    border: 1px solid #444444;\r\n    width: 32px;\r\n    height: 32px;\r\n    margin: 1px;\r\n    background: none;\r\n    background: -moz-linear-gradient(top, #d6d4d4 0%, #adadad 100%);\r\n    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d6d4d4', endColorstr='#adadad', GradientType=0);\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: x-small;\r\n    color: #ffffff;\r\n    cursor: pointer;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#topLeftLogo {\r\n    width: 27px;\r\n    height: 32px;\r\n    float: left;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70302709-af822a80-1838-11ea-913b-5f935ea282ed.png);\r\n    background-repeat: no-repeat;\r\n    background-size: 26px;\r\n    background-position: center;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#settingsIcon {\r\n    float: right;\r\n    position: fixed;\r\n    top: 0px;\r\n    color: #c5c5c5;\r\n    right: 0px;\r\n    text-align: center;\r\n    padding: 11px;\r\n}\r\n\r\nbutton.standardcat.button:hover {\r\n    background: #c1c1c1;\r\n}\r\n\r\ndiv#Addedmessage {\r\n    font-family: monospace;\r\n    color: white;\r\n    padding: 2px;\r\n}\r\n\r\n#minimizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #2b3d50;\r\n    position: absolute;\r\n    top: 0px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #c5c5c5;\r\n    cursor: pointer;\r\n    border-left: 1px solid #464646;\r\n    border-bottom: 1px solid #464646;\r\n    margin-top: -4px;\r\n}\r\n\r\ndiv#maximizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #5d5d5d;\r\n    position: absolute;\r\n    top: 38px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #ababab;\r\n    cursor: pointer;\r\n    margin-top: -4px;\r\n    text-shadow: 1px 1px 1px #4b4b4b;\r\n}\r\n\r\n.propertiesbar.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbarheader.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbar.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    width: 98%;\r\n    color: #2f2f2f;\r\n    padding: 3px 10px;\r\n    background-color: gray;\r\n    border-bottom: 1px solid #909090;\r\n    border-radius: 6px 6px 0px 0px;\r\n    text-shadow: 1px 1px 0px #a5a5a5;\r\n}\r\n\r\ntextarea.textarea.optionlistProperties {\r\n    width: 98%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    height: 150px;\r\n    border-radius: 0px 0px 6px 6px;\r\n    border: 1px solid gray;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntextarea.textarea.stringProperties {\r\n    width: 100%;\r\n    padding: 0px;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    min-height: 10vh;\r\n    border: none;\r\n    border-radius: 3px;\r\n    background-color: #ffffffc7;\r\n}\r\n\r\n.propertiesbarheader.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    font-weight: bold;\r\n    width: 100%;\r\n    color: #bcbcbc;\r\n    padding: 3px;\r\n}\r\n\r\nselect#propertisBarSelecId {\r\n    width: 99%;\r\n    padding: 1px 2px;\r\n    background-color: gainsboro;\r\n    border-radius: 0px 0px 6px 6px;\r\n}\r\n\r\ndiv#propertiesBarLog {\r\n    width: 100%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    font-size: small;\r\n    padding: 2px;\r\n}\r\n\r\nrect.optionListoption {\r\n    cursor: pointer;\r\n}\r\n\r\nrect.optionListoption:hover {\r\n    fill: #d9e3e6;\r\n    stroke: #989898;\r\n}\r\n\r\ndiv#error {\r\n    color: #c0392b;\r\n    padding: 8px;\r\n}\r\n\r\nforeignObject.textbody {\r\n    font-family: 'ubuntu mono', monospace;\r\n    font-size: x-small;\r\n    color: #4e4e4e;\r\n    overflow: auto;\r\n}\r\n\r\ndiv#catHead {\r\n    font-family: 'ubuntu';\r\n    font-size: small;\r\n    width: fit-content;\r\n    padding: 2px 6px;\r\n    color: white;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-left: 3px;\r\n}\r\n\r\ndiv#catbody {\r\n    margin: 0px;\r\n    border-bottom: none;\r\n    border-right: none;\r\n}\r\n\r\ndiv#catcard {\r\n    margin-bottom: 4px;\r\n    padding: 0px;\r\n}\r\n\r\nrect.xAnchor {\r\n    cursor: ew-resize;\r\n}\r\n\r\nrect.yAnchor {\r\n    cursor: ns-resize;\r\n}\r\n\r\nrect.xyAnchor {\r\n    cursor: nwse-resize;\r\n}\r\n\r\n/* ::-webkit-scrollbar {\r\n    width: 6px;\r\n    height: 10px;\r\n} */\r\n\r\n/* Track */\r\n\r\n/* ::-webkit-scrollbar-track {\r\n    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\r\n    -webkit-border-radius: 4px;\r\n    border-radius: 4px;\r\n    touch-action: manipulation;\r\n} */\r\n\r\n/* Handle */\r\n\r\n/* ::-webkit-scrollbar-thumb {\r\n    -webkit-border-radius: 4px;\r\n    background: rgb(0, 0, 0);\r\n}\r\n\r\n::-webkit-scrollbar-thumb:window-inactive {\r\n    background: rgba(255, 0, 0, 0.4);\r\n} */\r\n\r\npath.play {\r\n    cursor: pointer;\r\n}\r\n\r\npath.play:hover {\r\n    fill: gray;\r\n}\r\n\r\nth {\r\n    border: none;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntd {\r\n    border: none;\r\n    background-color: whitesmoke;\r\n    overflow: hidden;\r\n}\r\n\r\ntbody {\r\n    font-family: ubuntu;\r\n    font-size: small;\r\n}\r\n\r\nth {\r\n    font-family: ubuntu;\r\n    text-align: left;\r\n    font-size: small;\r\n}\r\n\r\ndiv#propertiesBarContents {\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n    font-weight: normal;\r\n    color: #ffffff;\r\n    margin: 2px 0px 10px 0px;\r\n}\r\n\r\nforeignObject.panel_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ntbody {\r\n    border: none;\r\n}\r\n\r\ntable.dataframe {\r\n    border: none;\r\n}\r\n\r\nrect {\r\n    cursor: move;\r\n}\r\n\r\ninput.stringPnanel.Name {\r\n    width: 100%;\r\n    border: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\nforeignObject.panel_edit_mode a {\r\n    font-size: x-small;\r\n    color: #bdbdbd;\r\n    font-family: 'ubuntu mono';\r\n    position: relative;\r\n    text-decoration: none;\r\n    top: -8px;\r\n}\r\n\r\ndiv#numerical_slider_container {\r\n    padding: 7px;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\ndiv#help_t3 {\r\n    line-height: 1em;\r\n    color: #ec5f66;\r\n    margin-top: 5px;\r\n    margin-bottom: 3px;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_t4 {\r\n    color: #009688;\r\n    margin-left: 18px;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-bottom: 5px;\r\n}\r\n\r\ndiv#help_p {\r\n    margin-left: 36px;\r\n    margin-right: 8px;\r\n    text-align: justify;\r\n}\r\n\r\nspan#code {\r\n    color: #c23d51;\r\n    border-radius: 2px;\r\n    font-family: Courier;\r\n    font-size: xx-small;\r\n    vertical-align: middle;\r\n    padding: 1px 4px;\r\n    background-color: #32c8ac2e;\r\n}\r\n\r\ntable.dataframe {\r\n    font-size: x-small;\r\n}\r\n\r\nthead {\r\n    font-size: x-small;\r\n}\r\n\r\nth {\r\n    font-size: x-small;\r\n}\r\n\r\ntd {\r\n    font-size: x-small;\r\n}\r\n\r\nspan#errorTitle {\r\n    color: #e91e63;\r\n    font-weight: bold;\r\n    background-color: #f4433638;\r\n    border-radius: 3px;\r\n}\r\n\r\na.menubarButtons {\r\n    text-decoration: unset;\r\n    color: #000000;\r\n    text-shadow: 1px 1px 4px #4b4b4b;\r\n    font-size: small;\r\n    padding: 0px 6px;\r\n    margin: 1px 1px;\r\n    float: left;\r\n}\r\n\r\ndiv#buttonClickedname {\r\n    color: white;\r\n    font-size: small;\r\n    padding: 0px 8px;\r\n    margin: 0px;\r\n    float: left;\r\n    position: absolute;\r\n    bottom: 25px;\r\n    left: 224px;\r\n    background-color: #3d3d3d;\r\n}\r\n\r\npre {\r\n    margin: 0px;\r\n}\r\n\r\ninput.inputFileUpload {\r\n    border: none;\r\n    border-radius: 4px;\r\n    margin: 2px 2px;\r\n    background: #2b3d50;\r\n    height: 20px;\r\n    font-family: 'ubuntu mono';\r\n    color: white;\r\n}\r\n\r\ninput.submitFileUpload {\r\n    border-radius: 4px;\r\n    float: right;\r\n    margin: 3px;\r\n}\r\n\r\nforeignObject.fileUpload_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ninput#fileUploadFormToTheCloud {\r\n    border-radius: 1px;\r\n    margin-left: 1px;\r\n    /* height: 20px; */\r\n}\r\n\r\na.open_uploadedFile_link {\r\n    text-decoration: none;\r\n    color: black;\r\n    padding: 0px 6px;\r\n    position: relative;\r\n    top: 1px;\r\n    border-radius: 2px;\r\n    margin-left: 3px;\r\n    background-color: #e8e8e8;\r\n}\r\n\r\ndiv#TheContainedFile {\r\n    color: white;\r\n    padding: 2px 5px;\r\n    font-family: 'ubuntu';\r\n    display: inline;\r\n    font-size: small;\r\n    border-right: 1px solid gray;\r\n}\r\n\r\ndiv#PleaseWaitOverLay {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: #ffffff8a;\r\n    color: black;\r\n    text-align: center;\r\n    margin: auto;\r\n    line-height: 100vh;\r\n}\r\n\r\nselect.listView {\r\n    width: 198px;\r\n    height: 179px;\r\n    background-color: #f0f0f0;\r\n    border: 1px solid gray;\r\n    border-radius: 3px;\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n}\r\n\r\noption#someSelection {\r\n    background-color: #e0e0e0;\r\n    box-shadow: 0px 1px 0px white;\r\n    margin-bottom: 1px;\r\n}\r\n\r\ntext.statusTextClass {\r\n    font-size: x-small;\r\n}\r\n\r\n.subcatheader {\r\n    padding-left: 1em;\r\n    color: #ffca28;\r\n    font-size: small;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_quote {\r\n    border: 1px solid #cfcfcf;\r\n    padding: 2px;\r\n    border-radius: 3px;\r\n    background-color: #f4f4f4;\r\n    font-family: courier new;\r\n    font-size: xx-small;\r\n}\r\n\r\nforeignObject#halign_box {\r\n    font-size: 20px;\r\n    color: white;\r\n    text-decoration: none;\r\n    text-align: center;\r\n}\r\n\r\nforeignObject#halign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    margin: 0px 4px;\r\n}\r\n\r\nforeignObject#halign_box a:hover {\r\n    text-decoration: none;\r\n    color: #ffc107;\r\n}\r\n\r\ni.fa.fa-pause {\r\n    margin-left: -1px;\r\n    padding: 0px;\r\n}\r\n\r\nforeignObject#valign_box {\r\n    font-size: 20px;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n    padding: 4px 2px;\r\n}\r\n\r\nforeignObject#valign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    font-size: 20px;\r\n    display: inline-grid;\r\n}\r\n\r\nforeignObject#valign_box a:hover {\r\n    color: #ffc107;\r\n}\r\n\r\na#valign_icon {\r\n    float: left;\r\n    margin: 5px 4px;\r\n}\r\n\r\na.standardcat.button {\r\n    width: 32px;\r\n    height: 32px;\r\n    border: 1px solid black;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#leftbarcontainer {\r\n    width: 225px;\r\n    min-height: 250px;\r\n    float: left;\r\n    margin-top: 2.5px;\r\n}\r\n\r\n.toolbarTopToggleItem {\r\n    height: 25px;\r\n    display: block;\r\n    line-height: 25px;\r\n    color: #1c1c1c;\r\n    font-size: small;\r\n    float: left;\r\n}\r\n\r\n.toolbarTopToggleContainer {\r\n    width: 225px;\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n    text-align: center;\r\n    float: left;\r\n}\r\n\r\ndiv#toolbar_container_1_1_2 {\r\n    width: 25px;\r\n    float: left;\r\n    background-color: red;\r\n    height: 25px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#toolbar_container_1_2 {\r\n    background-color: #2d2d2d;\r\n    width: 225px;\r\n    height: 250px;\r\n}\r\n\r\ndiv#toolbar_container_1_2_1 {\r\n    box-sizing: border-box;\r\n    width: 200px;\r\n    background-color: #e6e6e6;\r\n    min-height: 200px;\r\n    float: left;\r\n    border: 1px solid #cfcfcf;\r\n}\r\n\r\n.mainButtonItem {\r\n    box-sizing: border-box;\r\n    width: 49.5px;\r\n    height: 49.5px;\r\n    float: left;\r\n    background-color: #6060601f;\r\n    display: inline-block;\r\n    vertical-align: middle;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70328473-107b2400-1874-11ea-88ff-dcca67fd98a9.png);\r\n    line-height: 50px;\r\n    text-align: center;\r\n    border: 1px solid #252525;\r\n    color: #ffffffed;\r\n    background-size: 36px;\r\n    font-size: x-small;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    overflow: hidden;\r\n}\r\n\r\ndiv#toolbar_container_1_2_2 {\r\n    width: 25px;\r\n    float: left;\r\n    height: 200px;\r\n    background-color: #c1c1c1;\r\n    box-sizing: border-box;\r\n    border-right: 1px solid #373737;\r\n}\r\n\r\n.rightToggleButton {\r\n    background-image: url(https://www.corasupport.org/wp-content/uploads/2015/11/placeholder-icon-300x300-v1b.png);\r\n    background-size: 20px;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    cursor: pointer;\r\n    font-size: small;\r\n    background-color: #a3a3a3;\r\n    width: 23px;\r\n    height: 23px;\r\n    text-align: center;\r\n    line-height: 25px;\r\n    border: 1px solid #2d2d2d;\r\n    border-bottom: 1px solid #565656;\r\n}\r\n\r\ndiv#toolbar_container_1_2_0 {\r\n    background-color: #707070;\r\n    font-size: small;\r\n    color: white;\r\n    line-height: 25px;\r\n    font-size: xx-small;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    background-color: #252525;\r\n    transition: 0.2s;\r\n    cursor: pointer;\r\n    border: 1px solid #818181;\r\n}\r\n\r\n.toptoggleitem {\r\n    background-color: #d1d1d1;\r\n    margin: 3px 4px 0px 0px;\r\n    height: 20px;\r\n    padding: 0px 5px;\r\n    line-height: 20px;\r\n    border: 1px solid #aaaaaa;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    background-color: #2b3d50;\r\n    border-color: #2b3d50;\r\n    color: #cfd8dc;\r\n}\r\n\r\n.rightToggleButton:hover {\r\n    background-color: #565656;\r\n    transition: 0.5s;\r\n    color: #ffffff;\r\n    border: 1px solid #cecece;\r\n}\r\n\r\n.rightToggleButton:focus {\r\n    background-color: #ffc107;\r\n    color: black;\r\n    text-shadow: 0px 0px 4px black;\r\n}\r\n\r\n.toptoggleitem:hover {\r\n    border-color: #ffc107;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#NoneTabbedToolBoxText {\r\n    position: relative;\r\n    top: 50%;\r\n    transform: rotate(-90deg);\r\n    font-size: small;\r\n    line-height: 25px;\r\n    text-shadow: 0px 0px 4px #000000;\r\n}\r\n\r\nspan#hint {\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n    display: none;\r\n    background-color: #00000066;\r\n    border: 1px solid #565656;\r\n    opacity: 0;\r\n}\r\n\r\ndiv.rightToggleButton:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\n.canvas_container {\r\n    position: fixed;\r\n    top: 30px;\r\n    left: 225px;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.canvas_container_inner {\r\n    margin: 3px;\r\n}\r\n\r\n.canvas_tab_container {\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n}\r\n\r\nh1 {\r\n    margin: 0px;\r\n}\r\n\r\ndiv#somethingLater {\r\n    width: 100%;\r\n    height: 1000px;\r\n    background-color: #666666;\r\n    overflow: scroll;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\ntextarea#script_body_editor {\r\n    height: 100vh;\r\n}\r\n\r\ndiv#codeBody {\r\n    height: 100vh;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    transition: 2s;\r\n}\r\n\r\n.toptoggleitem.selected:hover {\r\n    transition: 2s;\r\n    min-height: 36%;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    width: 50px;\r\n    top: 60px;\r\n    padding-left: 5px;\r\n    min-width: 250px;\r\n    padding-top: 5px;\r\n}\r\n";
+var css_248z = "body {\r\n    -webkit-user-select: none;\r\n    -khtml-user-select: none;\r\n    -moz-user-select: none;\r\n    -o-user-select: none;\r\n    user-select: none;\r\n    overflow-y: hidden; /* Hide vertical scrollbar */\r\n    overflow-x: hidden;\r\n}\r\n\r\nsvg {\r\n    border: solid 1px #565656;\r\n}\r\n\r\n#checks {\r\n    margin: 10px;\r\n}\r\n\r\ntext {\r\n    pointer-events: none;\r\n    user-select: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu mono';\r\n}\r\n\r\n.nodeLog {\r\n    font-size: small;\r\n    font-family: monospace;\r\n    pointer-events: none;\r\n}\r\n\r\ninput:focus,\r\nselect:focus,\r\ntextarea:focus,\r\nbutton:focus {\r\n    outline: none;\r\n}\r\n\r\nrect:focus {\r\n    outline: none;\r\n}\r\n\r\n.output {\r\n    font-family: monospace;\r\n    font-size: small;\r\n    color: white;\r\n}\r\n\r\n.input {\r\n    font-family: monospace;\r\n    font-size: small;\r\n}\r\n\r\n.nodetitle {\r\n    font-family: 'ubuntu mono';\r\n    font-size: 13px;\r\n    font-weight: bold;\r\n    color: white;\r\n    pointer-events: none;\r\n    text-align: center;\r\n}\r\n\r\ndiv#someData {\r\n    padding: 8px;\r\n    padding-top: 25px;\r\n    font-size: x-small;\r\n    font-family: monospace;\r\n}\r\n\r\ncircle {\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#PropertiesBarSelector {\r\n    width: 4px;\r\n    position: fixed;\r\n    right: 501px;\r\n    background-color: #000000;\r\n    height: 100%;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    background-color: #2b3d50;\r\n    right: 0px;\r\n    top: 0px;\r\n    min-height: 35%;\r\n    transition-timing-function: ease-in-out;\r\n    transition: height 2s;\r\n    transition-delay: 1s;  \r\n    width: 220px;\r\n    top: 60px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n}\r\n\r\ndiv#mainGrid {\r\n    position: relative;\r\n    top: 0px;\r\n    left: 0px;\r\n    background-color: #ececec;\r\n}\r\n\r\ndiv#textAreaBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\ndiv#optionlistBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\nselect#optionListSelectItems {\r\n    background: white;\r\n    opacity: 1;\r\n    font-family: monospace;\r\n    font-weight: bold;\r\n    border: 1px solid black;\r\n    border-radius: 3px;\r\n}\r\n\r\nh5 {\r\n    font-family: monospace;\r\n    margin-top: 1px;\r\n    margin-bottom: 4px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#LeftPropertiesBar {\r\n    width: 200px;\r\n    position: fixed;\r\n    background-color: #2b3d50;\r\n    left: 0px;\r\n    top: 0px;\r\n}\r\n\r\n.additionalData {\r\n    border-radius: 7px;\r\n    font-size: x-small;\r\n    width: 222px;\r\n    background-color: #ffffff47;\r\n    font-family: monospace;\r\n    color: #5d5d5d;\r\n    padding: 3px;\r\n    border: none;\r\n}\r\n\r\ndiv#LeftPropertiesBarSelector {\r\n    width: 5px;\r\n    height: 100%;\r\n    display: none;\r\n    position: fixed;\r\n    left: 200px;\r\n    background-color: #252525;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#TopPropertiesBar {\r\n    position: fixed;\r\n    top: 0px;\r\n    left: 0px;\r\n    width: 100%;\r\n    height: 30px;\r\n    background-color: #e6e6e6;\r\n}\r\n\r\ndiv#TopPropertiesBarSelector {\r\n    height: 2px;\r\n    width: 100%;\r\n    position: fixed;\r\n    left: 0px;\r\n    border-bottom: 1px solid #858585;\r\n    top: 47px;\r\n    cursor: ns-resize;\r\n}\r\n\r\nbutton.menubarButtons {\r\n    background-color: #6d6d6d;\r\n    border: none;\r\n    cursor: pointer;\r\n    color: #444444;\r\n    color: #cacaca;\r\n    font-family: 'Poppins', sans-serif;\r\n}\r\n\r\nbutton.menubarButtons:hover {\r\n    background-color: #aaabaa;\r\n}\r\n\r\ndiv#DefName {\r\n    width: 100%;\r\n    height: 32px;\r\n    padding: 0px 0px;\r\n    background: #2b3d50;\r\n    border-bottom: 1px solid #434343;\r\n}\r\n\r\ndiv#BottomPropertiesBar {\r\n    position: fixed;\r\n    bottom: 0px;\r\n    height: 20px;\r\n    left: 0px;\r\n    border-top: 1px solid #757575;\r\n    box-shadow: 0px -1px 0px #313131;\r\n    background-color: #525252;\r\n    background: linear-gradient(180deg, rgba(96, 96, 96, 1) 0%, rgba(82, 82, 82, 1) 100%);\r\n    width: 100%;\r\n}\r\n\r\na#changeTitleName {\r\n    color: #cfd8dc;\r\n    text-decoration: none;\r\n}\r\n\r\n.ccbody {\r\n    width: 100%;\r\n}\r\n\r\n.ccatheader {\r\n    padding: 0px 3px;\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    /* border: 1px solid #2c67a5; */\r\n    color: #e7e7e7;\r\n    padding: 4px;\r\n    cursor: pointer;\r\n    overflow: hidden;\r\n}\r\n\r\nbutton.standardcat.button {\r\n    vertical-align: middle;\r\n    border: 1px solid #444444;\r\n    width: 32px;\r\n    height: 32px;\r\n    margin: 1px;\r\n    background: none;\r\n    background: -moz-linear-gradient(top, #d6d4d4 0%, #adadad 100%);\r\n    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d6d4d4', endColorstr='#adadad', GradientType=0);\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: x-small;\r\n    color: #ffffff;\r\n    cursor: pointer;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#topLeftLogo {\r\n    width: 27px;\r\n    height: 32px;\r\n    float: left;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70302709-af822a80-1838-11ea-913b-5f935ea282ed.png);\r\n    background-repeat: no-repeat;\r\n    background-size: 26px;\r\n    background-position: center;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#settingsIcon {\r\n    float: right;\r\n    position: fixed;\r\n    top: 0px;\r\n    color: #c5c5c5;\r\n    right: 0px;\r\n    text-align: center;\r\n    padding: 11px;\r\n}\r\n\r\nbutton.standardcat.button:hover {\r\n    background: #c1c1c1;\r\n}\r\n\r\ndiv#Addedmessage {\r\n    font-family: monospace;\r\n    color: white;\r\n    padding: 2px;\r\n}\r\n\r\n#minimizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #2b3d50;\r\n    position: absolute;\r\n    top: 0px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #c5c5c5;\r\n    cursor: pointer;\r\n    border-left: 1px solid #464646;\r\n    border-bottom: 1px solid #464646;\r\n    margin-top: -4px;\r\n}\r\n\r\ndiv#maximizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #5d5d5d;\r\n    position: absolute;\r\n    top: 38px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #ababab;\r\n    cursor: pointer;\r\n    margin-top: -4px;\r\n    text-shadow: 1px 1px 1px #4b4b4b;\r\n}\r\n\r\n.propertiesbar.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbarheader.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbar.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    width: 98%;\r\n    color: #2f2f2f;\r\n    padding: 3px 10px;\r\n    background-color: gray;\r\n    border-bottom: 1px solid #909090;\r\n    border-radius: 6px 6px 0px 0px;\r\n    text-shadow: 1px 1px 0px #a5a5a5;\r\n}\r\n\r\ntextarea.textarea.optionlistProperties {\r\n    width: 98%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    height: 150px;\r\n    border-radius: 0px 0px 6px 6px;\r\n    border: 1px solid gray;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntextarea.textarea.stringProperties {\r\n    width: 100%;\r\n    padding: 0px;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    min-height: 10vh;\r\n    border: none;\r\n    border-radius: 3px;\r\n    background-color: #ffffffc7;\r\n}\r\n\r\n.propertiesbarheader.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    font-weight: bold;\r\n    width: 100%;\r\n    color: #bcbcbc;\r\n    padding: 3px;\r\n}\r\n\r\nselect#propertisBarSelecId {\r\n    width: 99%;\r\n    padding: 1px 2px;\r\n    background-color: gainsboro;\r\n    border-radius: 0px 0px 6px 6px;\r\n}\r\n\r\ndiv#propertiesBarLog {\r\n    width: 100%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    font-size: small;\r\n    padding: 2px;\r\n}\r\n\r\nrect.optionListoption {\r\n    cursor: pointer;\r\n}\r\n\r\nrect.optionListoption:hover {\r\n    fill: #d9e3e6;\r\n    stroke: #989898;\r\n}\r\n\r\ndiv#error {\r\n    color: #c0392b;\r\n    padding: 8px;\r\n}\r\n\r\nforeignObject.textbody {\r\n    font-family: 'ubuntu mono', monospace;\r\n    font-size: x-small;\r\n    color: #4e4e4e;\r\n    overflow: auto;\r\n}\r\n\r\ndiv#catHead {\r\n    font-family: 'ubuntu';\r\n    font-size: small;\r\n    width: fit-content;\r\n    padding: 2px 6px;\r\n    color: white;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-left: 3px;\r\n}\r\n\r\ndiv#catbody {\r\n    margin: 0px;\r\n    border-bottom: none;\r\n    border-right: none;\r\n}\r\n\r\ndiv#catcard {\r\n    margin-bottom: 4px;\r\n    padding: 0px;\r\n}\r\n\r\nrect.xAnchor {\r\n    cursor: ew-resize;\r\n}\r\n\r\nrect.yAnchor {\r\n    cursor: ns-resize;\r\n}\r\n\r\nrect.xyAnchor {\r\n    cursor: nwse-resize;\r\n}\r\n\r\n/* ::-webkit-scrollbar {\r\n    width: 6px;\r\n    height: 10px;\r\n} */\r\n\r\n/* Track */\r\n\r\n/* ::-webkit-scrollbar-track {\r\n    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\r\n    -webkit-border-radius: 4px;\r\n    border-radius: 4px;\r\n    touch-action: manipulation;\r\n} */\r\n\r\n/* Handle */\r\n\r\n/* ::-webkit-scrollbar-thumb {\r\n    -webkit-border-radius: 4px;\r\n    background: rgb(0, 0, 0);\r\n}\r\n\r\n::-webkit-scrollbar-thumb:window-inactive {\r\n    background: rgba(255, 0, 0, 0.4);\r\n} */\r\n\r\npath.play {\r\n    cursor: pointer;\r\n}\r\n\r\npath.play:hover {\r\n    fill: gray;\r\n}\r\n\r\nth {\r\n    border: none;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntd {\r\n    border: none;\r\n    background-color: whitesmoke;\r\n    overflow: hidden;\r\n}\r\n\r\ntbody {\r\n    font-family: ubuntu;\r\n    font-size: small;\r\n}\r\n\r\nth {\r\n    font-family: ubuntu;\r\n    text-align: left;\r\n    font-size: small;\r\n}\r\n\r\ndiv#propertiesBarContents {\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n    font-weight: normal;\r\n    color: #ffffff;\r\n    margin: 2px 0px 10px 0px;\r\n}\r\n\r\nforeignObject.panel_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ntbody {\r\n    border: none;\r\n}\r\n\r\ntable.dataframe {\r\n    border: none;\r\n}\r\n\r\nrect {\r\n    cursor: move;\r\n}\r\n\r\ninput.stringPnanel.Name {\r\n    width: 98%;\r\n    border: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\nforeignObject.panel_edit_mode a {\r\n    font-size: x-small;\r\n    color: #bdbdbd;\r\n    font-family: 'ubuntu mono';\r\n    position: relative;\r\n    text-decoration: none;\r\n    top: -8px;\r\n}\r\n\r\ndiv#numerical_slider_container {\r\n    padding: 7px;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\ndiv#help_t3 {\r\n    line-height: 1em;\r\n    color: #ec5f66;\r\n    margin-top: 5px;\r\n    margin-bottom: 3px;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_t4 {\r\n    color: #009688;\r\n    margin-left: 18px;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-bottom: 5px;\r\n}\r\n\r\ndiv#help_p {\r\n    margin-left: 36px;\r\n    margin-right: 8px;\r\n    text-align: justify;\r\n}\r\n\r\nspan#code {\r\n    color: #c23d51;\r\n    border-radius: 2px;\r\n    font-family: Courier;\r\n    font-size: xx-small;\r\n    vertical-align: middle;\r\n    padding: 1px 4px;\r\n    background-color: #32c8ac2e;\r\n}\r\n\r\ntable.dataframe {\r\n    font-size: x-small;\r\n}\r\n\r\nthead {\r\n    font-size: x-small;\r\n}\r\n\r\nth {\r\n    font-size: x-small;\r\n}\r\n\r\ntd {\r\n    font-size: x-small;\r\n}\r\n\r\nspan#errorTitle {\r\n    color: #e91e63;\r\n    font-weight: bold;\r\n    background-color: #f4433638;\r\n    border-radius: 3px;\r\n}\r\n\r\na.menubarButtons {\r\n    text-decoration: unset;\r\n    color: #000000;\r\n    text-shadow: 1px 1px 4px #4b4b4b;\r\n    font-size: small;\r\n    padding: 0px 6px;\r\n    margin: 1px 1px;\r\n    float: left;\r\n}\r\n\r\ndiv#buttonClickedname {\r\n    color: white;\r\n    font-size: small;\r\n    padding: 0px 8px;\r\n    margin: 0px;\r\n    float: left;\r\n    position: absolute;\r\n    bottom: 25px;\r\n    left: 224px;\r\n    background-color: #3d3d3d;\r\n}\r\n\r\npre {\r\n    margin: 0px;\r\n}\r\n\r\ninput.inputFileUpload {\r\n    border: none;\r\n    border-radius: 4px;\r\n    margin: 2px 2px;\r\n    background: #2b3d50;\r\n    height: 20px;\r\n    font-family: 'ubuntu mono';\r\n    color: white;\r\n}\r\n\r\ninput.submitFileUpload {\r\n    border-radius: 4px;\r\n    float: right;\r\n    margin: 3px;\r\n}\r\n\r\nforeignObject.fileUpload_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ninput#fileUploadFormToTheCloud {\r\n    border-radius: 1px;\r\n    margin-left: 1px;\r\n    /* height: 20px; */\r\n}\r\n\r\na.open_uploadedFile_link {\r\n    text-decoration: none;\r\n    color: black;\r\n    padding: 0px 6px;\r\n    position: relative;\r\n    top: 1px;\r\n    border-radius: 2px;\r\n    margin-left: 3px;\r\n    background-color: #e8e8e8;\r\n}\r\n\r\ndiv#TheContainedFile {\r\n    color: white;\r\n    padding: 2px 5px;\r\n    font-family: 'ubuntu';\r\n    display: inline;\r\n    font-size: small;\r\n    border-right: 1px solid gray;\r\n}\r\n\r\ndiv#PleaseWaitOverLay {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: #ffffff8a;\r\n    color: black;\r\n    text-align: center;\r\n    margin: auto;\r\n    line-height: 100vh;\r\n}\r\n\r\nselect.listView {\r\n    width: 198px;\r\n    height: 179px;\r\n    background-color: #f0f0f0;\r\n    border: 1px solid gray;\r\n    border-radius: 3px;\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n}\r\n\r\noption#someSelection {\r\n    background-color: #e0e0e0;\r\n    box-shadow: 0px 1px 0px white;\r\n    margin-bottom: 1px;\r\n}\r\n\r\ntext.statusTextClass {\r\n    font-size: x-small;\r\n}\r\n\r\n.subcatheader {\r\n    padding-left: 1em;\r\n    color: #ffca28;\r\n    font-size: small;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_quote {\r\n    border: 1px solid #cfcfcf;\r\n    padding: 2px;\r\n    border-radius: 3px;\r\n    background-color: #f4f4f4;\r\n    font-family: courier new;\r\n    font-size: xx-small;\r\n}\r\n\r\nforeignObject#halign_box {\r\n    font-size: 20px;\r\n    color: white;\r\n    text-decoration: none;\r\n    text-align: center;\r\n}\r\n\r\nforeignObject#halign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    margin: 0px 4px;\r\n}\r\n\r\nforeignObject#halign_box a:hover {\r\n    text-decoration: none;\r\n    color: #ffc107;\r\n}\r\n\r\ni.fa.fa-pause {\r\n    margin-left: -1px;\r\n    padding: 0px;\r\n}\r\n\r\nforeignObject#valign_box {\r\n    font-size: 20px;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n    padding: 4px 2px;\r\n}\r\n\r\nforeignObject#valign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    font-size: 20px;\r\n    display: inline-grid;\r\n}\r\n\r\nforeignObject#valign_box a:hover {\r\n    color: #ffc107;\r\n}\r\n\r\na#valign_icon {\r\n    float: left;\r\n    margin: 5px 4px;\r\n}\r\n\r\na.standardcat.button {\r\n    width: 32px;\r\n    height: 32px;\r\n    border: 1px solid black;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#leftbarcontainer {\r\n    width: 225px;\r\n    min-height: 250px;\r\n    float: left;\r\n    margin-top: 2.5px;\r\n}\r\n\r\n.toolbarTopToggleItem {\r\n    height: 25px;\r\n    display: block;\r\n    line-height: 25px;\r\n    color: #1c1c1c;\r\n    font-size: small;\r\n    float: left;\r\n}\r\n\r\n.toolbarTopToggleContainer {\r\n    width: 225px;\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n    text-align: center;\r\n    float: left;\r\n}\r\n\r\ndiv#toolbar_container_1_1_2 {\r\n    width: 25px;\r\n    float: left;\r\n    background-color: red;\r\n    height: 25px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#toolbar_container_1_2 {\r\n    background-color: #2d2d2d;\r\n    width: 225px;\r\n    height: 250px;\r\n}\r\n\r\ndiv#toolbar_container_1_2_1 {\r\n    box-sizing: border-box;\r\n    width: 200px;\r\n    background-color: #e6e6e6;\r\n    min-height: 200px;\r\n    float: left;\r\n    border: 1px solid #cfcfcf;\r\n}\r\n\r\n.mainButtonItem {\r\n    box-sizing: border-box;\r\n    width: 49.5px;\r\n    height: 49.5px;\r\n    float: left;\r\n    background-color: #6060601f;\r\n    display: inline-block;\r\n    vertical-align: middle;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70328473-107b2400-1874-11ea-88ff-dcca67fd98a9.png);\r\n    line-height: 50px;\r\n    text-align: center;\r\n    border: 1px solid #252525;\r\n    color: #ffffffed;\r\n    background-size: 36px;\r\n    font-size: x-small;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    overflow: hidden;\r\n}\r\n\r\ndiv#toolbar_container_1_2_2 {\r\n    width: 25px;\r\n    float: left;\r\n    height: 200px;\r\n    background-color: #c1c1c1;\r\n    box-sizing: border-box;\r\n    border-right: 1px solid #373737;\r\n}\r\n\r\n.rightToggleButton {\r\n    background-image: url(https://www.corasupport.org/wp-content/uploads/2015/11/placeholder-icon-300x300-v1b.png);\r\n    background-size: 20px;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    cursor: pointer;\r\n    font-size: small;\r\n    background-color: #a3a3a3;\r\n    width: 23px;\r\n    height: 23px;\r\n    text-align: center;\r\n    line-height: 25px;\r\n    border: 1px solid #2d2d2d;\r\n    border-bottom: 1px solid #565656;\r\n}\r\n\r\ndiv#toolbar_container_1_2_0 {\r\n    background-color: #707070;\r\n    font-size: small;\r\n    color: white;\r\n    line-height: 25px;\r\n    font-size: xx-small;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    background-color: #252525;\r\n    transition: 0.2s;\r\n    cursor: pointer;\r\n    border: 1px solid #818181;\r\n}\r\n\r\n.toptoggleitem {\r\n    background-color: #d1d1d1;\r\n    margin: 3px 4px 0px 0px;\r\n    height: 20px;\r\n    padding: 0px 5px;\r\n    line-height: 20px;\r\n    border: 1px solid #aaaaaa;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    background-color: #2b3d50;\r\n    border-color: #2b3d50;\r\n    color: #cfd8dc;\r\n}\r\n\r\n.rightToggleButton:hover {\r\n    background-color: #565656;\r\n    transition: 0.5s;\r\n    color: #ffffff;\r\n    border: 1px solid #cecece;\r\n}\r\n\r\n.rightToggleButton:focus {\r\n    background-color: #ffc107;\r\n    color: black;\r\n    text-shadow: 0px 0px 4px black;\r\n}\r\n\r\n.toptoggleitem:hover {\r\n    border-color: #ffc107;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#NoneTabbedToolBoxText {\r\n    position: relative;\r\n    top: 50%;\r\n    transform: rotate(-90deg);\r\n    font-size: small;\r\n    line-height: 25px;\r\n    text-shadow: 0px 0px 4px #000000;\r\n}\r\n\r\nspan#hint {\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n    display: none;\r\n    background-color: #00000066;\r\n    border: 1px solid #565656;\r\n    opacity: 0;\r\n}\r\n\r\ndiv.rightToggleButton:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\n.canvas_container {\r\n    position: fixed;\r\n    top: 30px;\r\n    left: 225px;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.canvas_container_inner {\r\n    margin: 3px;\r\n}\r\n\r\n.canvas_tab_container {\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n}\r\n\r\nh1 {\r\n    margin: 0px;\r\n}\r\n\r\ndiv#somethingLater {\r\n    width: 100%;\r\n    height: 1000px;\r\n    background-color: #666666;\r\n    overflow: scroll;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\ntextarea#script_body_editor {\r\n    height: 100vh;\r\n}\r\n\r\ndiv#codeBody {\r\n    height: 100vh;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    transition: 2s;\r\n}\r\n\r\n.toptoggleitem.selected:hover {\r\n    transition: 2s;\r\n    min-height: 36%;\r\n}";
 styleInject(css_248z);
 
 class Canvas extends React__default['default'].Component {
@@ -6693,159 +6750,12 @@ class Canvas extends React__default['default'].Component {
         width: '100vw',
         height: '100vh'
       }
-    }, /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.dummyToSetState()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.manageGrid()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleComponentSelection()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleDoubleClick()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleEdgeInitialization()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleTheClickOnAllComponents()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleFileUpload()), /*#__PURE__*/React__default['default'].createElement("div", {
-      className: "canvas_container canvas_container_inner main_canvas_container canvas_body_container"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      className: "ui-designer-grid",
-      id: "mainGrid"
-    }, /*#__PURE__*/React__default['default'].createElement(Grid, null))), /*#__PURE__*/React__default['default'].createElement(TopBar, {
+    }, /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.dummyToSetState()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.manageGrid()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleComponentSelection()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleDoubleClick()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleEdgeInitialization()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleTheClickOnAllComponents()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleFileUpload()), /*#__PURE__*/React__default['default'].createElement(Grid, null), /*#__PURE__*/React__default['default'].createElement(TopBar, {
       saveData: this.saveData,
       downloadData: this.downloadData
-    }), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "LeftPropertiesBar",
-      style: {
-        top: "30px"
-      }
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "leftbarcontainer"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1",
-      className: "toolBarContainer 1"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_1",
-      className: "toolBarContainer 1 1"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_1_1",
-      className: "toolbarTopToggleContainer"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      className: "toolbarTopToggleItem 1"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      className: "toptoggleitem componentTab selected"
-    }, "Components")))), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_2",
-      className: "TabToolBox componentTab"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_2_0",
-      className: "toolbarbuttonsContainer"
-    }, "\xA0 Components ", '>', /*#__PURE__*/React__default['default'].createElement("span", {
-      className: "currentTab componentTab",
-      style: {
-        marginLeft: "3px"
-      }
-    }, " Main Inputs")), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_2_1",
-      className: "toolbarbuttonsContainer componentTab Basic 0",
-      style: {
-        display: "none"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_2_1",
-      className: "toolbarbuttonsContainer componentTab BSH -1",
-      style: {
-        display: "none"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_2_1",
-      className: "toolbarbuttonsContainer componentTab Osi -1",
-      style: {
-        display: "none"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_2_1",
-      className: "toolbarbuttonsContainer componentTab Pandas -1",
-      style: {
-        display: "none"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_2_1",
-      className: "toolbarbuttonsContainer componentTab StringOps -1",
-      style: {
-        display: "none"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_2_1",
-      className: "toolbarbuttonsContainer componentTab Input 0"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "addSlider",
-      onClick: () => CreateNewSlider(this),
-      className: "mainButtonItem 1 1",
-      style: {
-        backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"
-      }
-    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-      id: "hint"
-    }, "Slider")), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "addPanel",
-      onClick: () => CreateNewPanel(this),
-      className: "mainButtonItem 1 1",
-      style: {
-        backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"
-      }
-    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-      id: "hint"
-    }, "Panel")), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "addToggle",
-      onClick: () => CreateNewToggle(this),
-      className: "mainButtonItem 1 1",
-      style: {
-        backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"
-      }
-    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-      id: "hint"
-    }, "Toggle")), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "addOptionList",
-      onClick: () => CreateNewOptionList(this),
-      className: "mainButtonItem 1 1",
-      style: {
-        backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"
-      }
-    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-      id: "hint"
-    }, "Option list")), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "addListView",
-      onClick: () => CreateNewListView(this),
-      className: "mainButtonItem 1 1",
-      style: {
-        backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"
-      }
-    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-      id: "hint"
-    }, "List view")), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "addFile",
-      onClick: () => CreateNewFileUpload(this),
-      className: "mainButtonItem 1 1",
-      style: {
-        backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"
-      }
-    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-      id: "hint"
-    }, "File upload"))), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_2_2",
-      className: "toolbarRightToggleNavigator 1"
-    })))), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "leftbarcontainer"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1",
-      className: "toolBarContainer 1"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_1",
-      className: "toolBarContainer 1 1"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "toolbar_container_1_1_1",
-      className: "toolbarTopToggleContainer"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      className: "toolbarTopToggleItem 1"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      className: "toptoggleitem 99098379-d5ab-4bc3-bc0e-b8353c952845 f56e635d-c2a6-48ec-9b93-26b76b890390 selected"
-    }, " Properties")))), /*#__PURE__*/React__default['default'].createElement("div", {
-      className: "ccatheader"
-    }), /*#__PURE__*/React__default['default'].createElement("div", {
-      className: "ccbody",
-      id: "propertiesBarContents",
-      style: {
-        "width": "100%"
-      }
-    })))));
+    }), /*#__PURE__*/React__default['default'].createElement(LeftContainer, {
+      context: this
+    }));
   }
 
 }
