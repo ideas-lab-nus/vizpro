@@ -140,32 +140,12 @@ export default class Canvas extends React.Component {
                                 </div>
                             </div>
                                 
-                            <div id="toolbar_container_1_2" className="TabToolBox 99098379-d5ab-4bc3-bc0e-b8353c952845 f56e635d-c2a6-48ec-9b93-26b76b890390">
-                                
-                                <div id="toolbar_container_1_2_0" className="toolbarbuttonsContainer">
-                                    &nbsp; Properties <span className="currentTab 99098379-d5ab-4bc3-bc0e-b8353c952845">&nbsp;</span> 
-                                </div>
-                                
-                                <div id="toolbar_container_1_2_1" className="toolbarbuttonsContainer 99098379-d5ab-4bc3-bc0e-b8353c952845 140dfea1-7a19-4663-a905-38ff58c8c82f 0">
-                                                                                                    
-                                </div>
-                                
-                                <div id="toolbar_container_1_2_2" className="toolbarRightToggleNavigator 2">
-                                    
-                                    <div className="rightToggleButton 1" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/404b5524d84a49838ce63a1fe8a2b7e7.png)"}}><span id="hint">Properties</span></div>
-                                    
-                                </div>
-                            </div>
+                            <div className="ccatheader"></div>
+                            <div className="ccbody" id="propertiesBarContents" style={{"width":"100%"}}></div>
                         </div>
-                    </div>
-                </div>
-                
-                <div id="PropertiesBar" className="componentsCategory">
-                    <div className="ccatheader"><span id="customcomponentarrow">
-                        <i className="fa fa-chevron-circle-down" aria-hidden="true"></i></span>  Properties
-                    </div>
-                    <div className="ccbody" id="propertiesBarContents" style={{"width":"100%"}}></div>
-                </div>
+                    </div>               
+
+                </div>   
             </div>
         )
     }
