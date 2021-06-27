@@ -1,7 +1,6 @@
 import React from 'react';
 import ScriptTag from 'react-script-tag';
 import { globalVars } from './js/constants.js';
-import { onMaximizeClick, onMinimizeClick } from './js/layout.js';
 import { CreateNewSlider } from './js/slider.js';
 import { CreateNewOptionList } from './js/optionlist.js';
 import { CreateNewPanel } from './js/panel.js';
@@ -11,13 +10,14 @@ import { CreateNewListView } from './js/listView.js';
 import { manageCanvas } from './js/layout.js'; 
 import { manageGrid } from './js/mainGrid.js';
 import { dummyToSetState } from './js/functions.js';
-import Grid from './Grid';      
+import Grid from './Grid';   
+import TopBar from './TopBar.js';   
 import { handleComponentSelection, 
          handleTheClickOnAllComponents, 
          handleEdgeInitialization, 
          handleDoubleClick } from './js/handle.js';
 import { addGenericComponentIcon, addRightToggleButton } from './js/leftPropertyBar.js';
-import { saveData, loadData, clearData, downloadData } from './js/saveAndLoadData.js';
+import { saveData, loadData, downloadData } from './js/saveAndLoadData.js';
 import './App.css';
 
 export default class Canvas extends React.Component {
@@ -83,21 +83,8 @@ export default class Canvas extends React.Component {
                         <Grid />   
                     </div> 
                 </div>
-                <div id="TopPropertiesBar">
-                    <a id="fileTheDef" className="menubarButtons">File</a>
-                    <a id="fileTheDef" className="menubarButtons">Edit</a>
-                    <a id="fileTheDef" className="menubarButtons">Help</a>
-                    <a id="saveTheDef" className="menubarButtons" onClick={() => this.saveData()}>Save</a>
-                    <a id="fileTheDef" className="menubarButtons" onClick={() => clearData()}>Clear</a>
-                    <a id="saveTheDef" className="menubarButtons" onClick={() => this.downloadData()}>Download</a>
 
-                    <div id="minimizeUpperBar" style={{display: "block"}} onClick={() => onMinimizeClick()}>
-                        <i id="tominimize" className="fa fa-caret-up" aria-hidden="true"></i>
-                    </div>
-                    <div id="maximizeUpperBar" style={{display: "none"}} onClick={() => onMaximizeClick()}>
-                        <i id="tomaximize" className="fa fa-caret-up" aria-hidden="true" style={{transform: [{ rotate: '180deg'}]}}></i>
-                    </div>
-                </div>
+                <TopBar saveData={this.saveData} downloadData={this.downloadData}/>
 
                 <div id="LeftPropertiesBar" style={{top: "30px"}}>
                     <div id="leftbarcontainer">

@@ -994,6 +994,7 @@ function deleteComponent(component_to_be_deleted) {
             for (let i = 0; i < allEdges.length; i++) {
                 element.forEach(thisEdgeId => {
                     d3.select('path#' + thisEdgeId).remove();
+                    d3.select('rect#pathCircle' + thisEdgeId).remove();
                     if (thisEdgeId === allEdges[i]['path_id']) {
                         allEdges.splice(i, 1);
                         reactContext.setState({
@@ -1016,6 +1017,7 @@ function deleteComponent(component_to_be_deleted) {
             for (let i = 0; i < allEdges.length; i++) {
                 element.forEach(thisEdgeId => {
                     d3.select('path#' + thisEdgeId).remove();
+                    d3.select('rect#pathCircle' + thisEdgeId).remove();
                     if (thisEdgeId === allEdges[i]['path_id']) {
                         allEdges.splice(i, 1);
                         reactContext.setState({
