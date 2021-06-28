@@ -108,10 +108,6 @@ function inputPreconditions(args, n) {
     if (!(args instanceof Array)) {
         throw new TypeError('args must be an array ');
     }
-
-    // if (args.length < n) {
-    //     throw new TypeError('args.length < ' + n);  ----> no need to add this condition, as `args` will always be a list from the backend auto generator with the exact number of inputs.
-    // }
 }
 
 /*
@@ -593,8 +589,6 @@ function min(args) {
     };
 }
 
-var result_json = null;
-
 function draw3dModel(args) {
     /**
      * This function returns the minimum value between a list of inputs.
@@ -935,6 +929,7 @@ function calculateShallow(compId) {
     });
 
     var d = shallow_functions[thisComp.Name](inputGroup);
+    console.log(d);
 
     thisComp.outputs.forEach(function (output, i) {
         output.value = d['value'][i];
@@ -942,4 +937,4 @@ function calculateShallow(compId) {
     });
 }
 
-export { calculateShallow };
+export { calculateShallow, shallow_functions };

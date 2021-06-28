@@ -6,6 +6,7 @@ var React = require('react');
 var ScriptTag = require('react-script-tag');
 var $ = require('jquery');
 var Plotly = require('plotly');
+require('axios');
 require('@fontsource/ubuntu-mono');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -607,10 +608,7 @@ function inputPreconditions(args, n) {
   // args = parseString(args); // args is always a normal list
   if (!(args instanceof Array)) {
     throw new TypeError('args must be an array ');
-  } // if (args.length < n) {
-  //     throw new TypeError('args.length < ' + n);  ----> no need to add this condition, as `args` will always be a list from the backend auto generator with the exact number of inputs.
-  // }
-
+  }
 }
 /*
 ARITHMETIC OPERATORS
@@ -1394,6 +1392,7 @@ function calculateShallow(compId) {
     inputGroup.push(input.value);
   });
   var d = shallow_functions[thisComp.Name](inputGroup);
+  console.log(d);
   thisComp.outputs.forEach(function (output, i) {
     output.value = d['value'][i];
     output.type = d['type'][i];
@@ -2175,6 +2174,7 @@ function deleteComponent(component_to_be_deleted) {
       var _loop4 = function _loop4(_i) {
         element.forEach(function (thisEdgeId) {
           d3$b.select('path#' + thisEdgeId).remove();
+          d3$b.select('rect#pathCircle' + thisEdgeId).remove();
 
           if (thisEdgeId === allEdges[_i]['path_id']) {
             allEdges.splice(_i, 1);
@@ -2202,6 +2202,7 @@ function deleteComponent(component_to_be_deleted) {
       var _loop5 = function _loop5(_i2) {
         element.forEach(function (thisEdgeId) {
           d3$b.select('path#' + thisEdgeId).remove();
+          d3$b.select('rect#pathCircle' + thisEdgeId).remove();
 
           if (thisEdgeId === allEdges[_i2]['path_id']) {
             allEdges.splice(_i2, 1);
@@ -3895,7 +3896,7 @@ function CreateNewFileUpload(reactContext) {
     newcomp = FromExisting;
   }
 
-  newcomp.fill = 'url(#fileUploadGradient)';
+  newcomp.fill = '#5e6b7a';
   newcomp.Name = 'False';
   var padding = 20;
   var titleMargin = 30;
@@ -3903,36 +3904,15 @@ function CreateNewFileUpload(reactContext) {
   newcomp.type = 'fileUpload';
   newcomp.dftype = 'shlow'; // TODO : get the longest text in the component. and set the width based on this.
 
-  newcomp.width = 300; //newcomp.Name.length * one_character_width + titleMarginLeft;
-
+  newcomp.width = 300;
   var allContents = d3$4.select('#allCanvasContents');
-
-  function update() {
-    node.attr('transform', function (d) {
-      return "translate(".concat(d.x, ",").concat(d.y, ")");
-    });
-  }
-
-  d3$4.drag().on('start', function (event, d) {
-    return Dummyrect.attr('stroke', 'red');
-  }).on('drag', function (event, d) {
-    d.x = event.x;
-    d.y = event.y;
-  }).on('end', function (event, d) {
-    return Dummyrect.attr('stroke', '#3a4c69');
-  }).on('start.update drag.update end.update', update);
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', function () {
     if (FromExisting == null) {
-      // if (kwargs.X != undefined && kwargs.Y != undefined && kwargs != null){
-      //     newcomp.X = kwargs.X;
-      //     newcomp.Y = kwargs.Y;
-      // } else{
       var mousex = reactContext.state.mousex;
       var mousey = reactContext.state.mousey;
       newcomp.X = mousex + Math.random() * 500;
-      newcomp.Y = mousey + Math.random() * 500; // }
-
+      newcomp.Y = mousey + Math.random() * 500;
       return 'translate(' + newcomp.X + ', ' + newcomp.Y + ')';
     } else {
       return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
@@ -3944,9 +3924,7 @@ function CreateNewFileUpload(reactContext) {
   var InputGroup = node.append('g');
 
   var _loop = function _loop(index) {
-    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
-    . //newcomp.fill)
-    attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
       newcomp.inputs[index].circle = reactContext.state.fromCircle;
       newcomp.inputs[index].circle.element = this.id;
       newcomp.inputs[index].circle.CX = 0;
@@ -3984,7 +3962,7 @@ function CreateNewFileUpload(reactContext) {
       return 'File Size : ' + (newcomp.outputs[0].Description.size / (1024 * 1024)).toString() + " MB <a class='open_uploadedFile_link' href='" + newcomp.outputs[0].Description.url + "' target='blank'>open</a>";
     }
   }).attr('x', '55').attr('y', newcomp.height + 2).attr('width', newcomp.width - 50).attr('height', 15).attr('fill', 'white');
-  var Dummyrect = node.append('rect').attr('class', 'CompFBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3') //.attr("filter", "url(#f2")
+  node.append('rect').attr('class', 'CompFBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3') //.attr("filter", "url(#f2")
   .attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
   var cirGroup = node.append('g').attr('transform', function () {
     var x = newcomp.width;
@@ -3998,7 +3976,8 @@ function CreateNewFileUpload(reactContext) {
   node.append('rect').attr('width', newcomp.width - 2).attr('height', 10).attr('x', 1).attr('y', 1).attr('rx', 2).attr('ry', 2).attr('fill', 'url(#gradient2)').attr('fill-opacity', 0.4);
   node.append('foreignObject').attr('id', 'foreignObject_fileUpload' + newcomp.GUID).attr('class', 'foreignObject_fileUpload').attr('width', newcomp.width).attr('height', newcomp.height).attr('y', '-1.1px').html(function () {
     if (newcomp.outputs[0].value == null || newcomp.outputs[0].value === undefined) {
-      return "\n            <form method=\"post\" enctype=\"multipart/form-data\" id=\"form_" + newcomp.GUID + "\">\n            <input id=\"fileUploadFormToTheCloud\" class=\"" + newcomp.GUID + "\" type=\"file\" name=\"myFile\">\n            </form>\n            ";
+      var form = "\n                    <form method=\"post\" enctype=\"multipart/form-data\" id=\"form_" + newcomp.GUID + "\">\n                    <input id=\"fileUploadFormToTheCloud\" class=\"" + newcomp.GUID + "\" type=\"file\" name=\"myFile\">\n                    </form>\n                    ";
+      return form;
     } else {
       return "\n                <div id=\"TheContainedFile\">" + newcomp.outputs[0].Description.Name + "</div>\n                <div id=\"TheContainedFile\">Size :" + (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() + " MB</div>\n            ";
     }
@@ -4045,36 +4024,84 @@ function CreateNewFileUpload(reactContext) {
 
 function handleFileUpload() {
   $__default['default']('input#fileUploadFormToTheCloud').on('change', function (e) {
-    var thisFormId = $__default['default'](this).attr('class');
-    var this_form_elemnt = $__default['default']('#form_' + thisFormId);
-    var form_data = new FormData(this_form_elemnt[0]);
-    console.log('uploading' + form_data);
+    //     var selectedFile = e.target.files[0];
+    //     console.log(selectedFile);
+    //     var thisFormId = $(this).attr('class');
+    //     console.log(thisFormId);
+    //     var this_form_element = $('#form_' + thisFormId);
+    //     console.log(this_form_element);
+    //     var form_data = new FormData(this_form_element[0]);
+    //     console.log(form_data);
+    //     var reader = new FileReader();
+    //     reader.readAsText(selectedFile);
+    //     reader.onload = (event) => {
+    //         console.log('inside handle file read');
+    //         console.log(event.target.result);
+    //         //var save = JSON.parse(event.target.result);
+    //        // console.log(save)
+    //         window.localStorage.setItem(thisFormId, event.target.result);
+    //         console.log(window.localStorage);
+    //     };
+    //     var fileName = selectedFile.name;
+    //     var fileSize = selectedFile.size;
+    //     console.log(fileName);
+    //     var theCurrentComp = selectComp(thisFormId);
+    //     theCurrentComp.outputs[0].Name = fileName;
+    //     theCurrentComp.outputs[0].Description = {
+    //         Name: fileName,
+    //         size: fileSize,
+    //         //url: res.publicURL
+    //     };
+    //     //theCurrentComp.outputs[0].value = res.publicURL; //to be handled later
+    //     console.log(theCurrentComp);
+    //     d3.select('#fileUpload_status_' + thisFormId).html(
+    //         'File Size : ' +
+    //             (selectedFile.size / (1024 * 1024)).toString() +
+    //             " MB <a class='open_uploadedFile_link' href='" +
+    //             //res.publicURL +
+    //             "' target='blank'>open</a>"
+    //     );
+    //     d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
+    //         return (
+    //             `
+    //             <div id="TheContainedFile">` +
+    //                 fileName +
+    //                 `</div>
+    //             <div id="TheContainedFile">Size :` +
+    //                 (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
+    //                 ` MB</div>
+    //             `
+    //         );
+    //     });
+    var thisFormId = $__default['default'](this).attr("class");
+    var this_form_element = $__default['default']("#form_" + thisFormId);
+    var form_data = new FormData(this_form_element[0]);
+    console.log(form_data);
     var fileName = $__default['default'](this).val();
     console.log(fileName);
     $__default['default'].ajax({
-      type: 'POST',
-      accepts: 'text/json',
-      url: '../upload/',
-      data: form_data,
+      "type": "POST",
+      "accepts": "text/json",
+      "url": "www.example.com",
+      "data": form_data,
       processData: false,
       contentType: false,
-      beforeSend: function beforeSend(xhr, settings) {
-        // $.beforeSend(xhr, settings);
-        d3$4.select('#fileUpload_status_' + thisFormId).html('Uploading ..... ');
+      "beforeSend": function beforeSend(xhr, settings) {
+        d3$4.select("#fileUpload_status_" + thisFormId).html("Uploading ..... ");
       },
-      success: function success(res) {
+      "success": function success(res) {
         console.log(res);
-        var theCurrentComp = selectComp(thisFormId);
+        theCurrentComp = selectComp(thisFormId);
         theCurrentComp.outputs[0].Name = res.FileName;
         theCurrentComp.outputs[0].Description = {
-          Name: res.FileName,
-          size: res.FileSize,
-          url: res.publicURL
+          "Name": res.FileName,
+          "size": res.FileSize,
+          "url": res.publicURL
         };
         theCurrentComp.outputs[0].value = res.publicURL;
-        d3$4.select('#fileUpload_status_' + thisFormId).html('File Size : ' + (res['FileSize'] / (1024 * 1024)).toString() + " MB <a class='open_uploadedFile_link' href='" + res.publicURL + "' target='blank'>open</a>");
-        d3$4.select('#foreignObject_fileUpload' + thisFormId).html(function () {
-          return "\n                    <div id=\"TheContainedFile\">" + res.FileName + "</div>\n                    <div id=\"TheContainedFile\">Size :" + (res.FileSize / (1024 * 1024)).toFixed(4).toString() + " MB</div>\n                ";
+        d3$4.select("#fileUpload_status_" + thisFormId).html("File Size : " + (res["FileSize"] / (1024 * 1024)).toString() + " MB " + "<a class='open_uploadedFile_link' href='" + res.publicURL + "' target='blank'>open</a>");
+        d3$4.select("#foreignObject_fileUpload" + thisFormId).html(function () {
+          return "\n                <div id=\"TheContainedFile\">" + res.FileName + "</div>\n                <div id=\"TheContainedFile\">Size :" + (res.FileSize / (1024 * 1024)).toFixed(4).toString() + " MB</div>\n            ";
         });
         redrawDependents(thisFormId);
       }
@@ -4623,277 +4650,263 @@ function showVerticalAlignment(selectionBox) {
 
 var img = "data:image/png;base64,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";
 
-var Grid = /*#__PURE__*/function (_Component) {
-  _inherits(Grid, _Component);
-
-  var _super = _createSuper(Grid);
-
-  function Grid() {
-    _classCallCheck(this, Grid);
-
-    return _super.apply(this, arguments);
+class Grid extends React.Component {
+  render() {
+    return /*#__PURE__*/React__default['default'].createElement("svg", {
+      height: "10000",
+      width: "10000"
+    }, /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("pattern", {
+      id: "img122",
+      patternUnits: "userSpaceOnUse",
+      width: "500",
+      height: "500"
+    }, /*#__PURE__*/React__default['default'].createElement("image", {
+      className: "rep",
+      xlinkHref: img,
+      x: "0",
+      y: "0",
+      width: "500",
+      height: "500"
+    })), /*#__PURE__*/React__default['default'].createElement("filter", {
+      id: this.props.filter_id,
+      x: "-40",
+      y: "-40",
+      width: "150%",
+      height: "150%",
+      filterUnits: "userSpaceOnUse"
+    }, /*#__PURE__*/React__default['default'].createElement("feOffset", {
+      result: "offOut",
+      in: "SourceGraphics",
+      dx: "0",
+      dy: "0"
+    }), /*#__PURE__*/React__default['default'].createElement("feGaussianBlur", {
+      result: "blurOut",
+      in: "offOut",
+      stdDeviation: "1"
+    }), /*#__PURE__*/React__default['default'].createElement("feBlend", {
+      in: "SourceGraphic",
+      in2: "blurOut",
+      mode: "normal"
+    })), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "grad1ient",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        'stopColour': '#dddddd',
+        'stopOpacity': '100%'
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "50%",
+      style: {
+        "stopColour": "#eeeeee",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#dddddd",
+        "stopOpacity": "100%"
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "fileUploadGradient",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#344b62",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "10%",
+      style: {
+        "stopColour": "#344b62",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "12%",
+      style: {
+        "stopColour": "#2b3d50",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "88%",
+      style: {
+        "stopColour": "#2b3d50",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "90%",
+      style: {
+        "stopColour": "#23364a",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#23364a",
+        "stopOpacity": "100%"
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "gradientlsider",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#eeeeee",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "20%",
+      style: {
+        "stopColour": "#eeeeee",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "30%",
+      style: {
+        "stopColour": "#dddddd",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "70%",
+      style: {
+        "stopColour": "#dddddd",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "80%",
+      style: {
+        "stopColour": "#cccccc",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#cccccc",
+        "stopOpacity": "100%"
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "gradient2",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "10%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "30%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "60%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "80%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "60%"
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "gradient2_2",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "50%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "0%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "70%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "0%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#ffffff",
+        "stopOpacity": "30%"
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "gradient3",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#555555",
+        "stopOpacity": "0%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "28%",
+      style: {
+        "stopColour": "#555555",
+        "stopOpacity": "0%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "30%",
+      style: {
+        "stopColour": "#555555",
+        "stopOpacity": "20%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "80%",
+      style: {
+        "stopColour": "#555555",
+        "stopOpacity": "50%"
+      }
+    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+      id: "gradient4",
+      x1: "0%",
+      y1: "0%",
+      x2: "0%",
+      y2: "100%"
+    }, /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "0%",
+      style: {
+        "stopColour": "#373939",
+        "stopOpacity": "100%"
+      }
+    }), /*#__PURE__*/React__default['default'].createElement("stop", {
+      offset: "100%",
+      style: {
+        "stopColour": "#023939",
+        "stopOpacity": "100%"
+      }
+    })))));
   }
 
-  _createClass(Grid, [{
-    key: "render",
-    value: function render() {
-      return /*#__PURE__*/React__default['default'].createElement("svg", {
-        height: "10000",
-        width: "10000"
-      }, /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("pattern", {
-        id: "img122",
-        patternUnits: "userSpaceOnUse",
-        width: "500",
-        height: "500"
-      }, /*#__PURE__*/React__default['default'].createElement("image", {
-        className: "rep",
-        xlinkHref: img,
-        x: "0",
-        y: "0",
-        width: "500",
-        height: "500"
-      })), /*#__PURE__*/React__default['default'].createElement("filter", {
-        id: this.props.filter_id,
-        x: "-40",
-        y: "-40",
-        width: "150%",
-        height: "150%",
-        filterUnits: "userSpaceOnUse"
-      }, /*#__PURE__*/React__default['default'].createElement("feOffset", {
-        result: "offOut",
-        in: "SourceGraphics",
-        dx: "0",
-        dy: "0"
-      }), /*#__PURE__*/React__default['default'].createElement("feGaussianBlur", {
-        result: "blurOut",
-        in: "offOut",
-        stdDeviation: "1"
-      }), /*#__PURE__*/React__default['default'].createElement("feBlend", {
-        in: "SourceGraphic",
-        in2: "blurOut",
-        mode: "normal"
-      })), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "grad1ient",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          'stopColour': '#dddddd',
-          'stopOpacity': '100%'
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "50%",
-        style: {
-          "stopColour": "#eeeeee",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#dddddd",
-          "stopOpacity": "100%"
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "fileUploadGradient",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#344b62",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "10%",
-        style: {
-          "stopColour": "#344b62",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "12%",
-        style: {
-          "stopColour": "#2b3d50",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "88%",
-        style: {
-          "stopColour": "#2b3d50",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "90%",
-        style: {
-          "stopColour": "#23364a",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#23364a",
-          "stopOpacity": "100%"
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "gradientlsider",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#eeeeee",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "20%",
-        style: {
-          "stopColour": "#eeeeee",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "30%",
-        style: {
-          "stopColour": "#dddddd",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "70%",
-        style: {
-          "stopColour": "#dddddd",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "80%",
-        style: {
-          "stopColour": "#cccccc",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#cccccc",
-          "stopOpacity": "100%"
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "gradient2",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "10%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "30%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "60%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "80%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "60%"
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "gradient2_2",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "50%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "0%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "70%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "0%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#ffffff",
-          "stopOpacity": "30%"
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "gradient3",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#555555",
-          "stopOpacity": "0%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "28%",
-        style: {
-          "stopColour": "#555555",
-          "stopOpacity": "0%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "30%",
-        style: {
-          "stopColour": "#555555",
-          "stopOpacity": "20%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "80%",
-        style: {
-          "stopColour": "#555555",
-          "stopOpacity": "50%"
-        }
-      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-        id: "gradient4",
-        x1: "0%",
-        y1: "0%",
-        x2: "0%",
-        y2: "100%"
-      }, /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "0%",
-        style: {
-          "stopColour": "#373939",
-          "stopOpacity": "100%"
-        }
-      }), /*#__PURE__*/React__default['default'].createElement("stop", {
-        offset: "100%",
-        style: {
-          "stopColour": "#023939",
-          "stopOpacity": "100%"
-        }
-      })))));
-    }
-  }]);
-
-  return Grid;
-}(React.Component);
+}
 
 /*
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -6380,8 +6393,8 @@ const toggleButtonInfo = [{
 }];
 
 function addGenericComponentIcon() {
-  for (var index = 0; index < details.length; index++) {
-    var currInfo = details[index];
+  for (let index = 0; index < details.length; index++) {
+    const currInfo = details[index];
     var outputNameList = extractOutputName(currInfo.outputList);
     var newComp = addNewComponentIcon(this, 'addComp', currInfo.name, currInfo.shname, currInfo.desc, currInfo.type, currInfo.dftype, 'mainButtonItem 1 1', currInfo.backgroundImage, currInfo.inputList, outputNameList, currInfo.color);
     $__default['default'](tabIdMapping[currInfo.category]).append(newComp);
@@ -6391,9 +6404,9 @@ function addGenericComponentIcon() {
 function addNewComponentIcon(reactContext, id, name, shname, desc, type, dftype, className, imageUrl, inputList, outputList, color) {
   var newCompString = '<div id="' + id + '" name="' + name + '" shname="' + shname + '" desc="' + desc + '" type="' + type + '" dftype="' + dftype + '" class="' + className + '" style="background-image:url(' + imageUrl + ')">' + (imageUrl === '' ? name : ' &nbsp; ' + '<span id="hint">' + name + '</span>') + '</div>';
   var newComp = $__default['default'](newCompString);
-  newComp.on('click', function () {
+  newComp.on('click', () => {
     if (type === 'component') {
-      var kwargs = {
+      let kwargs = {
         shortName: shname,
         dfType: dftype
       };
@@ -6406,10 +6419,10 @@ function addNewComponentIcon(reactContext, id, name, shname, desc, type, dftype,
 }
 
 function extractOutputName(array) {
-  var output = [];
+  let output = [];
 
-  for (var index = 0; index < array.length; index++) {
-    var element = array[index];
+  for (let index = 0; index < array.length; index++) {
+    const element = array[index];
     output.push(element.name);
   }
 
@@ -6419,18 +6432,14 @@ function extractOutputName(array) {
 function addRightToggleButton() {
   var parentDiv = $__default['default']('div.toolbarRightToggleNavigator.1');
 
-  var _loop = function _loop(index) {
-    var currBtn = toggleButtonInfo[index];
-    var newToggleString = '<div class="rightToggleButton 1" style="background-image:url(' + currBtn.backgroundImage + '"><span id="hint">' + currBtn.name + '</span></div>';
-    var newToggle = $__default['default'](newToggleString);
-    newToggle.on('click', function () {
+  for (let index = 0; index < toggleButtonInfo.length; index++) {
+    const currBtn = toggleButtonInfo[index];
+    let newToggleString = '<div class="rightToggleButton 1" style="background-image:url(' + currBtn.backgroundImage + '"><span id="hint">' + currBtn.name + '</span></div>';
+    let newToggle = $__default['default'](newToggleString);
+    newToggle.on('click', () => {
       setCurrentCategory('componentTab', currBtn.id, currBtn.name);
     });
     parentDiv.append(newToggle);
-  };
-
-  for (var index = 0; index < toggleButtonInfo.length; index++) {
-    _loop(index);
   }
 }
 
@@ -6452,7 +6461,7 @@ var d3 = require('d3');
 function getCurrentData(reactContext) {
   var allContents = d3.select('#allCanvasContents');
   var svgContainer = d3.select('svg');
-  reactContext.state.allEdges.forEach(function (element) {
+  reactContext.state.allEdges.forEach(element => {
     element['d'] = $__default['default']('path#' + element.path_id).attr('d');
     element['circleX'] = $__default['default']('rect#pathCircle' + element.path_id).attr('x');
     element['circleY'] = $__default['default']('rect#pathCircle' + element.path_id).attr('y');
@@ -6473,12 +6482,12 @@ function getCurrentData(reactContext) {
     currentRightColWidth: parseFloat(d3.select('div#PropertiesBar').style('width')),
     currentLeftColWidth: parseFloat(d3.select('div#LeftPropertiesBar').style('width'))
   };
-  var fileData = JSON.stringify(data);
+  const fileData = JSON.stringify(data);
   return fileData;
 }
 
 function saveData() {
-  var fileData = getCurrentData(this);
+  const fileData = getCurrentData(this);
   var storage = window.localStorage;
   storage.setItem('data', fileData);
   alert('Successfully save data');
@@ -6490,20 +6499,18 @@ function clearData() {
 }
 
 function downloadData() {
-  var fileData = getCurrentData(this);
-  var blob = new Blob([fileData], {
+  const fileData = getCurrentData(this);
+  const blob = new Blob([fileData], {
     type: "text/plain"
   });
-  var url = URL.createObjectURL(blob);
-  var link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
   link.download = "data.json";
   link.href = url;
   link.click();
 }
 
 function loadData() {
-  var _this = this;
-
   var allData = JSON.parse(window.localStorage.getItem('data'));
   var allContents = d3.select('#allCanvasContents');
   var svgContainer = d3.select('svg');
@@ -6521,10 +6528,10 @@ function loadData() {
       this.setState({
         allComp: allComponents
       });
-      allComponents.forEach(function (element) {
-        if (element.type === 'component') CreateNewComponent(_this, element); //to be handle later
-        else if (element.type === 'slider') CreateNewSlider(_this, element);else if (element.type === 'string') CreateNewPanel(_this, element);else if (element.type === 'toggle') CreateNewToggle(_this, element);else if (element.type === 'optionList') CreateNewOptionList(_this, element); //to be handle later
-          else if (element.type === 'fileUpload') CreateNewFileUpload(_this, element);else if (element.type === 'listView') CreateNewListView(_this, element);
+      allComponents.forEach(element => {
+        if (element.type === 'component') CreateNewComponent(this, element); //to be handle later
+        else if (element.type === 'slider') CreateNewSlider(this, element);else if (element.type === 'string') CreateNewPanel(this, element);else if (element.type === 'toggle') CreateNewToggle(this, element);else if (element.type === 'optionList') CreateNewOptionList(this, element); //to be handle later
+          else if (element.type === 'fileUpload') CreateNewFileUpload(this, element);else if (element.type === 'listView') CreateNewListView(this, element);
       });
     }
 
@@ -6539,7 +6546,7 @@ function loadData() {
         parent_child_matrix_fast_check: allData.parent_child_matrix_fast_check,
         root_components: allData.root_components
       });
-      allEdges.forEach(function (element) {
+      allEdges.forEach(element => {
         CreatePaths(element);
       });
     }
@@ -6552,6 +6559,103 @@ function CreatePaths(theEdge) {
   }).attr('stroke', 'black').attr('stroke-width', '5').attr('id', theEdge.path_id).attr('stroke-dasharray', '4').attr('stroke-linecap', 'round').attr('fill', 'none').attr('stroke-opacity', '0.5').lower();
   addEdgeCircle(theEdge, theEdge.d).attr('x', theEdge.circleX).attr('y', theEdge.circleY).attr('style', 'display:block');
 } //End of CreatePaths
+
+/**
+ * Adds a new user defined object. This function is called in componentDidMount in the main Canvas
+ * @param {String} name the component's name
+ * @param {String} shname the component's short name
+ * @param {String} desc the component's description
+ * @param {String} type the component's type (must be Component/OptionList/String)
+ * @param {String} dftype the component's depth type (must be shlow or dp)
+ * @param {String} category the component's category (must be either Basic/BuildSimHub/OsiSoft/Pandas/String Operations)
+ * @param {List} inputList the component's input list. It is a list of dictionary. "name" attribute is compulsory, 
+ * other attributes such as short name, description, input type and default value are optional
+ * @param {List} outputList the component's output list. It is a list of dictionary. "name" attribute is compulsory, 
+ * other attributes such as short name and description are optional
+ * @param {String} color the component's color in hex code. The default color is #F23322 (orange)
+ * @param {String} backgroundImage the URL of the component's icon in the left property bar. This field is optional.
+ * @param {Function} calledFunc the corresponding function for that component.
+ */
+
+var typeList = ['component', 'optionList', 'string'];
+var dftypeList = ['shlow', 'dp'];
+var categoryList = ['Basic', 'BuildSimHub', 'OsiSoft', 'Pandas', 'String Operations'];
+
+function addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color = "#F23322", backgroundImage = "", calledFunc = undefined) {
+  //check requirements
+  if (typeList.includes(type) && dftypeList.includes(dftype) && categoryList.includes(category)) {
+    let nameCheck = true;
+
+    for (let index = 0; index < inputList.length; index++) {
+      const element = inputList[index];
+
+      if (element.name === undefined) {
+        nameCheck = false;
+        break;
+      }
+    }
+
+    for (let index = 0; index < outputList.length; index++) {
+      const element = outputList[index];
+
+      if (element.name === undefined) {
+        nameCheck = false;
+        break;
+      }
+    }
+
+    if (nameCheck) {
+      let newComp = {
+        name: name,
+        shname: shname,
+        desc: desc,
+        type: type,
+        dftype: dftype,
+        category: category,
+        inputList: inputList,
+        outputList: outputList,
+        color: color,
+        backgroundImage: backgroundImage
+      };
+      details.push(newComp);
+
+      if (calledFunc !== undefined) {
+        if (dftype === 'shlow') {
+          shallow_functions[name] = calledFunc;
+        }
+      }
+    } else {
+      console.log('All elements in input and output list must have "name" attribute');
+    }
+  } else {
+    console.log("Check the type/dftype/category again");
+  }
+}
+/**
+ * Take a list of components that are passed by props and append all of them to the database
+ * @param {List} list a list of dictionary, containing the information about the components
+ */
+
+
+function addAllUdo(list) {
+  if (list !== undefined) {
+    for (let index = 0; index < list.length; index++) {
+      const element = list[index];
+      let name = element.name;
+      let shname = element.shname;
+      let desc = element.desc;
+      let type = element.type;
+      let dftype = element.dftype;
+      let category = element.category;
+      let inputList = element.inputList;
+      let outputList = element.outputList;
+      let color = element.color === undefined ? '#F23322' : element.color;
+      let backgroundImage = element.backgroundImage === undefined ? '' : element.backgroundImage;
+      let calledFunc = element.func;
+      addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color, backgroundImage, calledFunc);
+    }
+  }
+}
 
 function styleInject(css, ref) {
   if ( ref === void 0 ) ref = {};
@@ -6615,6 +6719,8 @@ var Canvas = /*#__PURE__*/function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      console.log(this.props.udo);
+      addAllUdo(this.props.udo);
       this.manageCanvas();
       this.loadData();
       this.addGenericComponentIcon();

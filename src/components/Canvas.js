@@ -18,6 +18,7 @@ import { handleComponentSelection,
          handleDoubleClick } from './js/handle.js';
 import { addGenericComponentIcon, addRightToggleButton } from './js/leftPropertyBar.js';
 import { saveData, loadData, clearData, downloadData } from './js/saveAndLoadData.js';
+import {addAllUdo} from './js/userDefinedObject.js';
 import './App.css';
 
 export default class Canvas extends React.Component {
@@ -39,6 +40,8 @@ export default class Canvas extends React.Component {
     }
 
     componentDidMount() {
+        console.log(this.props.udo);
+        addAllUdo(this.props.udo);
         this.manageCanvas();
         this.loadData();
         this.addGenericComponentIcon();
