@@ -1,4 +1,6 @@
 import {
+    uuidv4,
+    addCircle,
     selectComp,
     updateAll,
     ViewListRedrawing,
@@ -11,20 +13,6 @@ import { cancelPanelEdit, submitPanelEdit } from './panel.js';
 import $ from 'jquery';
 var d3 = require('d3');
 
-function addCircle() {
-    var initCircle = {
-        GUID: uuidv4('C'),
-        element: null,
-        CX: 0,
-        CY: 0,
-        Comp: null,
-        type: 'data',
-        path: null
-    };
-
-    return initCircle;
-}
-
 function GetURLParameter(sParam) {
     var sPageURL = window.location.search.substring(1);
     var sURLVariables = sPageURL.split('&');
@@ -34,17 +22,6 @@ function GetURLParameter(sParam) {
             return sParameterName[1];
         }
     }
-}
-
-function uuidv4(ini) {
-    return (
-        ini +
-        'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = (Math.random() * 16) | 0,
-                v = c === 'x' ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-        })
-    );
 }
 
 function addEdge(from, to, fromComp, toComp) {

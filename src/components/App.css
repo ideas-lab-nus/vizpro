@@ -4,6 +4,8 @@ body {
     -moz-user-select: none;
     -o-user-select: none;
     user-select: none;
+    overflow-y: hidden; /* Hide vertical scrollbar */
+    overflow-x: hidden;
 }
 
 svg {
@@ -80,16 +82,17 @@ div#PropertiesBarSelector {
 }
 
 div#PropertiesBar {
-    width: 500px;
     background-color: #2b3d50;
-    position: fixed;
     right: 0px;
-    box-shadow: 0px 11px 10px #0000006e;
     top: 0px;
     min-height: 35%;
     transition-timing-function: ease-in-out;
     transition: height 2s;
-    transition-delay: 1s;
+    transition-delay: 1s;  
+    width: 220px;
+    top: 60px;
+    padding-left: 5px;
+    padding-top: 5px;
 }
 
 div#mainGrid {
@@ -224,7 +227,7 @@ a#changeTitleName {
     padding: 0px 3px;
     font-family: 'Ubuntu', sans-serif;
     font-size: small;
-    border: 1px solid #2c67a5;
+    /* border: 1px solid #2c67a5; */
     color: #e7e7e7;
     padding: 4px;
     cursor: pointer;
@@ -432,29 +435,30 @@ rect.xyAnchor {
     cursor: nwse-resize;
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
     width: 6px;
     height: 10px;
-}
+} */
 
 /* Track */
 
-::-webkit-scrollbar-track {
+/* ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     -webkit-border-radius: 4px;
     border-radius: 4px;
-}
+    touch-action: manipulation;
+} */
 
 /* Handle */
 
-::-webkit-scrollbar-thumb {
+/* ::-webkit-scrollbar-thumb {
     -webkit-border-radius: 4px;
     background: rgb(0, 0, 0);
 }
 
 ::-webkit-scrollbar-thumb:window-inactive {
     background: rgba(255, 0, 0, 0.4);
-}
+} */
 
 path.play {
     cursor: pointer;
@@ -514,7 +518,7 @@ rect {
 }
 
 input.stringPnanel.Name {
-    width: 100%;
+    width: 98%;
     border: none;
     font-size: small;
     font-family: 'ubuntu';
@@ -980,12 +984,4 @@ div#codeBody {
 .toptoggleitem.selected:hover {
     transition: 2s;
     min-height: 36%;
-}
-
-div#PropertiesBar {
-    width: 50px;
-    top: 60px;
-    padding-left: 5px;
-    min-width: 250px;
-    padding-top: 5px;
 }
