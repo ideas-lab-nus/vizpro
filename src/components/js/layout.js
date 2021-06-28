@@ -195,13 +195,13 @@ function manageCanvas() {
         })
         .style('left', currentLeftColWidth + 'px');
 
-    d3.select('div#PropertiesBar')
-        .style('width', () => {
-            return currentRightColWidth + 'px';
-        })
-        .style('top', () => {
-            return currentTopBarHeight.toString() + 'px';
-        });
+    // d3.select('div#PropertiesBar')
+    //     .style('width', () => {
+    //         return currentRightColWidth + 'px';
+    //     })
+    //     .style('top', () => {
+    //         return currentTopBarHeight.toString() + 'px';
+    //     });
     d3.select('div#PropertiesBarSelector')
         .style('top', () => {
             return currentTopBarHeight.toString() + 'px';

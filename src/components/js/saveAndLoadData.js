@@ -45,7 +45,8 @@ function saveData() {
 
 function clearData() {
     window.localStorage.clear();
-    alert('All the saved data has been cleared. Please reload the page');
+    alert('All the saved data has been cleared. The page will be reloaded');
+    window.location.reload(true);
 }
 
 function downloadData() {

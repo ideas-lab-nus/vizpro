@@ -1,6 +1,6 @@
-import babel from '@rollup/plugin-babel';
 import external from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
+import babel from '@rollup/plugin-babel';
 import image from '@rollup/plugin-image';
 import del from 'rollup-plugin-delete';
 import pkg from './package.json';
@@ -15,13 +15,14 @@ export default {
     plugins: [
         external(),
         babel({
+            babelHelpers: 'bundled',
             exclude: 'node_modules/**'
         }),
         del({ targets: ['dist/*'] }),
         postcss({
             plugins: []
           }),
-        image(),
+        image()
     ],
-    external: Object.keys(pkg.peerDependencies || {}),
+    external: [...Object.keys(pkg.peerDependencies || {}), 'react-script-tag', 'jquery', 'plotly', '@fontsource/ubuntu-mono'],
 };

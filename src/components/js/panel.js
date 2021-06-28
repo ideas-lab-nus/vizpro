@@ -25,13 +25,13 @@
  */
 
 import {
+    uuidv4,
     addcomponent,
     selectComp,
     visualizeSpatialComponent,
     drawPlotComponent,
     redrawDependents
 } from './functions.js';
-import { uuidv4 } from './handle.js';
 import { jsonView } from './jsonview.js';
 import $ from 'jquery';
 var d3 = require('d3');
