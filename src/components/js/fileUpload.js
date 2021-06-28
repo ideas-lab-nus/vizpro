@@ -311,59 +311,101 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
 
 function handleFileUpload() {
     $('input#fileUploadFormToTheCloud').on('change', function (e) {
-        var selectedFile = e.target.files[0];
-        console.log(selectedFile);
-        var thisFormId = $(this).attr('class');
-        console.log(thisFormId);
+    //     var selectedFile = e.target.files[0];
+    //     console.log(selectedFile);
+    //     var thisFormId = $(this).attr('class');
+    //     console.log(thisFormId);
 
-        var this_form_element = $('#form_' + thisFormId);
-        console.log(this_form_element);
+    //     var this_form_element = $('#form_' + thisFormId);
+    //     console.log(this_form_element);
 
-        var form_data = new FormData(this_form_element[0]);
-        console.log(form_data);
+    //     var form_data = new FormData(this_form_element[0]);
+    //     console.log(form_data);
 
-        var reader = new FileReader();
-        reader.readAsText(selectedFile);
-        reader.onload = (event) => {
-            console.log('inside handle file read');
-            console.log(event.target.result);
-            //var save = JSON.parse(event.target.result);
-           // console.log(save)
-            window.localStorage.setItem(thisFormId, event.target.result);
-            console.log(window.localStorage);
-        };
+    //     var reader = new FileReader();
+    //     reader.readAsText(selectedFile);
+    //     reader.onload = (event) => {
+    //         console.log('inside handle file read');
+    //         console.log(event.target.result);
+    //         //var save = JSON.parse(event.target.result);
+    //        // console.log(save)
+    //         window.localStorage.setItem(thisFormId, event.target.result);
+    //         console.log(window.localStorage);
+    //     };
 
-        var fileName = selectedFile.name;
-        var fileSize = selectedFile.size;
-        console.log(fileName);
-        var theCurrentComp = selectComp(thisFormId);
-        theCurrentComp.outputs[0].Name = fileName;
-        theCurrentComp.outputs[0].Description = {
-            Name: fileName,
-            size: fileSize,
-            //url: res.publicURL
-        };
-        //theCurrentComp.outputs[0].value = res.publicURL; //to be handled later
-        console.log(theCurrentComp);
-        d3.select('#fileUpload_status_' + thisFormId).html(
-            'File Size : ' +
-                (selectedFile.size / (1024 * 1024)).toString() +
-                " MB <a class='open_uploadedFile_link' href='" +
-                //res.publicURL +
-                "' target='blank'>open</a>"
-        );
-        d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
-            return (
-                `
-                <div id="TheContainedFile">` +
-                    fileName +
-                    `</div>
-                <div id="TheContainedFile">Size :` +
-                    (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
-                    ` MB</div>
-                `
-            );
-        });
+    //     var fileName = selectedFile.name;
+    //     var fileSize = selectedFile.size;
+    //     console.log(fileName);
+    //     var theCurrentComp = selectComp(thisFormId);
+    //     theCurrentComp.outputs[0].Name = fileName;
+    //     theCurrentComp.outputs[0].Description = {
+    //         Name: fileName,
+    //         size: fileSize,
+    //         //url: res.publicURL
+    //     };
+    //     //theCurrentComp.outputs[0].value = res.publicURL; //to be handled later
+    //     console.log(theCurrentComp);
+    //     d3.select('#fileUpload_status_' + thisFormId).html(
+    //         'File Size : ' +
+    //             (selectedFile.size / (1024 * 1024)).toString() +
+    //             " MB <a class='open_uploadedFile_link' href='" +
+    //             //res.publicURL +
+    //             "' target='blank'>open</a>"
+    //     );
+    //     d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
+    //         return (
+    //             `
+    //             <div id="TheContainedFile">` +
+    //                 fileName +
+    //                 `</div>
+    //             <div id="TheContainedFile">Size :` +
+    //                 (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
+    //                 ` MB</div>
+    //             `
+    //         );
+    //     });
+    var thisFormId = $(this).attr("class");
+
+    var this_form_element = $("#form_" + thisFormId);
+
+    var form_data = new FormData(this_form_element[0]);
+    console.log(form_data)
+
+    var fileName = $(this).val();
+    console.log(fileName);
+
+    const thefileuploadajax = $.ajax({
+        "type": "POST",
+        "accepts": "text/json",
+        "url": "www.example.com",
+        "data": form_data,
+        processData: false,
+        contentType: false,
+        "beforeSend": function(xhr, settings) {
+            d3.select("#fileUpload_status_" + thisFormId)
+                .html("Uploading ..... ")
+
+        },
+        "success": function(res) {
+            console.log(res);
+            theCurrentComp = selectComp(thisFormId);
+            theCurrentComp.outputs[0].Name = res.FileName;
+            theCurrentComp.outputs[0].Description = { "Name": res.FileName, "size": res.FileSize, "url": res.publicURL };
+            theCurrentComp.outputs[0].value = res.publicURL;
+            d3.select("#fileUpload_status_" + thisFormId)
+                .html("File Size : " + (res["FileSize"] / (1024 * 1024)).toString() + " MB " + "<a class='open_uploadedFile_link' href='" + res.publicURL + "' target='blank'>open</a>")
+
+            d3.select("#foreignObject_fileUpload" + thisFormId)
+                .html(() => {
+                    return `
+                <div id="TheContainedFile">` + res.FileName + `</div>
+                <div id="TheContainedFile">Size :` + (res.FileSize / (1024 * 1024)).toFixed(4).toString() + ` MB</div>
+            `
+                })
+            redrawDependents(thisFormId);
+        }
+
+    });
     });
 }
 
