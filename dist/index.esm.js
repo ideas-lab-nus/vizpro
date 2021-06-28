@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ScriptTag from 'react-script-tag';
 import $ from 'jquery';
 import Plotly from 'plotly';
+import 'axios';
 import '@fontsource/ubuntu-mono';
 
 function ownKeys(object, enumerableOnly) {
@@ -596,10 +597,7 @@ function inputPreconditions(args, n) {
   // args = parseString(args); // args is always a normal list
   if (!(args instanceof Array)) {
     throw new TypeError('args must be an array ');
-  } // if (args.length < n) {
-  //     throw new TypeError('args.length < ' + n);  ----> no need to add this condition, as `args` will always be a list from the backend auto generator with the exact number of inputs.
-  // }
-
+  }
 }
 /*
 ARITHMETIC OPERATORS
@@ -1383,6 +1381,7 @@ function calculateShallow(compId) {
     inputGroup.push(input.value);
   });
   var d = shallow_functions[thisComp.Name](inputGroup);
+  console.log(d);
   thisComp.outputs.forEach(function (output, i) {
     output.value = d['value'][i];
     output.type = d['type'][i];
@@ -3459,7 +3458,7 @@ function handleDoubleClick() {
   });
 } // End of HandleDoubleClick
 
-var globalVars = {
+const globalVars = {
   initEdgex1: 0,
   initEdgey1: 0,
   fromCircle: addCircle(),
@@ -3559,7 +3558,7 @@ function CreateNewFileUpload(reactContext) {
     newcomp = FromExisting;
   }
 
-  newcomp.fill = 'url(#fileUploadGradient)';
+  newcomp.fill = '#5e6b7a';
   newcomp.Name = 'False';
   var padding = 20;
   var titleMargin = 30;
@@ -3567,36 +3566,15 @@ function CreateNewFileUpload(reactContext) {
   newcomp.type = 'fileUpload';
   newcomp.dftype = 'shlow'; // TODO : get the longest text in the component. and set the width based on this.
 
-  newcomp.width = 300; //newcomp.Name.length * one_character_width + titleMarginLeft;
-
+  newcomp.width = 300;
   var allContents = d3$6.select('#allCanvasContents');
-
-  function update() {
-    node.attr('transform', function (d) {
-      return "translate(".concat(d.x, ",").concat(d.y, ")");
-    });
-  }
-
-  d3$6.drag().on('start', function (event, d) {
-    return Dummyrect.attr('stroke', 'red');
-  }).on('drag', function (event, d) {
-    d.x = event.x;
-    d.y = event.y;
-  }).on('end', function (event, d) {
-    return Dummyrect.attr('stroke', '#3a4c69');
-  }).on('start.update drag.update end.update', update);
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', function () {
     if (FromExisting == null) {
-      // if (kwargs.X != undefined && kwargs.Y != undefined && kwargs != null){
-      //     newcomp.X = kwargs.X;
-      //     newcomp.Y = kwargs.Y;
-      // } else{
       var mousex = reactContext.state.mousex;
       var mousey = reactContext.state.mousey;
       newcomp.X = mousex + Math.random() * 500;
-      newcomp.Y = mousey + Math.random() * 500; // }
-
+      newcomp.Y = mousey + Math.random() * 500;
       return 'translate(' + newcomp.X + ', ' + newcomp.Y + ')';
     } else {
       return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
@@ -3608,9 +3586,7 @@ function CreateNewFileUpload(reactContext) {
   var InputGroup = node.append('g');
 
   var _loop = function _loop(index) {
-    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
-    . //newcomp.fill)
-    attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
       newcomp.inputs[index].circle = reactContext.state.fromCircle;
       newcomp.inputs[index].circle.element = this.id;
       newcomp.inputs[index].circle.CX = 0;
@@ -3648,7 +3624,7 @@ function CreateNewFileUpload(reactContext) {
       return 'File Size : ' + (newcomp.outputs[0].Description.size / (1024 * 1024)).toString() + " MB <a class='open_uploadedFile_link' href='" + newcomp.outputs[0].Description.url + "' target='blank'>open</a>";
     }
   }).attr('x', '55').attr('y', newcomp.height + 2).attr('width', newcomp.width - 50).attr('height', 15).attr('fill', 'white');
-  var Dummyrect = node.append('rect').attr('class', 'CompFBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3') //.attr("filter", "url(#f2")
+  node.append('rect').attr('class', 'CompFBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3') //.attr("filter", "url(#f2")
   .attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
   var cirGroup = node.append('g').attr('transform', function () {
     var x = newcomp.width;
@@ -3662,7 +3638,8 @@ function CreateNewFileUpload(reactContext) {
   node.append('rect').attr('width', newcomp.width - 2).attr('height', 10).attr('x', 1).attr('y', 1).attr('rx', 2).attr('ry', 2).attr('fill', 'url(#gradient2)').attr('fill-opacity', 0.4);
   node.append('foreignObject').attr('id', 'foreignObject_fileUpload' + newcomp.GUID).attr('class', 'foreignObject_fileUpload').attr('width', newcomp.width).attr('height', newcomp.height).attr('y', '-1.1px').html(function () {
     if (newcomp.outputs[0].value == null || newcomp.outputs[0].value === undefined) {
-      return "\n            <form method=\"post\" enctype=\"multipart/form-data\" id=\"form_" + newcomp.GUID + "\">\n            <input id=\"fileUploadFormToTheCloud\" class=\"" + newcomp.GUID + "\" type=\"file\" name=\"myFile\">\n            </form>\n            ";
+      var form = "\n                    <form method=\"post\" enctype=\"multipart/form-data\" id=\"form_" + newcomp.GUID + "\">\n                    <input id=\"fileUploadFormToTheCloud\" class=\"" + newcomp.GUID + "\" type=\"file\" name=\"myFile\">\n                    </form>\n                    ";
+      return form;
     } else {
       return "\n                <div id=\"TheContainedFile\">" + newcomp.outputs[0].Description.Name + "</div>\n                <div id=\"TheContainedFile\">Size :" + (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() + " MB</div>\n            ";
     }
@@ -3709,36 +3686,84 @@ function CreateNewFileUpload(reactContext) {
 
 function handleFileUpload() {
   $('input#fileUploadFormToTheCloud').on('change', function (e) {
-    var thisFormId = $(this).attr('class');
-    var this_form_elemnt = $('#form_' + thisFormId);
-    var form_data = new FormData(this_form_elemnt[0]);
-    console.log('uploading' + form_data);
+    //     var selectedFile = e.target.files[0];
+    //     console.log(selectedFile);
+    //     var thisFormId = $(this).attr('class');
+    //     console.log(thisFormId);
+    //     var this_form_element = $('#form_' + thisFormId);
+    //     console.log(this_form_element);
+    //     var form_data = new FormData(this_form_element[0]);
+    //     console.log(form_data);
+    //     var reader = new FileReader();
+    //     reader.readAsText(selectedFile);
+    //     reader.onload = (event) => {
+    //         console.log('inside handle file read');
+    //         console.log(event.target.result);
+    //         //var save = JSON.parse(event.target.result);
+    //        // console.log(save)
+    //         window.localStorage.setItem(thisFormId, event.target.result);
+    //         console.log(window.localStorage);
+    //     };
+    //     var fileName = selectedFile.name;
+    //     var fileSize = selectedFile.size;
+    //     console.log(fileName);
+    //     var theCurrentComp = selectComp(thisFormId);
+    //     theCurrentComp.outputs[0].Name = fileName;
+    //     theCurrentComp.outputs[0].Description = {
+    //         Name: fileName,
+    //         size: fileSize,
+    //         //url: res.publicURL
+    //     };
+    //     //theCurrentComp.outputs[0].value = res.publicURL; //to be handled later
+    //     console.log(theCurrentComp);
+    //     d3.select('#fileUpload_status_' + thisFormId).html(
+    //         'File Size : ' +
+    //             (selectedFile.size / (1024 * 1024)).toString() +
+    //             " MB <a class='open_uploadedFile_link' href='" +
+    //             //res.publicURL +
+    //             "' target='blank'>open</a>"
+    //     );
+    //     d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
+    //         return (
+    //             `
+    //             <div id="TheContainedFile">` +
+    //                 fileName +
+    //                 `</div>
+    //             <div id="TheContainedFile">Size :` +
+    //                 (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
+    //                 ` MB</div>
+    //             `
+    //         );
+    //     });
+    var thisFormId = $(this).attr("class");
+    var this_form_element = $("#form_" + thisFormId);
+    var form_data = new FormData(this_form_element[0]);
+    console.log(form_data);
     var fileName = $(this).val();
     console.log(fileName);
     $.ajax({
-      type: 'POST',
-      accepts: 'text/json',
-      url: '../upload/',
-      data: form_data,
+      "type": "POST",
+      "accepts": "text/json",
+      "url": "www.example.com",
+      "data": form_data,
       processData: false,
       contentType: false,
-      beforeSend: function beforeSend(xhr, settings) {
-        // $.beforeSend(xhr, settings);
-        d3$6.select('#fileUpload_status_' + thisFormId).html('Uploading ..... ');
+      "beforeSend": function beforeSend(xhr, settings) {
+        d3$6.select("#fileUpload_status_" + thisFormId).html("Uploading ..... ");
       },
-      success: function success(res) {
+      "success": function success(res) {
         console.log(res);
-        var theCurrentComp = selectComp(thisFormId);
+        theCurrentComp = selectComp(thisFormId);
         theCurrentComp.outputs[0].Name = res.FileName;
         theCurrentComp.outputs[0].Description = {
-          Name: res.FileName,
-          size: res.FileSize,
-          url: res.publicURL
+          "Name": res.FileName,
+          "size": res.FileSize,
+          "url": res.publicURL
         };
         theCurrentComp.outputs[0].value = res.publicURL;
-        d3$6.select('#fileUpload_status_' + thisFormId).html('File Size : ' + (res['FileSize'] / (1024 * 1024)).toString() + " MB <a class='open_uploadedFile_link' href='" + res.publicURL + "' target='blank'>open</a>");
-        d3$6.select('#foreignObject_fileUpload' + thisFormId).html(function () {
-          return "\n                    <div id=\"TheContainedFile\">" + res.FileName + "</div>\n                    <div id=\"TheContainedFile\">Size :" + (res.FileSize / (1024 * 1024)).toFixed(4).toString() + " MB</div>\n                ";
+        d3$6.select("#fileUpload_status_" + thisFormId).html("File Size : " + (res["FileSize"] / (1024 * 1024)).toString() + " MB " + "<a class='open_uploadedFile_link' href='" + res.publicURL + "' target='blank'>open</a>");
+        d3$6.select("#foreignObject_fileUpload" + thisFormId).html(function () {
+          return "\n                <div id=\"TheContainedFile\">" + res.FileName + "</div>\n                <div id=\"TheContainedFile\">Size :" + (res.FileSize / (1024 * 1024)).toFixed(4).toString() + " MB</div>\n            ";
         });
         redrawDependents(thisFormId);
       }
@@ -3792,7 +3817,7 @@ function onMaximizeClick() {
 }
 
 function manageCanvas() {
-  var reactContext = this;
+  const reactContext = this;
   var svgContainer = d3$5.select('svg');
   var allContents = svgContainer.append('g').attr('id', 'allCanvasContents');
   var currentLeftColWidth = reactContext.state.currentLeftColWidth;
@@ -3821,7 +3846,7 @@ function manageCanvas() {
     var somearr = reactContext.state.udo_names;
     var text = '';
 
-    var _loop = function _loop(cat) {
+    for (const cat in reactContext.state.cats) {
       if (reactContext.state.cats.hasOwnProperty(cat)) {
         text += '<div id="catcard">';
         text += '<div id="catHead" style="background-color:' + reactContext.state.cats[cat] + '">' + cat + '</div>';
@@ -3834,20 +3859,16 @@ function manageCanvas() {
         });
         text += '</div></div>';
       }
-    };
-
-    for (var cat in reactContext.state.cats) {
-      _loop(cat);
     }
 
     return text;
   });
-  d3$5.select('div#LeftPropertiesBar').style('width', function () {
+  d3$5.select('div#LeftPropertiesBar').style('width', () => {
     return currentLeftColWidth + 'px';
-  }).style('top', function () {
+  }).style('top', () => {
     return currentTopBarHeight.toString() + 'px';
   });
-  d3$5.select('div#LeftPropertiesBarSelector').style('top', function () {
+  d3$5.select('div#LeftPropertiesBarSelector').style('top', () => {
     return currentTopBarHeight.toString() + 'px';
   }).style('left', currentLeftColWidth + 'px'); // d3.select('div#PropertiesBar')
   //     .style('width', () => {
@@ -3857,10 +3878,10 @@ function manageCanvas() {
   //         return currentTopBarHeight.toString() + 'px';
   //     });
 
-  d3$5.select('div#PropertiesBarSelector').style('top', function () {
+  d3$5.select('div#PropertiesBarSelector').style('top', () => {
     return currentTopBarHeight.toString() + 'px';
   }).style('right', currentRightColWidth + 'px');
-  d3$5.select('div#TopPropertiesBar').style('height', function () {
+  d3$5.select('div#TopPropertiesBar').style('height', () => {
     return currentTopBarHeight + 'px';
   });
   d3$5.select('div#PropertiesBarSelector').on('mousedown', function () {
@@ -3877,7 +3898,7 @@ function manageCanvas() {
     currentLeftColWidth = event.clientX;
 
     if (rightColumnIsSelected) {
-      d3$5.select('div#PropertiesBar').style('width', function () {
+      d3$5.select('div#PropertiesBar').style('width', () => {
         if (currentRightColWidth >= 50) {
           if (!rightColIsdisplayed) d3$5.select('div#PropertiesBar').style('display', 'block');
           d3$5.select('div#PropertiesBarSelector').style('background-color', '#252525');
@@ -3889,7 +3910,7 @@ function manageCanvas() {
           d3$5.select('div#PropertiesBarSelector').style('background-color', '#1abc9c');
         }
       });
-      d3$5.select('div#PropertiesBarSelector').style('right', function () {
+      d3$5.select('div#PropertiesBarSelector').style('right', () => {
         if (currentRightColWidth >= 50) {
           return currentRightColWidth.toString() + 'px';
         } else {
@@ -3900,7 +3921,7 @@ function manageCanvas() {
 
     if (leftColumnIsSelected) {
       d3$5.select('body').style('cursor', 'ew-resize');
-      d3$5.select('div#LeftPropertiesBar').style('width', function () {
+      d3$5.select('div#LeftPropertiesBar').style('width', () => {
         if (currentLeftColWidth >= 50) {
           if (!leftColIsdisplayed) d3$5.select('div#LeftPropertiesBar').style('display', 'block');
           d3$5.select('div#LeftPropertiesBarSelector').style('background-color', '#252525');
@@ -3912,7 +3933,7 @@ function manageCanvas() {
           d3$5.select('div#LeftPropertiesBarSelector').style('background-color', '#1abc9c');
         }
       });
-      d3$5.select('div#LeftPropertiesBarSelector').style('left', function () {
+      d3$5.select('div#LeftPropertiesBarSelector').style('left', () => {
         if (currentLeftColWidth >= 50) {
           return currentLeftColWidth.toString() + 'px';
         } else {
@@ -3922,21 +3943,37 @@ function manageCanvas() {
     }
 
     if (messageshown) {
-      var trns = d3$5.transition().duration(500).ease(d3$5.easeLinear);
-      d3$5.select('div#Addedmessage').transition(trns).style('opacity', function () {
+      let trns = d3$5.transition().duration(500).ease(d3$5.easeLinear);
+      d3$5.select('div#Addedmessage').transition(trns).style('opacity', () => {
         messageshown = false;
         return 0;
       });
-      d3$5.select('div#buttonClickedname').transition(trns).style('opacity', function () {
+      d3$5.select('div#buttonClickedname').transition(trns).style('opacity', () => {
         messageshown = false;
         return 0;
       });
     }
-  }).on('mouseup', function () {
+  }).on('mouseup', () => {
     if (rightColumnIsSelected) rightColumnIsSelected = false;
     if (leftColumnIsSelected) leftColumnIsSelected = false;
   });
 }
+
+/*
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+─██████──────────██████─██████████─██████████████─██████──────────██████─██████████████─████████████████───██████████─████████████───
+─██░░██████████████░░██─██░░░░░░██─██░░░░░░░░░░██─██░░██████████──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───██░░░░░░██─██░░░░░░░░████─
+─██░░░░░░░░░░░░░░░░░░██─████░░████─██░░██████░░██─██░░░░░░░░░░██──██░░██─██░░██████████─██░░████████░░██───████░░████─██░░████░░░░██─
+─██░░██████░░██████░░██───██░░██───██░░██──██░░██─██░░██████░░██──██░░██─██░░██─────────██░░██────██░░██─────██░░██───██░░██──██░░██─
+─██░░██──██░░██──██░░██───██░░██───██░░██████░░██─██░░██──██░░██──██░░██─██░░██─────────██░░████████░░██─────██░░██───██░░██──██░░██─
+─██░░██──██░░██──██░░██───██░░██───██░░░░░░░░░░██─██░░██──██░░██──██░░██─██░░██──██████─██░░░░░░░░░░░░██─────██░░██───██░░██──██░░██─
+─██░░██──██████──██░░██───██░░██───██░░██████░░██─██░░██──██░░██──██░░██─██░░██──██░░██─██░░██████░░████─────██░░██───██░░██──██░░██─
+─██░░██──────────██░░██───██░░██───██░░██──██░░██─██░░██──██░░██████░░██─██░░██──██░░██─██░░██──██░░██───────██░░██───██░░██──██░░██─
+─██░░██──────────██░░██─████░░████─██░░██──██░░██─██░░██──██░░░░░░░░░░██─██░░██████░░██─██░░██──██░░██████─████░░████─██░░████░░░░██─
+─██░░██──────────██░░██─██░░░░░░██─██░░██──██░░██─██░░██──██████████░░██─██░░░░░░░░░░██─██░░██──██░░░░░░██─██░░░░░░██─██░░░░░░░░████─
+─██████──────────██████─██████████─██████──██████─██████──────────██████─██████████████─██████──██████████─██████████─████████████───
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+*/
 
 var d3$4 = require('d3');
 
@@ -3952,14 +3989,14 @@ var selection_rectangle_group = null;
 var selection_rectangle_group_rect = null;
 var horizontal_alignment_box = null;
 var vertical_alignment_box = null;
-var horizontal_align_box = {
+const horizontal_align_box = {
   W: 150.0,
   H: 30.0,
   color: '#373f46',
   opacity: 0.8,
   radius: 5.0
 };
-var vertical_align_box = {
+const vertical_align_box = {
   W: 30.0,
   H: 150.0,
   color: '#373f46',
@@ -3981,7 +4018,7 @@ function manageGrid() {
     this.offsetLeft;
     this.offsetTop;
     return 'white';
-  }).on('mousedown', function () {
+  }).on('mousedown', () => {
     if (optionListStarted && !startDrag && !mouseInsideOption) {
       d3$4.selectAll('rect.optionListoption').style('display', 'none');
       d3$4.selectAll('text.optionListoptiontext').style('display', 'none');
@@ -4018,7 +4055,7 @@ function manageGrid() {
       }
     }
   }).on('dblclick', function (event) {
-    d3$4.select('div#buttonClickedname').text('dblclick').style('opacity', function () {
+    d3$4.select('div#buttonClickedname').text('dblclick').style('opacity', () => {
       reactContext.setState({
         messageshown: true
       });
@@ -4158,9 +4195,9 @@ function manageGrid() {
       var y3 = d3$4.pointer(event, allContents.node())[1];
       var x4 = selection_box_x;
       var y4 = d3$4.pointer(event, allContents.node())[1];
-      selection_box.attr('x', selection_box_x).attr('points', function () {
+      selection_box.attr('x', selection_box_x).attr('points', () => {
         return x1 + ',' + y1 + ' ' + x2 + ',' + y2 + ' ' + x3 + ',' + y3 + ' ' + x4 + ',' + y4 + ' ' + x1 + ',' + y1 + ' ';
-      }).attr('fill', function () {
+      }).attr('fill', () => {
         if (x1 > x2) return '#2a2a48';else return '#a95b54';
       }).attr('stroke', 'black').attr('stroke-dasharray', '4 4').attr('stroke-width', 1).attr('fill-opacity', 0.1);
     }
@@ -4172,9 +4209,8 @@ function manageGrid() {
         //This needs to move to a separate function .
         var clickedId = reactContext.state.clickedId;
         var just_moved_component = selectComp(clickedId);
-
-        var current_components_selection = _objectSpread2({}, reactContext.state.components_selection_data);
-
+        var current_components_selection = { ...reactContext.state.components_selection_data
+        };
         current_components_selection[clickedId] = {
           x0: just_moved_component.X,
           y0: just_moved_component.Y,
@@ -4204,7 +4240,8 @@ function manageGrid() {
     if (reactContext.state.StringAnchorclicked) {
       var StringAnchorId = reactContext.state.StringAnchorId;
       var modified_string_comp = selectComp(StringAnchorId);
-      current_components_selection = _objectSpread2({}, reactContext.state.components_selection_data);
+      current_components_selection = { ...reactContext.state.components_selection_data
+      };
       current_components_selection[StringAnchorId] = {
         x0: modified_string_comp.X,
         y0: modified_string_comp.Y,
@@ -4234,12 +4271,11 @@ function manageGrid() {
       min_selected_y = 0;
       max_selected_x = 0;
       max_selected_y = 0;
-
-      var components_selection_data = _objectSpread2({}, reactContext.state.components_selection_data);
-
+      var components_selection_data = { ...reactContext.state.components_selection_data
+      };
       var current_selected_comps = reactContext.state.selected_components;
 
-      for (var key in components_selection_data) {
+      for (const key in components_selection_data) {
         if (components_selection_data.hasOwnProperty(key)) {
           if (components_selection_data[key].x0 > selection_box_x && components_selection_data[key].y0 > selection_box_y && components_selection_data[key].x1 < d3$4.pointer(allContents.node())[0] && components_selection_data[key].y1 < d3$4.pointer(allContents.node())[1]) {
             temp_selected_xs.push(components_selection_data[key].x0);
@@ -4284,13 +4320,13 @@ function highlightSelection(components_list, temp_selected_xs, temp_selected_ys)
   }
 
   if (components_list.length > 0) {
-    min_selected_x = Math.min.apply(Math, _toConsumableArray(temp_selected_xs));
-    max_selected_x = Math.max.apply(Math, _toConsumableArray(temp_selected_xs)) - min_selected_x;
-    min_selected_y = Math.min.apply(Math, _toConsumableArray(temp_selected_ys));
-    max_selected_y = Math.max.apply(Math, _toConsumableArray(temp_selected_ys)) - min_selected_y;
+    min_selected_x = Math.min(...temp_selected_xs);
+    max_selected_x = Math.max(...temp_selected_xs) - min_selected_x;
+    min_selected_y = Math.min(...temp_selected_ys);
+    max_selected_y = Math.max(...temp_selected_ys) - min_selected_y;
     someCircle = allContents.append('circle').attr('cx', (min_selected_x + min_selected_x + max_selected_x) / 2.0).attr('cy', (min_selected_y + min_selected_y + max_selected_y) / 2.0).attr('r', 10).attr('fill', 'red');
     selection_rectangle_group = allContents.append('g').attr('transform', 'translate(' + (min_selected_x - 20) + ',' + (min_selected_y - 20) + ')').attr('width', max_selected_x + 40).attr('height', max_selected_y + 40);
-    selection_rectangle_group_rect = selection_rectangle_group.append('rect').attr('width', max_selected_x + 40).attr('height', max_selected_y + 40).attr('fill', 'gray').attr('rx', 25).attr('ry', 25).attr('fill-opacity', 0.3).attr('stroke', 'black').attr('stroke-width', 2).attr('stroke-opacity', 0.5).style('cursor', 'pointer').on('mousedown', function () {
+    selection_rectangle_group_rect = selection_rectangle_group.append('rect').attr('width', max_selected_x + 40).attr('height', max_selected_y + 40).attr('fill', 'gray').attr('rx', 25).attr('ry', 25).attr('fill-opacity', 0.3).attr('stroke', 'black').attr('stroke-width', 2).attr('stroke-opacity', 0.5).style('cursor', 'pointer').on('mousedown', () => {
       reactContext.setState({
         selection_groud_selected: true
       });
@@ -4303,13 +4339,22 @@ function highlightSelection(components_list, temp_selected_xs, temp_selected_ys)
 
 function showHorizontalAlignment(selectionBox) {
   var horizAlignBox = selectionBox.append('rect').attr('x', (selectionBox.attr('width') - horizontal_align_box.W) / 2.0).attr('y', -horizontal_align_box.H - 5).attr('width', horizontal_align_box.W).attr('height', horizontal_align_box.H).attr('fill', horizontal_align_box.color).attr('rx', horizontal_align_box.radius).attr('opacity', horizontal_align_box.opacity);
-  selectionBox.append('foreignObject').attr('id', 'halign_box').attr('x', (selectionBox.attr('width') - horizontal_align_box.W) / 2.0).attr('width', horizontal_align_box.W).attr('height', horizontal_align_box.H).attr('y', -horizontal_align_box.H - 5).html("&nbsp;<a href=\"#\" onclick=\"alignComponent('left')\"><i class=\"fa fa-align-left\"></i></a>\n            <a href=\"#\" onclick=\"alignComponent('center')\" ><i class=\"fa fa-align-center\"></i></a>\n            <a href=\"#\"  onclick=\"alignComponent('right')\"><i class=\"fa fa-align-right\"></i></a>\n            <a href=\"#\"><i class=\"fa fa-pause\" aria-hidden=\"true\"></i><i class=\"fa fa-pause\" aria-hidden=\"true\" style=\"margin-left: 3px;\"></i></a>\n            ");
+  selectionBox.append('foreignObject').attr('id', 'halign_box').attr('x', (selectionBox.attr('width') - horizontal_align_box.W) / 2.0).attr('width', horizontal_align_box.W).attr('height', horizontal_align_box.H).attr('y', -horizontal_align_box.H - 5).html(`&nbsp;<a href="#" onclick="alignComponent('left')"><i class="fa fa-align-left"></i></a>
+            <a href="#" onclick="alignComponent('center')" ><i class="fa fa-align-center"></i></a>
+            <a href="#"  onclick="alignComponent('right')"><i class="fa fa-align-right"></i></a>
+            <a href="#"><i class="fa fa-pause" aria-hidden="true"></i><i class="fa fa-pause" aria-hidden="true" style="margin-left: 3px;"></i></a>
+            `);
   return horizAlignBox;
 }
 
 function showVerticalAlignment(selectionBox) {
   var vertAlignBox = selectionBox.append('rect').attr('y', (selectionBox.attr('height') - vertical_align_box.H) / 2.0).attr('x', -vertical_align_box.W - 5).attr('width', vertical_align_box.W).attr('height', vertical_align_box.H).attr('fill', vertical_align_box.color).attr('opacity', vertical_align_box.opacity).attr('rx', vertical_align_box.radius);
-  selectionBox.append('foreignObject').attr('id', 'valign_box').attr('y', (selectionBox.attr('height') - vertical_align_box.H) / 2.0).attr('width', vertical_align_box.W).attr('height', vertical_align_box.H).attr('x', -vertical_align_box.W - 5).html("<a id=\"valign_icon\" href=\"#\"><i class=\"fa fa-align-left fa-rotate-90\"></i></a>\n            <a  id=\"valign_icon\" href=\"#\"><i class=\"fa fa-align-center fa-rotate-90\"></i></a>\n            <a id=\"valign_icon\"  href=\"#\"><i class=\"fa fa-align-right fa-rotate-90\"></i></a>\n            <a id=\"valign_icon\"  href=\"#\" style=\"margin-left: 5px;\" ><i class=\"fa fa-pause fa-rotate-90\" aria-hidden=\"true\"></i>\n            <i class=\"fa fa-pause fa-rotate-90\" aria-hidden=\"true\"></i></a>\n            ");
+  selectionBox.append('foreignObject').attr('id', 'valign_box').attr('y', (selectionBox.attr('height') - vertical_align_box.H) / 2.0).attr('width', vertical_align_box.W).attr('height', vertical_align_box.H).attr('x', -vertical_align_box.W - 5).html(`<a id="valign_icon" href="#"><i class="fa fa-align-left fa-rotate-90"></i></a>
+            <a  id="valign_icon" href="#"><i class="fa fa-align-center fa-rotate-90"></i></a>
+            <a id="valign_icon"  href="#"><i class="fa fa-align-right fa-rotate-90"></i></a>
+            <a id="valign_icon"  href="#" style="margin-left: 5px;" ><i class="fa fa-pause fa-rotate-90" aria-hidden="true"></i>
+            <i class="fa fa-pause fa-rotate-90" aria-hidden="true"></i></a>
+            `);
   return vertAlignBox;
 }
 
@@ -5479,49 +5524,63 @@ class PropertiesTab extends Component {
 
 }
 
-class LeftContainer extends Component {
-  render() {
-    return /*#__PURE__*/React.createElement("div", {
-      id: "LeftPropertiesBar",
-      style: {
-        top: "30px"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      id: "leftbarcontainer"
-    }, /*#__PURE__*/React.createElement("div", {
-      id: "toolbar_container_1",
-      className: "toolBarContainer 1"
-    }, /*#__PURE__*/React.createElement("div", {
-      id: "toolbar_container_1_1",
-      className: "toolBarContainer 1 1"
-    }, /*#__PURE__*/React.createElement("div", {
-      id: "toolbar_container_1_1_1",
-      className: "toolbarTopToggleContainer"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "toolbarTopToggleItem 1"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "toptoggleitem componentTab selected"
-    }, "Components")))), /*#__PURE__*/React.createElement(ComponentTab, {
-      context: this.props.context
-    }))), /*#__PURE__*/React.createElement("div", {
-      id: "leftbarcontainer"
-    }, /*#__PURE__*/React.createElement("div", {
-      id: "toolbar_container_1",
-      className: "toolBarContainer 1"
-    }, /*#__PURE__*/React.createElement("div", {
-      id: "toolbar_container_1_1",
-      className: "toolBarContainer 1 1"
-    }, /*#__PURE__*/React.createElement("div", {
-      id: "toolbar_container_1_1_1",
-      className: "toolbarTopToggleContainer"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "toolbarTopToggleItem 1"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "toptoggleitem propertiesTab selected"
-    }, "Properties")))), /*#__PURE__*/React.createElement(PropertiesTab, null))));
+var LeftContainer = /*#__PURE__*/function (_Component) {
+  _inherits(LeftContainer, _Component);
+
+  var _super = _createSuper(LeftContainer);
+
+  function LeftContainer() {
+    _classCallCheck(this, LeftContainer);
+
+    return _super.apply(this, arguments);
   }
 
-}
+  _createClass(LeftContainer, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/React.createElement("div", {
+        id: "LeftPropertiesBar",
+        style: {
+          top: "30px"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        id: "leftbarcontainer"
+      }, /*#__PURE__*/React.createElement("div", {
+        id: "toolbar_container_1",
+        className: "toolBarContainer 1"
+      }, /*#__PURE__*/React.createElement("div", {
+        id: "toolbar_container_1_1",
+        className: "toolBarContainer 1 1"
+      }, /*#__PURE__*/React.createElement("div", {
+        id: "toolbar_container_1_1_1",
+        className: "toolbarTopToggleContainer"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "toolbarTopToggleItem 1"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "toptoggleitem componentTab selected"
+      }, "Components")))), /*#__PURE__*/React.createElement(ComponentTab, {
+        context: this.props.context
+      }))), /*#__PURE__*/React.createElement("div", {
+        id: "leftbarcontainer"
+      }, /*#__PURE__*/React.createElement("div", {
+        id: "toolbar_container_1",
+        className: "toolBarContainer 1"
+      }, /*#__PURE__*/React.createElement("div", {
+        id: "toolbar_container_1_1",
+        className: "toolBarContainer 1 1"
+      }, /*#__PURE__*/React.createElement("div", {
+        id: "toolbar_container_1_1_1",
+        className: "toolbarTopToggleContainer"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "toolbarTopToggleItem 1"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "toptoggleitem propertiesTab selected"
+      }, "Properties")))), /*#__PURE__*/React.createElement(PropertiesTab, null))));
+    }
+  }]);
+
+  return LeftContainer;
+}(Component);
 
 /**
  * This file contains all information about the component, which are:
@@ -6736,8 +6795,8 @@ const toggleButtonInfo = [{
 }];
 
 function addGenericComponentIcon() {
-  for (var index = 0; index < details.length; index++) {
-    var currInfo = details[index];
+  for (let index = 0; index < details.length; index++) {
+    const currInfo = details[index];
     var outputNameList = extractOutputName(currInfo.outputList);
     var newComp = addNewComponentIcon(this, 'addComp', currInfo.name, currInfo.shname, currInfo.desc, currInfo.type, currInfo.dftype, 'mainButtonItem 1 1', currInfo.backgroundImage, currInfo.inputList, outputNameList, currInfo.color);
     $(tabIdMapping[currInfo.category]).append(newComp);
@@ -6747,9 +6806,9 @@ function addGenericComponentIcon() {
 function addNewComponentIcon(reactContext, id, name, shname, desc, type, dftype, className, imageUrl, inputList, outputList, color) {
   var newCompString = '<div id="' + id + '" name="' + name + '" shname="' + shname + '" desc="' + desc + '" type="' + type + '" dftype="' + dftype + '" class="' + className + '" style="background-image:url(' + imageUrl + ')">' + (imageUrl === '' ? name : ' &nbsp; ' + '<span id="hint">' + name + '</span>') + '</div>';
   var newComp = $(newCompString);
-  newComp.on('click', function () {
+  newComp.on('click', () => {
     if (type === 'component') {
-      var kwargs = {
+      let kwargs = {
         shortName: shname,
         dfType: dftype
       };
@@ -6762,10 +6821,10 @@ function addNewComponentIcon(reactContext, id, name, shname, desc, type, dftype,
 }
 
 function extractOutputName(array) {
-  var output = [];
+  let output = [];
 
-  for (var index = 0; index < array.length; index++) {
-    var element = array[index];
+  for (let index = 0; index < array.length; index++) {
+    const element = array[index];
     output.push(element.name);
   }
 
@@ -6775,18 +6834,14 @@ function extractOutputName(array) {
 function addRightToggleButton() {
   var parentDiv = $('div.toolbarRightToggleNavigator.1');
 
-  var _loop = function _loop(index) {
-    var currBtn = toggleButtonInfo[index];
-    var newToggleString = '<div class="rightToggleButton 1" style="background-image:url(' + currBtn.backgroundImage + '"><span id="hint">' + currBtn.name + '</span></div>';
-    var newToggle = $(newToggleString);
-    newToggle.on('click', function () {
+  for (let index = 0; index < toggleButtonInfo.length; index++) {
+    const currBtn = toggleButtonInfo[index];
+    let newToggleString = '<div class="rightToggleButton 1" style="background-image:url(' + currBtn.backgroundImage + '"><span id="hint">' + currBtn.name + '</span></div>';
+    let newToggle = $(newToggleString);
+    newToggle.on('click', () => {
       setCurrentCategory('componentTab', currBtn.id, currBtn.name);
     });
     parentDiv.append(newToggle);
-  };
-
-  for (var index = 0; index < toggleButtonInfo.length; index++) {
-    _loop(index);
   }
 }
 
@@ -6799,6 +6854,107 @@ function setCurrentCategory(panel_id, id, name) {
       $('span.currentTab.' + panel_id).text(name);
     } else {
       $('div.toolbarbuttonsContainer.' + panel_id + '.' + toolbarbuttonsContainer[i].classList[2]).hide();
+    }
+  }
+}
+
+/**
+ * Adds a new user defined object. This function is called in componentDidMount in the main Canvas
+ * @param {String} name the component's name
+ * @param {String} shname the component's short name
+ * @param {String} desc the component's description
+ * @param {String} type the component's type (must be Component/OptionList/String)
+ * @param {String} dftype the component's depth type (must be shlow or dp)
+ * @param {String} category the component's category (must be either Basic/BuildSimHub/OsiSoft/Pandas/String Operations)
+ * @param {List} inputList the component's input list. It is a list of dictionary. "name" attribute is compulsory, 
+ * other attributes such as short name, description, input type and default value are optional
+ * @param {List} outputList the component's output list. It is a list of dictionary. "name" attribute is compulsory, 
+ * other attributes such as short name and description are optional
+ * @param {String} color the component's color in hex code. The default color is #F23322 (orange)
+ * @param {String} backgroundImage the URL of the component's icon in the left property bar. This field is optional.
+ * @param {Function} calledFunc the corresponding function for that component.
+ */
+
+var typeList = ['component', 'optionList', 'string'];
+var dftypeList = ['shlow', 'dp'];
+var categoryList = ['Basic', 'BuildSimHub', 'OsiSoft', 'Pandas', 'String Operations'];
+
+function addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList) {
+  var color = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : "#F23322";
+  var backgroundImage = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : "";
+  var calledFunc = arguments.length > 10 && arguments[10] !== undefined ? arguments[10] : undefined;
+
+  //check requirements
+  if (typeList.includes(type) && dftypeList.includes(dftype) && categoryList.includes(category)) {
+    var nameCheck = true;
+
+    for (var index = 0; index < inputList.length; index++) {
+      var element = inputList[index];
+
+      if (element.name === undefined) {
+        nameCheck = false;
+        break;
+      }
+    }
+
+    for (var _index = 0; _index < outputList.length; _index++) {
+      var _element = outputList[_index];
+
+      if (_element.name === undefined) {
+        nameCheck = false;
+        break;
+      }
+    }
+
+    if (nameCheck) {
+      var newComp = {
+        name: name,
+        shname: shname,
+        desc: desc,
+        type: type,
+        dftype: dftype,
+        category: category,
+        inputList: inputList,
+        outputList: outputList,
+        color: color,
+        backgroundImage: backgroundImage
+      };
+      details.push(newComp);
+
+      if (calledFunc !== undefined) {
+        if (dftype === 'shlow') {
+          shallow_functions[name] = calledFunc;
+        }
+      }
+    } else {
+      console.log('All elements in input and output list must have "name" attribute');
+    }
+  } else {
+    console.log("Check the type/dftype/category again");
+  }
+}
+/**
+ * Take a list of components that are passed by props and append all of them to the database
+ * @param {List} list a list of dictionary, containing the information about the components
+ */
+
+
+function addAllUdo(list) {
+  if (list !== undefined) {
+    for (var index = 0; index < list.length; index++) {
+      var element = list[index];
+      var name = element.name;
+      var shname = element.shname;
+      var desc = element.desc;
+      var type = element.type;
+      var dftype = element.dftype;
+      var category = element.category;
+      var inputList = element.inputList;
+      var outputList = element.outputList;
+      var color = element.color === undefined ? '#F23322' : element.color;
+      var backgroundImage = element.backgroundImage === undefined ? '' : element.backgroundImage;
+      var calledFunc = element.func;
+      addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color, backgroundImage, calledFunc);
     }
   }
 }
@@ -6863,6 +7019,8 @@ var Canvas = /*#__PURE__*/function (_React$Component) {
   _createClass(Canvas, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      console.log(this.props.udo);
+      addAllUdo(this.props.udo);
       this.manageCanvas();
       this.loadData();
       this.addGenericComponentIcon();
