@@ -24,8 +24,12 @@
  * @since  x.x.x
  */
 
-import { addcomponent, selectComp, addOptionDropdownList } from './functions.js';
-import { uuidv4, addCircle } from './handle.js';
+import { 
+    uuidv4, 
+    addCircle, 
+    addcomponent, 
+    selectComp, 
+    addOptionDropdownList } from './functions.js';
 import $ from 'jquery';
 var d3 = require('d3');
 var optionListComp;

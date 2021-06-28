@@ -65,6 +65,33 @@ function dummyToSetState() {
     messageshown = reactContext.state.messageshown;
 }
 
+
+
+function uuidv4(ini) {
+    return (
+        ini +
+        'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (Math.random() * 16) | 0,
+                v = c === 'x' ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+        })
+    );
+}
+
+function addCircle() {
+    var initCircle = {
+        GUID: uuidv4('C'),
+        element: null,
+        CX: 0,
+        CY: 0,
+        Comp: null,
+        type: 'data',
+        path: null
+    };
+
+    return initCircle;
+}
+
 function addcomponent(
     guid,
     n_inputs = 4,
@@ -1156,6 +1183,8 @@ function runDeepFunction(compId) {
 
 export {
     dummyToSetState,
+    uuidv4,
+    addCircle,
     addcomponent,
     selectComp,
     updateAll,

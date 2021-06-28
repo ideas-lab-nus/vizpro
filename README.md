@@ -5,6 +5,11 @@
 `playground` is an internal cra that should be used to test this React Component Library that
 currently exports the component `Canvas`
 
+For cloud functions: 
+    - Ensure your function is public
+    - Handle preflight requests as detailed here;
+        https://cloud.google.com/functions/docs/writing/http#functions_http_cors-nodejs
+        
 Run at root:
 1. `npm update && npm run build`
 2. `npm run i-all` //This runs npm install for both the base and playground
@@ -12,7 +17,6 @@ Run at root:
 
 # Issues to address:
 
--   \*\* Call to cloud function url is blocked by CORS issue. Temp workaround -> Install Chrome CORS extension
 -   \*\* Request for cloud function is sync. Make it async and add a `loading` indicator
 -   File Upload feature
 -   Factor out local title variables into constants file instead of state dictionary

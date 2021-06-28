@@ -53,6 +53,28 @@ function _objectSpread2(target) {
   return target;
 }
 
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -66,6 +88,85 @@ function _defineProperty(obj, key, value) {
   }
 
   return obj;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) _setPrototypeOf(subClass, superClass);
+}
+
+function _getPrototypeOf(o) {
+  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  return _getPrototypeOf(o);
+}
+
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+function _isNativeReflectConstruct() {
+  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+  if (Reflect.construct.sham) return false;
+  if (typeof Proxy === "function") return true;
+
+  try {
+    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (call && (typeof call === "object" || typeof call === "function")) {
+    return call;
+  }
+
+  return _assertThisInitialized(self);
+}
+
+function _createSuper(Derived) {
+  var hasNativeReflectConstruct = _isNativeReflectConstruct();
+
+  return function _createSuperInternal() {
+    var Super = _getPrototypeOf(Derived),
+        result;
+
+    if (hasNativeReflectConstruct) {
+      var NewTarget = _getPrototypeOf(this).constructor;
+
+      result = Reflect.construct(Super, arguments, NewTarget);
+    } else {
+      result = Super.apply(this, arguments);
+    }
+
+    return _possibleConstructorReturn(this, result);
+  };
 }
 
 function _toConsumableArray(arr) {
@@ -1384,6 +1485,27 @@ function dummyToSetState() {
   reactContext$1.state.messageshown;
 }
 
+function uuidv4(ini) {
+  return ini + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0,
+        v = c === 'x' ? r : r & 0x3 | 0x8;
+    return v.toString(16);
+  });
+}
+
+function addCircle() {
+  var initCircle = {
+    GUID: uuidv4('C'),
+    element: null,
+    CX: 0,
+    CY: 0,
+    Comp: null,
+    type: 'data',
+    path: null
+  };
+  return initCircle;
+}
+
 function addcomponent(guid) {
   var n_inputs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 4;
   var n_outputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 5;
@@ -2237,22 +2359,35 @@ function runDeepFunction(compId) {
   });
 }
 
+/*
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+─██████████████─██████████████─██████████████─██████████─██████████████─██████──────────██████────██████─────────██████████─██████████████─██████████████─
+─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─██░░██████████──██░░██────██░░██─────────██░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
+─██░░██████░░██─██░░██████░░██─██████░░██████─████░░████─██░░██████░░██─██░░░░░░░░░░██──██░░██────██░░██─────────████░░████─██░░██████████─██████░░██████─
+─██░░██──██░░██─██░░██──██░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██████░░██──██░░██────██░░██───────────██░░██───██░░██─────────────██░░██─────
+─██░░██──██░░██─██░░██████░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██░░██████████─────██░░██─────
+─██░░██──██░░██─██░░░░░░░░░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██░░░░░░░░░░██─────██░░██─────
+─██░░██──██░░██─██░░██████████─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██████████░░██─────██░░██─────
+─██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██████░░██────██░░██───────────██░░██───────────██░░██─────██░░██─────
+─██░░██████░░██─██░░██─────────────██░░██─────████░░████─██░░██████░░██─██░░██──██░░░░░░░░░░██────██░░██████████─████░░████─██████████░░██─────██░░██─────
+─██░░░░░░░░░░██─██░░██─────────────██░░██─────██░░░░░░██─██░░░░░░░░░░██─██░░██──██████████░░██────██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─────██░░██─────
+─██████████████─██████─────────────██████─────██████████─██████████████─██████──────────██████────██████████████─██████████─██████████████─────██████─────
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+*/
+
 var d3$a = require('d3');
 
 var optionListComp;
 var OptionListValues;
 
-function CreateNewOptionList(reactContext) {
-  var FromExisting = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var optionlist_predefined_items = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+function CreateNewOptionList(reactContext, FromExisting = null, optionlist_predefined_items = null) {
   var newcomp;
 
   if (FromExisting == null) {
     newcomp = addcomponent(uuidv4('C'), 1, 1);
     var guid = newcomp.GUID;
-
-    var data = _objectSpread2({}, reactContext.state.parent_child_matrix);
-
+    var data = { ...reactContext.state.parent_child_matrix
+    };
     data[guid] = [];
     reactContext.setState({
       parent_child_matrix: data
@@ -2278,7 +2413,7 @@ function CreateNewOptionList(reactContext) {
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
   var genY;
-  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', function () {
+  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
     if (FromExisting == null) {
       genX = Math.random() * 500 + 200;
       genY = Math.random() * 500 + 200;
@@ -2294,10 +2429,9 @@ function CreateNewOptionList(reactContext) {
   }]);
   var InputGroup = node.append('g');
 
-  var _loop = function _loop(index) {
+  for (let index = 0; index < newcomp.inputs.length; index++) {
     InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
-    . //newcomp.fill)
-    attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+    .attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
       newcomp.inputs[index].circle = addCircle();
       newcomp.inputs[index].circle.element = this.id;
       newcomp.inputs[index].circle.CX = 0;
@@ -2305,40 +2439,30 @@ function CreateNewOptionList(reactContext) {
       newcomp.inputs[index].type = 'input';
       return 'input';
     });
-  };
-
-  for (var index = 0; index < newcomp.inputs.length; index++) {
-
-    _loop(index);
   }
 
   var OutputGroup = node.append('g');
 
-  var _loop2 = function _loop2(_index) {
-    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + _index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + _index).attr('type', function () {
-      newcomp.outputs[_index].circle = this;
-      newcomp.outputs[_index].type = 'output';
+  for (let index = 0; index < newcomp.outputs.length; index++) {
+    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      newcomp.outputs[index].circle = this;
+      newcomp.outputs[index].type = 'output';
       return 'output';
     }).lower();
-  };
-
-  for (var _index = 0; _index < newcomp.outputs.length; _index++) {
-
-    _loop2(_index);
   }
 
   node.append('rect').attr('class', 'CompOBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3') //.attr("filter", "url(#f2")
   .attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
-  var cirGroup = node.append('g').attr('transform', function () {
-    var x = newcomp.width;
-    var y = newcomp.height;
+  var cirGroup = node.append('g').attr('transform', () => {
+    let x = newcomp.width;
+    let y = newcomp.height;
     return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
   });
   cirGroup.append('text').attr('id', 'nodeLog' + newcomp.GUID).attr('class', 'nodeLog ' + newcomp.GUID).attr('transform', 'translate(10, 10)').text(newcomp.log.logText).attr('fill', 'black').style('display', 'none');
   node.append('rect').attr('class', 'CompOBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', 'white').attr('stroke', 'black').attr('stroke-width', '1').on('mousemove', function (event) {
     d3$a.select(event.currentTarget).attr('cursor', 'pointer');
   });
-  var Titlegroup = node.append('g').attr('transform', function () {
+  var Titlegroup = node.append('g').attr('transform', () => {
     return 'translate(0, 15)';
   });
   Titlegroup.append('text').attr('class', 'nodetitle node_title' + newcomp.GUID).attr('id', 'option-' + newcomp.GUID).text(newcomp.Name).attr('fill', 'black').attr('transform', 'translate(' + 20 + ', 0)');
@@ -2353,19 +2477,18 @@ function CreateNewOptionList(reactContext) {
     });
   }
 
-  var current_comp_out = _objectSpread2({}, reactContext.state.comp_output_edges);
-
-  var current_comp_in = _objectSpread2({}, reactContext.state.comp_input_edges);
-
+  var current_comp_out = { ...reactContext.state.comp_output_edges
+  };
+  var current_comp_in = { ...reactContext.state.comp_input_edges
+  };
   current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
   current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
   reactContext.setState({
     comp_input_edges: current_comp_in,
     comp_output_edges: current_comp_out
   });
-
-  var current_components_selection = _objectSpread2({}, reactContext.state.components_selection_data);
-
+  var current_components_selection = { ...reactContext.state.components_selection_data
+  };
   current_components_selection[newcomp.GUID] = {
     x0: newcomp.X,
     y0: newcomp.Y,
@@ -2381,10 +2504,10 @@ function submitOptionListEdit(compKey) {
   optionListComp = selectComp(compKey);
   OptionListValues = optionListComp['optionListValues'];
   $__default['default']('textarea.textarea.optionlistProperties').text(function () {
-    var optionListOptionsfromTextarea = '';
-    var forTheHTMLpreview = '';
+    let optionListOptionsfromTextarea = '';
+    let forTheHTMLpreview = '';
 
-    for (var option in optionListComp['optionListValues']) {
+    for (const option in optionListComp['optionListValues']) {
       if (optionListComp['optionListValues'].hasOwnProperty(option)) {
         optionListOptionsfromTextarea += '<option value="' + optionListComp['optionListValues'][option] + '">' + option + '</option>';
         forTheHTMLpreview += option + '-->' + optionListComp['optionListValues'][option] + '<br>';
@@ -2397,13 +2520,13 @@ function submitOptionListEdit(compKey) {
   });
   $__default['default']('textarea.textarea.optionlistProperties').on('focusout', function (e) {
     try {
-      var thedict = JSON.parse($__default['default'](this).val());
+      let thedict = JSON.parse($__default['default'](this).val());
       OptionListValues = thedict;
       $__default['default']('select#propertisBarSelecId').html(function () {
-        var optionListOptionsfromTextarea = '';
-        var forTheHTMLpreview = '';
+        let optionListOptionsfromTextarea = '';
+        let forTheHTMLpreview = '';
 
-        for (var option in thedict) {
+        for (const option in thedict) {
           if (thedict.hasOwnProperty(option)) {
             optionListOptionsfromTextarea += '<option value="' + thedict[option] + '">' + option + '</option>';
             forTheHTMLpreview += option + '-->' + thedict[option] + '<br>';
@@ -2413,7 +2536,7 @@ function submitOptionListEdit(compKey) {
         $__default['default']('div#propertiesBarLog').html('<div id="success">Success:<br>' + forTheHTMLpreview + '</div>');
         return optionListOptionsfromTextarea;
       });
-    } catch (_unused) {
+    } catch {
       $__default['default']('div#propertiesBarLog').html('<div id="error">Error: check Dictionary syntax,<br>example : {"key1":value1, "key2":value2}</div>');
     }
   });
@@ -2425,12 +2548,24 @@ function readyToGoSubmit(compKey) {
   addOptionDropdownList(compKey);
 }
 
+/*
+───────────────────────────────────────────────────────────────────────────────────────────
+─██████████████─██████─────────██████████─████████████───██████████████─████████████████───
+─██░░░░░░░░░░██─██░░██─────────██░░░░░░██─██░░░░░░░░████─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
+─██░░██████████─██░░██─────────████░░████─██░░████░░░░██─██░░██████████─██░░████████░░██───
+─██░░██─────────██░░██───────────██░░██───██░░██──██░░██─██░░██─────────██░░██────██░░██───
+─██░░██████████─██░░██───────────██░░██───██░░██──██░░██─██░░██████████─██░░████████░░██───
+─██░░░░░░░░░░██─██░░██───────────██░░██───██░░██──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
+─██████████░░██─██░░██───────────██░░██───██░░██──██░░██─██░░██████████─██░░██████░░████───
+─────────██░░██─██░░██───────────██░░██───██░░██──██░░██─██░░██─────────██░░██──██░░██─────
+─██████████░░██─██░░██████████─████░░████─██░░████░░░░██─██░░██████████─██░░██──██░░██████─
+─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░████─██░░░░░░░░░░██─██░░██──██░░░░░░██─
+─██████████████─██████████████─██████████─████████████───██████████████─██████──██████████─
+*/
+
 var d3$9 = require('d3');
 
-function addSlider(guid) {
-  var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 100;
-  var step = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1.0;
+function addSlider(guid, min = 0, max = 100, step = 1.0) {
   var initSlider = {
     GUID: guid,
     X: 0,
@@ -2462,8 +2597,7 @@ function addSlider(guid) {
 //TODO : save and retrieve the slider values.
 
 
-function CreateNewSlider(reactContext) {
-  var FromExisting = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+function CreateNewSlider(reactContext, FromExisting = null) {
   var SLIDER_END_POSITION = reactContext.state.SLIDER_END_POSITION;
   var SLIDER_START_POSITION = reactContext.state.SLIDER_START_POSITION;
   var newSlider;
@@ -2474,9 +2608,8 @@ function CreateNewSlider(reactContext) {
     newSlider = addSlider(uuidv4('S'), 0, 100, 1.0); //Fix dict creation
 
     var guid = newSlider.GUID;
-
-    var data = _objectSpread2({}, reactContext.state.parent_child_matrix);
-
+    var data = { ...reactContext.state.parent_child_matrix
+    };
     data[guid] = [];
     reactContext.setState({
       parent_child_matrix: data
@@ -2495,7 +2628,7 @@ function CreateNewSlider(reactContext) {
   var cont = allContents.append('g').attr('class', 'slider').attr('id', newSlider.GUID);
   var genX;
   var genY;
-  var node = cont.append('g').attr('class', 'SliderGroup ' + newSlider.selection + ' ' + newSlider.view + ' ' + newSlider.GUID).attr('id', 'comp-' + newSlider.GUID).attr('transform', function () {
+  var node = cont.append('g').attr('class', 'SliderGroup ' + newSlider.selection + ' ' + newSlider.view + ' ' + newSlider.GUID).attr('id', 'comp-' + newSlider.GUID).attr('transform', () => {
     if (FromExisting == null) {
       genX = Math.random() * 500 + 200;
       genY = Math.random() * 500 + 200;
@@ -2508,7 +2641,7 @@ function CreateNewSlider(reactContext) {
   }).data([{
     x: FromExisting ? FromExisting.X : genX,
     y: FromExisting ? FromExisting.Y : genY
-  }]).on('mousedown', function () {
+  }]).on('mousedown', () => {
     reactContext.setState({
       rectType: 'slider'
     });
@@ -2524,8 +2657,8 @@ function CreateNewSlider(reactContext) {
     });
   });
   var rect = node.append('rect').attr('class', 'CompSBody ' + newSlider.GUID).attr('id', newSlider.GUID).attr('rx', '3').attr('ry', '3').attr('stroke-width', '2').attr('stroke', '#3a4c69').attr('width', newSlider.width).attr('height', newSlider.height).attr('fill', '#dddddd').on('mousemove', function () {
-    var current_slider = _objectSpread2({}, reactContext.state.selectedSliderComponent);
-
+    var current_slider = { ...reactContext.state.selectedSliderComponent
+    };
     current_slider.rect = this;
     reactContext.setState({
       selectedSliderComponent: current_slider
@@ -2533,17 +2666,17 @@ function CreateNewSlider(reactContext) {
     d3$9.select(current_slider.rect).attr('cursor', 'pointer');
   }).on('mouseout', function () {
     newSlider.rect = this;
-  }).on('dblclick', function () {}).on('mousedown', function () {
+  }).on('dblclick', () => {}).on('mousedown', () => {
     reactContext.setState({
       rectType: 'slider'
     });
   });
-  var ValueTextGroup = node.append('g').attr('transform', function () {
+  var ValueTextGroup = node.append('g').attr('transform', () => {
     return 'translate(-80, 0)';
   });
   ValueTextGroup.append('rect').attr('cx', '0').attr('cy', '0').attr('rx', '3').attr('ry', '3').attr('fill', 'black').attr('width', '80').attr('height', '20').attr('opacity', '0.5');
   ValueTextGroup.append('text').attr('id', 'sliderValueText_' + newSlider.GUID).attr('class', 'sliderValueText ' + newSlider.GUID).attr('transform', 'translate(2, 14)').attr('fill', 'white').text(newSlider.value.toString());
-  var Titlegroup = node.append('g').attr('transform', function () {
+  var Titlegroup = node.append('g').attr('transform', () => {
     return 'translate(0, 15)';
   });
   Titlegroup.append('text').attr('class', 'sliderTitle slider_title' + newSlider.GUID).text(newSlider.Name).attr('fill', 'black').attr('transform', 'translate(' + titleMarginLeft / 2.0 + ', 0)');
@@ -2552,14 +2685,10 @@ function CreateNewSlider(reactContext) {
   SlidingGroup.append('line').attr('x1', '2').attr('y1', '11').attr('x2', '184').attr('y2', '11').attr('stroke', 'gray').attr('stroke-width', '1');
 
   function anchorUpdate() {
-    slidingAnchor.attr('transform', function (d) {
-      return "translate(".concat(d.x, ",3)");
-    });
+    slidingAnchor.attr('transform', d => `translate(${d.x},3)`);
   }
 
-  var anchorDragHandler = d3$9.drag().on('start', function (event, d) {
-    return rect.attr('stroke', 'red');
-  }).on('drag', function (event, d) {
+  var anchorDragHandler = d3$9.drag().on('start', (event, d) => rect.attr('stroke', 'red')).on('drag', (event, d) => {
     var selectedSliderComponent = reactContext.state.selectedSliderComponent;
     var sliderRectId = reactContext.state.sliderRectId;
     var slider_anchor_value;
@@ -2586,9 +2715,7 @@ function CreateNewSlider(reactContext) {
       selectedSliderComponent: selectedSliderComponent
     });
     redrawDependents(selectedSliderComponent.GUID);
-  }).on('end', function (event, d) {
-    return rect.attr('stroke', '#3a4c69');
-  }).on('start.update drag.update end.update', anchorUpdate);
+  }).on('end', (event, d) => rect.attr('stroke', '#3a4c69')).on('start.update drag.update end.update', anchorUpdate);
   var slidingAnchor = SlidingGroup.append('rect').attr('id', 'SliderAnchor_' + newSlider.GUID).attr('width', '10').attr('height', '15').attr('rx', '5').attr('ry', '5').attr('fill', '#3a4d69').style('cursor', 'pointer').attr('transform', 'translate(' + newSlider.anchorValue.toString() + ', 3)').data([{
     x: newSlider.anchorValue,
     y: 3
@@ -2609,10 +2736,10 @@ function CreateNewSlider(reactContext) {
     });
   }).call(anchorDragHandler); //Make a copy of the current states
 
-  var current_comp_out = _objectSpread2({}, reactContext.state.comp_output_edges);
-
-  var current_comp_in = _objectSpread2({}, reactContext.state.comp_input_edges);
-
+  var current_comp_out = { ...reactContext.state.comp_output_edges
+  };
+  var current_comp_in = { ...reactContext.state.comp_input_edges
+  };
   current_comp_out[newSlider.GUID] = new Array(1);
   current_comp_in[newSlider.GUID] = new Array(1);
   reactContext.setState({
@@ -2636,9 +2763,8 @@ function CreateNewSlider(reactContext) {
       rectType: 'slider'
     });
   });
-
-  var current_components_selection = _objectSpread2({}, reactContext.state.components_selection_data);
-
+  var current_components_selection = { ...reactContext.state.components_selection_data
+  };
   current_components_selection[newSlider.GUID] = {
     x0: newSlider.X,
     y0: newSlider.Y,
@@ -2658,8 +2784,8 @@ function CreateNewSlider(reactContext) {
 
 function submitSliderEdit(compKey) {
   var slider_component = selectComp(compKey);
-  var SLIDER_START_POSITION = 60;
-  var SLIDER_END_POSITION = 238;
+  const SLIDER_START_POSITION = 60;
+  const SLIDER_END_POSITION = 238;
   slider_component.min = parseFloat($__default['default']('input#new_slider_min_value').val());
   slider_component.max = parseFloat($__default['default']('input#new_slider_max_value').val());
   slider_component.value = parseFloat($__default['default']('input#new_slider_current_value').val());
@@ -2683,11 +2809,25 @@ function cancelSliderEdit() {
   $__default['default']('div#propertiesBarContents').html('');
 }
 
+/*
+───────────────────────────────────────────────────────────────────────────────────────────────────
+─██████████████─██████████████─████████████████───██████████─██████──────────██████─██████████████─
+─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───██░░░░░░██─██░░██████████──██░░██─██░░░░░░░░░░██─
+─██░░██████████─██████░░██████─██░░████████░░██───████░░████─██░░░░░░░░░░██──██░░██─██░░██████████─
+─██░░██─────────────██░░██─────██░░██────██░░██─────██░░██───██░░██████░░██──██░░██─██░░██─────────
+─██░░██████████─────██░░██─────██░░████████░░██─────██░░██───██░░██──██░░██──██░░██─██░░██─────────
+─██░░░░░░░░░░██─────██░░██─────██░░░░░░░░░░░░██─────██░░██───██░░██──██░░██──██░░██─██░░██──██████─
+─██████████░░██─────██░░██─────██░░██████░░████─────██░░██───██░░██──██░░██──██░░██─██░░██──██░░██─
+─────────██░░██─────██░░██─────██░░██──██░░██───────██░░██───██░░██──██░░██████░░██─██░░██──██░░██─
+─██████████░░██─────██░░██─────██░░██──██░░██████─████░░████─██░░██──██░░░░░░░░░░██─██░░██████░░██─
+─██░░░░░░░░░░██─────██░░██─────██░░██──██░░░░░░██─██░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─
+─██████████████─────██████─────██████──██████████─██████████─██████──────────██████─██████████████─
+*/
+
 var d3$8 = require('d3'); //TODO : check this for the text overflow : https://bl.ocks.org/mbostock/1424037
 
 
-function CreateNewPanel(reactContext) {
-  var FromExisting = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+function CreateNewPanel(reactContext, FromExisting = null) {
   var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
   var ANCHOR_WIDTH = reactContext.state.ANCHOR_WIDTH;
   var newcomp;
@@ -2695,9 +2835,8 @@ function CreateNewPanel(reactContext) {
   if (FromExisting == null) {
     newcomp = addcomponent(uuidv4('C'), 1, 1);
     var guid = newcomp.GUID;
-
-    var data = _objectSpread2({}, reactContext.state.parent_child_matrix);
-
+    var data = { ...reactContext.state.parent_child_matrix
+    };
     data[guid] = [];
     reactContext.setState({
       parent_child_matrix: data
@@ -2718,7 +2857,7 @@ function CreateNewPanel(reactContext) {
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
   var genY;
-  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', function () {
+  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
     if (FromExisting == null) {
       genX = Math.random() * 500 + 200;
       genY = Math.random() * 500 + 200;
@@ -2732,17 +2871,16 @@ function CreateNewPanel(reactContext) {
     x: FromExisting ? FromExisting.X : genX,
     y: FromExisting ? FromExisting.Y : genY
   }]);
-  node.append('rect').attr('class', 'CompPBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('y', '-15').attr('width', function () {
+  node.append('rect').attr('class', 'CompPBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('y', '-15').attr('width', () => {
     return 10 + newcomp.Name.length * 6;
   }).attr('height', newcomp.height + 10).attr('fill', '#525252').attr('fill-opacity', '1.0').on('mouseover', function (event) {
     d3$8.select(event.currentTarget).attr('cursor', 'pointer');
   });
   var InputGroup = node.append('g');
 
-  var _loop = function _loop(index) {
+  for (let index = 0; index < newcomp.inputs.length; index++) {
     InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
-    . //newcomp.fill)
-    attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+    .attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
       newcomp.inputs[index].circle = this;
 
       if (FromExisting == null) {
@@ -2759,19 +2897,14 @@ function CreateNewPanel(reactContext) {
         targetcircleIN: false
       });
     }).lower();
-  };
-
-  for (var index = 0; index < newcomp.inputs.length; index++) {
-
-    _loop(index);
   }
 
   var OutputGroup = node.append('g');
 
-  var _loop2 = function _loop2(_index) {
-    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + _index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + _index).attr('type', function () {
-      newcomp.outputs[_index].circle = this;
-      newcomp.outputs[_index].type = 'output';
+  for (let index = 0; index < newcomp.outputs.length; index++) {
+    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      newcomp.outputs[index].circle = this;
+      newcomp.outputs[index].type = 'output';
       return 'output';
     }).on('mousemove', function () {
       reactContext.setState({
@@ -2782,23 +2915,16 @@ function CreateNewPanel(reactContext) {
         targetcircleIN: false
       });
     }).lower();
-  };
-
-  for (var _index = 0; _index < newcomp.outputs.length; _index++) {
-
-    _loop2(_index);
   }
 
   node.append('rect').attr('class', 'CompPBody statusRect ' + newcomp.GUID).attr('id', 'statusRect' + newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('x', '50').attr('y', newcomp.height - 20).attr('width', newcomp.width - 50).attr('height', 35).attr('fill', '#525252').attr('fill-opacity', '1.0');
   node.append('foreignObject').attr('id', 'panel_status_' + newcomp.GUID).attr('class', 'panel_status ' + newcomp.GUID).html('Type : ' + newcomp.inputs[0].type).attr('x', '55').attr('y', newcomp.height + 2).attr('width', newcomp.width - 50).attr('height', 15).attr('fill', 'white');
-  node.append('foreignObject').attr('id', 'panel_edit_mode' + newcomp.GUID).attr('class', 'panel_edit_mode ' + newcomp.GUID).html(function () {
+  node.append('foreignObject').attr('id', 'panel_edit_mode' + newcomp.GUID).attr('class', 'panel_edit_mode ' + newcomp.GUID).html(() => {
     return '<h5 id="changeEditMoveMode_' + newcomp.GUID + '" style="color:white; margin-top:1px" ">Edit</h5>';
-  }).attr('x', newcomp.width - 30).attr('y', newcomp.height + 2).attr('width', 30).attr('height', 15).attr('fill', 'white').on('click', function () {
-    return edit_move_mode(newcomp.GUID);
-  }).attr('style', 'cursor: pointer;');
+  }).attr('x', newcomp.width - 30).attr('y', newcomp.height + 2).attr('width', 30).attr('height', 15).attr('fill', 'white').on('click', () => edit_move_mode(newcomp.GUID)).attr('style', 'cursor: pointer;');
   var Dummyrect = node.append('rect').attr('class', 'CompPBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS) //.attr("filter", "url(#f2")
   .attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
-  var Titlegroup = node.append('g').attr('transform', function () {
+  var Titlegroup = node.append('g').attr('transform', () => {
     return 'translate(0, 15)';
   });
   Titlegroup.append('text').attr('class', 'nodetitle node_title' + newcomp.GUID).attr('id', 'nodeTitle' + newcomp.GUID).text(newcomp.Name).attr('fill', 'white').attr('x', 5).attr('y', -18);
@@ -2828,11 +2954,7 @@ function CreateNewPanel(reactContext) {
   .attr('fill-opacity', '0.15').on('mousemove', function (event) {
     d3$8.select(event.currentTarget).attr('cursor', 'pointer');
   });
-  var resize = d3$8.drag().on('start', function (event, d) {
-    return Dummyrect.attr('stroke', 'red');
-  }).on('end', function (event, d) {
-    return Dummyrect.attr('stroke', '#3a4c69');
-  }).on('drag', function (event, d) {
+  var resize = d3$8.drag().on('start', (event, d) => Dummyrect.attr('stroke', 'red')).on('end', (event, d) => Dummyrect.attr('stroke', '#3a4c69')).on('drag', function (event, d) {
     var anchorMouseYpos = reactContext.state.anchorMouseYpos;
     var anchorMouseXpos = reactContext.state.anchorMouseXpos;
     var StringAnchorId = reactContext.state.StringAnchorId;
@@ -2864,7 +2986,7 @@ function CreateNewPanel(reactContext) {
     d3$8.select('rect.xyAnchor.' + StringAnchorId).attr('x', thisComp.width - ANCHOR_WIDTH).attr('y', thisComp.height - ANCHOR_WIDTH);
     d3$8.select('foreignObject#textbody_' + StringAnchorId).attr('height', thisComp.height - ANCHOR_WIDTH - 5).attr('width', thisComp.width - 4 - ANCHOR_WIDTH);
     d3$8.select('foreignObject#panel_edit_mode' + StringAnchorId).attr('y', newHeight + 2).attr('x', newWidth - 30);
-    d3$8.select('g#logCirGroup_' + StringAnchorId).attr('transform', function () {
+    d3$8.select('g#logCirGroup_' + StringAnchorId).attr('transform', () => {
       var x = thisComp.width;
       var y = thisComp.height;
       return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
@@ -2877,7 +2999,7 @@ function CreateNewPanel(reactContext) {
     y: newcomp.height - ANCHOR_WIDTH,
     width: ANCHOR_WIDTH,
     height: ANCHOR_WIDTH
-  }]).attr('width', ANCHOR_WIDTH).attr('height', ANCHOR_WIDTH).attr('x', newcomp.width - ANCHOR_WIDTH).attr('y', newcomp.height - ANCHOR_WIDTH).attr('fill-opacity', 0.01).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).on('mousedown', function (event) {
+  }]).attr('width', ANCHOR_WIDTH).attr('height', ANCHOR_WIDTH).attr('x', newcomp.width - ANCHOR_WIDTH).attr('y', newcomp.height - ANCHOR_WIDTH).attr('fill-opacity', 0.01).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).on('mousedown', event => {
     reactContext.setState({
       anchorMouseXpos: d3$8.pointer(event)[0] - newcomp.width,
       anchorMouseYpos: d3$8.pointer(event)[1] - newcomp.height,
@@ -2894,19 +3016,18 @@ function CreateNewPanel(reactContext) {
     });
   }
 
-  var current_comp_out = _objectSpread2({}, reactContext.state.comp_output_edges);
-
-  var current_comp_in = _objectSpread2({}, reactContext.state.comp_input_edges);
-
+  var current_comp_out = { ...reactContext.state.comp_output_edges
+  };
+  var current_comp_in = { ...reactContext.state.comp_input_edges
+  };
   current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
   current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
   reactContext.setState({
     comp_input_edges: current_comp_in,
     comp_output_edges: current_comp_out
   });
-
-  var current_components_selection = _objectSpread2({}, reactContext.state.components_selection_data);
-
+  var current_components_selection = { ...reactContext.state.components_selection_data
+  };
   current_components_selection[newcomp.GUID] = {
     x0: newcomp.X,
     y0: newcomp.Y,
@@ -2964,27 +3085,6 @@ function edit_move_mode(compId, mode) {
 
 var d3$7 = require('d3');
 
-function addCircle() {
-  var initCircle = {
-    GUID: uuidv4('C'),
-    element: null,
-    CX: 0,
-    CY: 0,
-    Comp: null,
-    type: 'data',
-    path: null
-  };
-  return initCircle;
-}
-
-function uuidv4(ini) {
-  return ini + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0,
-        v = c === 'x' ? r : r & 0x3 | 0x8;
-    return v.toString(16);
-  });
-}
-
 function addEdge(from, to, fromComp, toComp) {
   var initLink = {
     GUID: uuidv4('E'),
@@ -3001,9 +3101,9 @@ function addEdge(from, to, fromComp, toComp) {
 }
 
 function handleComponentSelection() {
-  var reactContext = this;
+  const reactContext = this;
   var allComp = reactContext.state.allComp;
-  allComp.forEach(function (element) {
+  allComp.forEach(element => {
     if (element.type === 'component' || element.type === 'toggle' || element.type === 'fileUpload' || element.type === 'listView') {
       d3$7.select('g#comp-' + element.GUID).on('click', function () {
         d3$7.select('rect#' + element.GUID).attr('stroke-width', '2').attr('stroke', '#0064ffa8');
@@ -3011,7 +3111,7 @@ function handleComponentSelection() {
           selected_component_id: element.GUID
         });
       });
-      d3$7.select('rect#' + element.GUID).on('focusout', function () {
+      d3$7.select('rect#' + element.GUID).on('focusout', () => {
         d3$7.select('rect#' + element.GUID).attr('stroke-width', '0').attr('stroke', 'none');
       });
     } else if (element.type === 'string') {
@@ -3022,7 +3122,7 @@ function handleComponentSelection() {
           selected_component_id: element.GUID
         });
       });
-      d3$7.selectAll('rect#' + element.GUID + ', rect#overlaySelector' + element.GUID).on('focusout', function () {
+      d3$7.selectAll('rect#' + element.GUID + ', rect#overlaySelector' + element.GUID).on('focusout', () => {
         d3$7.select('rect#' + element.GUID).attr('stroke-width', '0').attr('stroke', 'none');
         d3$7.select('rect#statusRect' + element.GUID).attr('fill', '#525252');
       });
@@ -3032,7 +3132,7 @@ function handleComponentSelection() {
         reactContext.setState({
           selected_component_id: element.GUID
         });
-      }).on('focusout', function () {
+      }).on('focusout', () => {
         d3$7.select('rect#' + element.GUID).attr('stroke-width', '1').attr('stroke', 'black');
       });
     } else if (element.type === 'optionList') {
@@ -3045,7 +3145,7 @@ function handleComponentSelection() {
           optionlistRectid: element.GUID
         });
       });
-      d3$7.select('rect#' + element.GUID).on('focusout', function () {
+      d3$7.select('rect#' + element.GUID).on('focusout', () => {
         d3$7.select('rect#' + element.GUID).attr('stroke-width', '0').attr('stroke', 'none');
       });
     }
@@ -3060,7 +3160,7 @@ function handleComponentSelection() {
 
 
 function handleTheClickOnAllComponents() {
-  var reactContext = this;
+  const reactContext = this;
   reactContext.state.allComp;
   d3$7.selectAll('rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody, rect.CompCBody').on('mousedown', function (event) {
     var coordinates = d3$7.pointer(event);
@@ -3092,11 +3192,10 @@ function handleEdgeInitialization() {
     });
     var edgeStarted = reactContext.state.edgeStarted;
     var targetcircleIN = reactContext.state.targetcircleIN;
-
-    var fromCircle = _objectSpread2({}, reactContext.state.fromCircle);
-
-    var comp_output_edges = _objectSpread2({}, reactContext.state.comp_output_edges);
-
+    var fromCircle = { ...reactContext.state.fromCircle
+    };
+    var comp_output_edges = { ...reactContext.state.comp_output_edges
+    };
     var selectedcircleId;
 
     if (edgeStarted && targetcircleIN && this !== fromCircle.element) ; else {
@@ -3145,21 +3244,18 @@ function handleEdgeInitialization() {
     var edgeStarted = reactContext.state.edgeStarted;
     var allEdges = reactContext.state.allEdges;
     var targetcircleIN = reactContext.state.targetcircleIN;
-
-    var fromCircle = _objectSpread2({}, reactContext.state.fromCircle);
-
-    var toCircle = _objectSpread2({}, reactContext.state.toCircle);
-
-    var comp_input_edges = _objectSpread2({}, reactContext.state.comp_input_edges);
-
-    var comp_output_edges = _objectSpread2({}, reactContext.state.comp_output_edges);
-
+    var fromCircle = { ...reactContext.state.fromCircle
+    };
+    var toCircle = { ...reactContext.state.toCircle
+    };
+    var comp_input_edges = { ...reactContext.state.comp_input_edges
+    };
+    var comp_output_edges = { ...reactContext.state.comp_output_edges
+    };
     var root_components = reactContext.state.root_components; //What.
 
     var parent_child_matrix = reactContext.state.parent_child_matrix;
-
-    var parent_child_matrix_fast_check = _toConsumableArray(reactContext.state.parent_child_matrix_fast_check);
-
+    var parent_child_matrix_fast_check = [...reactContext.state.parent_child_matrix_fast_check];
     var selectedcircleId = reactContext.state.selectedcircleId;
 
     if (edgeStarted && targetcircleIN && this !== fromCircle.element && (comp_input_edges[this.classList[1]][this.classList[2]] === undefined || comp_input_edges[this.classList[1]][this.classList[2]] === null)) {
@@ -3188,8 +3284,8 @@ function handleEdgeInitialization() {
         } // Datatree control. FIX UNCOMMENR
 
 
-        var current_edge_comp_matrix = _objectSpread2({}, reactContext.state.edge_comp_matrix);
-
+        var current_edge_comp_matrix = { ...reactContext.state.edge_comp_matrix
+        };
         current_edge_comp_matrix[thisEdge.path_id] = {
           from: fromCircle.element.classList[1],
           to: toCircle.element.classList[1],
@@ -3239,16 +3335,36 @@ function handleEdgeInitialization() {
 
 
 function handleDoubleClick() {
-  var reactContext = this;
+  const reactContext = this;
   var allComp = reactContext.state.allComp;
-  allComp.forEach(function (element) {
+  allComp.forEach(element => {
     if (element.type === 'string') {
       d3$7.select('g#comp-' + element.GUID).on('dblclick', function () {
         if (!reactContext.state.doubleClicked) {
           reactContext.setState({
             doubleClicked: true
           });
-          $__default['default']('div#propertiesBarContents').append("\n                        <div class=\"propertiesbarheader title\">String Panel Properties</div>\n                        <div class=\"propertiesbarheader label\">Name</div>\n                        <input class=\"stringPnanel Name\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Value</div>\n                        <textarea class=\"textarea stringProperties\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Panel Type</div>\n                        <form>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_text\" value=\"text\"> text<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_html\" value=\"html\"> html<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_json\" value=\"json\"> json<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_lsit\" value=\"lsit\"> list<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_plot\" value=\"plot\"> plot <br>\n                        </form>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Log</div>\n                        <div id=\"propertiesBarLog\" class=\"log\"></div>\n                        <button id=\"stringEditButton\">Apply</button>\n                        <button id=\"cancelStringEdit\">Cancel</button>");
+          $__default['default']('div#propertiesBarContents').append(`
+                        <div class="propertiesbarheader title">String Panel Properties</div>
+                        <div class="propertiesbarheader label">Name</div>
+                        <input class="stringPnanel Name"></textarea>
+                        <hr>
+                        <div class="propertiesbarheader label">Value</div>
+                        <textarea class="textarea stringProperties"></textarea>
+                        <hr>
+                        <div class="propertiesbarheader label">Panel Type</div>
+                        <form>
+                            <input type="radio" name="type" id="string_radio_text" value="text"> text<br>
+                            <input type="radio" name="type" id="string_radio_html" value="html"> html<br>
+                            <input type="radio" name="type" id="string_radio_json" value="json"> json<br>
+                            <input type="radio" name="type" id="string_radio_lsit" value="lsit"> list<br>
+                            <input type="radio" name="type" id="string_radio_plot" value="plot"> plot <br>
+                        </form>
+                        <hr>
+                        <div class="propertiesbarheader label">Log</div>
+                        <div id="propertiesBarLog" class="log"></div>
+                        <button id="stringEditButton">Apply</button>
+                        <button id="cancelStringEdit">Cancel</button>`);
           element.outputs[0].value = element.value;
           var StringComp = selectComp(element.GUID);
           $__default['default']('input#string_radio_' + StringComp.inputs[0].type).prop('checked', true);
@@ -3262,16 +3378,16 @@ function handleDoubleClick() {
 
           if (StringComp.child) {
             $__default['default']('textarea.textarea.stringProperties').prop('disabled', true);
-            $__default['default']('textarea.stringProperties').text(function () {
+            $__default['default']('textarea.stringProperties').text(() => {
               return StringComp.inputs[0].value;
             });
-            $__default['default']('body').on('mousemove', function () {
-              $__default['default']('textarea.stringProperties').text(function () {
+            $__default['default']('body').on('mousemove', () => {
+              $__default['default']('textarea.stringProperties').text(() => {
                 return StringComp.inputs[0].value;
               });
             });
           } else {
-            $__default['default']('textarea.stringProperties').text(function () {
+            $__default['default']('textarea.stringProperties').text(() => {
               return StringComp.inputs[0].value;
             });
           }
@@ -3303,8 +3419,25 @@ function handleDoubleClick() {
           reactContext.setState({
             doubleClicked: true
           });
-          $__default['default']('div#propertiesBarContents').append("\n                        <div class=\"propertiesbar title\">Option list properties.</div>\n                        <div class=\"propertiesbar label\">options (as dictionary)</div>\n                        <textarea class=\"textarea optionlistProperties\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbar label\">\n                            Preview:\n                        </div>\n                        <select id=\"propertisBarSelecId\">\n\n                        </select>\n                        <hr>\n                        <div class=\"propertiesbar label\">\n                            Log\n                        </div>\n                        <div id=\"propertiesBarLog\" class=\"log\"></div>\n                        <button id=\"applyChangeButton\">Apply</button>\n                        ");
-          var compKey = element.GUID;
+          $__default['default']('div#propertiesBarContents').append(`
+                        <div class="propertiesbar title">Option list properties.</div>
+                        <div class="propertiesbar label">options (as dictionary)</div>
+                        <textarea class="textarea optionlistProperties"></textarea>
+                        <hr>
+                        <div class="propertiesbar label">
+                            Preview:
+                        </div>
+                        <select id="propertisBarSelecId">
+
+                        </select>
+                        <hr>
+                        <div class="propertiesbar label">
+                            Log
+                        </div>
+                        <div id="propertiesBarLog" class="log"></div>
+                        <button id="applyChangeButton">Apply</button>
+                        `);
+          let compKey = element.GUID;
           submitOptionListEdit(compKey);
           $__default['default']('button#applyChangeButton').on('click', function (e) {
             readyToGoSubmit(compKey);
@@ -3320,7 +3453,15 @@ function handleDoubleClick() {
           reactContext.setState({
             doubleClicked: true
           });
-          $__default['default']('div#propertiesBarContents').append("\n                        <div class=\"propertiesbarheader label\">Slider</div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Min-value : </div><input type=\"number\" id=\"new_slider_min_value\"></div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Max-value: </div><input type=\"number\" id=\"new_slider_max_value\"></div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Step: </div><input type=\"number\" id=\"new_slider_step_value\"></div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Current-value: </div><input type=\"number\" id=\"new_slider_current_value\"></div>\n                        <button id=\"sliderEditButton\">Save</button>\n                        <button id=\"cancelSliderEdit\">Cancel</button>\n                        ");
+          $__default['default']('div#propertiesBarContents').append(`
+                        <div class="propertiesbarheader label">Slider</div>
+                        <div id="numerical_slider_container"><div id="string_input_label">Min-value : </div><input type="number" id="new_slider_min_value"></div>
+                        <div id="numerical_slider_container"><div id="string_input_label">Max-value: </div><input type="number" id="new_slider_max_value"></div>
+                        <div id="numerical_slider_container"><div id="string_input_label">Step: </div><input type="number" id="new_slider_step_value"></div>
+                        <div id="numerical_slider_container"><div id="string_input_label">Current-value: </div><input type="number" id="new_slider_current_value"></div>
+                        <button id="sliderEditButton">Save</button>
+                        <button id="cancelSliderEdit">Cancel</button>
+                        `);
           $__default['default']('input#new_slider_min_value').val(element.min);
           $__default['default']('input#new_slider_max_value').val(element.max);
           $__default['default']('input#new_slider_step_value').val(element.step);
@@ -3354,7 +3495,7 @@ function handleDoubleClick() {
             currentToggle.outputs[0].value = 'True';
             return 'True';
           }
-        }).attr('fill', function () {
+        }).attr('fill', () => {
           if (toggleValue === 'True') {
             d3$7.select('#dummyRect_' + element.GUID).attr('fill', '#2c3e50');
             return '#ecf0f1';
@@ -3703,7 +3844,7 @@ function onMaximizeClick() {
 }
 
 function manageCanvas() {
-  const reactContext = this;
+  var reactContext = this;
   var svgContainer = d3$5.select('svg');
   var allContents = svgContainer.append('g').attr('id', 'allCanvasContents');
   var currentLeftColWidth = reactContext.state.currentLeftColWidth;
@@ -3732,7 +3873,7 @@ function manageCanvas() {
     var somearr = reactContext.state.udo_names;
     var text = '';
 
-    for (const cat in reactContext.state.cats) {
+    var _loop = function _loop(cat) {
       if (reactContext.state.cats.hasOwnProperty(cat)) {
         text += '<div id="catcard">';
         text += '<div id="catHead" style="background-color:' + reactContext.state.cats[cat] + '">' + cat + '</div>';
@@ -3745,16 +3886,20 @@ function manageCanvas() {
         });
         text += '</div></div>';
       }
+    };
+
+    for (var cat in reactContext.state.cats) {
+      _loop(cat);
     }
 
     return text;
   });
-  d3$5.select('div#LeftPropertiesBar').style('width', () => {
+  d3$5.select('div#LeftPropertiesBar').style('width', function () {
     return currentLeftColWidth + 'px';
-  }).style('top', () => {
+  }).style('top', function () {
     return currentTopBarHeight.toString() + 'px';
   });
-  d3$5.select('div#LeftPropertiesBarSelector').style('top', () => {
+  d3$5.select('div#LeftPropertiesBarSelector').style('top', function () {
     return currentTopBarHeight.toString() + 'px';
   }).style('left', currentLeftColWidth + 'px'); // d3.select('div#PropertiesBar')
   //     .style('width', () => {
@@ -3764,10 +3909,10 @@ function manageCanvas() {
   //         return currentTopBarHeight.toString() + 'px';
   //     });
 
-  d3$5.select('div#PropertiesBarSelector').style('top', () => {
+  d3$5.select('div#PropertiesBarSelector').style('top', function () {
     return currentTopBarHeight.toString() + 'px';
   }).style('right', currentRightColWidth + 'px');
-  d3$5.select('div#TopPropertiesBar').style('height', () => {
+  d3$5.select('div#TopPropertiesBar').style('height', function () {
     return currentTopBarHeight + 'px';
   });
   d3$5.select('div#PropertiesBarSelector').on('mousedown', function () {
@@ -3784,7 +3929,7 @@ function manageCanvas() {
     currentLeftColWidth = event.clientX;
 
     if (rightColumnIsSelected) {
-      d3$5.select('div#PropertiesBar').style('width', () => {
+      d3$5.select('div#PropertiesBar').style('width', function () {
         if (currentRightColWidth >= 50) {
           if (!rightColIsdisplayed) d3$5.select('div#PropertiesBar').style('display', 'block');
           d3$5.select('div#PropertiesBarSelector').style('background-color', '#252525');
@@ -3796,7 +3941,7 @@ function manageCanvas() {
           d3$5.select('div#PropertiesBarSelector').style('background-color', '#1abc9c');
         }
       });
-      d3$5.select('div#PropertiesBarSelector').style('right', () => {
+      d3$5.select('div#PropertiesBarSelector').style('right', function () {
         if (currentRightColWidth >= 50) {
           return currentRightColWidth.toString() + 'px';
         } else {
@@ -3807,7 +3952,7 @@ function manageCanvas() {
 
     if (leftColumnIsSelected) {
       d3$5.select('body').style('cursor', 'ew-resize');
-      d3$5.select('div#LeftPropertiesBar').style('width', () => {
+      d3$5.select('div#LeftPropertiesBar').style('width', function () {
         if (currentLeftColWidth >= 50) {
           if (!leftColIsdisplayed) d3$5.select('div#LeftPropertiesBar').style('display', 'block');
           d3$5.select('div#LeftPropertiesBarSelector').style('background-color', '#252525');
@@ -3819,7 +3964,7 @@ function manageCanvas() {
           d3$5.select('div#LeftPropertiesBarSelector').style('background-color', '#1abc9c');
         }
       });
-      d3$5.select('div#LeftPropertiesBarSelector').style('left', () => {
+      d3$5.select('div#LeftPropertiesBarSelector').style('left', function () {
         if (currentLeftColWidth >= 50) {
           return currentLeftColWidth.toString() + 'px';
         } else {
@@ -3829,17 +3974,17 @@ function manageCanvas() {
     }
 
     if (messageshown) {
-      let trns = d3$5.transition().duration(500).ease(d3$5.easeLinear);
-      d3$5.select('div#Addedmessage').transition(trns).style('opacity', () => {
+      var trns = d3$5.transition().duration(500).ease(d3$5.easeLinear);
+      d3$5.select('div#Addedmessage').transition(trns).style('opacity', function () {
         messageshown = false;
         return 0;
       });
-      d3$5.select('div#buttonClickedname').transition(trns).style('opacity', () => {
+      d3$5.select('div#buttonClickedname').transition(trns).style('opacity', function () {
         messageshown = false;
         return 0;
       });
     }
-  }).on('mouseup', () => {
+  }).on('mouseup', function () {
     if (rightColumnIsSelected) rightColumnIsSelected = false;
     if (leftColumnIsSelected) leftColumnIsSelected = false;
   });
@@ -4222,268 +4367,282 @@ function showVerticalAlignment(selectionBox) {
 
 var img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAAG80e8cAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAB+FJREFUeNrswQENAAAAwqD3T20PBxQAAAAAAAAAAAAAAAAAAAAnJoAA7MIBCQAAAICg/6/7EYoCAAAAAAAAAAAAAAAAAAAzCcAuHNMAAAAACOrf2hZeMAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4JwC4ckAAAAAAI+v+6HYGiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArCWAAOzCAQkAAACAoP+vG5KiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwFoCsFPHJgAAIRAEwRbsv1dbOMyUGT68SNhPX9vZ2d3dlT8M/hM6CB0QOiB0QOiA0AGhA0IHhA5CB4QOCB0QOiB0QOiA0AGhg9ABoQNCB4QOCB0QOiB0QOggdCcAoQNCB4QOCB0QOiB0QOiA0EHogNABoQNCB4QOCB0QOiB0EDogdEDogNABoQNCB4QOCB2EDggdEDogdEDogNABoQNCB4QOQgeEDggdEDogdEDogNABoYPQAaEDQgeEDggdEDogdEDoIHRA6IDQAaEDQgeEDggdEDogdBA6IHRA6IDQAaEDQgeEDggdhA4IHRA6IHRA6IDQAaEDQgehA0IHhA4IHRA6IHRA6IDQAaGD0AGhA0IHhA4IHRA6IHRA6CB0QOiA0AGhA0IHhA4IHRA6CB0QOiB0QOiA0AGhA0IHhA4IHYQOCB0QOiB0QOiA0AGhA0IHoQNCB4QOCB0QOiB0QOiA0EHogNABoQNCB4QOCB0QOiB0QOggdEDogNABoQNCB4QOCB0QOggdEDogdEDogNABoQNCB4QOQgeEDggdEDogdEDogNABoQNCB6EDQgeEDggdEDogdEDogNBB6IDQAaEDQgeEDggdEDogdBA6IHRA6IDQAaEDQgeEDggdEDoIHRA6IHRA6IDQAaEDQgeEDkIHhA4IHRA6IHRA6IDQAaGD0AGhA0IHhA4IHRA6IHRA6IDQQeiA0AGhA0IHhA4IHRA6IHQQOiB0QOiA0AGhA0IHNkYAAdq5YxMGoiCGgr4a3H+vLmBTccJiBscv1fHBm/599fT09PT09N7v+XIHgAEGHQAMOgBg0AEAgw4AGHQAMOgAgEEHAIKeT/7P7QDAn3PpR09PT09Pr9Dz5A4AAww6ABh0AMCgAwAGHQAw6ABg0AEAgw4ABLkUBwAcLv3o6enp6ekVep7cAWCAQQcAgw4AGHQAwKADAAYdAAw6AGDQAYAgl+IAgMOlHz09PT09vULPkzsADDDoAGDQAQCDDgAYdADAoAOAQQcADDoAEORSHABwuPSjp6enp6dX6HlyB4ABBh0ADDoAYNABAIMOABh0ADDoAIBBBwCCXIoDAA6XfvT09PT09Ao9T+4AMMCgA4BBBwAMOgBg0AEAgw4ABh0AMOgAQJBLcQDA4dKPnp6enp5eoefJHQAGGHQAMOgAgEEHAAw6AGDQAcCgAwAGHQAIcikOADhc+tHT09PT0yv0PLkDwACDDgAGHQAw6ACAQQcADDoAGHQAwKADAEEuxQEAh0s/enp6enp6hZ4ndwAYYNABwKADAAYdADDoAIBBBwCDDgAYdAAgyKU4AOBw6UdPT09PT6/Q8+QOAAMMOgAYdADAoAMABh0AMOgAYNABAIMOAAS5FAcAHC796Onp6enpFXqe3AFggEEHAIMOABh0AMCgAwAGHQAMOgBg0AGAIJfiAIDDpR89PT09Pb1Cz5M7AAww6ABg0AEAgw4AGHQAwKADgEEHAAw6ABDkUhwAcLj0o6enp6enV+h5cgeAAQYdAAw6AGDQAQCDDgAYdAAw6ACAQQcAglyKAwAOl3709PT09PQKPU/uADDAoAOAQQcADDoAYNABAIMOAAYdADDoAECQS3EAwOHSj56enp6eXqHnyR0ABhh0ADDoAIBBBwAMOgBg0AHAoAMABh0ACHIpDgA4XPrR09PT09Mr9Dy5A8AAgw4ABh0AMOgAgEEHAAw6ABh0AMCgAwBBLsUBAIdLP3p6enp6eoWeJ3cAGGDQAcCgAwAGHQAw6ACAQQcAgw4AGHQAIMilOADgcOlHT09PT0+v0PPkDgADDDoAGHQAwKADAAYdADDoAGDQAQCDDgAEuRQHABwu/ejp6enp6RV6ntwBYIBBBwCDDgAYdADAoAMABh0ADDoAYNABgCCX4gCAw6UfPT09PT29Qs+TOwAMMOgAYNABAIMOABh0AMCgA4BBBwAMOgAQ5FIcAHC49KOnp6enp1foeXIHgAEGHQAMOgBg0AEAgw4AGHQAMOgAgEEHAIJcigMADpd+9PT09PT0Cj1P7gAwwKADgEEHAAw6AGDQAQCDDgAGHQAw6ABAkEtxAMDh0o+enp6enl6h58kdAAYYdAAw6ACAQQcADDoAYNABwKADAAYdAAhyKQ4AOFz60dPT09PTK/Q8uQPAAIMOAAYdADDoAIBBBwAMOgAYdADAoAMAQS7FAQCHSz96enp6enqFnid3ABhg0AHAoAMABh0AMOgAgEEHAIMOABh0ACDIpTgAGPADp1M1teRFeWkAAAAASUVORK5CYII=";
 
-class Grid extends React.Component {
-  render() {
-    return /*#__PURE__*/React__default['default'].createElement("div", {
-      className: "canvas_container canvas_container_inner main_canvas_container canvas_body_container"
-    }, /*#__PURE__*/React__default['default'].createElement("div", {
-      className: "ui-designer-grid",
-      id: "mainGrid"
-    }, /*#__PURE__*/React__default['default'].createElement("svg", {
-      height: "10000",
-      width: "10000"
-    }, /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("pattern", {
-      id: "img122",
-      patternUnits: "userSpaceOnUse",
-      width: "500",
-      height: "500"
-    }, /*#__PURE__*/React__default['default'].createElement("image", {
-      className: "rep",
-      xlinkHref: img,
-      x: "0",
-      y: "0",
-      width: "500",
-      height: "500"
-    })), /*#__PURE__*/React__default['default'].createElement("filter", {
-      id: this.props.filter_id,
-      x: "-40",
-      y: "-40",
-      width: "150%",
-      height: "150%",
-      filterUnits: "userSpaceOnUse"
-    }, /*#__PURE__*/React__default['default'].createElement("feOffset", {
-      result: "offOut",
-      in: "SourceGraphics",
-      dx: "0",
-      dy: "0"
-    }), /*#__PURE__*/React__default['default'].createElement("feGaussianBlur", {
-      result: "blurOut",
-      in: "offOut",
-      stdDeviation: "1"
-    }), /*#__PURE__*/React__default['default'].createElement("feBlend", {
-      in: "SourceGraphic",
-      in2: "blurOut",
-      mode: "normal"
-    })), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-      id: "grad1ient",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "0%",
-      style: {
-        'stopColour': '#dddddd',
-        'stopOpacity': '100%'
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "50%",
-      style: {
-        "stopColour": "#eeeeee",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#dddddd",
-        "stopOpacity": "100%"
-      }
-    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-      id: "fileUploadGradient",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#344b62",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "10%",
-      style: {
-        "stopColour": "#344b62",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "12%",
-      style: {
-        "stopColour": "#2b3d50",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "88%",
-      style: {
-        "stopColour": "#2b3d50",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "90%",
-      style: {
-        "stopColour": "#23364a",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#23364a",
-        "stopOpacity": "100%"
-      }
-    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-      id: "gradientlsider",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#eeeeee",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "20%",
-      style: {
-        "stopColour": "#eeeeee",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "30%",
-      style: {
-        "stopColour": "#dddddd",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "70%",
-      style: {
-        "stopColour": "#dddddd",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "80%",
-      style: {
-        "stopColour": "#cccccc",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#cccccc",
-        "stopOpacity": "100%"
-      }
-    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-      id: "gradient2",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "10%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "30%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "60%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "80%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "60%"
-      }
-    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-      id: "gradient2_2",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "50%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "0%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "70%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "0%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#ffffff",
-        "stopOpacity": "30%"
-      }
-    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-      id: "gradient3",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#555555",
-        "stopOpacity": "0%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "28%",
-      style: {
-        "stopColour": "#555555",
-        "stopOpacity": "0%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "30%",
-      style: {
-        "stopColour": "#555555",
-        "stopOpacity": "20%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "80%",
-      style: {
-        "stopColour": "#555555",
-        "stopOpacity": "50%"
-      }
-    }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
-      id: "gradient4",
-      x1: "0%",
-      y1: "0%",
-      x2: "0%",
-      y2: "100%"
-    }, /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "0%",
-      style: {
-        "stopColour": "#373939",
-        "stopOpacity": "100%"
-      }
-    }), /*#__PURE__*/React__default['default'].createElement("stop", {
-      offset: "100%",
-      style: {
-        "stopColour": "#023939",
-        "stopOpacity": "100%"
-      }
-    })))))));
+var Grid = /*#__PURE__*/function (_Component) {
+  _inherits(Grid, _Component);
+
+  var _super = _createSuper(Grid);
+
+  function Grid() {
+    _classCallCheck(this, Grid);
+
+    return _super.apply(this, arguments);
   }
 
-}
+  _createClass(Grid, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/React__default['default'].createElement("div", {
+        className: "canvas_container canvas_container_inner main_canvas_container canvas_body_container"
+      }, /*#__PURE__*/React__default['default'].createElement("div", {
+        className: "ui-designer-grid",
+        id: "mainGrid"
+      }, /*#__PURE__*/React__default['default'].createElement("svg", {
+        height: "10000",
+        width: "10000"
+      }, /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("pattern", {
+        id: "img122",
+        patternUnits: "userSpaceOnUse",
+        width: "500",
+        height: "500"
+      }, /*#__PURE__*/React__default['default'].createElement("image", {
+        className: "rep",
+        xlinkHref: img,
+        x: "0",
+        y: "0",
+        width: "500",
+        height: "500"
+      })), /*#__PURE__*/React__default['default'].createElement("filter", {
+        id: this.props.filter_id,
+        x: "-40",
+        y: "-40",
+        width: "150%",
+        height: "150%",
+        filterUnits: "userSpaceOnUse"
+      }, /*#__PURE__*/React__default['default'].createElement("feOffset", {
+        result: "offOut",
+        in: "SourceGraphics",
+        dx: "0",
+        dy: "0"
+      }), /*#__PURE__*/React__default['default'].createElement("feGaussianBlur", {
+        result: "blurOut",
+        in: "offOut",
+        stdDeviation: "1"
+      }), /*#__PURE__*/React__default['default'].createElement("feBlend", {
+        in: "SourceGraphic",
+        in2: "blurOut",
+        mode: "normal"
+      })), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+        id: "grad1ient",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "0%",
+        style: {
+          'stopColour': '#dddddd',
+          'stopOpacity': '100%'
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "50%",
+        style: {
+          "stopColour": "#eeeeee",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#dddddd",
+          "stopOpacity": "100%"
+        }
+      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+        id: "fileUploadGradient",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#344b62",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "10%",
+        style: {
+          "stopColour": "#344b62",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "12%",
+        style: {
+          "stopColour": "#2b3d50",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "88%",
+        style: {
+          "stopColour": "#2b3d50",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "90%",
+        style: {
+          "stopColour": "#23364a",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#23364a",
+          "stopOpacity": "100%"
+        }
+      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+        id: "gradientlsider",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#eeeeee",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "20%",
+        style: {
+          "stopColour": "#eeeeee",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "30%",
+        style: {
+          "stopColour": "#dddddd",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "70%",
+        style: {
+          "stopColour": "#dddddd",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "80%",
+        style: {
+          "stopColour": "#cccccc",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#cccccc",
+          "stopOpacity": "100%"
+        }
+      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+        id: "gradient2",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "10%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "30%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "60%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "80%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "60%"
+        }
+      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+        id: "gradient2_2",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "50%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "0%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "70%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "0%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#ffffff",
+          "stopOpacity": "30%"
+        }
+      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+        id: "gradient3",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#555555",
+          "stopOpacity": "0%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "28%",
+        style: {
+          "stopColour": "#555555",
+          "stopOpacity": "0%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "30%",
+        style: {
+          "stopColour": "#555555",
+          "stopOpacity": "20%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "80%",
+        style: {
+          "stopColour": "#555555",
+          "stopOpacity": "50%"
+        }
+      }))), /*#__PURE__*/React__default['default'].createElement("defs", null, /*#__PURE__*/React__default['default'].createElement("linearGradient", {
+        id: "gradient4",
+        x1: "0%",
+        y1: "0%",
+        x2: "0%",
+        y2: "100%"
+      }, /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "0%",
+        style: {
+          "stopColour": "#373939",
+          "stopOpacity": "100%"
+        }
+      }), /*#__PURE__*/React__default['default'].createElement("stop", {
+        offset: "100%",
+        style: {
+          "stopColour": "#023939",
+          "stopOpacity": "100%"
+        }
+      })))))));
+    }
+  }]);
+
+  return Grid;
+}(React.Component);
 
 /*
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -4757,18 +4916,32 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
   });
 }
 
+/*
+───────────────────────────────────────────────────────────────────────────────────────────
+─██████████████─██████████████─██████████████─██████████████─██████─────────██████████████─
+─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██─────────██░░░░░░░░░░██─
+─██████░░██████─██░░██████░░██─██░░██████████─██░░██████████─██░░██─────────██░░██████████─
+─────██░░██─────██░░██──██░░██─██░░██─────────██░░██─────────██░░██─────────██░░██─────────
+─────██░░██─────██░░██──██░░██─██░░██─────────██░░██─────────██░░██─────────██░░██████████─
+─────██░░██─────██░░██──██░░██─██░░██──██████─██░░██──██████─██░░██─────────██░░░░░░░░░░██─
+─────██░░██─────██░░██──██░░██─██░░██──██░░██─██░░██──██░░██─██░░██─────────██░░██████████─
+─────██░░██─────██░░██──██░░██─██░░██──██░░██─██░░██──██░░██─██░░██─────────██░░██─────────
+─────██░░██─────██░░██████░░██─██░░██████░░██─██░░██████░░██─██░░██████████─██░░██████████─
+─────██░░██─────██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
+─────██████─────██████████████─██████████████─██████████████─██████████████─██████████████─
+───────────────────────────────────────────────────────────────────────────────────────────
+*/
+
 var d3$2 = require('d3');
 
-function CreateNewToggle(reactContext) {
-  var FromExisting = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+function CreateNewToggle(reactContext, FromExisting = null) {
   var newcomp;
 
   if (FromExisting == null) {
     newcomp = addcomponent(uuidv4('C'), 0, 1);
     var guid = newcomp.GUID;
-
-    var data = _objectSpread2({}, reactContext.state.parent_child_matrix);
-
+    var data = { ...reactContext.state.parent_child_matrix
+    };
     data[guid] = [];
     reactContext.setState({
       parent_child_matrix: data
@@ -4791,7 +4964,7 @@ function CreateNewToggle(reactContext) {
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
   var genY;
-  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', function () {
+  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
     if (FromExisting == null) {
       genX = Math.random() * 500 + 200;
       genY = Math.random() * 500 + 200;
@@ -4807,7 +4980,7 @@ function CreateNewToggle(reactContext) {
   }]);
   var InputGroup = node.append('g');
 
-  var _loop = function _loop(index) {
+  for (let index = 0; index < newcomp.inputs.length; index++) {
     InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
       newcomp.inputs[index].circle = reactContext.state.fromCircle;
       newcomp.inputs[index].circle.element = this.id;
@@ -4816,36 +4989,26 @@ function CreateNewToggle(reactContext) {
       newcomp.inputs[index].type = 'input';
       return 'input';
     });
-  };
-
-  for (var index = 0; index < newcomp.inputs.length; index++) {
-
-    _loop(index);
   }
 
   var OutputGroup = node.append('g');
 
-  var _loop2 = function _loop2(_index) {
-    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + _index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + _index).attr('type', function () {
-      newcomp.outputs[_index].circle = this;
-      newcomp.outputs[_index].type = 'output';
+  for (let index = 0; index < newcomp.outputs.length; index++) {
+    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      newcomp.outputs[index].circle = this;
+      newcomp.outputs[index].type = 'output';
       return 'output';
     }).lower();
-  };
-
-  for (var _index = 0; _index < newcomp.outputs.length; _index++) {
-
-    _loop2(_index);
   }
 
   node.append('rect').attr('class', 'CompTBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
-  var cirGroup = node.append('g').attr('transform', function () {
+  var cirGroup = node.append('g').attr('transform', () => {
     var x = newcomp.width;
     var y = newcomp.height;
     return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
   });
   cirGroup.append('text').attr('id', 'nodeLog' + newcomp.GUID).attr('class', 'nodeLog ' + newcomp.GUID).attr('transform', 'translate(10, 10)').text(newcomp.log.logText).attr('fill', 'black').style('display', 'none');
-  var Titlegroup = node.append('g').attr('transform', function () {
+  var Titlegroup = node.append('g').attr('transform', () => {
     return 'translate(0, 15)';
   });
   Titlegroup.append('text').attr('class', 'nodetitle node_title' + newcomp.GUID).text(newcomp.Name).attr('fill', '#ecf0f1').attr('transform', 'translate(' + (newcomp.width / 2.0 - newcomp.Name.length * 4.0).toString() + ', 0)');
@@ -4869,19 +5032,18 @@ function CreateNewToggle(reactContext) {
     });
   }
 
-  var current_comp_out = _objectSpread2({}, reactContext.state.comp_output_edges);
-
-  var current_comp_in = _objectSpread2({}, reactContext.state.comp_input_edges);
-
+  var current_comp_out = { ...reactContext.state.comp_output_edges
+  };
+  var current_comp_in = { ...reactContext.state.comp_input_edges
+  };
   current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
   current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
   reactContext.setState({
     comp_input_edges: current_comp_in,
     comp_output_edges: current_comp_out
   });
-
-  var current_components_selection = _objectSpread2({}, reactContext.state.components_selection_data);
-
+  var current_components_selection = { ...reactContext.state.components_selection_data
+  };
   current_components_selection[newcomp.GUID] = {
     x0: newcomp.X,
     y0: newcomp.Y,
@@ -4893,19 +5055,32 @@ function CreateNewToggle(reactContext) {
   });
 }
 
+/*
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+─██████████████─██████████████─██████████████─██████████─██████████████─██████──────────██████────██████─────────██████████─██████████████─██████████████─
+─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─██░░██████████──██░░██────██░░██─────────██░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
+─██░░██████░░██─██░░██████░░██─██████░░██████─████░░████─██░░██████░░██─██░░░░░░░░░░██──██░░██────██░░██─────────████░░████─██░░██████████─██████░░██████─
+─██░░██──██░░██─██░░██──██░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██████░░██──██░░██────██░░██───────────██░░██───██░░██─────────────██░░██─────
+─██░░██──██░░██─██░░██████░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██░░██████████─────██░░██─────
+─██░░██──██░░██─██░░░░░░░░░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██░░░░░░░░░░██─────██░░██─────
+─██░░██──██░░██─██░░██████████─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██████████░░██─────██░░██─────
+─██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██████░░██────██░░██───────────██░░██───────────██░░██─────██░░██─────
+─██░░██████░░██─██░░██─────────────██░░██─────████░░████─██░░██████░░██─██░░██──██░░░░░░░░░░██────██░░██████████─████░░████─██████████░░██─────██░░██─────
+─██░░░░░░░░░░██─██░░██─────────────██░░██─────██░░░░░░██─██░░░░░░░░░░██─██░░██──██████████░░██────██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─────██░░██─────
+─██████████████─██████─────────────██████─────██████████─██████████████─██████──────────██████────██████████████─██████████─██████████████─────██████─────
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+*/
+
 var d3$1 = require('d3');
 
-function CreateNewListView(reactContext) {
-  var FromExisting = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var optionlist_predefined_items = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+function CreateNewListView(reactContext, FromExisting = null, optionlist_predefined_items = null) {
   var newcomp;
 
   if (FromExisting == null) {
     newcomp = addcomponent(uuidv4('C'), 1, 1);
     var guid = newcomp.GUID;
-
-    var data = _objectSpread2({}, reactContext.state.parent_child_matrix);
-
+    var data = { ...reactContext.state.parent_child_matrix
+    };
     data[guid] = [];
     reactContext.setState({
       parent_child_matrix: data
@@ -4931,23 +5106,17 @@ function CreateNewListView(reactContext) {
   var allContents = d3$1.select('#allCanvasContents');
 
   function update() {
-    node.attr('transform', function (d) {
-      return "translate(".concat(d.x, ",").concat(d.y, ")");
-    });
+    node.attr('transform', d => `translate(${d.x},${d.y})`);
   }
 
-  d3$1.drag().on('start', function (event, d) {
-    return Dummyrect.attr('stroke', 'red');
-  }).on('drag', function (event, d) {
+  d3$1.drag().on('start', (event, d) => Dummyrect.attr('stroke', 'red')).on('drag', (event, d) => {
     d.x = event.x;
     d.y = event.y;
-  }).on('end', function (event, d) {
-    return Dummyrect.attr('stroke', '#3a4c69');
-  }).on('start.update drag.update end.update', update);
+  }).on('end', (event, d) => Dummyrect.attr('stroke', '#3a4c69')).on('start.update drag.update end.update', update);
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
   var genY;
-  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', function () {
+  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
     if (FromExisting == null) {
       genX = Math.random() * 500 + 200;
       genY = Math.random() * 500 + 200;
@@ -4963,10 +5132,9 @@ function CreateNewListView(reactContext) {
   }]);
   var InputGroup = node.append('g');
 
-  var _loop = function _loop(index) {
+  for (let index = 0; index < newcomp.inputs.length; index++) {
     InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
-    . //newcomp.fill)
-    attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+    .attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
       newcomp.inputs[index].circle = addCircle();
       newcomp.inputs[index].circle.element = this.id;
       newcomp.inputs[index].circle.CX = 0;
@@ -4974,47 +5142,36 @@ function CreateNewListView(reactContext) {
       newcomp.inputs[index].type = 'input';
       return 'input';
     });
-  };
-
-  for (var index = 0; index < newcomp.inputs.length; index++) {
-
-    _loop(index);
   }
 
   var OutputGroup = node.append('g');
 
-  var _loop2 = function _loop2(_index) {
+  for (let index = 0; index < newcomp.outputs.length; index++) {
     OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
-    . //newcomp.fill)
-    attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + _index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + _index).attr('type', function () {
-      newcomp.outputs[_index].circle = this;
-      newcomp.outputs[_index].type = 'output';
+    .attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      newcomp.outputs[index].circle = this;
+      newcomp.outputs[index].type = 'output';
       return 'output';
     }).lower();
-  };
-
-  for (var _index = 0; _index < newcomp.outputs.length; _index++) {
-
-    _loop2(_index);
   }
 
   var Dummyrect = node.append('rect').attr('class', 'CompLBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3') //.attr("filter", "url(#f2")
   .attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', '#CECECE');
   node.append('text').attr('x', 5).attr('y', 15).text('listItems').attr('fill', 'black').style('font-family', 'Ubuntu Mono'); //listbox items
 
-  node.append('foreignObject').attr('class', 'listView CompLBody' + newcomp.GUID).attr('id', 'listView-' + newcomp.GUID).attr('y', 20).attr('x', 1).attr('width', newcomp.width - 2).attr('height', newcomp.height - 20).html(function () {
+  node.append('foreignObject').attr('class', 'listView CompLBody' + newcomp.GUID).attr('id', 'listView-' + newcomp.GUID).attr('y', 20).attr('x', 1).attr('width', newcomp.width - 2).attr('height', newcomp.height - 20).html(() => {
     var selectedOptions = [];
-    var ListItemsvalueReturn = "<select id=\"listviewSelect\" class=\"listView " + newcomp.GUID + "\" size=\"5\"  multiple>";
-    newcomp.value.forEach(function (option) {
+    var ListItemsvalueReturn = `<select id="listviewSelect" class="listView ` + newcomp.GUID + `" size="5"  multiple>`;
+    newcomp.value.forEach(option => {
       if (option[1] === 0) {
-        ListItemsvalueReturn += "<option id=\"someSelection\" class=\"listViewOption " + newcomp.GUID + "\" value=\"" + option[0] + "\">" + option[0] + "</option>";
+        ListItemsvalueReturn += `<option id="someSelection" class="listViewOption ` + newcomp.GUID + `" value="` + option[0] + `">` + option[0] + `</option>`;
       } else {
-        ListItemsvalueReturn += "<option id=\"someSelection\" class=\"listViewOption " + newcomp.GUID + "\" value=\"" + option[0] + "\" selected>" + option[0] + "</option>";
+        ListItemsvalueReturn += `<option id="someSelection" class="listViewOption ` + newcomp.GUID + `" value="` + option[0] + `" selected>` + option[0] + `</option>`;
         selectedOptions.push(option[0]);
       }
     });
     newcomp.outputs[0].value = JSON.stringify(selectedOptions);
-    ListItemsvalueReturn += "</select>";
+    ListItemsvalueReturn += `</select>`;
     return ListItemsvalueReturn;
   });
   node.append('rect').attr('class', 'CompLBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', 20).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
@@ -5033,19 +5190,18 @@ function CreateNewListView(reactContext) {
     });
   }
 
-  var current_comp_out = _objectSpread2({}, reactContext.state.comp_output_edges);
-
-  var current_comp_in = _objectSpread2({}, reactContext.state.comp_input_edges);
-
+  var current_comp_out = { ...reactContext.state.comp_output_edges
+  };
+  var current_comp_in = { ...reactContext.state.comp_input_edges
+  };
   current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
   current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
   reactContext.setState({
     comp_input_edges: current_comp_in,
     comp_output_edges: current_comp_out
   });
-
-  var current_components_selection = _objectSpread2({}, reactContext.state.components_selection_data);
-
+  var current_components_selection = { ...reactContext.state.components_selection_data
+  };
   current_components_selection[newcomp.GUID] = {
     x0: newcomp.X,
     y0: newcomp.Y,
@@ -5062,7 +5218,7 @@ var d3 = require('d3');
 function getCurrentData(reactContext) {
   var allContents = d3.select('#allCanvasContents');
   var svgContainer = d3.select('svg');
-  reactContext.state.allEdges.forEach(function (element) {
+  reactContext.state.allEdges.forEach(element => {
     element['d'] = $__default['default']('path#' + element.path_id).attr('d');
     element['circleX'] = $__default['default']('rect#pathCircle' + element.path_id).attr('x');
     element['circleY'] = $__default['default']('rect#pathCircle' + element.path_id).attr('y');
@@ -5083,12 +5239,12 @@ function getCurrentData(reactContext) {
     currentRightColWidth: parseFloat(d3.select('div#PropertiesBar').style('width')),
     currentLeftColWidth: parseFloat(d3.select('div#LeftPropertiesBar').style('width'))
   };
-  var fileData = JSON.stringify(data);
+  const fileData = JSON.stringify(data);
   return fileData;
 }
 
 function saveData() {
-  var fileData = getCurrentData(this);
+  const fileData = getCurrentData(this);
   var storage = window.localStorage;
   storage.setItem('data', fileData);
   alert('Successfully save data');
@@ -5096,24 +5252,23 @@ function saveData() {
 
 function clearData() {
   window.localStorage.clear();
-  alert('All the saved data has been cleared. Please reload the page');
+  alert('All the saved data has been cleared. The page will be reloaded');
+  window.location.reload(true);
 }
 
 function downloadData() {
-  var fileData = getCurrentData(this);
-  var blob = new Blob([fileData], {
+  const fileData = getCurrentData(this);
+  const blob = new Blob([fileData], {
     type: "text/plain"
   });
-  var url = URL.createObjectURL(blob);
-  var link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
   link.download = "data.json";
   link.href = url;
   link.click();
 }
 
 function loadData() {
-  var _this = this;
-
   var allData = JSON.parse(window.localStorage.getItem('data'));
   var allContents = d3.select('#allCanvasContents');
   var svgContainer = d3.select('svg');
@@ -5131,10 +5286,10 @@ function loadData() {
       this.setState({
         allComp: allComponents
       });
-      allComponents.forEach(function (element) {
-        if (element.type === 'component') CreateNewComponent(_this, element); //to be handle later
-        else if (element.type === 'slider') CreateNewSlider(_this, element);else if (element.type === 'string') CreateNewPanel(_this, element);else if (element.type === 'toggle') CreateNewToggle(_this, element);else if (element.type === 'optionList') CreateNewOptionList(_this, element); //to be handle later
-          else if (element.type === 'fileUpload') CreateNewFileUpload(_this, element);else if (element.type === 'listView') CreateNewListView(_this, element);
+      allComponents.forEach(element => {
+        if (element.type === 'component') CreateNewComponent(this, element); //to be handle later
+        else if (element.type === 'slider') CreateNewSlider(this, element);else if (element.type === 'string') CreateNewPanel(this, element);else if (element.type === 'toggle') CreateNewToggle(this, element);else if (element.type === 'optionList') CreateNewOptionList(this, element); //to be handle later
+          else if (element.type === 'fileUpload') CreateNewFileUpload(this, element);else if (element.type === 'listView') CreateNewListView(this, element);
       });
     }
 
@@ -5149,7 +5304,7 @@ function loadData() {
         parent_child_matrix_fast_check: allData.parent_child_matrix_fast_check,
         root_components: allData.root_components
       });
-      allEdges.forEach(function (element) {
+      allEdges.forEach(element => {
         CreatePaths(element);
       });
     }
@@ -5163,66 +5318,91 @@ function CreatePaths(theEdge) {
   addEdgeCircle(theEdge, theEdge.d).attr('x', theEdge.circleX).attr('y', theEdge.circleY).attr('style', 'display:block');
 } //End of CreatePaths
 
-class TopBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.saveData = this.props.saveData;
-    this.downloadData = this.props.downloadData;
+var TopBar = /*#__PURE__*/function (_Component) {
+  _inherits(TopBar, _Component);
+
+  var _super = _createSuper(TopBar);
+
+  function TopBar(props) {
+    var _this;
+
+    _classCallCheck(this, TopBar);
+
+    _this = _super.call(this, props);
+    _this.saveData = _this.props.saveData;
+    _this.downloadData = _this.props.downloadData;
+    return _this;
   }
 
-  render() {
-    return /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "TopPropertiesBar"
-    }, /*#__PURE__*/React__default['default'].createElement("a", {
-      id: "fileTheDef",
-      className: "menubarButtons"
-    }, "File"), /*#__PURE__*/React__default['default'].createElement("a", {
-      id: "fileTheDef",
-      className: "menubarButtons"
-    }, "Edit"), /*#__PURE__*/React__default['default'].createElement("a", {
-      id: "fileTheDef",
-      className: "menubarButtons"
-    }, "Help"), /*#__PURE__*/React__default['default'].createElement("a", {
-      id: "saveTheDef",
-      className: "menubarButtons",
-      onClick: () => this.saveData()
-    }, "Save"), /*#__PURE__*/React__default['default'].createElement("a", {
-      id: "fileTheDef",
-      className: "menubarButtons",
-      onClick: () => clearData()
-    }, "Clear"), /*#__PURE__*/React__default['default'].createElement("a", {
-      id: "saveTheDef",
-      className: "menubarButtons",
-      onClick: () => this.downloadData()
-    }, "Download"), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "minimizeUpperBar",
-      style: {
-        display: "block"
-      },
-      onClick: () => onMinimizeClick()
-    }, /*#__PURE__*/React__default['default'].createElement("i", {
-      id: "tominimize",
-      className: "fa fa-caret-up",
-      "aria-hidden": "true"
-    })), /*#__PURE__*/React__default['default'].createElement("div", {
-      id: "maximizeUpperBar",
-      style: {
-        display: "none"
-      },
-      onClick: () => onMaximizeClick()
-    }, /*#__PURE__*/React__default['default'].createElement("i", {
-      id: "tomaximize",
-      className: "fa fa-caret-up",
-      "aria-hidden": "true",
-      style: {
-        transform: [{
-          rotate: '180deg'
-        }]
-      }
-    })));
-  }
+  _createClass(TopBar, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
 
-}
+      return /*#__PURE__*/React__default['default'].createElement("div", {
+        id: "TopPropertiesBar"
+      }, /*#__PURE__*/React__default['default'].createElement("a", {
+        id: "fileTheDef",
+        className: "menubarButtons"
+      }, "File"), /*#__PURE__*/React__default['default'].createElement("a", {
+        id: "fileTheDef",
+        className: "menubarButtons"
+      }, "Edit"), /*#__PURE__*/React__default['default'].createElement("a", {
+        id: "fileTheDef",
+        className: "menubarButtons"
+      }, "Help"), /*#__PURE__*/React__default['default'].createElement("a", {
+        id: "saveTheDef",
+        className: "menubarButtons",
+        onClick: function onClick() {
+          return _this2.saveData();
+        }
+      }, "Save"), /*#__PURE__*/React__default['default'].createElement("a", {
+        id: "fileTheDef",
+        className: "menubarButtons",
+        onClick: function onClick() {
+          return clearData();
+        }
+      }, "Clear"), /*#__PURE__*/React__default['default'].createElement("a", {
+        id: "saveTheDef",
+        className: "menubarButtons",
+        onClick: function onClick() {
+          return _this2.downloadData();
+        }
+      }, "Download"), /*#__PURE__*/React__default['default'].createElement("div", {
+        id: "minimizeUpperBar",
+        style: {
+          display: "block"
+        },
+        onClick: function onClick() {
+          return onMinimizeClick();
+        }
+      }, /*#__PURE__*/React__default['default'].createElement("i", {
+        id: "tominimize",
+        className: "fa fa-caret-up",
+        "aria-hidden": "true"
+      })), /*#__PURE__*/React__default['default'].createElement("div", {
+        id: "maximizeUpperBar",
+        style: {
+          display: "none"
+        },
+        onClick: function onClick() {
+          return onMaximizeClick();
+        }
+      }, /*#__PURE__*/React__default['default'].createElement("i", {
+        id: "tomaximize",
+        className: "fa fa-caret-up",
+        "aria-hidden": "true",
+        style: {
+          transform: [{
+            rotate: '180deg'
+          }]
+        }
+      })));
+    }
+  }]);
+
+  return TopBar;
+}(React.Component);
 
 class ComponentTab extends React.Component {
   render() {
@@ -6703,61 +6883,65 @@ function styleInject(css, ref) {
 var css_248z = "body {\r\n    -webkit-user-select: none;\r\n    -khtml-user-select: none;\r\n    -moz-user-select: none;\r\n    -o-user-select: none;\r\n    user-select: none;\r\n    overflow-y: hidden; /* Hide vertical scrollbar */\r\n    overflow-x: hidden;\r\n}\r\n\r\nsvg {\r\n    border: solid 1px #565656;\r\n}\r\n\r\n#checks {\r\n    margin: 10px;\r\n}\r\n\r\ntext {\r\n    pointer-events: none;\r\n    user-select: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu mono';\r\n}\r\n\r\n.nodeLog {\r\n    font-size: small;\r\n    font-family: monospace;\r\n    pointer-events: none;\r\n}\r\n\r\ninput:focus,\r\nselect:focus,\r\ntextarea:focus,\r\nbutton:focus {\r\n    outline: none;\r\n}\r\n\r\nrect:focus {\r\n    outline: none;\r\n}\r\n\r\n.output {\r\n    font-family: monospace;\r\n    font-size: small;\r\n    color: white;\r\n}\r\n\r\n.input {\r\n    font-family: monospace;\r\n    font-size: small;\r\n}\r\n\r\n.nodetitle {\r\n    font-family: 'ubuntu mono';\r\n    font-size: 13px;\r\n    font-weight: bold;\r\n    color: white;\r\n    pointer-events: none;\r\n    text-align: center;\r\n}\r\n\r\ndiv#someData {\r\n    padding: 8px;\r\n    padding-top: 25px;\r\n    font-size: x-small;\r\n    font-family: monospace;\r\n}\r\n\r\ncircle {\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#PropertiesBarSelector {\r\n    width: 4px;\r\n    position: fixed;\r\n    right: 501px;\r\n    background-color: #000000;\r\n    height: 100%;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    background-color: #2b3d50;\r\n    right: 0px;\r\n    top: 0px;\r\n    min-height: 35%;\r\n    transition-timing-function: ease-in-out;\r\n    transition: height 2s;\r\n    transition-delay: 1s;  \r\n    width: 220px;\r\n    top: 60px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n}\r\n\r\ndiv#mainGrid {\r\n    position: relative;\r\n    top: 0px;\r\n    left: 0px;\r\n    background-color: #ececec;\r\n}\r\n\r\ndiv#textAreaBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\ndiv#optionlistBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\nselect#optionListSelectItems {\r\n    background: white;\r\n    opacity: 1;\r\n    font-family: monospace;\r\n    font-weight: bold;\r\n    border: 1px solid black;\r\n    border-radius: 3px;\r\n}\r\n\r\nh5 {\r\n    font-family: monospace;\r\n    margin-top: 1px;\r\n    margin-bottom: 4px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#LeftPropertiesBar {\r\n    width: 200px;\r\n    position: fixed;\r\n    background-color: #2b3d50;\r\n    left: 0px;\r\n    top: 0px;\r\n}\r\n\r\n.additionalData {\r\n    border-radius: 7px;\r\n    font-size: x-small;\r\n    width: 222px;\r\n    background-color: #ffffff47;\r\n    font-family: monospace;\r\n    color: #5d5d5d;\r\n    padding: 3px;\r\n    border: none;\r\n}\r\n\r\ndiv#LeftPropertiesBarSelector {\r\n    width: 5px;\r\n    height: 100%;\r\n    display: none;\r\n    position: fixed;\r\n    left: 200px;\r\n    background-color: #252525;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#TopPropertiesBar {\r\n    position: fixed;\r\n    top: 0px;\r\n    left: 0px;\r\n    width: 100%;\r\n    height: 30px;\r\n    background-color: #e6e6e6;\r\n}\r\n\r\ndiv#TopPropertiesBarSelector {\r\n    height: 2px;\r\n    width: 100%;\r\n    position: fixed;\r\n    left: 0px;\r\n    border-bottom: 1px solid #858585;\r\n    top: 47px;\r\n    cursor: ns-resize;\r\n}\r\n\r\nbutton.menubarButtons {\r\n    background-color: #6d6d6d;\r\n    border: none;\r\n    cursor: pointer;\r\n    color: #444444;\r\n    color: #cacaca;\r\n    font-family: 'Poppins', sans-serif;\r\n}\r\n\r\nbutton.menubarButtons:hover {\r\n    background-color: #aaabaa;\r\n}\r\n\r\ndiv#DefName {\r\n    width: 100%;\r\n    height: 32px;\r\n    padding: 0px 0px;\r\n    background: #2b3d50;\r\n    border-bottom: 1px solid #434343;\r\n}\r\n\r\ndiv#BottomPropertiesBar {\r\n    position: fixed;\r\n    bottom: 0px;\r\n    height: 20px;\r\n    left: 0px;\r\n    border-top: 1px solid #757575;\r\n    box-shadow: 0px -1px 0px #313131;\r\n    background-color: #525252;\r\n    background: linear-gradient(180deg, rgba(96, 96, 96, 1) 0%, rgba(82, 82, 82, 1) 100%);\r\n    width: 100%;\r\n}\r\n\r\na#changeTitleName {\r\n    color: #cfd8dc;\r\n    text-decoration: none;\r\n}\r\n\r\n.ccbody {\r\n    width: 100%;\r\n}\r\n\r\n.ccatheader {\r\n    padding: 0px 3px;\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    /* border: 1px solid #2c67a5; */\r\n    color: #e7e7e7;\r\n    padding: 4px;\r\n    cursor: pointer;\r\n    overflow: hidden;\r\n}\r\n\r\nbutton.standardcat.button {\r\n    vertical-align: middle;\r\n    border: 1px solid #444444;\r\n    width: 32px;\r\n    height: 32px;\r\n    margin: 1px;\r\n    background: none;\r\n    background: -moz-linear-gradient(top, #d6d4d4 0%, #adadad 100%);\r\n    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d6d4d4', endColorstr='#adadad', GradientType=0);\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: x-small;\r\n    color: #ffffff;\r\n    cursor: pointer;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#topLeftLogo {\r\n    width: 27px;\r\n    height: 32px;\r\n    float: left;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70302709-af822a80-1838-11ea-913b-5f935ea282ed.png);\r\n    background-repeat: no-repeat;\r\n    background-size: 26px;\r\n    background-position: center;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#settingsIcon {\r\n    float: right;\r\n    position: fixed;\r\n    top: 0px;\r\n    color: #c5c5c5;\r\n    right: 0px;\r\n    text-align: center;\r\n    padding: 11px;\r\n}\r\n\r\nbutton.standardcat.button:hover {\r\n    background: #c1c1c1;\r\n}\r\n\r\ndiv#Addedmessage {\r\n    font-family: monospace;\r\n    color: white;\r\n    padding: 2px;\r\n}\r\n\r\n#minimizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #2b3d50;\r\n    position: absolute;\r\n    top: 0px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #c5c5c5;\r\n    cursor: pointer;\r\n    border-left: 1px solid #464646;\r\n    border-bottom: 1px solid #464646;\r\n    margin-top: -4px;\r\n}\r\n\r\ndiv#maximizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #5d5d5d;\r\n    position: absolute;\r\n    top: 38px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #ababab;\r\n    cursor: pointer;\r\n    margin-top: -4px;\r\n    text-shadow: 1px 1px 1px #4b4b4b;\r\n}\r\n\r\n.propertiesbar.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbarheader.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbar.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    width: 98%;\r\n    color: #2f2f2f;\r\n    padding: 3px 10px;\r\n    background-color: gray;\r\n    border-bottom: 1px solid #909090;\r\n    border-radius: 6px 6px 0px 0px;\r\n    text-shadow: 1px 1px 0px #a5a5a5;\r\n}\r\n\r\ntextarea.textarea.optionlistProperties {\r\n    width: 98%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    height: 150px;\r\n    border-radius: 0px 0px 6px 6px;\r\n    border: 1px solid gray;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntextarea.textarea.stringProperties {\r\n    width: 100%;\r\n    padding: 0px;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    min-height: 10vh;\r\n    border: none;\r\n    border-radius: 3px;\r\n    background-color: #ffffffc7;\r\n}\r\n\r\n.propertiesbarheader.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    font-weight: bold;\r\n    width: 100%;\r\n    color: #bcbcbc;\r\n    padding: 3px;\r\n}\r\n\r\nselect#propertisBarSelecId {\r\n    width: 99%;\r\n    padding: 1px 2px;\r\n    background-color: gainsboro;\r\n    border-radius: 0px 0px 6px 6px;\r\n}\r\n\r\ndiv#propertiesBarLog {\r\n    width: 100%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    font-size: small;\r\n    padding: 2px;\r\n}\r\n\r\nrect.optionListoption {\r\n    cursor: pointer;\r\n}\r\n\r\nrect.optionListoption:hover {\r\n    fill: #d9e3e6;\r\n    stroke: #989898;\r\n}\r\n\r\ndiv#error {\r\n    color: #c0392b;\r\n    padding: 8px;\r\n}\r\n\r\nforeignObject.textbody {\r\n    font-family: 'ubuntu mono', monospace;\r\n    font-size: x-small;\r\n    color: #4e4e4e;\r\n    overflow: auto;\r\n}\r\n\r\ndiv#catHead {\r\n    font-family: 'ubuntu';\r\n    font-size: small;\r\n    width: fit-content;\r\n    padding: 2px 6px;\r\n    color: white;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-left: 3px;\r\n}\r\n\r\ndiv#catbody {\r\n    margin: 0px;\r\n    border-bottom: none;\r\n    border-right: none;\r\n}\r\n\r\ndiv#catcard {\r\n    margin-bottom: 4px;\r\n    padding: 0px;\r\n}\r\n\r\nrect.xAnchor {\r\n    cursor: ew-resize;\r\n}\r\n\r\nrect.yAnchor {\r\n    cursor: ns-resize;\r\n}\r\n\r\nrect.xyAnchor {\r\n    cursor: nwse-resize;\r\n}\r\n\r\n/* ::-webkit-scrollbar {\r\n    width: 6px;\r\n    height: 10px;\r\n} */\r\n\r\n/* Track */\r\n\r\n/* ::-webkit-scrollbar-track {\r\n    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\r\n    -webkit-border-radius: 4px;\r\n    border-radius: 4px;\r\n    touch-action: manipulation;\r\n} */\r\n\r\n/* Handle */\r\n\r\n/* ::-webkit-scrollbar-thumb {\r\n    -webkit-border-radius: 4px;\r\n    background: rgb(0, 0, 0);\r\n}\r\n\r\n::-webkit-scrollbar-thumb:window-inactive {\r\n    background: rgba(255, 0, 0, 0.4);\r\n} */\r\n\r\npath.play {\r\n    cursor: pointer;\r\n}\r\n\r\npath.play:hover {\r\n    fill: gray;\r\n}\r\n\r\nth {\r\n    border: none;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntd {\r\n    border: none;\r\n    background-color: whitesmoke;\r\n    overflow: hidden;\r\n}\r\n\r\ntbody {\r\n    font-family: ubuntu;\r\n    font-size: small;\r\n}\r\n\r\nth {\r\n    font-family: ubuntu;\r\n    text-align: left;\r\n    font-size: small;\r\n}\r\n\r\ndiv#propertiesBarContents {\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n    font-weight: normal;\r\n    color: #ffffff;\r\n    margin: 2px 0px 10px 0px;\r\n}\r\n\r\nforeignObject.panel_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ntbody {\r\n    border: none;\r\n}\r\n\r\ntable.dataframe {\r\n    border: none;\r\n}\r\n\r\nrect {\r\n    cursor: move;\r\n}\r\n\r\ninput.stringPnanel.Name {\r\n    width: 98%;\r\n    border: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\nforeignObject.panel_edit_mode a {\r\n    font-size: x-small;\r\n    color: #bdbdbd;\r\n    font-family: 'ubuntu mono';\r\n    position: relative;\r\n    text-decoration: none;\r\n    top: -8px;\r\n}\r\n\r\ndiv#numerical_slider_container {\r\n    padding: 7px;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\ndiv#help_t3 {\r\n    line-height: 1em;\r\n    color: #ec5f66;\r\n    margin-top: 5px;\r\n    margin-bottom: 3px;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_t4 {\r\n    color: #009688;\r\n    margin-left: 18px;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-bottom: 5px;\r\n}\r\n\r\ndiv#help_p {\r\n    margin-left: 36px;\r\n    margin-right: 8px;\r\n    text-align: justify;\r\n}\r\n\r\nspan#code {\r\n    color: #c23d51;\r\n    border-radius: 2px;\r\n    font-family: Courier;\r\n    font-size: xx-small;\r\n    vertical-align: middle;\r\n    padding: 1px 4px;\r\n    background-color: #32c8ac2e;\r\n}\r\n\r\ntable.dataframe {\r\n    font-size: x-small;\r\n}\r\n\r\nthead {\r\n    font-size: x-small;\r\n}\r\n\r\nth {\r\n    font-size: x-small;\r\n}\r\n\r\ntd {\r\n    font-size: x-small;\r\n}\r\n\r\nspan#errorTitle {\r\n    color: #e91e63;\r\n    font-weight: bold;\r\n    background-color: #f4433638;\r\n    border-radius: 3px;\r\n}\r\n\r\na.menubarButtons {\r\n    text-decoration: unset;\r\n    color: #000000;\r\n    text-shadow: 1px 1px 4px #4b4b4b;\r\n    font-size: small;\r\n    padding: 0px 6px;\r\n    margin: 1px 1px;\r\n    float: left;\r\n}\r\n\r\ndiv#buttonClickedname {\r\n    color: white;\r\n    font-size: small;\r\n    padding: 0px 8px;\r\n    margin: 0px;\r\n    float: left;\r\n    position: absolute;\r\n    bottom: 25px;\r\n    left: 224px;\r\n    background-color: #3d3d3d;\r\n}\r\n\r\npre {\r\n    margin: 0px;\r\n}\r\n\r\ninput.inputFileUpload {\r\n    border: none;\r\n    border-radius: 4px;\r\n    margin: 2px 2px;\r\n    background: #2b3d50;\r\n    height: 20px;\r\n    font-family: 'ubuntu mono';\r\n    color: white;\r\n}\r\n\r\ninput.submitFileUpload {\r\n    border-radius: 4px;\r\n    float: right;\r\n    margin: 3px;\r\n}\r\n\r\nforeignObject.fileUpload_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ninput#fileUploadFormToTheCloud {\r\n    border-radius: 1px;\r\n    margin-left: 1px;\r\n    /* height: 20px; */\r\n}\r\n\r\na.open_uploadedFile_link {\r\n    text-decoration: none;\r\n    color: black;\r\n    padding: 0px 6px;\r\n    position: relative;\r\n    top: 1px;\r\n    border-radius: 2px;\r\n    margin-left: 3px;\r\n    background-color: #e8e8e8;\r\n}\r\n\r\ndiv#TheContainedFile {\r\n    color: white;\r\n    padding: 2px 5px;\r\n    font-family: 'ubuntu';\r\n    display: inline;\r\n    font-size: small;\r\n    border-right: 1px solid gray;\r\n}\r\n\r\ndiv#PleaseWaitOverLay {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: #ffffff8a;\r\n    color: black;\r\n    text-align: center;\r\n    margin: auto;\r\n    line-height: 100vh;\r\n}\r\n\r\nselect.listView {\r\n    width: 198px;\r\n    height: 179px;\r\n    background-color: #f0f0f0;\r\n    border: 1px solid gray;\r\n    border-radius: 3px;\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n}\r\n\r\noption#someSelection {\r\n    background-color: #e0e0e0;\r\n    box-shadow: 0px 1px 0px white;\r\n    margin-bottom: 1px;\r\n}\r\n\r\ntext.statusTextClass {\r\n    font-size: x-small;\r\n}\r\n\r\n.subcatheader {\r\n    padding-left: 1em;\r\n    color: #ffca28;\r\n    font-size: small;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_quote {\r\n    border: 1px solid #cfcfcf;\r\n    padding: 2px;\r\n    border-radius: 3px;\r\n    background-color: #f4f4f4;\r\n    font-family: courier new;\r\n    font-size: xx-small;\r\n}\r\n\r\nforeignObject#halign_box {\r\n    font-size: 20px;\r\n    color: white;\r\n    text-decoration: none;\r\n    text-align: center;\r\n}\r\n\r\nforeignObject#halign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    margin: 0px 4px;\r\n}\r\n\r\nforeignObject#halign_box a:hover {\r\n    text-decoration: none;\r\n    color: #ffc107;\r\n}\r\n\r\ni.fa.fa-pause {\r\n    margin-left: -1px;\r\n    padding: 0px;\r\n}\r\n\r\nforeignObject#valign_box {\r\n    font-size: 20px;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n    padding: 4px 2px;\r\n}\r\n\r\nforeignObject#valign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    font-size: 20px;\r\n    display: inline-grid;\r\n}\r\n\r\nforeignObject#valign_box a:hover {\r\n    color: #ffc107;\r\n}\r\n\r\na#valign_icon {\r\n    float: left;\r\n    margin: 5px 4px;\r\n}\r\n\r\na.standardcat.button {\r\n    width: 32px;\r\n    height: 32px;\r\n    border: 1px solid black;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#leftbarcontainer {\r\n    width: 225px;\r\n    min-height: 250px;\r\n    float: left;\r\n    margin-top: 2.5px;\r\n}\r\n\r\n.toolbarTopToggleItem {\r\n    height: 25px;\r\n    display: block;\r\n    line-height: 25px;\r\n    color: #1c1c1c;\r\n    font-size: small;\r\n    float: left;\r\n}\r\n\r\n.toolbarTopToggleContainer {\r\n    width: 225px;\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n    text-align: center;\r\n    float: left;\r\n}\r\n\r\ndiv#toolbar_container_1_1_2 {\r\n    width: 25px;\r\n    float: left;\r\n    background-color: red;\r\n    height: 25px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#toolbar_container_1_2 {\r\n    background-color: #2d2d2d;\r\n    width: 225px;\r\n    height: 250px;\r\n}\r\n\r\ndiv#toolbar_container_1_2_1 {\r\n    box-sizing: border-box;\r\n    width: 200px;\r\n    background-color: #e6e6e6;\r\n    min-height: 200px;\r\n    float: left;\r\n    border: 1px solid #cfcfcf;\r\n}\r\n\r\n.mainButtonItem {\r\n    box-sizing: border-box;\r\n    width: 49.5px;\r\n    height: 49.5px;\r\n    float: left;\r\n    background-color: #6060601f;\r\n    display: inline-block;\r\n    vertical-align: middle;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70328473-107b2400-1874-11ea-88ff-dcca67fd98a9.png);\r\n    line-height: 50px;\r\n    text-align: center;\r\n    border: 1px solid #252525;\r\n    color: #ffffffed;\r\n    background-size: 36px;\r\n    font-size: x-small;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    overflow: hidden;\r\n}\r\n\r\ndiv#toolbar_container_1_2_2 {\r\n    width: 25px;\r\n    float: left;\r\n    height: 200px;\r\n    background-color: #c1c1c1;\r\n    box-sizing: border-box;\r\n    border-right: 1px solid #373737;\r\n}\r\n\r\n.rightToggleButton {\r\n    background-image: url(https://www.corasupport.org/wp-content/uploads/2015/11/placeholder-icon-300x300-v1b.png);\r\n    background-size: 20px;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    cursor: pointer;\r\n    font-size: small;\r\n    background-color: #a3a3a3;\r\n    width: 23px;\r\n    height: 23px;\r\n    text-align: center;\r\n    line-height: 25px;\r\n    border: 1px solid #2d2d2d;\r\n    border-bottom: 1px solid #565656;\r\n}\r\n\r\ndiv#toolbar_container_1_2_0 {\r\n    background-color: #707070;\r\n    font-size: small;\r\n    color: white;\r\n    line-height: 25px;\r\n    font-size: xx-small;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    background-color: #252525;\r\n    transition: 0.2s;\r\n    cursor: pointer;\r\n    border: 1px solid #818181;\r\n}\r\n\r\n.toptoggleitem {\r\n    background-color: #d1d1d1;\r\n    margin: 3px 4px 0px 0px;\r\n    height: 20px;\r\n    padding: 0px 5px;\r\n    line-height: 20px;\r\n    border: 1px solid #aaaaaa;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    background-color: #2b3d50;\r\n    border-color: #2b3d50;\r\n    color: #cfd8dc;\r\n}\r\n\r\n.rightToggleButton:hover {\r\n    background-color: #565656;\r\n    transition: 0.5s;\r\n    color: #ffffff;\r\n    border: 1px solid #cecece;\r\n}\r\n\r\n.rightToggleButton:focus {\r\n    background-color: #ffc107;\r\n    color: black;\r\n    text-shadow: 0px 0px 4px black;\r\n}\r\n\r\n.toptoggleitem:hover {\r\n    border-color: #ffc107;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#NoneTabbedToolBoxText {\r\n    position: relative;\r\n    top: 50%;\r\n    transform: rotate(-90deg);\r\n    font-size: small;\r\n    line-height: 25px;\r\n    text-shadow: 0px 0px 4px #000000;\r\n}\r\n\r\nspan#hint {\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n    display: none;\r\n    background-color: #00000066;\r\n    border: 1px solid #565656;\r\n    opacity: 0;\r\n}\r\n\r\ndiv.rightToggleButton:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\n.canvas_container {\r\n    position: fixed;\r\n    top: 30px;\r\n    left: 225px;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.canvas_container_inner {\r\n    margin: 3px;\r\n}\r\n\r\n.canvas_tab_container {\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n}\r\n\r\nh1 {\r\n    margin: 0px;\r\n}\r\n\r\ndiv#somethingLater {\r\n    width: 100%;\r\n    height: 1000px;\r\n    background-color: #666666;\r\n    overflow: scroll;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\ntextarea#script_body_editor {\r\n    height: 100vh;\r\n}\r\n\r\ndiv#codeBody {\r\n    height: 100vh;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    transition: 2s;\r\n}\r\n\r\n.toptoggleitem.selected:hover {\r\n    transition: 2s;\r\n    min-height: 36%;\r\n}";
 styleInject(css_248z);
 
-class Canvas extends React__default['default'].Component {
-  constructor(props) {
-    super(props);
-    this.state = globalVars;
-    this.handleComponentSelection = handleComponentSelection.bind(this);
-    this.handleDoubleClick = handleDoubleClick.bind(this);
-    this.handleEdgeInitialization = handleEdgeInitialization.bind(this);
-    this.handleTheClickOnAllComponents = handleTheClickOnAllComponents.bind(this);
-    this.handleFileUpload = handleFileUpload.bind(this);
-    this.manageCanvas = manageCanvas.bind(this);
-    this.manageGrid = manageGrid.bind(this);
-    this.dummyToSetState = dummyToSetState.bind(this);
-    this.addGenericComponentIcon = addGenericComponentIcon.bind(this);
-    this.saveData = saveData.bind(this);
-    this.loadData = loadData.bind(this);
-    this.downloadData = downloadData.bind(this);
+var Canvas = /*#__PURE__*/function (_React$Component) {
+  _inherits(Canvas, _React$Component);
+
+  var _super = _createSuper(Canvas);
+
+  function Canvas(props) {
+    var _this;
+
+    _classCallCheck(this, Canvas);
+
+    _this = _super.call(this, props);
+    _this.state = globalVars;
+    _this.handleComponentSelection = handleComponentSelection.bind(_assertThisInitialized(_this));
+    _this.handleDoubleClick = handleDoubleClick.bind(_assertThisInitialized(_this));
+    _this.handleEdgeInitialization = handleEdgeInitialization.bind(_assertThisInitialized(_this));
+    _this.handleTheClickOnAllComponents = handleTheClickOnAllComponents.bind(_assertThisInitialized(_this));
+    _this.handleFileUpload = handleFileUpload.bind(_assertThisInitialized(_this));
+    _this.manageCanvas = manageCanvas.bind(_assertThisInitialized(_this));
+    _this.manageGrid = manageGrid.bind(_assertThisInitialized(_this));
+    _this.dummyToSetState = dummyToSetState.bind(_assertThisInitialized(_this));
+    _this.addGenericComponentIcon = addGenericComponentIcon.bind(_assertThisInitialized(_this));
+    _this.saveData = saveData.bind(_assertThisInitialized(_this));
+    _this.loadData = loadData.bind(_assertThisInitialized(_this));
+    _this.downloadData = downloadData.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
-  componentDidMount() {
-    this.manageCanvas();
-    this.loadData();
-    this.addGenericComponentIcon();
-    addRightToggleButton();
-    this.timerID = setInterval(() => this.tick(), 1000);
-  }
+  _createClass(Canvas, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.manageCanvas();
+      this.loadData();
+      this.addGenericComponentIcon();
+      addRightToggleButton();
+    }
+  }, {
+    key: "print",
+    value: function print() {
+      console.log(this.state);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/React__default['default'].createElement("div", {
+        style: {
+          backgroundColor: '#2b3d50',
+          width: '100vw',
+          height: '100vh'
+        }
+      }, /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.dummyToSetState()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.manageGrid()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleComponentSelection()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleDoubleClick()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleEdgeInitialization()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleTheClickOnAllComponents()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleFileUpload()), /*#__PURE__*/React__default['default'].createElement(Grid, null), /*#__PURE__*/React__default['default'].createElement(TopBar, {
+        saveData: this.saveData,
+        downloadData: this.downloadData
+      }), /*#__PURE__*/React__default['default'].createElement(LeftContainer, {
+        context: this
+      }));
+    }
+  }]);
 
-  componentWillUnmount() {
-    clearInterval(this.timerID);
-  }
-
-  tick() {
-    this.setState({
-      date: new Date()
-    });
-  }
-
-  print() {
-    console.log(this.state);
-  }
-
-  render() {
-    return /*#__PURE__*/React__default['default'].createElement("div", {
-      style: {
-        backgroundColor: '#2b3d50',
-        width: '100vw',
-        height: '100vh'
-      }
-    }, /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.dummyToSetState()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.manageGrid()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleComponentSelection()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleDoubleClick()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleEdgeInitialization()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleTheClickOnAllComponents()), /*#__PURE__*/React__default['default'].createElement(ScriptTag__default['default'], null, this.handleFileUpload()), /*#__PURE__*/React__default['default'].createElement(Grid, null), /*#__PURE__*/React__default['default'].createElement(TopBar, {
-      saveData: this.saveData,
-      downloadData: this.downloadData
-    }), /*#__PURE__*/React__default['default'].createElement(LeftContainer, {
-      context: this
-    }));
-  }
-
-}
+  return Canvas;
+}(React__default['default'].Component);
 
 exports.Canvas = Canvas;

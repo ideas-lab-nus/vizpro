@@ -39,20 +39,6 @@ export default class Canvas extends React.Component {
         this.loadData();
         this.addGenericComponentIcon();
         addRightToggleButton();
-        this.timerID = setInterval(
-          () => this.tick(),
-          1000
-        );
-    }
-    
-    componentWillUnmount() {
-        clearInterval(this.timerID);
-    }
-    
-    tick() {
-        this.setState({
-            date: new Date()
-        });
     }
 
     print() {
@@ -66,7 +52,7 @@ export default class Canvas extends React.Component {
                 width: '100vw',
                 height: '100vh',
               }}>
-                  
+
                 {/* <ScriptTag>{this.print()}</ScriptTag> */}
                 <ScriptTag>{this.dummyToSetState()}</ScriptTag>
                 <ScriptTag>{this.manageGrid()}</ScriptTag>
