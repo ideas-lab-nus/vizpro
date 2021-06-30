@@ -834,6 +834,10 @@ div#toolbar_container_1_2_1 {
     font-size: x-small;
     background-position: center;
     background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.mainButtonItem:hover {
     overflow: visible;
 }
 
@@ -954,19 +958,21 @@ span.tooltiptext {
     z-index: 1;
 }
 
-/* .tooltip {
-} */
-
-/* span.tooltiptext {    
-    z-index: 1;
-} */
-
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
 
+p.iconText {
+    display: block;
+    text-overflow: ellipsis;
+    width: 40px;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 5px;
+    line-height: normal;
+}
   
-/* div.mainButtonItem span#hint {
+div.mainButtonItem span#hint {
     position: relative;
     width: fit-content;
     display: none;
@@ -976,7 +982,6 @@ span.tooltiptext {
     left: 30px;
     padding: 0px 4px;
     overflow: visible;
-
 }
 
 div.mainButtonItem:hover span#hint {
@@ -987,7 +992,7 @@ div.mainButtonItem:hover span#hint {
     padding: 0px 4px;
     border-radius: 5px;
     width: fit-content;
-} */
+}
 
 div.rightToggleButton:hover span#hint {
     opacity: 1;
