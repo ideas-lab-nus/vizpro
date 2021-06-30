@@ -309,16 +309,12 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
 function handleFileUpload() {
     $('input#fileUploadFormToTheCloud').on('change', function (e) {
         var selectedFile = e.target.files[0];
-        console.log(selectedFile);
-        var thisFormId = $(this).attr('class');
-        console.log(thisFormId);        
+        var thisFormId = $(this).attr('class');       
 
         var fileUrl = URL.createObjectURL(selectedFile);
-        console.log(fileUrl);
 
         var fileName = selectedFile.name;
         var fileSize = selectedFile.size;
-        console.log(fileName);
         var theCurrentComp = selectComp(thisFormId);
         theCurrentComp.outputs[0].Name = fileName;
         theCurrentComp.outputs[0].Description = {
@@ -326,7 +322,7 @@ function handleFileUpload() {
             size: fileSize,
             url: fileUrl,
         };
-        theCurrentComp.outputs[0].value = fileUrl; //to be handled later
+        theCurrentComp.outputs[0].value = fileUrl;
         console.log(theCurrentComp);
         d3.select('#fileUpload_status_' + thisFormId).html(
             'File Size : ' +

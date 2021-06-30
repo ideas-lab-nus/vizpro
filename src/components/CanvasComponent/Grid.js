@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import grid2 from './img/grid2.png';
+import grid2 from '../img/grid2.png';
 
 export default class Grid extends Component {
     render() {

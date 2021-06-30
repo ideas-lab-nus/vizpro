@@ -45,8 +45,6 @@ var parent_child_matrix;
 var parent_child_matrix_fast_check;
 var components_selection_data;
 var runDeep;
-var messageshown;
-var mouseInsideOption;
 
 function dummyToSetState() {
     reactContext = this;
@@ -61,8 +59,6 @@ function dummyToSetState() {
     parent_child_matrix_fast_check = reactContext.state.parent_child_matrix_fast_check;
     components_selection_data = reactContext.state.components_selection_data;
     runDeep = reactContext.state.runDeep;
-    mouseInsideOption = reactContext.state.mouseInsideOption;
-    messageshown = reactContext.state.messageshown;
 }
 
 
@@ -1133,7 +1129,9 @@ function popupMessage(message) {
     d3.select('div#buttonClickedname')
         .text(message)
         .style('opacity', () => {
-            messageshown = true;
+            reactContext.setState({
+                messageshown: true,
+            });
             return 0.8;
         });
 } // End of popupMessage

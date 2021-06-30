@@ -17,6 +17,7 @@ function getCurrentData(reactContext) {
         element['circleX'] = $('rect#pathCircle' + element.path_id).attr('x');
         element['circleY'] = $('rect#pathCircle' + element.path_id).attr('y');
     });
+    console.log(reactContext.state.allComp);
     var data = {
         components: reactContext.state.allComp,
         edges: reactContext.state.allEdges,

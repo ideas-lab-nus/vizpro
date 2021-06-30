@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { CreateNewSlider } from './js/slider.js';
-import { CreateNewOptionList } from './js/optionlist.js';
-import { CreateNewPanel } from './js/panel.js';
-import { CreateNewToggle } from './js/toggle.js';
-import { CreateNewFileUpload } from './js/fileUpload.js';
-import { CreateNewListView } from './js/listView.js';
+import { CreateNewSlider } from '../logic/slider.js';
+import { CreateNewOptionList } from '../logic/optionlist.js';
+import { CreateNewPanel } from '../logic/panel.js';
+import { CreateNewToggle } from '../logic/toggle.js';
+import { CreateNewFileUpload } from '../logic/fileUpload.js';
+import { CreateNewListView } from '../logic/listView.js';
 
 export default class ComponentTab extends Component {
     render() {
