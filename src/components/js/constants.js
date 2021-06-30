@@ -1,4 +1,4 @@
-import { addCircle } from './handle.js';
+import { addCircle } from './functions.js';
 
 const globalVars = {
     initEdgex1: 0,

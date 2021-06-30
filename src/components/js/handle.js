@@ -590,8 +590,5 @@ export {
     handleTheClickOnAllComponents,
     handleEdgeInitialization,
     handleComponentSelection,
-    handleDoubleClick,
-    uuidv4,
-    addCircle,
-    addEdge
+    handleDoubleClick
 };

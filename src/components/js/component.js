@@ -25,8 +25,7 @@
  * @since  x.x.x
  */
 
-import { addcomponent, popupMessage, runDeepFunction } from './functions.js';
-import { uuidv4 } from './handle.js';
+import { addcomponent, popupMessage, runDeepFunction, uuidv4 } from './functions.js';
 import $ from 'jquery';
 
 var d3 = require('d3');

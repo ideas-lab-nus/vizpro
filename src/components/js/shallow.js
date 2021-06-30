@@ -929,11 +929,16 @@ function calculateShallow(compId) {
 
     var d = shallow_functions[thisComp.Name](inputGroup);
     console.log(d);
+    console.log(d.length);
 
-    thisComp.outputs.forEach(function (output, i) {
-        output.value = d['value'][i];
-        output.type = d['type'][i];
-    });
+    if (d.type.length !== thisComp.outputs.length || d.value.length !== thisComp.outputs.length) {
+        alert("The number of outputs does not match the number of values in the return function. Please check again");
+    } else {
+        thisComp.outputs.forEach(function (output, i) {
+            output.value = d['value'][i];
+            output.type = d['type'][i];
+        });
+    }
 }
 
 export { calculateShallow, shallow_functions };

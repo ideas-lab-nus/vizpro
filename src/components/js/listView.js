@@ -23,8 +23,7 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
-import { addcomponent } from './functions.js';
-import { uuidv4, addCircle } from './handle.js';
+import { addcomponent, uuidv4, addCircle } from './functions.js';
 import '@fontsource/ubuntu-mono';
 var d3 = require('d3');
 
@@ -73,20 +72,6 @@ function CreateNewListView(reactContext, FromExisting = null, optionlist_predefi
     // TODO : get the longest text in the component. and set the width based on this.
 
     var allContents = d3.select('#allCanvasContents');
-
-    function update() {
-        node.attr('transform', d => `translate(${d.x},${d.y})`);
-    }
-
-    var dragHandler = d3
-        .drag()
-        .on('start', (event, d) => Dummyrect.attr('stroke', 'red'))
-        .on('drag', (event, d) => {
-            d.x = event.x;
-            d.y = event.y;
-        })
-        .on('end', (event, d) => Dummyrect.attr('stroke', '#3a4c69'))
-        .on('start.update drag.update end.update', update);
 
     var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
 
