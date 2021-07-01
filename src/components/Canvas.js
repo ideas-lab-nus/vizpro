@@ -36,7 +36,6 @@ export default class Canvas extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.udo);
         addAllUdo(this.props.udo);
         this.manageCanvas();
         this.loadData();

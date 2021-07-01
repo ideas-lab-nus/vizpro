@@ -144,21 +144,6 @@ function CreateNewComponent(
                 return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
             }
         })
-        .data([
-            {
-                x: FromExisting
-                    ? FromExisting.X
-                    : kwargs.X !== undefined && kwargs.Y !== undefined
-                    ? kwargs.X
-                    : genX,
-                y: FromExisting
-                    ? FromExisting.Y
-                    : kwargs.X !== undefined && kwargs.Y !== undefined
-                    ? kwargs.Y
-                    : genY
-            }
-        ]);
-    // .call(dragHandler);
 
     var statusBar = node
         .append('g')
@@ -397,7 +382,7 @@ function CreateNewComponent(
         .attr('fill', newcomp.fill)
         .attr('fill-opacity', '0.01')
         .on('mousemove', function (event) {
-            d3.select(event.currentTargethis).attr('cursor', 'pointer');
+            d3.select(event.currentTarget).attr('cursor', 'pointer');
         })
         .on('mouseout', function (event) {
             d3.select(event.currentTarget).attr('fill', newcomp.fill);

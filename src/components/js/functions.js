@@ -473,7 +473,7 @@ function redrawDependents(parentComp) {
                 ch.inputs[element[2]].type = 'json';
             } else if (parent.type === 'toggle' || parent.type === 'optionList') {
                 ch.inputs[element[2]].value = parent.value;
-            } else if (parent.type === 'component') {
+            } else if (parent.type === 'component' || parent.type === 'cloud') {
                 try {
                     calculateShallow(parent.GUID);
                     ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -827,7 +827,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                     var padding = 20;
                     var titleMargin = 30;
                     var thenewEdge = d3.select('#' + inputElement).attr('d', function () {
-                        if (element.type === 'component') {
+                        if (element.type === 'component' || element.type === 'cloud') {
                             var itisthelocation = returnCurveString(
                                 xy2[0],
                                 xy2[1],
@@ -892,7 +892,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                     var padding = 20;
                     var titleMargin = 30;
                     var thenewEdge = d3.select('#' + outputElement).attr('d', function () {
-                        if (element.type === 'component') {
+                        if (element.type === 'component' || element.type === 'cloud') {
                             var itisthelocation = returnCurveString(
                                 rectpos[0] + parseFloat(rectwidth),
                                 rectpos[1] + (circleindex * padding + titleMargin),

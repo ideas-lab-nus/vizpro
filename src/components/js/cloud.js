@@ -6,15 +6,11 @@ var d3 = require('d3');
 function calculateCloud(compId) {
     d3.select('div#PleaseWaitOverLay').style('display', 'block');
     var thisComp = selectComp(compId);
-    var inputGroup = [];
-    thisComp.inputs.forEach(input => {
-        inputGroup.push(input.value);
-    });
-
     var functionName = thisComp.Name;
-    var args = inputGroup;
+    var args = thisComp.inputs.map(input => input.value);
 
     const result = mapFunction[functionName](args);
+
     try {
         thisComp.outputs.forEach(function (output, i) {
             output.type = result['type'][i];
@@ -25,6 +21,7 @@ function calculateCloud(compId) {
         d3.select('div#PleaseWaitOverLay').style('display', 'none');
     } catch (error) {
         console.log(error);
+        alert(error);
         d3.select('div#PleaseWaitOverLay').style('display', 'none');
     }
 }
@@ -36,7 +33,7 @@ const mapFunction = {
 function absolute(args) {
     var log_ = 'Success';
     var parameters = args[0];
-    var url = args[1] + '/' + 'there?p1=' + parameters.toString();
+    var url = args[1] + '/there?p1=' + parameters.toString();
     var data = { parameters: parameters.toString() };
 
     const req = $.ajax({
