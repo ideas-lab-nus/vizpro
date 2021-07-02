@@ -59,8 +59,7 @@ export default class Canvas extends React.Component {
                 <ScriptTag>{this.handleComponentSelection()}</ScriptTag>
                 <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
                 <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
-                <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>
-                
+                <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>                
                 
                 <Grid />   
 

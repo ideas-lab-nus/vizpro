@@ -18,7 +18,7 @@ function getCurrentData(reactContext) {
         element['circleX'] = $('rect#pathCircle' + element.path_id).attr('x');
         element['circleY'] = $('rect#pathCircle' + element.path_id).attr('y');
     });
-    console.log(reactContext.state.allComp);
+
     var data = {
         components: reactContext.state.allComp,
         edges: reactContext.state.allEdges,
@@ -78,7 +78,6 @@ function loadData() {
                 allComp: allComponents
             });
             allComponents.forEach(element => {
-                console.log(element);
                 if (element.type === 'component') CreateNewComponent(this, element);
                 else if (element.type === 'slider') CreateNewSlider(this, element);
                 else if (element.type === 'string') CreateNewPanel(this, element);

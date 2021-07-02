@@ -317,7 +317,6 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
             size: fileSize,
         };
         theCurrentComp.outputs[0].value = selectedFile;
-        console.log(theCurrentComp);
         d3.select('#fileUpload_status_' + thisFormId).html(
             'File Size : ' +
             (selectedFile.size / (1024 * 1024)).toString() +

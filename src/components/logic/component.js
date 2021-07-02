@@ -49,7 +49,8 @@ function CreateNewComponent(
     kwargs = null,
     inputList,
     outputList,
-    color = '#F23322'
+    color = '#F23322',
+    url
 ) {
     var IDLE_COLOR = reactContext.state.IDLE_COLOR;
     var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
@@ -90,6 +91,10 @@ function CreateNewComponent(
         }
 
         newcomp.fill = color;
+        if (url !== undefined) {
+            newcomp.isUDOCloud = true;
+            newcomp.url = url;
+        }
         newcomp.Name = ThisComponentName;
         newcomp.height =
             titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding;

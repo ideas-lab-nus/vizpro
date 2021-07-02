@@ -162,7 +162,7 @@ function CreateNewCloud(
                 .attr('stroke', newcomp.fill)
                 .attr('stroke-width', '2')
                 .attr('id', 'inputCirViual' + newcomp.GUID + '_' + index)
-                .attr('class', 'inputCirVisual' + newcomp.GUID + ' ' + index)
+                .attr('class', 'inputCirVisual ' + newcomp.GUID + ' ' + index)
                 .attr('type', function () {
                     if (FromExisting == null) {
                         return 'text';
@@ -182,7 +182,7 @@ function CreateNewCloud(
                 .attr('fill-opacity', '0.3')
                 .attr('r', '15')
                 .attr('id', 'inputCir' + newcomp.GUID + '_' + index)
-                .attr('class', 'inputCir' + newcomp.GUID + ' ' + index)
+                .attr('class', 'inputCir ' + newcomp.GUID + ' ' + index)
                 .attr('type', function () {
                     if (FromExisting == null) {
                         return 'text';
@@ -195,10 +195,9 @@ function CreateNewCloud(
         var InputGroupText = node.append('g');
 
         for (let index = 0; index < newcomp.inputs.length; index++) {
-            console.log(newcomp.inputs[index].Name)
             var inptext = InputGroupText.append('text')
                 .attr('id', 'input-' + newcomp.GUID + '_' + index)
-                .attr('class', 'inputTxt' + newcomp.GUID + ' ' + index)
+                .attr('class', 'inputTxt ' + newcomp.GUID + ' ' + index)
                 .attr(
                     'transform',
                     'translate(' + 10 + ' , ' + (index * padding + titleMargin + 5).toString() + ')'
@@ -230,7 +229,7 @@ function CreateNewCloud(
                 .attr('stroke', newcomp.fill)
                 .attr('stroke-width', '2')
                 .attr('id', 'outputCirVisual' + newcomp.GUID + '_' + index)
-                .attr('class', 'outputCirVisual' + newcomp.GUID + ' ' + index)
+                .attr('class', 'outputCirVisual ' + newcomp.GUID + ' ' + index)
                 .attr('type', function () {
                     if (FromExisting == null) {
                         return 'text';
@@ -250,7 +249,7 @@ function CreateNewCloud(
                 .attr('fill-opacity', '0.5')
                 .attr('r', '12')
                 .attr('id', 'outputCir' + newcomp.GUID + '_' + index)
-                .attr('class', 'outputCir' + newcomp.GUID + ' ' + index)
+                .attr('class', 'outputCir ' + newcomp.GUID + ' ' + index)
                 .attr('type', function () {
                     if (FromExisting == null) {
                         return 'text';
@@ -264,7 +263,7 @@ function CreateNewCloud(
         for (let index = 0; index < newcomp.outputs.length; index++) {
             var outtext = OutputGroupText.append('text')
                 .attr('id', 'output-' + newcomp.GUID + '_' + index)
-                .attr('class', 'outputTxt' + newcomp.GUID + ' ' + index)
+                .attr('class', 'outputTxt ' + newcomp.GUID + ' ' + index)
                 .attr(
                     'transform',
                     'translate(' +
@@ -457,7 +456,7 @@ function CreateNewCloud(
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log('Adding a generic comp' + newcomp);
+        console.log('Adding a Cloud comp' + newcomp);
         current_all_comp.push(newcomp);
         reactContext.setState({
             allComp: current_all_comp
@@ -499,12 +498,12 @@ function submitCloudEdit(compKey) {
         cloudComp.url = url;
         cloudComp.Name = name;
     
-        d3.selectAll('circle.inputCirVisual' + cloudComp.GUID).remove();
-        d3.selectAll('circle.inputCir' + cloudComp.GUID).remove();
-        d3.selectAll('text.inputTxt' + cloudComp.GUID).remove();
-        d3.selectAll('circle.outputCirVisual' + cloudComp.GUID).remove();
-        d3.selectAll('circle.outputCir' + cloudComp.GUID).remove();
-        d3.selectAll('text.outputTxt' + cloudComp.GUID).remove();
+        d3.selectAll('circle.inputCirVisual.' + cloudComp.GUID).remove();
+        d3.selectAll('circle.inputCir.' + cloudComp.GUID).remove();
+        d3.selectAll('text.inputTxt.' + cloudComp.GUID).remove();
+        d3.selectAll('circle.outputCirVisual.' + cloudComp.GUID).remove();
+        d3.selectAll('circle.outputCir.' + cloudComp.GUID).remove();
+        d3.selectAll('text.outputTxt.' + cloudComp.GUID).remove();
 
         addInputCirclesFunc(cloudComp);
         addOutputCirclesFunc(cloudComp);
@@ -517,7 +516,7 @@ function submitCloudEdit(compKey) {
         $('div#propertiesBarContents').html('');
     } catch (error) {
         console.log(error);
-        alert("Invalid JSON format!");
+        alert("Ran into an issue :(");
     }
 }
 

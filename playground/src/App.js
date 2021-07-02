@@ -7,7 +7,6 @@ function isNumeric(n) {
 
 function exponential(args) {
     let input = args[0];
-    console.log(input);
     if (!isNumeric(input)) {
         return {
             type: ['text', 'text'],
@@ -41,6 +40,23 @@ const newComps = [
         backgroundImage: '',
         func: exponential,
     },
+    {
+        name: 'Cloud - Abs',
+        shname: 'abs',
+        type: 'cloud',
+        dftype: 'dp',
+        category: 'Basic',
+        subcategory: 'Math',
+        inputList: [
+            { name: 'num', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+        ],
+        outputList: [
+            { name: 'output_', shortName: 'out_', desc: 'product' },
+        ],
+        color: '#F23322',
+        backgroundImage: '',
+        url: 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute'
+    },    
 ];
 
 const App = ()  => {

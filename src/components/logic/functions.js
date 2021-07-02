@@ -239,7 +239,6 @@ function addEdgeCircle(theEdge, thisD) {
         })
         .on('mousedown', function (event) {
             deleteEdge(theEdge.path_id);
-            console.log(theEdge.path_id);
             d3.select(event.currentTarget).remove();
 
             d3.select('path#' + theEdge.path_id).remove();
@@ -421,7 +420,6 @@ function addOptionDropdownList(compId) {
 } // End of addOptionDropdownList
 
 function changeOptionListFinalValue(el) {
-    console.log(el.attributes.value.value);
     var thisComp = selectComp(el.classList[1]);
     thisComp.value = el.attributes.key.value;
     thisComp.Name = el.attributes.value.value;
@@ -464,7 +462,6 @@ function redrawDependents(parentComp) {
                 ch.inputs[element[2]].value = parent.outputs[element[0]].value;
             } else if (parent.type === 'listView') {
                 ch.inputs[element[2]].value = parent.outputs[element[0]].value;
-                console.log(ch.inputs[element[2]]);
                 ch.inputs[element[2]].type = 'json';
             } else if (parent.type === 'toggle' || parent.type === 'optionList') {
                 ch.inputs[element[2]].value = parent.value;
@@ -486,17 +483,18 @@ function redrawDependents(parentComp) {
             redrawDependents(ch.GUID);
         });
     } else if (parent.dftype === 'dp') {
-        console.log('Cloud comp');
+        console.log('Cloud comp' + parent.type);
         parent.state = 'unbound';
         parent_child_matrix[parentComp].forEach(function (element, i) {
             //iterate through all those childs.
             let ch = selectComp(element[1]);
-            if (parent.type === 'cloud' && runDeep === true) {
+            if ((parent.type === 'cloud' || parent.isUDOCloud) && runDeep === true) {
                 reactContext.setState({
                     runDeep: false
                 });
                 if (parent.state === 'unbound') {
                     //Previously calculate deep
+                    console.log("calculating cloud")
                     calculateCloud(parent.GUID);
                     parent.state = 'active';
                 }
@@ -548,7 +546,6 @@ function updatShallowCompRender(ch) {
             const element = JSON.parse(ch.inputs[0].value)[i];
             newValues.push([element, 0]);
         }
-        console.log(newValues);
         ch.value = newValues;
         ch.inputs[0].value = newValues;
         ch.outputs[0].value = newValues;
@@ -992,10 +989,8 @@ function deleteComponent(component_to_be_deleted) {
             optionListStarted: false
         });
     }
-    console.log(component_to_be_reset.type);
     component_to_be_reset.value = null;
 
-    console.log(parent_child_matrix_fast_check);
     component_to_be_reset.inputs.forEach(input => {
         input.value = null;
     });

@@ -9,6 +9,7 @@ function calculateCloud(compId) {
     var functionName = cloudComp.Name;
     var args = cloudComp.inputs.map(input => input.value);
     var url = cloudComp.url;
+    console.log(args, url)
     const result = absolute(args, url);
 
     try {

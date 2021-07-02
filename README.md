@@ -24,24 +24,41 @@ function App() {
   );
 }
 ```
-Besides using pre-defined components in the package, users can defined their own components by providing the following details for that component in form of a dictionary:
-- Name
-- Short name
-- Description (optional)
-- Type: must be either `component`, `optionList` or `string`.
-- Dataflow type: must be either `shlow`(shallow) or `dp`(deep).
-- Category: must be either `Basic`, `BuildSimHub`, `OsiSoft`, `Pandas` or `String Operations`.
-- Input list: a list a list of dictionary, "name" attribute is compulsory, other attributes such as short name, description, input type and default value are optional.
-- Output list: a list of dictionary. "name" attribute is compulsory, other attributes such as short name and description are optional).
-- Color (in hex value)
-- icon image (optional): the URL to the image
-- function: a function that is executed when the component is connected to an input. A function must return a dictionary that has 2 keys: `type` and `value`. The corresponding value of `type` is a list containing the return type of all the outputs. The return type must be either `text`, `html`, `json`, `list` or `plot`. The corresponding value of `value` is a list containing the value that will be displayed of all the outputs. The size of both lists must be the same as the size of the `output list`.
+Besides using pre-defined components in the package, users can define their own components by passing the following details for that component in form of a dictionary as props:
 
-The details for all components must be put inside a single list (called `comps`).
-Finally, call the `Canvas` component with `{udo: comps}` as props
+### Required
+
+- `type` : Allowed type values -> [`component`, `optionList`, `string`, `cloud`]
+- `dftype` : Allowed dataflow values -> [`shlow`, `dp`]
+- `category` : Allowed categories -> [`Basic`, `BuildSimHub`, `OsiSoft`, `Pandas`, `String Operations`]
+- `name`: Attribute required for each entry in `inputList`, `outputList`
+
+Shallow functions (type != `cloud`, dftype = `shlow`)
+    - `func` : Function that is executed when the component is connected to an input. A function must return a dictionary that has 2 keys: `type` and `value`. The corresponding value of `type` is a list containing the return type of all the outputs. The return type must be either `text`, `html`, `json`, `list` or `plot`. The corresponding value of `value` is a list containing the value that will be displayed of all the outputs. The size of both lists must be the same as the size of the `output list`.
+
+Cloud functions (type = `cloud`, dftype = `dp`)
+    - `url` : URL of the cloud function
+
+### Optional
+
+- `name` : Name
+- `shname` : Short name
+- `desc` : Description
+- `inputList` : A list of dictionary
+- `outputList` : A list of dictionary
+- `color` : Color (in hex)
+- `backgroundImage` : URL to the image
+
+### Application
+
+```jsx
+    <Canvas  udo={newComps} />
+```
+
+where `newComps` is the list of components, each its own dictionary.
 
 Check this example for more details:
-In this example, two component called `Exponential` and `Product 2` will be added to the list of components.
+In this example, two components called `Exponential` and `Multiply 2` are added to the tool.
 
 In `App.js`:
 ```js
@@ -153,8 +170,3 @@ Run at root:
 -   Request for cloud function is sync. Make it async and add a `loading` indicator
 -   Factor out local title variables into constants file instead of state dictionary
 -   Fix components that take a file upload as an input (need to create a new public URL using `URL.createObjectURL()` method)
-
-## To note:
-
--   All the information about the components is stored in `componentDetail.js` file.
--   All the hardcoded generic components are handled using `addGenericComponentIcon` in `leftPropertyBar.js` file.

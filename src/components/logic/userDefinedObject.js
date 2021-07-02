@@ -1,5 +1,5 @@
-import {details} from './componentDetail.js';
-import {shallow_functions} from './shallow.js';
+import { details } from './componentDetail.js';
+import { shallow_functions } from './shallow.js';
 /**
  * Adds a new user defined object. This function is called in componentDidMount in the main Canvas
  * @param {String} name the component's name
@@ -16,54 +16,57 @@ import {shallow_functions} from './shallow.js';
  * @param {String} backgroundImage the URL of the component's icon in the left property bar. This field is optional.
  * @param {Function} calledFunc the corresponding function for that component.
  */
-var typeList = ['component', 'optionList', 'string'];
+var typeList = ['component', 'optionList', 'string', 'cloud'];
 var dftypeList = ['shlow', 'dp'];
 var categoryList = ['Basic', 'BuildSimHub', 'OsiSoft', 'Pandas', 'String Operations'];
 
-function addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color = "#F23322", backgroundImage = "", calledFunc = undefined) {
+function addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color = "#F23322", backgroundImage = "", calledFunc = undefined, url) {
     //check requirements
-    if (typeList.includes(type) && dftypeList.includes(dftype) && categoryList.includes(category)) {
-        let nameCheck = true;
-        for (let index = 0; index < inputList.length; index++) {
-            const element = inputList[index];
-            if (element.name === undefined) {
-                nameCheck = false;
-                break;
-            }
-        }
-        for (let index = 0; index < outputList.length; index++) {
-            const element = outputList[index];
-            if (element.name === undefined) {
-                nameCheck = false;
-                break;
-            }
-        }
-        if (nameCheck) {
-            let newComp = {
-                name: name,
-                shname: shname,
-                desc: desc,
-                type: type,
-                dftype: dftype,
-                category: category,
-                inputList: inputList,
-                outputList: outputList,
-                color: color,
-                backgroundImage: backgroundImage
-            };
-            details.push(newComp);
-            if (calledFunc !== undefined) {
-                if (dftype === 'shlow') {
-                    shallow_functions[name] = calledFunc;
-                } else if (dftype === 'dp') {
-                    //to be handle later
-                }
-            }
+    if (!typeList.includes(type)) {
+        throw new Error('Pass a valid type');
+    }
+    if (!dftypeList.includes(dftype)) {
+        throw new Error('Pass a valid dftype');
+    }
+    if (!categoryList.includes(category)) {
+        throw new Error('Pass a valid category');
+    }
+
+    var undefInputs = inputList.filter(elem => elem.name === undefined);
+    var undefOutputs = outputList.filter(elem => elem.name === undefined);
+    
+    if (undefInputs.length + undefOutputs.length !== 0) {
+        throw new Error('Each input/output must have a "name" attribute');
+    }
+
+    let newComp = {
+        name: name,
+        shname: shname,
+        desc: desc,
+        type: type,
+        dftype: dftype,
+        category: category,
+        inputList: inputList,
+        outputList: outputList,
+        color: color,
+        backgroundImage: backgroundImage,
+        url: url
+    };
+
+    details.push(newComp);
+
+    if (dftype === 'shlow') {
+        if (calledFunc !== undefined) {
+            shallow_functions[name] = calledFunc;
         } else {
-            console.log('All elements in input and output list must have "name" attribute');
+            throw new Error('Shallow functions require a function reference');
         }
-    } else {
-        console.log("Check the type/dftype/category again");
+    } else { //Already dftype is verified to be one of two
+        if (url !== undefined) {
+            
+        } else {
+            throw new Error('Cloud functions require a url');
+        }
     }
 }
 
@@ -86,8 +89,13 @@ function addAllUdo(list) {
             let color = element.color === undefined ? '#F23322' : element.color;
             let backgroundImage = element.backgroundImage === undefined ? '' : element.backgroundImage;
             let calledFunc = element.func;
-            addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color, backgroundImage, calledFunc);
+            let url = element.url;
+            try {
+                addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color, backgroundImage, calledFunc, url);
+            } catch (e) {
+                console.error(e.message);
+            }
         }
     }
 }
-export {addAllUdo};
+export { addAllUdo };

@@ -19,7 +19,8 @@ function addGenericComponentIcon() {
             currInfo.backgroundImage,
             currInfo.inputList,
             outputNameList,
-            currInfo.color
+            currInfo.color,
+            currInfo.url
         );
         $(tabIdMapping[currInfo.category]).append(newComp);
     }
@@ -37,7 +38,8 @@ function addNewComponentIcon(
     imageUrl,
     inputList,
     outputList,
-    color
+    color,
+    url
 ) {
     var newCompString =
         '<div id="' +
@@ -64,9 +66,9 @@ function addNewComponentIcon(
         '</div>';
     var newComp = $(newCompString);
     newComp.on('click', () => {
-        if (type === 'component') {
+        if (type === 'component' || type === 'cloud') {
             let kwargs = { shortName: shname, dfType: dftype };
-            CreateNewComponent(reactContext, null, name, kwargs, inputList, outputList, color);
+            CreateNewComponent(reactContext, null, name, kwargs, inputList, outputList, color, url);
         } else if (type === 'optionList') {
             CreateNewOptionList(reactContext, null, desc);
         }
