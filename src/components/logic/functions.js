@@ -459,9 +459,8 @@ function redrawDependents(parentComp) {
             //iterate through all those childs.
             let ch = selectComp(element[1]);
             if (parent.type === 'slider') {
-                console.log('setting slider value to child');
                 ch.inputs[element[2]].value = parent.value;
-            } else if (parent.type === 'string' || parent.type === 'fileUpload') {
+            } else if (parent.type === 'string') {
                 ch.inputs[element[2]].value = parent.outputs[element[0]].value;
             } else if (parent.type === 'listView') {
                 ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -469,7 +468,7 @@ function redrawDependents(parentComp) {
                 ch.inputs[element[2]].type = 'json';
             } else if (parent.type === 'toggle' || parent.type === 'optionList') {
                 ch.inputs[element[2]].value = parent.value;
-            } else if (parent.type === 'component') {
+            } else if (parent.type === 'component' || parent.type === 'cloud') {
                 try {
                     calculateShallow(parent.GUID);
                     ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -479,6 +478,9 @@ function redrawDependents(parentComp) {
                     console.log(error);
                     componentStatus(parent.GUID, ERROR_COLOR);
                 }
+            } else if (parent.type === 'fileUpload') {
+                ch.inputs[element[2]].value = parent.outputs[element[0]].value === null ? null : parent.outputs[element[0]].Description.Name;
+                ch.inputs[element[2]].file = parent.outputs[element[0]].value;
             }
             updatShallowCompRender(ch);
             redrawDependents(ch.GUID);
@@ -489,7 +491,7 @@ function redrawDependents(parentComp) {
         parent_child_matrix[parentComp].forEach(function (element, i) {
             //iterate through all those childs.
             let ch = selectComp(element[1]);
-            if (parent.type === 'component' && runDeep === true) {
+            if (parent.type === 'cloud' && runDeep === true) {
                 reactContext.setState({
                     runDeep: false
                 });
@@ -823,7 +825,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                     var padding = 20;
                     var titleMargin = 30;
                     var thenewEdge = d3.select('#' + inputElement).attr('d', function () {
-                        if (element.type === 'component') {
+                        if (element.type === 'component' || element.type === 'cloud') {
                             var itisthelocation = returnCurveString(
                                 xy2[0],
                                 xy2[1],
@@ -888,7 +890,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                     var padding = 20;
                     var titleMargin = 30;
                     var thenewEdge = d3.select('#' + outputElement).attr('d', function () {
-                        if (element.type === 'component') {
+                        if (element.type === 'component' || element.type === 'cloud') {
                             var itisthelocation = returnCurveString(
                                 rectpos[0] + parseFloat(rectwidth),
                                 rectpos[1] + (circleindex * padding + titleMargin),

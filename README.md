@@ -52,9 +52,7 @@ function isNumeric(n) {
 }
 
 function exponential(args) {
-    console.log("inside exponential");
     let input = args[0];
-    console.log(input);
     if (!isNumeric(input)) {
         return {
             type: ['text', 'text'],
@@ -152,9 +150,9 @@ Run at root:
 
 ## Issues to address:
 
--   \*\* Request for cloud function is sync. Make it async and add a `loading` indicator
--   File Upload feature
+-   Request for cloud function is sync. Make it async and add a `loading` indicator
 -   Factor out local title variables into constants file instead of state dictionary
+-   Fix components that take a file upload as an input (need to create a new public URL using `URL.createObjectURL()` method)
 
 ## To note:
 
