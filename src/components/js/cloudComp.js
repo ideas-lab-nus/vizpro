@@ -486,6 +486,7 @@ function submitCloudEdit(compKey) {
         cloudComp.inputs = createInputDict(inputs.split('\n'));
         cloudComp.outputs = createOutputDict(["out"]);
         cloudComp.url = url;
+        cloudComp.Name = name;
     
         d3.selectAll('circle.removables').remove();
         d3.selectAll('text.removables').remove();

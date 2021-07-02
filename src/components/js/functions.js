@@ -493,7 +493,7 @@ function redrawDependents(parentComp) {
         parent_child_matrix[parentComp].forEach(function (element, i) {
             //iterate through all those childs.
             let ch = selectComp(element[1]);
-            if (parent.type === 'component' && runDeep === true) {
+            if (parent.type === 'cloud' && runDeep === true) {
                 reactContext.setState({
                     runDeep: false
                 });
