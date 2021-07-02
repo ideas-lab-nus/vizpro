@@ -169,7 +169,9 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
                 return (
                     'File Size : ' +
                     (newcomp.outputs[0].Description.size / (1024 * 1024)).toString() +
-                    " MB"
+                    " MB <a class='open_uploadedFile_link' href='" +
+                    newcomp.outputs[0].Description.url +
+                    "' target='blank'>open</a>"
                 );
             }
         })
@@ -304,11 +306,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
     });
     $('input#fileUploadFormToTheCloud').on('change', function (e) {
         var selectedFile = e.target.files[0];
-        var thisFormId = $(this).attr('class');  
-        console.log(selectedFile);
-        console.log(thisFormId);     
-
-        var fileUrl = URL.createObjectURL(selectedFile);
+        var thisFormId = $(this).attr('class');     
 
         var fileName = selectedFile.name;
         var fileSize = selectedFile.size;
@@ -317,7 +315,6 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
         theCurrentComp.outputs[0].Description = {
             Name: fileName,
             size: fileSize,
-            url: fileUrl,
         };
         theCurrentComp.outputs[0].value = selectedFile;
         console.log(theCurrentComp);

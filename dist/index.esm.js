@@ -4,6 +4,193 @@ import $ from 'jquery';
 import Plotly from 'plotly';
 import '@fontsource/ubuntu-mono';
 
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+
+    if (enumerableOnly) {
+      symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+    }
+
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) _setPrototypeOf(subClass, superClass);
+}
+
+function _getPrototypeOf(o) {
+  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  return _getPrototypeOf(o);
+}
+
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+function _isNativeReflectConstruct() {
+  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+  if (Reflect.construct.sham) return false;
+  if (typeof Proxy === "function") return true;
+
+  try {
+    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (call && (typeof call === "object" || typeof call === "function")) {
+    return call;
+  }
+
+  return _assertThisInitialized(self);
+}
+
+function _createSuper(Derived) {
+  var hasNativeReflectConstruct = _isNativeReflectConstruct();
+
+  return function _createSuperInternal() {
+    var Super = _getPrototypeOf(Derived),
+        result;
+
+    if (hasNativeReflectConstruct) {
+      var NewTarget = _getPrototypeOf(this).constructor;
+
+      result = Reflect.construct(Super, arguments, NewTarget);
+    } else {
+      result = Super.apply(this, arguments);
+    }
+
+    return _possibleConstructorReturn(this, result);
+  };
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+}
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
 /**
  * Create html element
  * @param {String} type html element
@@ -1633,7 +1820,6 @@ function redrawDependents(parentComp) {
       let ch = selectComp(element[1]);
 
       if (parent.type === 'slider') {
-        console.log('setting slider value to child');
         ch.inputs[element[2]].value = parent.value;
       } else if (parent.type === 'string') {
         ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -1654,7 +1840,6 @@ function redrawDependents(parentComp) {
           componentStatus(parent.GUID, ERROR_COLOR);
         }
       } else if (parent.type === 'fileUpload') {
-        console.log(parent.outputs[element[0]]);
         ch.inputs[element[2]].value = parent.outputs[element[0]].value === null ? null : parent.outputs[element[0]].Description.Name;
         ch.inputs[element[2]].file = parent.outputs[element[0]].value;
       }
@@ -2430,193 +2615,6 @@ function manageCanvas() {
     if (rightColumnIsSelected) rightColumnIsSelected = false;
     if (leftColumnIsSelected) leftColumnIsSelected = false;
   });
-}
-
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-
-    if (enumerableOnly) {
-      symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-    }
-
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-
-  return target;
-}
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-
-function _defineProperties(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
-  }
-}
-
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
-  return Constructor;
-}
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function");
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) _setPrototypeOf(subClass, superClass);
-}
-
-function _getPrototypeOf(o) {
-  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-    return o.__proto__ || Object.getPrototypeOf(o);
-  };
-  return _getPrototypeOf(o);
-}
-
-function _setPrototypeOf(o, p) {
-  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-    o.__proto__ = p;
-    return o;
-  };
-
-  return _setPrototypeOf(o, p);
-}
-
-function _isNativeReflectConstruct() {
-  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-  if (Reflect.construct.sham) return false;
-  if (typeof Proxy === "function") return true;
-
-  try {
-    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-function _assertThisInitialized(self) {
-  if (self === void 0) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return self;
-}
-
-function _possibleConstructorReturn(self, call) {
-  if (call && (typeof call === "object" || typeof call === "function")) {
-    return call;
-  }
-
-  return _assertThisInitialized(self);
-}
-
-function _createSuper(Derived) {
-  var hasNativeReflectConstruct = _isNativeReflectConstruct();
-
-  return function _createSuperInternal() {
-    var Super = _getPrototypeOf(Derived),
-        result;
-
-    if (hasNativeReflectConstruct) {
-      var NewTarget = _getPrototypeOf(this).constructor;
-
-      result = Reflect.construct(Super, arguments, NewTarget);
-    } else {
-      result = Super.apply(this, arguments);
-    }
-
-    return _possibleConstructorReturn(this, result);
-  };
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-
-  return arr2;
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 var d3$9 = require('d3');
@@ -4507,7 +4505,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
     if (newcomp.outputs[0].value == null || newcomp.outputs[0].value === undefined) {
       return 'File Size : None';
     } else {
-      return 'File Size : ' + (newcomp.outputs[0].Description.size / (1024 * 1024)).toString() + " MB";
+      return 'File Size : ' + (newcomp.outputs[0].Description.size / (1024 * 1024)).toString() + " MB <a class='open_uploadedFile_link' href='" + newcomp.outputs[0].Description.url + "' target='blank'>open</a>";
     }
   }).attr('x', '55').attr('y', newcomp.height + 2).attr('width', newcomp.width - 50).attr('height', 15).attr('fill', 'white');
   node.append('rect').attr('class', 'CompFBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
@@ -4576,17 +4574,13 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
   $('input#fileUploadFormToTheCloud').on('change', function (e) {
     var selectedFile = e.target.files[0];
     var thisFormId = $(this).attr('class');
-    console.log(selectedFile);
-    console.log(thisFormId);
-    var fileUrl = URL.createObjectURL(selectedFile);
     var fileName = selectedFile.name;
     var fileSize = selectedFile.size;
     var theCurrentComp = selectComp(thisFormId);
     theCurrentComp.outputs[0].Name = fileName;
     theCurrentComp.outputs[0].Description = {
       Name: fileName,
-      size: fileSize,
-      url: fileUrl
+      size: fileSize
     };
     theCurrentComp.outputs[0].value = selectedFile;
     console.log(theCurrentComp);
@@ -4755,7 +4749,7 @@ var d3$1 = require('d3');
 function getCurrentData(reactContext) {
   var allContents = d3$1.select('#allCanvasContents');
   var svgContainer = d3$1.select('svg');
-  reactContext.state.allEdges.forEach(element => {
+  reactContext.state.allEdges.forEach(function (element) {
     element['d'] = $('path#' + element.path_id).attr('d');
     element['circleX'] = $('rect#pathCircle' + element.path_id).attr('x');
     element['circleY'] = $('rect#pathCircle' + element.path_id).attr('y');
@@ -4777,12 +4771,12 @@ function getCurrentData(reactContext) {
     currentRightColWidth: parseFloat(d3$1.select('div#PropertiesBar').style('width')),
     currentLeftColWidth: parseFloat(d3$1.select('div#LeftPropertiesBar').style('width'))
   };
-  const fileData = JSON.stringify(data);
+  var fileData = JSON.stringify(data);
   return fileData;
 }
 
 function saveData() {
-  const fileData = getCurrentData(this);
+  var fileData = getCurrentData(this);
   var storage = window.localStorage;
   storage.setItem('data', fileData);
   alert('Successfully save data');
@@ -4795,18 +4789,20 @@ function clearData() {
 }
 
 function downloadData() {
-  const fileData = getCurrentData(this);
-  const blob = new Blob([fileData], {
+  var fileData = getCurrentData(this);
+  var blob = new Blob([fileData], {
     type: "text/plain"
   });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
+  var url = URL.createObjectURL(blob);
+  var link = document.createElement('a');
   link.download = "data.json";
   link.href = url;
   link.click();
 }
 
 function loadData() {
+  var _this = this;
+
   var allData = JSON.parse(window.localStorage.getItem('data'));
   var allContents = d3$1.select('#allCanvasContents');
   var svgContainer = d3$1.select('svg');
@@ -4824,10 +4820,10 @@ function loadData() {
       this.setState({
         allComp: allComponents
       });
-      allComponents.forEach(element => {
-        if (element.type === 'component') CreateNewComponent(this, element); //to be handle later
-        else if (element.type === 'slider') CreateNewSlider(this, element);else if (element.type === 'string') CreateNewPanel(this, element);else if (element.type === 'toggle') CreateNewToggle(this, element);else if (element.type === 'optionList') CreateNewOptionList(this, element); //to be handle later
-          else if (element.type === 'fileUpload') CreateNewFileUpload(this, element);else if (element.type === 'listView') CreateNewListView(this, element);
+      allComponents.forEach(function (element) {
+        if (element.type === 'component') CreateNewComponent(_this, element); //to be handle later
+        else if (element.type === 'slider') CreateNewSlider(_this, element);else if (element.type === 'string') CreateNewPanel(_this, element);else if (element.type === 'toggle') CreateNewToggle(_this, element);else if (element.type === 'optionList') CreateNewOptionList(_this, element); //to be handle later
+          else if (element.type === 'fileUpload') CreateNewFileUpload(_this, element);else if (element.type === 'listView') CreateNewListView(_this, element);
       });
     }
 
@@ -4842,7 +4838,7 @@ function loadData() {
         parent_child_matrix_fast_check: allData.parent_child_matrix_fast_check,
         root_components: allData.root_components
       });
-      allEdges.forEach(element => {
+      allEdges.forEach(function (element) {
         CreatePaths(element);
       });
     }
@@ -6725,8 +6721,8 @@ const toggleButtonInfo = [{
 }];
 
 function addGenericComponentIcon() {
-  for (let index = 0; index < details.length; index++) {
-    const currInfo = details[index];
+  for (var index = 0; index < details.length; index++) {
+    var currInfo = details[index];
     var outputNameList = extractOutputName(currInfo.outputList);
     var newComp = addNewComponentIcon(this, 'addComp', currInfo.name, currInfo.shname, currInfo.desc, currInfo.type, currInfo.dftype, 'mainButtonItem 1 1', currInfo.backgroundImage, currInfo.inputList, outputNameList, currInfo.color);
     $(tabIdMapping[currInfo.category]).append(newComp);
@@ -6736,9 +6732,9 @@ function addGenericComponentIcon() {
 function addNewComponentIcon(reactContext, id, name, shname, desc, type, dftype, className, imageUrl, inputList, outputList, color) {
   var newCompString = '<div id="' + id + '" name="' + name + '" shname="' + shname + '" desc="' + desc + '" type="' + type + '" dftype="' + dftype + '" class="' + className + '" style="background-image:url(' + imageUrl + ')">' + (imageUrl === '' ? name : ' &nbsp; ' + '<span id="hint">' + name + '</span>') + '</div>';
   var newComp = $(newCompString);
-  newComp.on('click', () => {
+  newComp.on('click', function () {
     if (type === 'component') {
-      let kwargs = {
+      var kwargs = {
         shortName: shname,
         dfType: dftype
       };
@@ -6751,10 +6747,10 @@ function addNewComponentIcon(reactContext, id, name, shname, desc, type, dftype,
 }
 
 function extractOutputName(array) {
-  let output = [];
+  var output = [];
 
-  for (let index = 0; index < array.length; index++) {
-    const element = array[index];
+  for (var index = 0; index < array.length; index++) {
+    var element = array[index];
     output.push(element.name);
   }
 
@@ -6764,14 +6760,18 @@ function extractOutputName(array) {
 function addRightToggleButton() {
   var parentDiv = $('div.toolbarRightToggleNavigator.1');
 
-  for (let index = 0; index < toggleButtonInfo.length; index++) {
-    const currBtn = toggleButtonInfo[index];
-    let newToggleString = '<div class="rightToggleButton 1" style="background-image:url(' + currBtn.backgroundImage + '"><span id="hint">' + currBtn.name + '</span></div>';
-    let newToggle = $(newToggleString);
-    newToggle.on('click', () => {
+  var _loop = function _loop(index) {
+    var currBtn = toggleButtonInfo[index];
+    var newToggleString = '<div class="rightToggleButton 1" style="background-image:url(' + currBtn.backgroundImage + '"><span id="hint">' + currBtn.name + '</span></div>';
+    var newToggle = $(newToggleString);
+    newToggle.on('click', function () {
       setCurrentCategory('componentTab', currBtn.id, currBtn.name);
     });
     parentDiv.append(newToggle);
+  };
+
+  for (var index = 0; index < toggleButtonInfo.length; index++) {
+    _loop(index);
   }
 }
 
@@ -6809,13 +6809,17 @@ var typeList = ['component', 'optionList', 'string'];
 var dftypeList = ['shlow', 'dp'];
 var categoryList = ['Basic', 'BuildSimHub', 'OsiSoft', 'Pandas', 'String Operations'];
 
-function addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color = "#F23322", backgroundImage = "", calledFunc = undefined) {
+function addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList) {
+  var color = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : "#F23322";
+  var backgroundImage = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : "";
+  var calledFunc = arguments.length > 10 && arguments[10] !== undefined ? arguments[10] : undefined;
+
   //check requirements
   if (typeList.includes(type) && dftypeList.includes(dftype) && categoryList.includes(category)) {
-    let nameCheck = true;
+    var nameCheck = true;
 
-    for (let index = 0; index < inputList.length; index++) {
-      const element = inputList[index];
+    for (var index = 0; index < inputList.length; index++) {
+      var element = inputList[index];
 
       if (element.name === undefined) {
         nameCheck = false;
@@ -6823,17 +6827,17 @@ function addNewUdo(name, shname, desc, type, dftype, category, inputList, output
       }
     }
 
-    for (let index = 0; index < outputList.length; index++) {
-      const element = outputList[index];
+    for (var _index = 0; _index < outputList.length; _index++) {
+      var _element = outputList[_index];
 
-      if (element.name === undefined) {
+      if (_element.name === undefined) {
         nameCheck = false;
         break;
       }
     }
 
     if (nameCheck) {
-      let newComp = {
+      var newComp = {
         name: name,
         shname: shname,
         desc: desc,
@@ -6867,19 +6871,19 @@ function addNewUdo(name, shname, desc, type, dftype, category, inputList, output
 
 function addAllUdo(list) {
   if (list !== undefined) {
-    for (let index = 0; index < list.length; index++) {
-      const element = list[index];
-      let name = element.name;
-      let shname = element.shname;
-      let desc = element.desc;
-      let type = element.type;
-      let dftype = element.dftype;
-      let category = element.category;
-      let inputList = element.inputList;
-      let outputList = element.outputList;
-      let color = element.color === undefined ? '#F23322' : element.color;
-      let backgroundImage = element.backgroundImage === undefined ? '' : element.backgroundImage;
-      let calledFunc = element.func;
+    for (var index = 0; index < list.length; index++) {
+      var element = list[index];
+      var name = element.name;
+      var shname = element.shname;
+      var desc = element.desc;
+      var type = element.type;
+      var dftype = element.dftype;
+      var category = element.category;
+      var inputList = element.inputList;
+      var outputList = element.outputList;
+      var color = element.color === undefined ? '#F23322' : element.color;
+      var backgroundImage = element.backgroundImage === undefined ? '' : element.backgroundImage;
+      var calledFunc = element.func;
       addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color, backgroundImage, calledFunc);
     }
   }
@@ -6915,50 +6919,65 @@ function styleInject(css, ref) {
 var css_248z = "/* Copy from newUIstyle_light.css*/\r\nbody {\r\n    -webkit-user-select: none;\r\n    -khtml-user-select: none;\r\n    -moz-user-select: none;\r\n    -o-user-select: none;\r\n    user-select: none;\r\n    overflow-y: hidden; /* Hide vertical scrollbar */\r\n    overflow-x: hidden;\r\n}\r\n\r\nsvg {\r\n    border: solid 1px #565656;\r\n}\r\n\r\n#checks {\r\n    margin: 10px;\r\n}\r\n\r\ntext {\r\n    pointer-events: none;\r\n    user-select: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu mono';\r\n}\r\n\r\n.nodeLog {\r\n    font-size: small;\r\n    font-family: monospace;\r\n    pointer-events: none;\r\n}\r\n\r\ninput:focus,\r\nselect:focus,\r\ntextarea:focus,\r\nbutton:focus {\r\n    outline: none;\r\n}\r\n\r\nrect:focus {\r\n    outline: none;\r\n}\r\n\r\n.output {\r\n    font-family: monospace;\r\n    font-size: small;\r\n    color: white;\r\n}\r\n\r\n.input {\r\n    font-family: monospace;\r\n    font-size: small;\r\n}\r\n\r\n.nodetitle {\r\n    font-family: 'ubuntu mono';\r\n    font-size: 13px;\r\n    font-weight: bold;\r\n    color: white;\r\n    pointer-events: none;\r\n    text-align: center;\r\n}\r\n\r\ndiv#someData {\r\n    padding: 8px;\r\n    padding-top: 25px;\r\n    font-size: x-small;\r\n    font-family: monospace;\r\n}\r\n\r\ncircle {\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#PropertiesBarSelector {\r\n    width: 4px;\r\n    position: fixed;\r\n    right: 501px;\r\n    background-color: #000000;\r\n    height: 100%;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    background-color: #2b3d50;\r\n    right: 0px;\r\n    top: 0px;\r\n    min-height: 35%;\r\n    transition-timing-function: ease-in-out;\r\n    transition: height 2s;\r\n    transition-delay: 1s;  \r\n    width: 220px;\r\n    top: 60px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n}\r\n\r\ndiv#mainGrid {\r\n    position: relative;\r\n    top: 0px;\r\n    left: 0px;\r\n    background-color: #ececec;\r\n}\r\n\r\ndiv#textAreaBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\ndiv#optionlistBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\nselect#optionListSelectItems {\r\n    background: white;\r\n    opacity: 1;\r\n    font-family: monospace;\r\n    font-weight: bold;\r\n    border: 1px solid black;\r\n    border-radius: 3px;\r\n}\r\n\r\nh5 {\r\n    font-family: monospace;\r\n    margin-top: 1px;\r\n    margin-bottom: 4px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#LeftPropertiesBar {\r\n    width: 200px;\r\n    position: fixed;\r\n    background-color: #2b3d50;\r\n    left: 0px;\r\n    top: 0px;\r\n}\r\n\r\n.additionalData {\r\n    border-radius: 7px;\r\n    font-size: x-small;\r\n    width: 222px;\r\n    background-color: #ffffff47;\r\n    font-family: monospace;\r\n    color: #5d5d5d;\r\n    padding: 3px;\r\n    border: none;\r\n}\r\n\r\ndiv#LeftPropertiesBarSelector {\r\n    width: 5px;\r\n    height: 100%;\r\n    display: none;\r\n    position: fixed;\r\n    left: 200px;\r\n    background-color: #252525;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#TopPropertiesBar {\r\n    position: fixed;\r\n    top: 0px;\r\n    left: 0px;\r\n    width: 100%;\r\n    height: 30px;\r\n    background-color: #e6e6e6;\r\n}\r\n\r\ndiv#TopPropertiesBarSelector {\r\n    height: 2px;\r\n    width: 100%;\r\n    position: fixed;\r\n    left: 0px;\r\n    border-bottom: 1px solid #858585;\r\n    top: 47px;\r\n    cursor: ns-resize;\r\n}\r\n\r\nbutton.menubarButtons {\r\n    background-color: #6d6d6d;\r\n    border: none;\r\n    cursor: pointer;\r\n    color: #444444;\r\n    color: #cacaca;\r\n    font-family: 'Poppins', sans-serif;\r\n}\r\n\r\nbutton.menubarButtons:hover {\r\n    background-color: #aaabaa;\r\n}\r\n\r\ndiv#DefName {\r\n    width: 100%;\r\n    height: 32px;\r\n    padding: 0px 0px;\r\n    background: #2b3d50;\r\n    border-bottom: 1px solid #434343;\r\n}\r\n\r\ndiv#BottomPropertiesBar {\r\n    position: fixed;\r\n    bottom: 0px;\r\n    height: 20px;\r\n    left: 0px;\r\n    border-top: 1px solid #757575;\r\n    box-shadow: 0px -1px 0px #313131;\r\n    background-color: #525252;\r\n    background: linear-gradient(180deg, rgba(96, 96, 96, 1) 0%, rgba(82, 82, 82, 1) 100%);\r\n    width: 100%;\r\n}\r\n\r\na#changeTitleName {\r\n    color: #cfd8dc;\r\n    text-decoration: none;\r\n}\r\n\r\n.ccbody {\r\n    width: 100%;\r\n}\r\n\r\n.ccatheader {\r\n    padding: 0px 3px;\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    /* border: 1px solid #2c67a5; */\r\n    color: #e7e7e7;\r\n    padding: 4px;\r\n    cursor: pointer;\r\n    overflow: hidden;\r\n}\r\n\r\nbutton.standardcat.button {\r\n    vertical-align: middle;\r\n    border: 1px solid #444444;\r\n    width: 32px;\r\n    height: 32px;\r\n    margin: 1px;\r\n    background: none;\r\n    background: -moz-linear-gradient(top, #d6d4d4 0%, #adadad 100%);\r\n    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d6d4d4', endColorstr='#adadad', GradientType=0);\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: x-small;\r\n    color: #ffffff;\r\n    cursor: pointer;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#topLeftLogo {\r\n    width: 27px;\r\n    height: 32px;\r\n    float: left;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70302709-af822a80-1838-11ea-913b-5f935ea282ed.png);\r\n    background-repeat: no-repeat;\r\n    background-size: 26px;\r\n    background-position: center;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#settingsIcon {\r\n    float: right;\r\n    position: fixed;\r\n    top: 0px;\r\n    color: #c5c5c5;\r\n    right: 0px;\r\n    text-align: center;\r\n    padding: 11px;\r\n}\r\n\r\nbutton.standardcat.button:hover {\r\n    background: #c1c1c1;\r\n}\r\n\r\ndiv#Addedmessage {\r\n    font-family: monospace;\r\n    color: white;\r\n    padding: 2px;\r\n}\r\n\r\n#minimizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #2b3d50;\r\n    position: absolute;\r\n    top: 0px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #c5c5c5;\r\n    cursor: pointer;\r\n    border-left: 1px solid #464646;\r\n    border-bottom: 1px solid #464646;\r\n    margin-top: -4px;\r\n}\r\n\r\ndiv#maximizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #5d5d5d;\r\n    position: absolute;\r\n    top: 38px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #ababab;\r\n    cursor: pointer;\r\n    margin-top: -4px;\r\n    text-shadow: 1px 1px 1px #4b4b4b;\r\n}\r\n\r\n.propertiesbar.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbarheader.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbar.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    width: 98%;\r\n    color: #2f2f2f;\r\n    padding: 3px 10px;\r\n    background-color: gray;\r\n    border-bottom: 1px solid #909090;\r\n    border-radius: 6px 6px 0px 0px;\r\n    text-shadow: 1px 1px 0px #a5a5a5;\r\n}\r\n\r\ntextarea.textarea.optionlistProperties {\r\n    width: 98%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    height: 150px;\r\n    border-radius: 0px 0px 6px 6px;\r\n    border: 1px solid gray;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntextarea.textarea.stringProperties {\r\n    resize: none;\r\n    width: 100%;\r\n    padding: 0px;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    min-height: 10vh;\r\n    border: none;\r\n    border-radius: 3px;\r\n    background-color: #ffffffc7;\r\n}\r\n\r\n.propertiesbarheader.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    font-weight: bold;\r\n    width: 100%;\r\n    color: #bcbcbc;\r\n    padding: 3px;\r\n}\r\n\r\nselect#propertisBarSelecId {\r\n    width: 99%;\r\n    padding: 1px 2px;\r\n    background-color: gainsboro;\r\n    border-radius: 0px 0px 6px 6px;\r\n}\r\n\r\ndiv#propertiesBarLog {\r\n    width: 100%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    font-size: small;\r\n    padding: 2px;\r\n}\r\n\r\nrect.optionListoption {\r\n    cursor: pointer;\r\n}\r\n\r\nrect.optionListoption:hover {\r\n    fill: #d9e3e6;\r\n    stroke: #989898;\r\n}\r\n\r\ndiv#error {\r\n    color: #c0392b;\r\n    padding: 8px;\r\n}\r\n\r\nforeignObject.textbody {\r\n    font-family: 'ubuntu mono', monospace;\r\n    font-size: x-small;\r\n    color: #4e4e4e;\r\n    overflow: auto;\r\n}\r\n\r\ndiv#catHead {\r\n    font-family: 'ubuntu';\r\n    font-size: small;\r\n    width: fit-content;\r\n    padding: 2px 6px;\r\n    color: white;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-left: 3px;\r\n}\r\n\r\ndiv#catbody {\r\n    margin: 0px;\r\n    border-bottom: none;\r\n    border-right: none;\r\n}\r\n\r\ndiv#catcard {\r\n    margin-bottom: 4px;\r\n    padding: 0px;\r\n}\r\n\r\nrect.xAnchor {\r\n    cursor: ew-resize;\r\n}\r\n\r\nrect.yAnchor {\r\n    cursor: ns-resize;\r\n}\r\n\r\nrect.xyAnchor {\r\n    cursor: nwse-resize;\r\n}\r\n\r\n/* ::-webkit-scrollbar {\r\n    width: 6px;\r\n    height: 10px;\r\n} */\r\n\r\n/* Track */\r\n\r\n/* ::-webkit-scrollbar-track {\r\n    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\r\n    -webkit-border-radius: 4px;\r\n    border-radius: 4px;\r\n    touch-action: manipulation;\r\n} */\r\n\r\n/* Handle */\r\n\r\n/* ::-webkit-scrollbar-thumb {\r\n    -webkit-border-radius: 4px;\r\n    background: rgb(0, 0, 0);\r\n}\r\n\r\n::-webkit-scrollbar-thumb:window-inactive {\r\n    background: rgba(255, 0, 0, 0.4);\r\n} */\r\n\r\npath.play {\r\n    cursor: pointer;\r\n}\r\n\r\npath.play:hover {\r\n    fill: gray;\r\n}\r\n\r\nth {\r\n    border: none;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntd {\r\n    border: none;\r\n    background-color: whitesmoke;\r\n    overflow: hidden;\r\n}\r\n\r\ntbody {\r\n    font-family: ubuntu;\r\n    font-size: small;\r\n}\r\n\r\nth {\r\n    font-family: ubuntu;\r\n    text-align: left;\r\n    font-size: small;\r\n}\r\n\r\ndiv#propertiesBarContents {\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n    font-weight: normal;\r\n    color: #ffffff;\r\n    margin: 2px 0px 10px 0px;\r\n}\r\n\r\nforeignObject.panel_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ntbody {\r\n    border: none;\r\n}\r\n\r\ntable.dataframe {\r\n    border: none;\r\n}\r\n\r\nrect {\r\n    cursor: move;\r\n}\r\n\r\ninput.stringPnanel.Name {\r\n    width: 98%;\r\n    border: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\nforeignObject.panel_edit_mode a {\r\n    font-size: x-small;\r\n    color: #bdbdbd;\r\n    font-family: 'ubuntu mono';\r\n    position: relative;\r\n    text-decoration: none;\r\n    top: -8px;\r\n}\r\n\r\ndiv#numerical_slider_container {\r\n    padding: 7px;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\ndiv#help_t3 {\r\n    line-height: 1em;\r\n    color: #ec5f66;\r\n    margin-top: 5px;\r\n    margin-bottom: 3px;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_t4 {\r\n    color: #009688;\r\n    margin-left: 18px;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-bottom: 5px;\r\n}\r\n\r\ndiv#help_p {\r\n    margin-left: 36px;\r\n    margin-right: 8px;\r\n    text-align: justify;\r\n}\r\n\r\nspan#code {\r\n    color: #c23d51;\r\n    border-radius: 2px;\r\n    font-family: Courier;\r\n    font-size: xx-small;\r\n    vertical-align: middle;\r\n    padding: 1px 4px;\r\n    background-color: #32c8ac2e;\r\n}\r\n\r\ntable.dataframe {\r\n    font-size: x-small;\r\n}\r\n\r\nthead {\r\n    font-size: x-small;\r\n}\r\n\r\nth {\r\n    font-size: x-small;\r\n}\r\n\r\ntd {\r\n    font-size: x-small;\r\n}\r\n\r\nspan#errorTitle {\r\n    color: #e91e63;\r\n    font-weight: bold;\r\n    background-color: #f4433638;\r\n    border-radius: 3px;\r\n}\r\n\r\na.menubarButtons {\r\n    text-decoration: unset;\r\n    color: #000000;\r\n    text-shadow: 1px 1px 4px #4b4b4b;\r\n    font-size: small;\r\n    padding: 0px 6px;\r\n    margin: 1px 1px;\r\n    float: left;\r\n}\r\n\r\ndiv#buttonClickedname {\r\n    color: white;\r\n    font-size: small;\r\n    padding: 0px 8px;\r\n    margin: 0px;\r\n    float: left;\r\n    position: absolute;\r\n    bottom: 25px;\r\n    left: 224px;\r\n    background-color: #3d3d3d;\r\n}\r\n\r\npre {\r\n    margin: 0px;\r\n}\r\n\r\ninput.inputFileUpload {\r\n    border: none;\r\n    border-radius: 4px;\r\n    margin: 2px 2px;\r\n    background: #2b3d50;\r\n    height: 20px;\r\n    font-family: 'ubuntu mono';\r\n    color: white;\r\n}\r\n\r\ninput.submitFileUpload {\r\n    border-radius: 4px;\r\n    float: right;\r\n    margin: 3px;\r\n}\r\n\r\nforeignObject.fileUpload_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ninput#fileUploadFormToTheCloud {\r\n    border-radius: 1px;\r\n    margin-left: 1px;\r\n    /* height: 20px; */\r\n}\r\n\r\na.open_uploadedFile_link {\r\n    text-decoration: none;\r\n    color: black;\r\n    padding: 0px 6px;\r\n    position: relative;\r\n    top: 1px;\r\n    border-radius: 2px;\r\n    margin-left: 3px;\r\n    background-color: #e8e8e8;\r\n}\r\n\r\ndiv#TheContainedFile {\r\n    color: white;\r\n    padding: 2px 5px;\r\n    font-family: 'ubuntu';\r\n    display: inline;\r\n    font-size: small;\r\n    border-right: 1px solid gray;\r\n}\r\n\r\ndiv#PleaseWaitOverLay {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: #ffffff8a;\r\n    color: black;\r\n    text-align: center;\r\n    margin: auto;\r\n    line-height: 100vh;\r\n}\r\n\r\nselect.listView {\r\n    width: 198px;\r\n    height: 179px;\r\n    background-color: #f0f0f0;\r\n    border: 1px solid gray;\r\n    border-radius: 3px;\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n}\r\n\r\noption#someSelection {\r\n    background-color: #e0e0e0;\r\n    box-shadow: 0px 1px 0px white;\r\n    margin-bottom: 1px;\r\n}\r\n\r\ntext.statusTextClass {\r\n    font-size: x-small;\r\n}\r\n\r\n.subcatheader {\r\n    padding-left: 1em;\r\n    color: #ffca28;\r\n    font-size: small;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_quote {\r\n    border: 1px solid #cfcfcf;\r\n    padding: 2px;\r\n    border-radius: 3px;\r\n    background-color: #f4f4f4;\r\n    font-family: courier new;\r\n    font-size: xx-small;\r\n}\r\n\r\nforeignObject#halign_box {\r\n    font-size: 20px;\r\n    color: white;\r\n    text-decoration: none;\r\n    text-align: center;\r\n}\r\n\r\nforeignObject#halign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    margin: 0px 4px;\r\n}\r\n\r\nforeignObject#halign_box a:hover {\r\n    text-decoration: none;\r\n    color: #ffc107;\r\n}\r\n\r\ni.fa.fa-pause {\r\n    margin-left: -1px;\r\n    padding: 0px;\r\n}\r\n\r\nforeignObject#valign_box {\r\n    font-size: 20px;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n    padding: 4px 2px;\r\n}\r\n\r\nforeignObject#valign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    font-size: 20px;\r\n    display: inline-grid;\r\n}\r\n\r\nforeignObject#valign_box a:hover {\r\n    color: #ffc107;\r\n}\r\n\r\na#valign_icon {\r\n    float: left;\r\n    margin: 5px 4px;\r\n}\r\n\r\na.standardcat.button {\r\n    width: 32px;\r\n    height: 32px;\r\n    border: 1px solid black;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#leftbarcontainer {\r\n    width: 225px;\r\n    min-height: 250px;\r\n    float: left;\r\n    margin-top: 2.5px;\r\n}\r\n\r\n.toolbarTopToggleItem {\r\n    height: 25px;\r\n    display: block;\r\n    line-height: 25px;\r\n    color: #1c1c1c;\r\n    font-size: small;\r\n    float: left;\r\n}\r\n\r\n.toolbarTopToggleContainer {\r\n    width: 225px;\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n    text-align: center;\r\n    float: left;\r\n}\r\n\r\ndiv#toolbar_container_1_1_2 {\r\n    width: 25px;\r\n    float: left;\r\n    background-color: red;\r\n    height: 25px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#toolbar_container_1_2 {\r\n    background-color: #2d2d2d;\r\n    width: 225px;\r\n    height: 250px;\r\n}\r\n\r\ndiv#toolbar_container_1_2_1 {\r\n    box-sizing: border-box;\r\n    width: 200px;\r\n    background-color: #e6e6e6;\r\n    min-height: 200px;\r\n    float: left;\r\n    border: 1px solid #cfcfcf;\r\n}\r\n\r\n.mainButtonItem {\r\n    box-sizing: border-box;\r\n    width: 49.5px;\r\n    height: 49.5px;\r\n    float: left;\r\n    background-color: #6060601f;\r\n    display: inline-block;\r\n    vertical-align: middle;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70328473-107b2400-1874-11ea-88ff-dcca67fd98a9.png);\r\n    line-height: 50px;\r\n    text-align: center;\r\n    border: 1px solid #252525;\r\n    color: #ffffffed;\r\n    background-size: 36px;\r\n    font-size: x-small;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    overflow: hidden;\r\n}\r\n\r\ndiv#toolbar_container_1_2_2 {\r\n    width: 25px;\r\n    float: left;\r\n    height: 200px;\r\n    background-color: #c1c1c1;\r\n    box-sizing: border-box;\r\n    border-right: 1px solid #373737;\r\n}\r\n\r\n.rightToggleButton {\r\n    background-image: url(https://www.corasupport.org/wp-content/uploads/2015/11/placeholder-icon-300x300-v1b.png);\r\n    background-size: 20px;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    cursor: pointer;\r\n    font-size: small;\r\n    background-color: #a3a3a3;\r\n    width: 23px;\r\n    height: 23px;\r\n    text-align: center;\r\n    line-height: 25px;\r\n    border: 1px solid #2d2d2d;\r\n    border-bottom: 1px solid #565656;\r\n}\r\n\r\ndiv#toolbar_container_1_2_0 {\r\n    background-color: #707070;\r\n    font-size: small;\r\n    color: white;\r\n    line-height: 25px;\r\n    font-size: xx-small;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    background-color: #252525;\r\n    transition: 0.2s;\r\n    cursor: pointer;\r\n    border: 1px solid #818181;\r\n}\r\n\r\n.toptoggleitem {\r\n    background-color: #d1d1d1;\r\n    margin: 3px 4px 0px 0px;\r\n    height: 20px;\r\n    padding: 0px 5px;\r\n    line-height: 20px;\r\n    border: 1px solid #aaaaaa;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    background-color: #2b3d50;\r\n    border-color: #2b3d50;\r\n    color: #cfd8dc;\r\n}\r\n\r\n.rightToggleButton:hover {\r\n    background-color: #565656;\r\n    transition: 0.5s;\r\n    color: #ffffff;\r\n    border: 1px solid #cecece;\r\n}\r\n\r\n.rightToggleButton:focus {\r\n    background-color: #ffc107;\r\n    color: black;\r\n    text-shadow: 0px 0px 4px black;\r\n}\r\n\r\n.toptoggleitem:hover {\r\n    border-color: #ffc107;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#NoneTabbedToolBoxText {\r\n    position: relative;\r\n    top: 50%;\r\n    transform: rotate(-90deg);\r\n    font-size: small;\r\n    line-height: 25px;\r\n    text-shadow: 0px 0px 4px #000000;\r\n}\r\n\r\nspan#hint {\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n    display: none;\r\n    background-color: #00000066;\r\n    border: 1px solid #565656;\r\n    opacity: 0;\r\n}\r\n\r\ndiv.rightToggleButton:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\n.canvas_container {\r\n    position: fixed;\r\n    top: 30px;\r\n    left: 225px;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.canvas_container_inner {\r\n    margin: 3px;\r\n}\r\n\r\n.canvas_tab_container {\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n}\r\n\r\nh1 {\r\n    margin: 0px;\r\n}\r\n\r\ndiv#somethingLater {\r\n    width: 100%;\r\n    height: 1000px;\r\n    background-color: #666666;\r\n    overflow: scroll;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\ntextarea#script_body_editor {\r\n    height: 100vh;\r\n}\r\n\r\ndiv#codeBody {\r\n    height: 100vh;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    transition: 2s;\r\n}\r\n\r\n.toptoggleitem.selected:hover {\r\n    transition: 2s;\r\n    min-height: 36%;\r\n}\r\n\r\n/* Copy from jsonview.css */\r\n/*\r\nbody {\r\n    font-family: 'Open Sans';\r\n    font-size: 16px;\r\n    background-color: #252525;\r\n    color: #808080;\r\n    box-sizing: border-box;\r\n}\r\n\r\n.line {\r\n    margin: 4px 0;\r\n    display: flex;\r\n    justify-content: flex-start;\r\n}\r\n\r\n.caret-icon {\r\n    width: 18px;\r\n    text-align: center;\r\n    cursor: pointer;\r\n}\r\n\r\n.empty-icon {\r\n    width: 18px;\r\n}\r\n\r\n.json-type {\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n.json-key {\r\n    color: #444;\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n.json-index {\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n\r\n.json-value {\r\n    margin-left: 8px;\r\n}\r\n\r\n.json-number {\r\n    color: #f9ae58;\r\n}\r\n\r\n.json-boolean {\r\n    color: #ec5f66;\r\n}\r\n\r\n.json-string {\r\n    color: #86b25c;\r\n}\r\n\r\n.json-size {\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n.hide {\r\n    display: none;\r\n}\r\n\r\n*/";
 styleInject(css_248z);
 
-class Canvas extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = globalVars;
-    this.handleComponentSelection = handleComponentSelection.bind(this);
-    this.handleDoubleClick = handleDoubleClick.bind(this);
-    this.handleEdgeInitialization = handleEdgeInitialization.bind(this);
-    this.handleTheClickOnAllComponents = handleTheClickOnAllComponents.bind(this);
-    this.manageCanvas = manageCanvas.bind(this);
-    this.manageGrid = manageGrid.bind(this);
-    this.dummyToSetState = dummyToSetState.bind(this);
-    this.addGenericComponentIcon = addGenericComponentIcon.bind(this);
-    this.saveData = saveData.bind(this);
-    this.loadData = loadData.bind(this);
-    this.downloadData = downloadData.bind(this);
+var Canvas = /*#__PURE__*/function (_React$Component) {
+  _inherits(Canvas, _React$Component);
+
+  var _super = _createSuper(Canvas);
+
+  function Canvas(props) {
+    var _this;
+
+    _classCallCheck(this, Canvas);
+
+    _this = _super.call(this, props);
+    _this.state = globalVars;
+    _this.handleComponentSelection = handleComponentSelection.bind(_assertThisInitialized(_this));
+    _this.handleDoubleClick = handleDoubleClick.bind(_assertThisInitialized(_this));
+    _this.handleEdgeInitialization = handleEdgeInitialization.bind(_assertThisInitialized(_this));
+    _this.handleTheClickOnAllComponents = handleTheClickOnAllComponents.bind(_assertThisInitialized(_this));
+    _this.manageCanvas = manageCanvas.bind(_assertThisInitialized(_this));
+    _this.manageGrid = manageGrid.bind(_assertThisInitialized(_this));
+    _this.dummyToSetState = dummyToSetState.bind(_assertThisInitialized(_this));
+    _this.addGenericComponentIcon = addGenericComponentIcon.bind(_assertThisInitialized(_this));
+    _this.saveData = saveData.bind(_assertThisInitialized(_this));
+    _this.loadData = loadData.bind(_assertThisInitialized(_this));
+    _this.downloadData = downloadData.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
-  componentDidMount() {
-    addAllUdo(this.props.udo);
-    this.manageCanvas();
-    this.loadData();
-    this.addGenericComponentIcon();
-    addRightToggleButton();
-  }
+  _createClass(Canvas, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      addAllUdo(this.props.udo);
+      this.manageCanvas();
+      this.loadData();
+      this.addGenericComponentIcon();
+      addRightToggleButton();
+    }
+  }, {
+    key: "print",
+    value: function print() {
+      console.log(this.state);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: '#2b3d50',
+          width: '100vw',
+          height: '100vh'
+        }
+      }, /*#__PURE__*/React.createElement(ScriptTag, null, this.dummyToSetState()), /*#__PURE__*/React.createElement(ScriptTag, null, this.manageGrid()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleComponentSelection()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleDoubleClick()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleEdgeInitialization()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleTheClickOnAllComponents()), /*#__PURE__*/React.createElement(Grid, null), /*#__PURE__*/React.createElement(TopBar, {
+        saveData: this.saveData,
+        downloadData: this.downloadData
+      }), /*#__PURE__*/React.createElement(LeftContainer, {
+        context: this
+      }));
+    }
+  }]);
 
-  print() {
-    console.log(this.state);
-  }
-
-  render() {
-    return /*#__PURE__*/React.createElement("div", {
-      style: {
-        backgroundColor: '#2b3d50',
-        width: '100vw',
-        height: '100vh'
-      }
-    }, /*#__PURE__*/React.createElement(ScriptTag, null, this.dummyToSetState()), /*#__PURE__*/React.createElement(ScriptTag, null, this.manageGrid()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleComponentSelection()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleDoubleClick()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleEdgeInitialization()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleTheClickOnAllComponents()), /*#__PURE__*/React.createElement(Grid, null), /*#__PURE__*/React.createElement(TopBar, {
-      saveData: this.saveData,
-      downloadData: this.downloadData
-    }), /*#__PURE__*/React.createElement(LeftContainer, {
-      context: this
-    }));
-  }
-
-}
+  return Canvas;
+}(React.Component);
 
 export { Canvas };
