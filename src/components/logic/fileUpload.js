@@ -169,9 +169,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
                 return (
                     'File Size : ' +
                     (newcomp.outputs[0].Description.size / (1024 * 1024)).toString() +
-                    " MB <a class='open_uploadedFile_link' href='" +
-                    newcomp.outputs[0].Description.url +
-                    "' target='blank'>open</a>"
+                    " MB"
                 );
             }
         })
@@ -304,12 +302,11 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
     reactContext.setState({
         components_selection_data: current_components_selection,
     });
-}
-
-function handleFileUpload() {
     $('input#fileUploadFormToTheCloud').on('change', function (e) {
         var selectedFile = e.target.files[0];
-        var thisFormId = $(this).attr('class');       
+        var thisFormId = $(this).attr('class');  
+        console.log(selectedFile);
+        console.log(thisFormId);     
 
         var fileUrl = URL.createObjectURL(selectedFile);
 
@@ -322,14 +319,12 @@ function handleFileUpload() {
             size: fileSize,
             url: fileUrl,
         };
-        theCurrentComp.outputs[0].value = fileUrl;
+        theCurrentComp.outputs[0].value = selectedFile;
         console.log(theCurrentComp);
         d3.select('#fileUpload_status_' + thisFormId).html(
             'File Size : ' +
             (selectedFile.size / (1024 * 1024)).toString() +
-            " MB <a class='open_uploadedFile_link' href='" +
-            fileUrl +
-            "' target='blank'>open</a>"
+            " MB"
         );
         d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
             return (
@@ -344,7 +339,7 @@ function handleFileUpload() {
             );
         });
         redrawDependents(thisFormId);
-    });
+    })
 }
 
-export { CreateNewFileUpload, handleFileUpload };
+export { CreateNewFileUpload };

@@ -461,7 +461,7 @@ function redrawDependents(parentComp) {
             if (parent.type === 'slider') {
                 console.log('setting slider value to child');
                 ch.inputs[element[2]].value = parent.value;
-            } else if (parent.type === 'string' || parent.type === 'fileUpload') {
+            } else if (parent.type === 'string') {
                 ch.inputs[element[2]].value = parent.outputs[element[0]].value;
             } else if (parent.type === 'listView') {
                 ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -479,6 +479,10 @@ function redrawDependents(parentComp) {
                     console.log(error);
                     componentStatus(parent.GUID, ERROR_COLOR);
                 }
+            } else if (parent.type === 'fileUpload') {
+                console.log(parent.outputs[element[0]])
+                ch.inputs[element[2]].value = parent.outputs[element[0]].value === null ? null : parent.outputs[element[0]].Description.Name;
+                ch.inputs[element[2]].file = parent.outputs[element[0]].value;
             }
             updatShallowCompRender(ch);
             redrawDependents(ch.GUID);
