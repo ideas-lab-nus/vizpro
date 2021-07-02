@@ -11,6 +11,7 @@ import { submitOptionListEdit, readyToGoSubmit } from './optionlist.js';
 import { cancelSliderEdit, submitSliderEdit } from './slider.js';
 import { cancelPanelEdit, submitPanelEdit } from './panel.js';
 import $ from 'jquery';
+import { cancelCloudEdit, submitCloudEdit } from './cloudComp.js';
 var d3 = require('d3');
 
 function GetURLParameter(sParam) {
@@ -47,7 +48,8 @@ function handleComponentSelection() {
             element.type === 'component' ||
             element.type === 'toggle' ||
             element.type === 'fileUpload' ||
-            element.type === 'listView'
+            element.type === 'listView' || 
+            element.type === 'cloud'
         ) {
             d3.select('g#comp-' + element.GUID).on('click', function () {
                 d3.select('rect#' + element.GUID)
@@ -580,6 +582,51 @@ function handleDoubleClick() {
                     });
                 redrawDependents(currentToggle.GUID);
             });
+        } else if (element.type === 'cloud') {
+            d3.select('g#comp-' + element.GUID).on('dblclick', function () {
+                if (!reactContext.state.doubleClicked) {
+                    reactContext.setState({
+                        doubleClicked: true
+                    });
+                    $('div#propertiesBarContents').append(`
+                        <div class="propertiesbarheader title">Cloud Function Properties</div>
+                        <div class="propertiesbarheader label">Function Name</div>
+                        <input class="cloudProp Name"></textarea>
+                        <hr>
+                        <div class="propertiesbarheader label">Input List</div>
+                        <textarea class="cloudProp textarea stringProperties Val"></textarea>
+                        <hr>
+                        <div class="propertiesbarheader label">Cloud function URL</div>
+                        <input class="cloudProp url"></textarea>
+                        <div></div>
+                        <div class="propertiesbarheader label">Log</div>
+                        <div id="propertiesBarLog" class="log"></div>
+                        <button id="cloudEditButton">Apply</button>
+                        <button id="cancelCloudEdit">Cancel</button>`);
+                
+                    var cloudComp = selectComp(element.GUID);
+
+                    $('input.cloudProp.Name').val(cloudComp.Name);
+
+                    // var inputString = JSON.stringify(cloudComp.inputs);
+                    // $('textarea.cloudProp.Val').val(inputString.substring(1, inputString.length-1));
+                    $('textarea.cloudProp.Val').val(cloudComp.inputNames);
+                    $('input.cloudProp.url').val(cloudComp.url);
+
+                    $('button#cloudEditButton').on('click', function () {
+                        submitCloudEdit(element.GUID);
+                        reactContext.setState({
+                            doubleClicked: false
+                        });
+                    });
+                    $('button#cancelCloudEdit').on('click', function () {
+                        cancelCloudEdit();
+                        reactContext.setState({
+                            doubleClicked: false
+                        });
+                    });
+                }
+            })
         }
         //TODO : else if other types than string, then you have to open the properties window.
     });

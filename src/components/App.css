@@ -839,6 +839,10 @@ div#toolbar_container_1_2_1 {
     overflow: hidden;
 }
 
+.mainButtonItem:hover {
+    overflow: visible;
+}
+
 div#toolbar_container_1_2_2 {
     width: 25px;
     float: left;
@@ -921,7 +925,7 @@ div#NoneTabbedToolBoxText {
     text-shadow: 0px 0px 4px #000000;
 }
 
-span#hint {
+div.rightToggleButton span#hint {
     position: relative;
     left: 30px;
     padding: 0px 4px;
@@ -931,6 +935,65 @@ span#hint {
     background-color: #00000066;
     border: 1px solid #565656;
     opacity: 0;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    /* border-bottom: 1px dotted black; */
+  }
+  
+span.tooltiptext {
+    visibility: hidden;
+    text-align: center;
+    border-radius: 6px;
+    padding: 0px 4px;
+    /* Position the tooltip */
+    position: absolute;
+    display: block;
+    color: black;
+    background-color: white;
+    line-height: normal;
+    width: fit-content;
+    top: 3px;
+    left: 25px;  
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+p.iconText {
+    display: block;
+    text-overflow: ellipsis;
+    width: 40px;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 5px;
+    line-height: normal;
+}
+  
+div.mainButtonItem span#hint {
+    position: relative;
+    width: fit-content;
+    display: none;
+    opacity: 0;
+    background-color: #ffffff;
+    color: #000000;
+    left: 30px;
+    padding: 0px 4px;
+    overflow: visible;
+}
+
+div.mainButtonItem:hover span#hint {
+    opacity: 1;
+    display: block;
+    position: relative;
+    left: 30px;
+    padding: 0px 4px;
+    border-radius: 5px;
+    width: fit-content;
 }
 
 div.rightToggleButton:hover span#hint {

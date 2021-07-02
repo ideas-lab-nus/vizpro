@@ -1417,49 +1417,47 @@ function calculateShallow(compId) {
   }
 }
 
-var d3$c = require('d3');
+var d3$d = require('d3');
 
 function calculateCloud(compId) {
-  d3$c.select('div#PleaseWaitOverLay').style('display', 'block');
-  var thisComp = selectComp(compId);
-  var inputGroup = [];
-  thisComp.inputs.forEach(input => {
-    inputGroup.push(input.value);
-  });
-  var functionName = thisComp.Name;
-  var args = inputGroup;
-  const result = mapFunction[functionName](args);
+  d3$d.select('div#PleaseWaitOverLay').style('display', 'block');
+  var cloudComp = selectComp(compId);
+  cloudComp.Name;
+  var args = cloudComp.inputs.map(input => input.value);
+  var url = cloudComp.url;
+  const result = absolute(args, url);
 
   try {
-    thisComp.outputs.forEach(function (output, i) {
+    cloudComp.outputs.forEach(function (output, i) {
       output.type = result['type'][i];
       output.value = result['value'][i];
       console.log(result);
     });
-    d3$c.select('div#PleaseWaitOverLay').style('display', 'none');
+    d3$d.select('div#PleaseWaitOverLay').style('display', 'none');
   } catch (error) {
     console.log(error);
-    d3$c.select('div#PleaseWaitOverLay').style('display', 'none');
+    alert(error);
+    d3$d.select('div#PleaseWaitOverLay').style('display', 'none');
   }
 }
 
-const mapFunction = {
-  Absolute: absolute
-};
-
-function absolute(args) {
+function absolute(args, url) {
   var log_ = 'Success';
-  var parameters = args[0];
-  var url = args[1] + '/' + 'there?p1=' + parameters.toString();
-  var data = {
-    parameters: parameters.toString()
-  };
+  var queryStr = '';
+
+  for (let i = 1; i <= args.length; i++) {
+    queryStr += '&p' + i + '=' + args[i - 1];
+  } //Replace first  & with  ?
+
+
+  var urlCall = url + queryStr.replace('&', '?'); // var data = { parameters: p1 };
+
   const req = $__default['default'].ajax({
     type: 'POST',
     dataType: 'json',
     async: false,
-    url: url,
-    data: JSON.stringify(data),
+    url: urlCall,
+    // data: JSON.stringify(data),
     // "headers": headers,
     beforeSend: function (xhr, settings) {}
   });
@@ -1470,23 +1468,7 @@ function absolute(args) {
   };
 }
 
-/*
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-─██████████████─██████──██████─██████──────────██████─██████████████─██████████████─██████████─██████████████─██████──────────██████─██████████████─
-─██░░░░░░░░░░██─██░░██──██░░██─██░░██████████──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─██░░██████████──██░░██─██░░░░░░░░░░██─
-─██░░██████████─██░░██──██░░██─██░░░░░░░░░░██──██░░██─██░░██████████─██████░░██████─████░░████─██░░██████░░██─██░░░░░░░░░░██──██░░██─██░░██████████─
-─██░░██─────────██░░██──██░░██─██░░██████░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██████░░██──██░░██─██░░██─────────
-─██░░██████████─██░░██──██░░██─██░░██──██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██─██░░██████████─
-─██░░░░░░░░░░██─██░░██──██░░██─██░░██──██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██─██░░░░░░░░░░██─
-─██░░██████████─██░░██──██░░██─██░░██──██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██─██████████░░██─
-─██░░██─────────██░░██──██░░██─██░░██──██░░██████░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██████░░██─────────██░░██─
-─██░░██─────────██░░██████░░██─██░░██──██░░░░░░░░░░██─██░░██████████─────██░░██─────████░░████─██░░██████░░██─██░░██──██░░░░░░░░░░██─██████████░░██─
-─██░░██─────────██░░░░░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─────██░░██─────██░░░░░░██─██░░░░░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─
-─██████─────────██████████████─██████──────────██████─██████████████─────██████─────██████████─██████████████─██████──────────██████─██████████████─
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-*/
-
-var d3$b = require('d3');
+var d3$c = require('d3');
 
 var reactContext$1;
 var allComp;
@@ -1537,11 +1519,15 @@ function addCircle() {
   return initCircle;
 }
 
-function addcomponent(guid, n_inputs = 4, n_outputs = 5, inputsIn = 5 * ['input'], outputsIn = 5 * ['output']) {
+function addcomponent(guid) {
+  var n_inputs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 4;
+  var n_outputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 5;
+  var inputsIn = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 5 * ['input'];
+  var outputsIn = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 5 * ['output'];
   var inputs = [];
   var outputs = [];
 
-  for (let index = 0; index < n_inputs; index++) {
+  for (var index = 0; index < n_inputs; index++) {
     try {
       inputs.push({
         id: index,
@@ -1555,7 +1541,7 @@ function addcomponent(guid, n_inputs = 4, n_outputs = 5, inputsIn = 5 * ['input'
         datatype: 'int',
         value: inputsIn[index].default_value
       });
-    } catch {
+    } catch (_unused) {
       inputs.push({
         id: index,
         circle: null,
@@ -1571,23 +1557,23 @@ function addcomponent(guid, n_inputs = 4, n_outputs = 5, inputsIn = 5 * ['input'
     }
   }
 
-  for (let index = 0; index < n_outputs; index++) {
+  for (var _index = 0; _index < n_outputs; _index++) {
     try {
       outputs.push({
-        id: index,
+        id: _index,
         circle: null,
         textObj: null,
-        Name: outputsIn[index],
-        ShortName: outputsIn[index],
-        Description: outputsIn[index].desc,
+        Name: outputsIn[_index],
+        ShortName: outputsIn[_index],
+        Description: outputsIn[_index].desc,
         Message: 'short description',
         type: 'item',
         datatype: 'int',
         value: null
       });
-    } catch {
+    } catch (_unused2) {
       outputs.push({
-        id: index,
+        id: _index,
         circle: null,
         textObj: null,
         Name: '',
@@ -1648,9 +1634,10 @@ function addcomponent(guid, n_inputs = 4, n_outputs = 5, inputsIn = 5 * ['input'
  */
 
 
-function selectComp(value, by = 'GUID') {
-  let toreturn = null;
-  allComp.forEach(element => {
+function selectComp(value) {
+  var by = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'GUID';
+  var toreturn = null;
+  allComp.forEach(function (element) {
     if (element[by] === value) {
       toreturn = element;
     }
@@ -1660,19 +1647,19 @@ function selectComp(value, by = 'GUID') {
 
 
 function addEdgeCircle(theEdge, thisD) {
-  var circ = d3$b.select('g#allPaths').append('rect').attr('id', 'pathCircle' + theEdge.path_id).attr('rx', 100).attr('ry', 100).attr('width', 15).attr('height', 15).attr('fill', 'red').attr('opacity', 0.3).attr('style', 'display:none').on('mousemove', function (event) {
-    d3$b.select(event.currentTarget).attr('opacity', 0.8);
-    d3$b.select('path#' + theEdge.path_id).attr('stroke', 'red').attr('stroke-width', 4).attr('stroke-dasharray', '5 5');
+  var circ = d3$c.select('g#allPaths').append('rect').attr('id', 'pathCircle' + theEdge.path_id).attr('rx', 100).attr('ry', 100).attr('width', 15).attr('height', 15).attr('fill', 'red').attr('opacity', 0.3).attr('style', 'display:none').on('mousemove', function (event) {
+    d3$c.select(event.currentTarget).attr('opacity', 0.8);
+    d3$c.select('path#' + theEdge.path_id).attr('stroke', 'red').attr('stroke-width', 4).attr('stroke-dasharray', '5 5');
   }).on('mouseout', function (event) {
-    d3$b.select(event.currentTarget).attr('opacity', 0.3);
-    d3$b.select('path#' + theEdge.path_id).attr('stroke', 'black').attr('stroke-width', 5).attr('stroke-dasharray', 4);
+    d3$c.select(event.currentTarget).attr('opacity', 0.3);
+    d3$c.select('path#' + theEdge.path_id).attr('stroke', 'black').attr('stroke-width', 5).attr('stroke-dasharray', 4);
   }).on('mousedown', function (event) {
     deleteEdge(theEdge.path_id);
     console.log(theEdge.path_id);
-    d3$b.select(event.currentTarget).remove();
-    d3$b.select('path#' + theEdge.path_id).remove();
+    d3$c.select(event.currentTarget).remove();
+    d3$c.select('path#' + theEdge.path_id).remove();
   });
-  d3$b.select('#' + theEdge.path_id).attr('stroke-width', '5').attr('d', function () {
+  d3$c.select('#' + theEdge.path_id).attr('stroke-width', '5').attr('d', function () {
     return thisD.replace('L', 'C');
   }).attr('stroke', 'black').attr('stroke-linecap', 'round').attr('stroke-opacity', '0.5').lower();
 
@@ -1688,7 +1675,7 @@ function addEdgeCircle(theEdge, thisD) {
 }
 
 function updateAll() {
-  allEdges.forEach(element => {
+  allEdges.forEach(function (element) {
     var thisD = $__default['default']('path#' + element.path_id).attr('d');
     addEdgeCircle(element, thisD);
   });
@@ -1716,13 +1703,13 @@ function getlocationFromTransform(trnsformText) {
 
 
 function ViewListRedrawing() {
-  d3$b.selectAll('option#someSelection').on('click', function (e) {
+  d3$c.selectAll('option#someSelection').on('click', function (e) {
     var id = this.classList[1];
     var selectedItems = [];
     var componentValue = [];
     var selectedOptions = $__default['default']('option.listViewOption.' + id);
 
-    for (let i = 0; i < selectedOptions.length; i++) {
+    for (var i = 0; i < selectedOptions.length; i++) {
       var currentValue = selectedOptions[i].value;
       var parsedcurrentValue;
 
@@ -1761,11 +1748,11 @@ function ViewListRedrawing() {
 function addOptionDropdownList(compId) {
   var optionListComp = selectComp(compId);
   var n = 0;
-  d3$b.select('g#comp-' + compId);
-  var optionsGroup = d3$b.select('g#optionListOption-' + compId);
+  d3$c.select('g#comp-' + compId);
+  var optionsGroup = d3$c.select('g#optionListOption-' + compId);
   optionsGroup.html('');
 
-  for (const option in optionListComp.optionListValues) {
+  for (var option in optionListComp.optionListValues) {
     if (optionListComp.optionListValues.hasOwnProperty(option)) {
       n += 1;
       optionsGroup.append('text').attr('fill', 'black').attr('class', 'optionListoptiontext ' + optionListComp.GUID + ' ' + optionListComp.optionListValues[option] + ' ' + option).attr('value', option).attr('key', optionListComp.optionListValues[option]).attr('width', '180').text(option).attr('y', 15 + 20 * n).attr('x', 5);
@@ -1774,10 +1761,10 @@ function addOptionDropdownList(compId) {
 
   n = 0;
 
-  for (const option in optionListComp.optionListValues) {
-    if (optionListComp.optionListValues.hasOwnProperty(option)) {
+  for (var _option in optionListComp.optionListValues) {
+    if (optionListComp.optionListValues.hasOwnProperty(_option)) {
       n += 1;
-      optionsGroup.append('rect').attr('fill', 'white').attr('class', 'optionListoption ' + optionListComp.GUID + ' ' + optionListComp.optionListValues[option] + ' ' + option).attr('value', option).attr('key', optionListComp.optionListValues[option]).attr('id', 'optionListoption').attr('width', '180').attr('height', '20').attr('y', 20 * n).attr('opacity', '0.3').attr('stroke', 'gray').on('mousemove', function () {
+      optionsGroup.append('rect').attr('fill', 'white').attr('class', 'optionListoption ' + optionListComp.GUID + ' ' + optionListComp.optionListValues[_option] + ' ' + _option).attr('value', _option).attr('key', optionListComp.optionListValues[_option]).attr('id', 'optionListoption').attr('width', '180').attr('height', '20').attr('y', 20 * n).attr('opacity', '0.3').attr('stroke', 'gray').on('mousemove', function () {
         reactContext$1.setState({
           mouseInsideOption: true
         });
@@ -1799,7 +1786,7 @@ function changeOptionListFinalValue(el) {
   thisComp.value = el.attributes.key.value;
   thisComp.Name = el.attributes.value.value;
   thisComp.outputs[0].value = el.classList[2];
-  d3$b.select('text#option-' + el.classList[1]).text(el.classList[3]).attr('fill', 'black');
+  d3$c.select('text#option-' + el.classList[1]).text(el.classList[3]).attr('fill', 'black');
   redrawDependents(el.classList[1]);
 } // End of changeOptionListFinalValue
 
@@ -1818,7 +1805,7 @@ function showDropDownList(hh) {
 
 function redrawDependents(parentComp) {
   console.log('redrawing dependents');
-  let parent = selectComp(parentComp);
+  var parent = selectComp(parentComp);
 
   if (parent_child_matrix[parentComp].length === 0) {
     // This means that this parent has no children
@@ -1828,7 +1815,7 @@ function redrawDependents(parentComp) {
   if (parent.dftype === 'shlow') {
     parent_child_matrix[parentComp].forEach(function (element, i) {
       //iterate through all those childs.
-      let ch = selectComp(element[1]);
+      var ch = selectComp(element[1]);
 
       if (parent.type === 'slider') {
         ch.inputs[element[2]].value = parent.value;
@@ -1840,7 +1827,7 @@ function redrawDependents(parentComp) {
         ch.inputs[element[2]].type = 'json';
       } else if (parent.type === 'toggle' || parent.type === 'optionList') {
         ch.inputs[element[2]].value = parent.value;
-      } else if (parent.type === 'component') {
+      } else if (parent.type === 'component' || parent.type === 'cloud') {
         try {
           calculateShallow(parent.GUID);
           ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -1863,9 +1850,9 @@ function redrawDependents(parentComp) {
     parent.state = 'unbound';
     parent_child_matrix[parentComp].forEach(function (element, i) {
       //iterate through all those childs.
-      let ch = selectComp(element[1]);
+      var ch = selectComp(element[1]);
 
-      if (parent.type === 'component' && runDeep === true) {
+      if (parent.type === 'cloud' && runDeep === true) {
         reactContext$1.setState({
           runDeep: false
         });
@@ -1902,12 +1889,13 @@ function updatShallowCompRender(ch) {
         console.log(data);
       });
     } else if (ch.inputs[0].type === 'plot') {
-      let data = JSON.parse(ch.inputs[0].value);
+      var data = JSON.parse(ch.inputs[0].value);
       drawPlotComponent(data, ch);
     } else if (ch.inputs[0].type === 'spatial') {
-      let data = JSON.parse(ch.inputs[0].value);
-      let unparseData = ch.inputs[0].value;
-      visualizeSpatialComponent(data, unparseData, ch);
+      var _data = JSON.parse(ch.inputs[0].value);
+
+      var unparseData = ch.inputs[0].value;
+      visualizeSpatialComponent(_data, unparseData, ch);
     }
 
     $__default['default']('foreignObject#panel_status_' + ch.GUID).text('type : ' + ch.inputs[0].type);
@@ -1918,8 +1906,8 @@ function updatShallowCompRender(ch) {
   } else if (ch.type === 'listView') {
     var newValues = [];
 
-    for (let i = 0; i < JSON.parse(ch.inputs[0].value).length; i++) {
-      const element = JSON.parse(ch.inputs[0].value)[i];
+    for (var i = 0; i < JSON.parse(ch.inputs[0].value).length; i++) {
+      var element = JSON.parse(ch.inputs[0].value)[i];
       newValues.push([element, 0]);
     }
 
@@ -1934,15 +1922,15 @@ function updatShallowCompRender(ch) {
 
 function visualizeSpatialComponent(data, unparseData, comp) {
   $__default['default']('foreignObject#textbody_' + comp.GUID).html('<div id="vis_area' + comp.GUID + '" style="height:4%"></div><div id="vis_canvas' + comp.GUID + '" style="height:92%">vis</div>');
-  var options = `<select id='spatial_select_` + comp.GUID + `' onchange= 'displaySelection(` + unparseData + `, "` + comp.GUID + `")'>`;
+  var options = "<select id='spatial_select_" + comp.GUID + "' onchange= 'displaySelection(" + unparseData + ", \"" + comp.GUID + "\")'>";
 
-  for (const key in data) {
+  for (var key in data) {
     if (data.hasOwnProperty(key)) {
-      options += `<option  value="` + key + `">` + key + `</option>`;
+      options += "<option  value=\"" + key + "\">" + key + "</option>";
     }
   }
 
-  options += `</select>`;
+  options += "</select>";
   $__default['default']('div#vis_area' + comp.GUID).html(options);
 } // End of visualizeSpatialComponent
 
@@ -1962,13 +1950,13 @@ function drawPlotComponent(data, comp) {
         });
       }
     } else if (data[0].type === 'bar') {
-      data[0].data.forEach(dataElement => {
-        var maxValue = Math.max(...dataElement.y);
+      data[0].data.forEach(function (dataElement) {
+        var maxValue = Math.max.apply(Math, _toConsumableArray(dataElement.y));
         dataElement['marker'] = {
           color: []
         };
-        dataElement.y.forEach(dataValue => {
-          dataElement.marker.color.push(d3$b.interpolateGnBu(dataValue / maxValue));
+        dataElement.y.forEach(function (dataValue) {
+          dataElement.marker.color.push(d3$c.interpolateGnBu(dataValue / maxValue));
         });
       });
 
@@ -2004,13 +1992,13 @@ function drawPlotComponent(data, comp) {
         });
       }
     } else if (data.type === 'bar') {
-      data.data.forEach(dataElement => {
-        var maxValue = Math.max(...dataElement.y);
+      data.data.forEach(function (dataElement) {
+        var maxValue = Math.max.apply(Math, _toConsumableArray(dataElement.y));
         dataElement['marker'] = {
           color: []
         };
-        dataElement.y.forEach(dataValue => {
-          dataElement.marker.color.push(d3$b.interpolateGnBu(dataValue / maxValue));
+        dataElement.y.forEach(function (dataValue) {
+          dataElement.marker.color.push(d3$c.interpolateGnBu(dataValue / maxValue));
         });
       });
 
@@ -2049,26 +2037,28 @@ function drawPlotComponent(data, comp) {
 
 
 function updateListViewDrawing(comp) {
-  d3$b.select('foreignObject#listView-' + comp.GUID).html(() => {
+  d3$c.select('foreignObject#listView-' + comp.GUID).html(function () {
     var selectedOptions = [];
-    var ListItemsvalueReturn = `<select id="listviewSelect" class="listView ` + comp.GUID + `" size="5"  multiple>`;
-    comp.value.forEach(option => {
+    var ListItemsvalueReturn = "<select id=\"listviewSelect\" class=\"listView " + comp.GUID + "\" size=\"5\"  multiple>";
+    comp.value.forEach(function (option) {
       if (option[1] === 0) {
-        ListItemsvalueReturn += `<option id="someSelection" class="listViewOption ` + comp.GUID + `" value="` + option[0] + `">` + option[0] + `</option>`;
+        ListItemsvalueReturn += "<option id=\"someSelection\" class=\"listViewOption " + comp.GUID + "\" value=\"" + option[0] + "\">" + option[0] + "</option>";
       } else {
-        ListItemsvalueReturn += `<option id="someSelection" class="listViewOption ` + comp.GUID + `" value="` + option[0] + `" selected>` + option[0] + `</option>`;
+        ListItemsvalueReturn += "<option id=\"someSelection\" class=\"listViewOption " + comp.GUID + "\" value=\"" + option[0] + "\" selected>" + option[0] + "</option>";
         selectedOptions.push(option[0]);
       }
     });
     comp.outputs[0].value = JSON.stringify(selectedOptions);
-    ListItemsvalueReturn += `</select>`;
+    ListItemsvalueReturn += "</select>";
     return ListItemsvalueReturn;
   });
   ViewListRedrawing();
 } // End of updateListViewDrawing
 
 
-function handleEdgeMovement(objID, x = null, y = null) {
+function handleEdgeMovement(objID) {
+  var x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  var y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
   var element = selectComp(objID);
 
   if (element != null && element.GUID === objID) {
@@ -2077,9 +2067,9 @@ function handleEdgeMovement(objID, x = null, y = null) {
       element.Y = y;
     }
 
-    for (let index = 0; index < comp_input_edges[objID].length; index++) {
+    var _loop = function _loop(index) {
       if (comp_input_edges[objID][index] !== undefined && comp_input_edges[objID][index] !== null) {
-        comp_input_edges[objID][index].forEach(inputElement => {
+        comp_input_edges[objID][index].forEach(function (inputElement) {
           var circleindex = index;
           var rectId = objID;
           var rectpos = $__default['default']('#comp-' + rectId).attr('transform').replace('translate(', '').replace(')', '').split(',').map(function (item) {
@@ -2090,8 +2080,8 @@ function handleEdgeMovement(objID, x = null, y = null) {
           });
           var padding = 20;
           var titleMargin = 30;
-          d3$b.select('#' + inputElement).attr('d', function () {
-            if (element.type === 'component') {
+          d3$c.select('#' + inputElement).attr('d', function () {
+            if (element.type === 'component' || element.type === 'cloud') {
               var itisthelocation = returnCurveString(xy2[0], xy2[1], rectpos[0], rectpos[1] + (circleindex * padding + titleMargin));
               handlePathDeleteMovement(inputElement, xy2, [rectpos[0], rectpos[1] + (circleindex * padding + titleMargin)]);
             } else if (element.type === 'string' || element.type === 'toggle' || element.type === 'fileUpload' || element.type === 'slider' || element.type === 'optionList' || element.type === 'listView') {
@@ -2103,12 +2093,16 @@ function handleEdgeMovement(objID, x = null, y = null) {
           });
         });
       }
+    };
+
+    for (var index = 0; index < comp_input_edges[objID].length; index++) {
+      _loop(index);
     }
 
-    for (let index = 0; index < comp_output_edges[objID].length; index++) {
-      if (comp_output_edges[objID][index] !== undefined && comp_output_edges[objID][index] !== null) {
-        comp_output_edges[objID][index].forEach(outputElement => {
-          var circleindex = index;
+    var _loop2 = function _loop2(_index2) {
+      if (comp_output_edges[objID][_index2] !== undefined && comp_output_edges[objID][_index2] !== null) {
+        comp_output_edges[objID][_index2].forEach(function (outputElement) {
+          var circleindex = _index2;
           var rectId = objID;
           var rectpos = $__default['default']('#comp-' + rectId).attr('transform').replace('translate(', '').replace(')', '').split(',').map(function (item) {
             return parseFloat(item, 10);
@@ -2119,8 +2113,8 @@ function handleEdgeMovement(objID, x = null, y = null) {
           });
           var padding = 20;
           var titleMargin = 30;
-          d3$b.select('#' + outputElement).attr('d', function () {
-            if (element.type === 'component') {
+          d3$c.select('#' + outputElement).attr('d', function () {
+            if (element.type === 'component' || element.type === 'cloud') {
               var itisthelocation = returnCurveString(rectpos[0] + parseFloat(rectwidth), rectpos[1] + (circleindex * padding + titleMargin), xy2[0], xy2[1]);
               handlePathDeleteMovement(outputElement, [rectpos[0] + parseFloat(rectwidth), rectpos[1] + (circleindex * padding + titleMargin)], [xy2[0], xy2[1]]);
             } else if (element.type === 'slider') {
@@ -2135,6 +2129,10 @@ function handleEdgeMovement(objID, x = null, y = null) {
           });
         });
       }
+    };
+
+    for (var _index2 = 0; _index2 < comp_output_edges[objID].length; _index2++) {
+      _loop2(_index2);
     }
   }
 } // End of handleEdgeMovement
@@ -2143,31 +2141,35 @@ function handleEdgeMovement(objID, x = null, y = null) {
 function handlePathDeleteMovement(pathId, xy1, xy2) {
   var circleX = ((xy1[0] + xy2[0]) / 2.0).toString() - 7.5;
   var circleY = ((xy1[1] + xy2[1]) / 2.0).toString() - 7.5;
-  d3$b.select('rect#pathCircle' + pathId).attr('x', circleX).attr('y', circleY).attr('style', 'display:block');
+  d3$c.select('rect#pathCircle' + pathId).attr('x', circleX).attr('y', circleY).attr('style', 'display:block');
 } // End of handlePathDeleteMovement
 
 
 function objToHtmlTable(object) {
   var col_length = 0;
   var keys = [];
-  var htmlQuery = `<table border="1" class="dataframe">` + `<thead> <tr style="text-align: right;"><th></th>`;
+  var htmlQuery = "<table border=\"1\" class=\"dataframe\">" + "<thead> <tr style=\"text-align: right;\"><th></th>";
 
-  for (const key in object) {
+  for (var key in object) {
     if (object.hasOwnProperty(key)) {
-      htmlQuery += `<th>` + key + `</th>`;
+      htmlQuery += "<th>" + key + "</th>";
       keys.push(key);
       col_length = object[key].length;
     }
   }
 
-  htmlQuery += `</tr></thead><tbody>`;
+  htmlQuery += "</tr></thead><tbody>";
 
-  for (let i = 0; i < col_length; i++) {
-    htmlQuery += `<tr><th>` + i.toString() + `</th>`;
-    keys.forEach(element => {
-      htmlQuery += `<td>` + object[element][i] + `</td>`;
+  var _loop3 = function _loop3(i) {
+    htmlQuery += "<tr><th>" + i.toString() + "</th>";
+    keys.forEach(function (element) {
+      htmlQuery += "<td>" + object[element][i] + "</td>";
     });
-    htmlQuery += `</tr>`;
+    htmlQuery += "</tr>";
+  };
+
+  for (var i = 0; i < col_length; i++) {
+    _loop3(i);
   }
 
   return htmlQuery;
@@ -2187,16 +2189,16 @@ function deleteComponent(component_to_be_deleted) {
   console.log(component_to_be_reset.type);
   component_to_be_reset.value = null;
   console.log(parent_child_matrix_fast_check);
-  component_to_be_reset.inputs.forEach(input => {
+  component_to_be_reset.inputs.forEach(function (input) {
     input.value = null;
   });
-  component_to_be_reset.outputs.forEach(output => {
+  component_to_be_reset.outputs.forEach(function (output) {
     output.value = null;
   });
   delete components_selection_data[component_to_be_deleted];
   redrawDependents(component_to_be_deleted);
 
-  for (let i = 0; i < parent_child_matrix_fast_check.length; i++) {
+  for (var i = 0; i < parent_child_matrix_fast_check.length; i++) {
     var current_parent_child_object_asList = parent_child_matrix_fast_check[i].split(' ');
 
     if (current_parent_child_object_asList[1] === component_to_be_deleted) {
@@ -2204,15 +2206,15 @@ function deleteComponent(component_to_be_deleted) {
     }
   }
 
-  comp_input_edges[component_to_be_deleted].forEach(element => {
+  comp_input_edges[component_to_be_deleted].forEach(function (element) {
     try {
-      for (let i = 0; i < allEdges.length; i++) {
-        element.forEach(thisEdgeId => {
-          d3$b.select('path#' + thisEdgeId).remove();
-          d3$b.select('rect#pathCircle' + thisEdgeId).remove();
+      var _loop4 = function _loop4(_i) {
+        element.forEach(function (thisEdgeId) {
+          d3$c.select('path#' + thisEdgeId).remove();
+          d3$c.select('rect#pathCircle' + thisEdgeId).remove();
 
-          if (thisEdgeId === allEdges[i]['path_id']) {
-            allEdges.splice(i, 1);
+          if (thisEdgeId === allEdges[_i]['path_id']) {
+            allEdges.splice(_i, 1);
             reactContext$1.setState({
               allEdges: allEdges
             });
@@ -2223,20 +2225,24 @@ function deleteComponent(component_to_be_deleted) {
           comp_output_edges[otherComp][otherCompIndex] = undefined;
           parent_child_matrix[otherComp] = [];
         });
+      };
+
+      for (var _i = 0; _i < allEdges.length; _i++) {
+        _loop4(_i);
       }
     } catch (err) {
       console.log(err);
     }
   });
-  comp_output_edges[component_to_be_deleted].forEach(element => {
+  comp_output_edges[component_to_be_deleted].forEach(function (element) {
     try {
-      for (let i = 0; i < allEdges.length; i++) {
-        element.forEach(thisEdgeId => {
-          d3$b.select('path#' + thisEdgeId).remove();
-          d3$b.select('rect#pathCircle' + thisEdgeId).remove();
+      var _loop5 = function _loop5(_i2) {
+        element.forEach(function (thisEdgeId) {
+          d3$c.select('path#' + thisEdgeId).remove();
+          d3$c.select('rect#pathCircle' + thisEdgeId).remove();
 
-          if (thisEdgeId === allEdges[i]['path_id']) {
-            allEdges.splice(i, 1);
+          if (thisEdgeId === allEdges[_i2]['path_id']) {
+            allEdges.splice(_i2, 1);
             reactContext$1.setState({
               allEdges: allEdges
             });
@@ -2246,6 +2252,10 @@ function deleteComponent(component_to_be_deleted) {
           var otherCompIndex = edge_comp_matrix[thisEdgeId]['to_index'];
           comp_input_edges[otherComp][otherCompIndex] = undefined;
         });
+      };
+
+      for (var _i2 = 0; _i2 < allEdges.length; _i2++) {
+        _loop5(_i2);
       }
     } catch (err) {
       console.log(err);
@@ -2257,16 +2267,16 @@ function deleteComponent(component_to_be_deleted) {
     parent_child_matrix: parent_child_matrix
   });
 
-  for (let i = 0; i < allComp.length; i++) {
-    if (allComp[i].GUID === component_to_be_deleted) {
-      allComp.splice(i, 1);
+  for (var _i3 = 0; _i3 < allComp.length; _i3++) {
+    if (allComp[_i3].GUID === component_to_be_deleted) {
+      allComp.splice(_i3, 1);
       reactContext$1.setState({
         allComp: allComp
       });
     }
   }
 
-  d3$b.select('#' + component_to_be_deleted).remove();
+  d3$c.select('#' + component_to_be_deleted).remove();
 } // End of deleteComponent
 
 
@@ -2280,9 +2290,11 @@ function deleteEdge(edge_to_be_deleted) {
   toComp.inputs[components_of_the_edge['to_index']].value = null;
   toComp.value = null;
   comp_input_edges[toComp.GUID][components_of_the_edge['to_index']] = undefined;
-  comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']] = comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']].filter(pathId => pathId !== edge_to_be_deleted);
+  comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']] = comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']].filter(function (pathId) {
+    return pathId !== edge_to_be_deleted;
+  });
 
-  for (let i = 0; i < parent_child_matrix[fromComp.GUID].length; i++) {
+  for (var i = 0; i < parent_child_matrix[fromComp.GUID].length; i++) {
     if (parent_child_matrix[fromComp.GUID][i][2] === components_of_the_edge['to_index'] && parent_child_matrix[fromComp.GUID][i][1] === toComp.GUID) {
       parent_child_matrix[fromComp.GUID].splice(i, 1);
     }
@@ -2291,14 +2303,16 @@ function deleteEdge(edge_to_be_deleted) {
   updatShallowCompRender(toComp);
   updatShallowCompRender(fromComp);
   redrawDependents(components_of_the_edge['to']);
-  allEdges = allEdges.filter(edge => edge['path_id'] !== edge_to_be_deleted);
+  allEdges = allEdges.filter(function (edge) {
+    return edge['path_id'] !== edge_to_be_deleted;
+  });
 
-  for (let i = 0; i < parent_child_matrix_fast_check.length; i++) {
-    var parent_child_info = parent_child_matrix_fast_check[i].split(' ');
+  for (var _i4 = 0; _i4 < parent_child_matrix_fast_check.length; _i4++) {
+    var parent_child_info = parent_child_matrix_fast_check[_i4].split(' ');
 
     if (parent_child_info[0] === components_of_the_edge['from_index'] && parent_child_info[1] === fromComp.GUID) {
       // && parent_child_info[3] === toComp.GUID
-      parent_child_matrix_fast_check.splice(i, 1);
+      parent_child_matrix_fast_check.splice(_i4, 1);
     }
   }
 
@@ -2316,7 +2330,7 @@ function deleteEdge(edge_to_be_deleted) {
 
 
 function popupMessage(message) {
-  d3$b.select('div#buttonClickedname').text(message).style('opacity', () => {
+  d3$c.select('div#buttonClickedname').text(message).style('opacity', function () {
     reactContext$1.setState({
       messageshown: true
     });
@@ -2333,20 +2347,20 @@ function popupMessage(message) {
 
 function componentStatus(id, Compstatus) {
   if (Compstatus === 'green') {
-    d3$b.select('rect#statusRect' + id).attr('fill', '#02521b');
-    d3$b.select('text#statusText' + id).text('Active').attr('fill', '#6cff13');
+    d3$c.select('rect#statusRect' + id).attr('fill', '#02521b');
+    d3$c.select('text#statusText' + id).text('Active').attr('fill', '#6cff13');
   } else if (Compstatus === '#ffca28') {
-    d3$b.select('rect#statusRect' + id).attr('fill', Compstatus);
-    d3$b.select('text#statusText' + id).text('Idle ...').attr('fill', 'black');
+    d3$c.select('rect#statusRect' + id).attr('fill', Compstatus);
+    d3$c.select('text#statusText' + id).text('Idle ...').attr('fill', 'black');
   } else if (Compstatus === 'red') {
-    d3$b.select('rect#statusRect' + id).attr('fill', '#fceecc');
-    d3$b.select('text#statusText' + id).text('Error').attr('fill', 'red');
+    d3$c.select('rect#statusRect' + id).attr('fill', '#fceecc');
+    d3$c.select('text#statusText' + id).text('Error').attr('fill', 'red');
   }
 } // End of componentStatus
 
 
 function moveComponent(id, x, y) {
-  d3$b.select('#comp-' + id).attr('transform', function () {
+  d3$c.select('#comp-' + id).attr('transform', function () {
     return 'translate(' + x + ',' + y + ')';
   });
   handleEdgeMovement(id, x, y);
@@ -2459,38 +2473,38 @@ var globalVars = {
 ───────────────────────────────────────────────────────────────────────────────────────────────
 */
 
-var d3$a = require('d3');
+var d3$b = require('d3');
 
 function onMinimizeClick() {
-  d3$a.select('#maximizeUpperBar').transition().style('display', 'block');
-  d3$a.select('#minimizeUpperBar').style('display', 'none');
-  d3$a.select('#TopPropertiesBar').transition().duration(200).style('top', '-60px');
-  d3$a.select('#LeftPropertiesBar').transition().duration(200).style('top', '0px');
-  d3$a.select('#PropertiesBar').transition().duration(200).style('top', '0px');
-  d3$a.select('#LeftPropertiesBarSelector').transition().duration(200).style('top', '0px');
-  d3$a.select('#PropertiesBarSelector').transition().duration(200).style('top', '0px');
-  d3$a.select('.canvas_container').transition().duration(200).style('top', '0px');
-  d3$a.select('#maximizeUpperBar').transition().duration(200).style('right', '300px').style('top', '61px');
-  d3$a.select('#minimizeUpperBar').transition().duration(200).style('right', '300px').style('top', '61px');
+  d3$b.select('#maximizeUpperBar').transition().style('display', 'block');
+  d3$b.select('#minimizeUpperBar').style('display', 'none');
+  d3$b.select('#TopPropertiesBar').transition().duration(200).style('top', '-60px');
+  d3$b.select('#LeftPropertiesBar').transition().duration(200).style('top', '0px');
+  d3$b.select('#PropertiesBar').transition().duration(200).style('top', '0px');
+  d3$b.select('#LeftPropertiesBarSelector').transition().duration(200).style('top', '0px');
+  d3$b.select('#PropertiesBarSelector').transition().duration(200).style('top', '0px');
+  d3$b.select('.canvas_container').transition().duration(200).style('top', '0px');
+  d3$b.select('#maximizeUpperBar').transition().duration(200).style('right', '300px').style('top', '61px');
+  d3$b.select('#minimizeUpperBar').transition().duration(200).style('right', '300px').style('top', '61px');
 }
 
 function onMaximizeClick() {
-  d3$a.select('#maximizeUpperBar').style('display', 'none');
-  d3$a.select('#minimizeUpperBar').style('display', 'block');
-  d3$a.select('#TopPropertiesBar').transition().duration(200).style('top', '0px');
-  d3$a.select('#LeftPropertiesBar').transition().duration(200).style('top', '30px');
-  d3$a.select('#PropertiesBar').transition().duration(200).style('top', '30px');
-  d3$a.select('#LeftPropertiesBarSelector').transition().duration(200).style('top', '30px');
-  d3$a.select('#PropertiesBarSelector').transition().duration(200).style('top', '30px');
-  d3$a.select('.canvas_container').transition().duration(200).style('top', '30px');
-  d3$a.select('#maximizeeUpperBar').transition().duration(200).style('right', '0px').style('top', '38px');
-  d3$a.select('#minimizeUpperBar').transition().duration(200).style('right', '0px').style('top', '0px');
-  d3$a.select('i#tomaximize').transition().duration(200).style('transform', 'rotate(180deg)');
+  d3$b.select('#maximizeUpperBar').style('display', 'none');
+  d3$b.select('#minimizeUpperBar').style('display', 'block');
+  d3$b.select('#TopPropertiesBar').transition().duration(200).style('top', '0px');
+  d3$b.select('#LeftPropertiesBar').transition().duration(200).style('top', '30px');
+  d3$b.select('#PropertiesBar').transition().duration(200).style('top', '30px');
+  d3$b.select('#LeftPropertiesBarSelector').transition().duration(200).style('top', '30px');
+  d3$b.select('#PropertiesBarSelector').transition().duration(200).style('top', '30px');
+  d3$b.select('.canvas_container').transition().duration(200).style('top', '30px');
+  d3$b.select('#maximizeeUpperBar').transition().duration(200).style('right', '0px').style('top', '38px');
+  d3$b.select('#minimizeUpperBar').transition().duration(200).style('right', '0px').style('top', '0px');
+  d3$b.select('i#tomaximize').transition().duration(200).style('transform', 'rotate(180deg)');
 }
 
 function manageCanvas() {
   var reactContext = this;
-  var svgContainer = d3$a.select('svg');
+  var svgContainer = d3$b.select('svg');
   var allContents = svgContainer.append('g').attr('id', 'allCanvasContents');
   var currentLeftColWidth = reactContext.state.currentLeftColWidth;
   var currentTopBarHeight = reactContext.state.currentTopBarHeight;
@@ -2502,7 +2516,7 @@ function manageCanvas() {
   var leftColIsdisplayed = reactContext.state.leftColIsdisplayed;
   allContents.append('rect').attr('fill', 'url(#img122)').attr('x', -1000).attr('y', -1000).attr('width', 6000).attr('height', 6000).style('cursor', 'default');
   allContents.append('g').attr('id', 'allPaths');
-  svgContainer.call(d3$a.zoom().filter(function (event) {
+  svgContainer.call(d3$b.zoom().filter(function (event) {
     return !(reactContext.state.startDrag || reactContext.state.StringAnchorclicked || reactContext.state.SliderAnchorclicked || reactContext.state.edgeStarted || reactContext.state.selection_groud_selected) && event.button === 0;
   }).on('zoom', function (event) {
     if (!reactContext.state.startDrag) {
@@ -2539,47 +2553,47 @@ function manageCanvas() {
 
     return text;
   });
-  d3$a.select('div#LeftPropertiesBar').style('width', function () {
+  d3$b.select('div#LeftPropertiesBar').style('width', function () {
     return currentLeftColWidth + 'px';
   }).style('top', function () {
     return currentTopBarHeight.toString() + 'px';
   });
-  d3$a.select('div#LeftPropertiesBarSelector').style('top', function () {
+  d3$b.select('div#LeftPropertiesBarSelector').style('top', function () {
     return currentTopBarHeight.toString() + 'px';
   }).style('left', currentLeftColWidth + 'px');
-  d3$a.select('div#PropertiesBarSelector').style('top', function () {
+  d3$b.select('div#PropertiesBarSelector').style('top', function () {
     return currentTopBarHeight.toString() + 'px';
   }).style('right', currentRightColWidth + 'px');
-  d3$a.select('div#TopPropertiesBar').style('height', function () {
+  d3$b.select('div#TopPropertiesBar').style('height', function () {
     return currentTopBarHeight + 'px';
   });
-  d3$a.select('div#PropertiesBarSelector').on('mousedown', function () {
+  d3$b.select('div#PropertiesBarSelector').on('mousedown', function () {
     currentRightColWidth = parseInt($__default['default']('div#PropertiesBar').css('width').replace('px', ''));
     rightColumnIsSelected = true;
   });
-  d3$a.select('div#LeftPropertiesBarSelector').on('mousedown', function () {
+  d3$b.select('div#LeftPropertiesBarSelector').on('mousedown', function () {
     currentLeftColWidth = parseInt($__default['default']('div#LeftPropertiesBar').css('width').replace('px', ''));
     leftColumnIsSelected = true;
   });
-  d3$a.select('body').on('mousemove', function (event) {
-    d3$a.select(event.currentTarget).style('cursor', 'auto');
+  d3$b.select('body').on('mousemove', function (event) {
+    d3$b.select(event.currentTarget).style('cursor', 'auto');
     currentRightColWidth = window.innerWidth - 16 - event.clientX;
     currentLeftColWidth = event.clientX;
 
     if (rightColumnIsSelected) {
-      d3$a.select('div#PropertiesBar').style('width', function () {
+      d3$b.select('div#PropertiesBar').style('width', function () {
         if (currentRightColWidth >= 50) {
-          if (!rightColIsdisplayed) d3$a.select('div#PropertiesBar').style('display', 'block');
-          d3$a.select('div#PropertiesBarSelector').style('background-color', '#252525');
+          if (!rightColIsdisplayed) d3$b.select('div#PropertiesBar').style('display', 'block');
+          d3$b.select('div#PropertiesBarSelector').style('background-color', '#252525');
           rightColIsdisplayed = true;
           return currentRightColWidth.toString() + 'px';
         } else {
           rightColIsdisplayed = false;
-          d3$a.select('div#PropertiesBar').style('display', 'none');
-          d3$a.select('div#PropertiesBarSelector').style('background-color', '#1abc9c');
+          d3$b.select('div#PropertiesBar').style('display', 'none');
+          d3$b.select('div#PropertiesBarSelector').style('background-color', '#1abc9c');
         }
       });
-      d3$a.select('div#PropertiesBarSelector').style('right', function () {
+      d3$b.select('div#PropertiesBarSelector').style('right', function () {
         if (currentRightColWidth >= 50) {
           return currentRightColWidth.toString() + 'px';
         } else {
@@ -2589,20 +2603,20 @@ function manageCanvas() {
     }
 
     if (leftColumnIsSelected) {
-      d3$a.select('body').style('cursor', 'ew-resize');
-      d3$a.select('div#LeftPropertiesBar').style('width', function () {
+      d3$b.select('body').style('cursor', 'ew-resize');
+      d3$b.select('div#LeftPropertiesBar').style('width', function () {
         if (currentLeftColWidth >= 50) {
-          if (!leftColIsdisplayed) d3$a.select('div#LeftPropertiesBar').style('display', 'block');
-          d3$a.select('div#LeftPropertiesBarSelector').style('background-color', '#252525');
+          if (!leftColIsdisplayed) d3$b.select('div#LeftPropertiesBar').style('display', 'block');
+          d3$b.select('div#LeftPropertiesBarSelector').style('background-color', '#252525');
           leftColIsdisplayed = true;
           return currentLeftColWidth.toString() + 'px';
         } else {
           leftColIsdisplayed = false;
-          d3$a.select('div#LeftPropertiesBar').style('display', 'none');
-          d3$a.select('div#LeftPropertiesBarSelector').style('background-color', '#1abc9c');
+          d3$b.select('div#LeftPropertiesBar').style('display', 'none');
+          d3$b.select('div#LeftPropertiesBarSelector').style('background-color', '#1abc9c');
         }
       });
-      d3$a.select('div#LeftPropertiesBarSelector').style('left', function () {
+      d3$b.select('div#LeftPropertiesBarSelector').style('left', function () {
         if (currentLeftColWidth >= 50) {
           return currentLeftColWidth.toString() + 'px';
         } else {
@@ -2612,12 +2626,12 @@ function manageCanvas() {
     }
 
     if (messageshown) {
-      var trns = d3$a.transition().duration(500).ease(d3$a.easeLinear);
-      d3$a.select('div#Addedmessage').transition(trns).style('opacity', function () {
+      var trns = d3$b.transition().duration(500).ease(d3$b.easeLinear);
+      d3$b.select('div#Addedmessage').transition(trns).style('opacity', function () {
         messageshown = false;
         return 0;
       });
-      d3$a.select('div#buttonClickedname').transition(trns).style('opacity', function () {
+      d3$b.select('div#buttonClickedname').transition(trns).style('opacity', function () {
         messageshown = false;
         return 0;
       });
@@ -2628,7 +2642,7 @@ function manageCanvas() {
   });
 }
 
-var d3$9 = require('d3');
+var d3$a = require('d3');
 
 var selection_box_x = 0;
 var selection_box_y = 0;
@@ -2662,7 +2676,7 @@ var reactContext;
 
 function manageGrid() {
   reactContext = this;
-  var allContents = d3$9.select('#allCanvasContents');
+  var allContents = d3$a.select('#allCanvasContents');
   var optionListStarted = reactContext.state.optionListStarted;
   var startDrag = reactContext.state.startDrag;
   var mouseInsideOption = reactContext.state.mouseInsideOption;
@@ -2673,8 +2687,8 @@ function manageGrid() {
     return 'white';
   }).on('mousedown', function () {
     if (optionListStarted && !startDrag && !mouseInsideOption) {
-      d3$9.selectAll('rect.optionListoption').style('display', 'none');
-      d3$9.selectAll('text.optionListoptiontext').style('display', 'none');
+      d3$a.selectAll('rect.optionListoption').style('display', 'none');
+      d3$a.selectAll('text.optionListoptiontext').style('display', 'none');
       reactContext.setState({
         optionListStarted: false,
         mouseInsideOption: false
@@ -2708,28 +2722,28 @@ function manageGrid() {
       }
     }
   }).on('dblclick', function (event) {
-    d3$9.select('div#buttonClickedname').text('dblclick').style('opacity', function () {
+    d3$a.select('div#buttonClickedname').text('dblclick').style('opacity', function () {
       reactContext.setState({
         messageshown: true
       });
       return 1;
     });
     reactContext.setState({
-      mousex: d3$9.pointer(event, allContents.node())[0],
-      mousey: d3$9.pointer(event, allContents.node())[1]
+      mousex: d3$a.pointer(event, allContents.node())[0],
+      mousey: d3$a.pointer(event, allContents.node())[1]
     });
-    d3$9.select('body').append('option');
+    d3$a.select('body').append('option');
   }).on('contextmenu', function (event) {
     //context menu event raised on right click
     event.preventDefault();
     popupMessage('RMB');
     selection_box_started = true;
-    selection_box_x = d3$9.pointer(event, allContents.node())[0];
-    selection_box_y = d3$9.pointer(event, allContents.node())[1];
+    selection_box_x = d3$a.pointer(event, allContents.node())[0];
+    selection_box_y = d3$a.pointer(event, allContents.node())[1];
     selection_box = allContents.append('polyline');
   }).on('mousemove', function (event) {
-    var mousex = d3$9.pointer(event, allContents.node())[0];
-    var mousey = d3$9.pointer(event, allContents.node())[1];
+    var mousex = d3$a.pointer(event, allContents.node())[0];
+    var mousey = d3$a.pointer(event, allContents.node())[1];
     reactContext.setState({
       mousex: mousex,
       mousey: mousey
@@ -2742,7 +2756,7 @@ function manageGrid() {
     }
 
     if (reactContext.state.edgeStarted) {
-      d3$9.select('#' + reactContext.state.selectedcircleId).attr('d', function () {
+      d3$a.select('#' + reactContext.state.selectedcircleId).attr('d', function () {
         return returnCurveString(reactContext.state.initEdgex1, reactContext.state.initEdgey1, mousex, mousey);
       }).attr('fill', 'none').attr('stroke-opacity', '0.2').attr('interpolate', 'basis');
     }
@@ -2751,13 +2765,13 @@ function manageGrid() {
     var optionlistRectid = reactContext.state.optionlistRectid;
 
     if (reactContext.state.textareaStarted) {
-      var selectedRect = getlocationFromTransform(d3$9.select('g#comp-' + textAreaRectId).attr('transform'));
-      d3$9.select('#TextAreaSelector').style('position', 'absolute').style('height', (parseFloat(d3$9.select('rect#' + textAreaRectId).attr('height')) - 50).toString() + 'px').style('left', selectedRect[0] + 4 + 'px').style('top', selectedRect[1] + 17 + 'px').style('border', 'none');
+      var selectedRect = getlocationFromTransform(d3$a.select('g#comp-' + textAreaRectId).attr('transform'));
+      d3$a.select('#TextAreaSelector').style('position', 'absolute').style('height', (parseFloat(d3$a.select('rect#' + textAreaRectId).attr('height')) - 50).toString() + 'px').style('left', selectedRect[0] + 4 + 'px').style('top', selectedRect[1] + 17 + 'px').style('border', 'none');
     }
 
     if (reactContext.state.optionListStarted) {
-      selectedRect = getlocationFromTransform(d3$9.select('g#comp-' + optionlistRectid).attr('transform'));
-      d3$9.select('#optionListSelectItems' + optionlistRectid).style('position', 'absolute').style('height', (parseFloat(d3$9.select('rect#' + optionlistRectid).attr('height')) - 50).toString() + 'px').style('left', selectedRect[0] + 20 + 'px').style('top', selectedRect[1] + 1 + 'px');
+      selectedRect = getlocationFromTransform(d3$a.select('g#comp-' + optionlistRectid).attr('transform'));
+      d3$a.select('#optionListSelectItems' + optionlistRectid).style('position', 'absolute').style('height', (parseFloat(d3$a.select('rect#' + optionlistRectid).attr('height')) - 50).toString() + 'px').style('left', selectedRect[0] + 20 + 'px').style('top', selectedRect[1] + 1 + 'px');
     } // if (reactContext.state.StringAnchorclicked) {
     //     if (StringAnchorType === YANCHOR) {
     //         //TODO : encabsulate this in a function.
@@ -2842,12 +2856,12 @@ function manageGrid() {
     if (selection_box_started) {
       var x1 = selection_box_x;
       var y1 = selection_box_y;
-      var x2 = d3$9.pointer(event, allContents.node())[0];
+      var x2 = d3$a.pointer(event, allContents.node())[0];
       var y2 = selection_box_y;
-      var x3 = d3$9.pointer(event, allContents.node())[0];
-      var y3 = d3$9.pointer(event, allContents.node())[1];
+      var x3 = d3$a.pointer(event, allContents.node())[0];
+      var y3 = d3$a.pointer(event, allContents.node())[1];
       var x4 = selection_box_x;
-      var y4 = d3$9.pointer(event, allContents.node())[1];
+      var y4 = d3$a.pointer(event, allContents.node())[1];
       selection_box.attr('x', selection_box_x).attr('points', function () {
         return x1 + ',' + y1 + ' ' + x2 + ',' + y2 + ' ' + x3 + ',' + y3 + ' ' + x4 + ',' + y4 + ' ' + x1 + ',' + y1 + ' ';
       }).attr('fill', function () {
@@ -2888,7 +2902,7 @@ function manageGrid() {
       reactContext.setState({
         edgeStarted: false
       });
-      d3$9.select('#' + reactContext.state.selectedcircleId).remove();
+      d3$a.select('#' + reactContext.state.selectedcircleId).remove();
     }
 
     if (reactContext.state.StringAnchorclicked) {
@@ -2931,7 +2945,7 @@ function manageGrid() {
 
       for (var key in components_selection_data) {
         if (components_selection_data.hasOwnProperty(key)) {
-          if (components_selection_data[key].x0 > selection_box_x && components_selection_data[key].y0 > selection_box_y && components_selection_data[key].x1 < d3$9.pointer(allContents.node())[0] && components_selection_data[key].y1 < d3$9.pointer(allContents.node())[1]) {
+          if (components_selection_data[key].x0 > selection_box_x && components_selection_data[key].y0 > selection_box_y && components_selection_data[key].x1 < d3$a.pointer(allContents.node())[0] && components_selection_data[key].y1 < d3$a.pointer(allContents.node())[1]) {
             temp_selected_xs.push(components_selection_data[key].x0);
             temp_selected_xs.push(components_selection_data[key].x1);
             temp_selected_ys.push(components_selection_data[key].y0);
@@ -2959,7 +2973,7 @@ function manageGrid() {
 var someCircle;
 
 function highlightSelection(components_list, temp_selected_xs, temp_selected_ys) {
-  var allContents = d3$9.select('#allCanvasContents');
+  var allContents = d3$a.select('#allCanvasContents');
 
   if (selection_rectangle_group != null) {
     selection_rectangle_group.remove();
@@ -3298,7 +3312,7 @@ var Grid = /*#__PURE__*/function (_Component) {
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 */
 
-var d3$8 = require('d3');
+var d3$9 = require('d3');
 /**
  * Create a new generic component (everything except slider, option list, panel, file upload, toogle, list view).
  * Example of calling this function for Average component:
@@ -3366,7 +3380,7 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
     });
   }
 
-  var allContents = d3$8.select('#allCanvasContents');
+  var allContents = d3$9.select('#allCanvasContents');
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
   var genY;
@@ -3386,11 +3400,7 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
     } else {
       return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
     }
-  }).data([{
-    x: FromExisting ? FromExisting.X : kwargs.X !== undefined && kwargs.Y !== undefined ? kwargs.X : genX,
-    y: FromExisting ? FromExisting.Y : kwargs.X !== undefined && kwargs.Y !== undefined ? kwargs.Y : genY
-  }]); // .call(dragHandler);
-
+  });
   var statusBar = node.append('g').attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
   statusBar.append('rect').attr('id', 'statusRect' + newcomp.GUID).attr('width', newcomp.width + 2).attr('x', -1.0).attr('height', 40).attr('fill', IDLE_COLOR).attr('stroke-width', 1).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('opacity', 0.5);
   statusBar.append('text').attr('class', 'statusTextClass').attr('id', 'statusText' + newcomp.GUID).attr('fill', 'black').attr('x', 5).attr('y', 37).text('Idle...');
@@ -3498,9 +3508,9 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
   }
 
   node.append('rect').attr('class', 'CompCBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
-    d3$8.select(event.currentTargethis).attr('cursor', 'pointer');
+    d3$9.select(event.currentTarget).attr('cursor', 'pointer');
   }).on('mouseout', function (event) {
-    d3$8.select(event.currentTarget).attr('fill', newcomp.fill);
+    d3$9.select(event.currentTarget).attr('fill', newcomp.fill);
   }).on('dblclick', () => {}).on('mousedown', () => {
     reactContext.setState({
       rectType: 'component'
@@ -3570,7 +3580,7 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 */
 
-var d3$7 = require('d3');
+var d3$8 = require('d3');
 
 var optionListComp;
 var OptionListValues;
@@ -3603,7 +3613,7 @@ function CreateNewOptionList(reactContext, FromExisting = null, optionlist_prede
   newcomp.type = 'optionList';
   newcomp.dftype = 'shlow'; // TODO : get the longest text in the component. and set the width based on this.
 
-  var allContents = d3$7.select('#allCanvasContents');
+  var allContents = d3$8.select('#allCanvasContents');
   newcomp.width = 200;
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
@@ -3653,7 +3663,7 @@ function CreateNewOptionList(reactContext, FromExisting = null, optionlist_prede
   });
   cirGroup.append('text').attr('id', 'nodeLog' + newcomp.GUID).attr('class', 'nodeLog ' + newcomp.GUID).attr('transform', 'translate(10, 10)').text(newcomp.log.logText).attr('fill', 'black').style('display', 'none');
   node.append('rect').attr('class', 'CompOBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', 'white').attr('stroke', 'black').attr('stroke-width', '1').on('mousemove', function (event) {
-    d3$7.select(event.currentTarget).attr('cursor', 'pointer');
+    d3$8.select(event.currentTarget).attr('cursor', 'pointer');
   });
   var Titlegroup = node.append('g').attr('transform', () => {
     return 'translate(0, 15)';
@@ -3756,7 +3766,7 @@ function readyToGoSubmit(compKey) {
 ─██████████████─██████████████─██████████─████████████───██████████████─██████──██████████─
 */
 
-var d3$6 = require('d3');
+var d3$7 = require('d3');
 
 function addSlider(guid, min = 0, max = 100, step = 1.0) {
   var initSlider = {
@@ -3817,7 +3827,7 @@ function CreateNewSlider(reactContext, FromExisting = null) {
   newSlider.height = 20;
   newSlider.width = 250;
   newSlider.dftype = 'shlow';
-  var allContents = d3$6.select('#allCanvasContents');
+  var allContents = d3$7.select('#allCanvasContents');
   var cont = allContents.append('g').attr('class', 'slider').attr('id', newSlider.GUID);
   var genX;
   var genY;
@@ -3856,7 +3866,7 @@ function CreateNewSlider(reactContext, FromExisting = null) {
     reactContext.setState({
       selectedSliderComponent: current_slider
     });
-    d3$6.select(current_slider.rect).attr('cursor', 'pointer');
+    d3$7.select(current_slider.rect).attr('cursor', 'pointer');
   }).on('mouseout', function () {
     newSlider.rect = this;
   }).on('dblclick', () => {}).on('mousedown', () => {
@@ -3881,7 +3891,7 @@ function CreateNewSlider(reactContext, FromExisting = null) {
     slidingAnchor.attr('transform', d => `translate(${d.x},3)`);
   }
 
-  var anchorDragHandler = d3$6.drag().on('start', (event, d) => rect.attr('stroke', 'red')).on('drag', (event, d) => {
+  var anchorDragHandler = d3$7.drag().on('start', (event, d) => rect.attr('stroke', 'red')).on('drag', (event, d) => {
     var selectedSliderComponent = reactContext.state.selectedSliderComponent;
     var sliderRectId = reactContext.state.sliderRectId;
     var slider_anchor_value;
@@ -3902,7 +3912,7 @@ function CreateNewSlider(reactContext, FromExisting = null) {
 
     selectedSliderComponent.anchorValue = slider_anchor_value;
     d.x = slider_anchor_value;
-    d3$6.select('#sliderValueText_' + sliderRectId.replace('SliderAnchor_', '')).text(slider_value.toFixed(6));
+    d3$7.select('#sliderValueText_' + sliderRectId.replace('SliderAnchor_', '')).text(slider_value.toFixed(6));
     selectedSliderComponent.value = slider_value;
     reactContext.setState({
       selectedSliderComponent: selectedSliderComponent
@@ -3913,9 +3923,9 @@ function CreateNewSlider(reactContext, FromExisting = null) {
     x: newSlider.anchorValue,
     y: 3
   }]).on('mousemove', function (event) {
-    d3$6.select(event.currentTarget).attr('fill', 'url(#gradientlsider)').attr('cursor', 'pointer').attr('stroke', 'black');
+    d3$7.select(event.currentTarget).attr('fill', 'url(#gradientlsider)').attr('cursor', 'pointer').attr('stroke', 'black');
   }).on('mouseleave', function (event) {
-    d3$6.select(event.currentTarget).attr('fill', '#3a4d69').attr('stroke', 'none');
+    d3$7.select(event.currentTarget).attr('fill', '#3a4d69').attr('stroke', 'none');
   }).on('mousedown', function () {
     reactContext.setState({
       sliderRectId: this.id,
@@ -3951,7 +3961,7 @@ function CreateNewSlider(reactContext, FromExisting = null) {
   } //Moving the slider body
 
 
-  d3$6.selectAll('g.SliderGroup').on('mousedown', function (d, i) {
+  d3$7.selectAll('g.SliderGroup').on('mousedown', function (d, i) {
     reactContext.setState({
       rectType: 'slider'
     });
@@ -3985,10 +3995,10 @@ function submitSliderEdit(compKey) {
   var slider_anchor_slope = (SLIDER_END_POSITION - SLIDER_START_POSITION) / (slider_component.max - slider_component.min);
   var slider_anchor_y_intersection = SLIDER_END_POSITION - SLIDER_START_POSITION - slider_anchor_slope * slider_component.max;
   var slider_anchor_currrent_position = slider_anchor_slope * slider_component.value + slider_anchor_y_intersection;
-  d3$6.select('rect#SliderAnchor_' + slider_component.GUID).attr('transform', function () {
+  d3$7.select('rect#SliderAnchor_' + slider_component.GUID).attr('transform', function () {
     return 'translate(' + slider_anchor_currrent_position.toString() + ',3)';
   });
-  d3$6.select('#sliderValueText_' + slider_component.GUID.replace('SliderAnchor_', '')).text(slider_component.value.toFixed(6));
+  d3$7.select('#sliderValueText_' + slider_component.GUID.replace('SliderAnchor_', '')).text(slider_component.value.toFixed(6));
   redrawDependents(slider_component.GUID);
   $__default['default']('div#propertiesBarContents').html('');
 }
@@ -4017,7 +4027,7 @@ function cancelSliderEdit() {
 ─██████████████─────██████─────██████──██████████─██████████─██████──────────██████─██████████████─
 */
 
-var d3$5 = require('d3'); //TODO : check this for the text overflow : https://bl.ocks.org/mbostock/1424037
+var d3$6 = require('d3'); //TODO : check this for the text overflow : https://bl.ocks.org/mbostock/1424037
 
 
 function CreateNewPanel(reactContext, FromExisting = null) {
@@ -4046,7 +4056,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
   newcomp.type = 'string';
   newcomp.dftype = 'shlow';
   newcomp.inputs[0].value = newcomp.value;
-  var allContents = d3$5.select('#allCanvasContents');
+  var allContents = d3$6.select('#allCanvasContents');
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
   var genY;
@@ -4067,7 +4077,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
   node.append('rect').attr('class', 'CompPBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('y', '-15').attr('width', () => {
     return 10 + newcomp.Name.length * 6;
   }).attr('height', newcomp.height + 10).attr('fill', '#525252').attr('fill-opacity', '1.0').on('mouseover', function (event) {
-    d3$5.select(event.currentTarget).attr('cursor', 'pointer');
+    d3$6.select(event.currentTarget).attr('cursor', 'pointer');
   });
   var InputGroup = node.append('g');
 
@@ -4145,9 +4155,9 @@ function CreateNewPanel(reactContext, FromExisting = null) {
 
   node.append('rect').attr('class', 'CompPBody ' + newcomp.GUID + ' a').attr('id', 'overlaySelector' + newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('y', '0').attr('width', newcomp.width - 5).attr('height', newcomp.height - 5).attr('fill', 'white') //"#ffeec7")
   .attr('fill-opacity', '0.15').on('mousemove', function (event) {
-    d3$5.select(event.currentTarget).attr('cursor', 'pointer');
+    d3$6.select(event.currentTarget).attr('cursor', 'pointer');
   });
-  var resize = d3$5.drag().on('start', (event, d) => Dummyrect.attr('stroke', 'red')).on('end', (event, d) => Dummyrect.attr('stroke', '#3a4c69')).on('drag', function (event, d) {
+  var resize = d3$6.drag().on('start', (event, d) => Dummyrect.attr('stroke', 'red')).on('end', (event, d) => Dummyrect.attr('stroke', '#3a4c69')).on('drag', function (event, d) {
     var anchorMouseYpos = reactContext.state.anchorMouseYpos;
     var anchorMouseXpos = reactContext.state.anchorMouseXpos;
     var StringAnchorId = reactContext.state.StringAnchorId;
@@ -4170,22 +4180,22 @@ function CreateNewPanel(reactContext, FromExisting = null) {
     var thisComp = selectComp(StringAnchorId);
     thisComp.height = newHeight;
     thisComp.width = newWidth;
-    d3$5.select('rect#dummyRect_' + StringAnchorId).attr('height', newHeight).attr('width', newWidth);
-    d3$5.select('rect#' + StringAnchorId).attr('height', newHeight);
-    d3$5.select('rect.CompPBody.' + StringAnchorId + '.a').attr('width', newWidth);
-    d3$5.select('rect#statusRect' + StringAnchorId).attr('y', newHeight - 20).attr('width', newWidth - 50);
-    d3$5.select('foreignObject#panel_status_' + StringAnchorId).attr('y', newHeight + 2).attr('width', newWidth - 50);
-    d3$5.select('rect#overlaySelector' + StringAnchorId).attr('height', newHeight - 5);
-    d3$5.select('rect.xyAnchor.' + StringAnchorId).attr('x', thisComp.width - ANCHOR_WIDTH).attr('y', thisComp.height - ANCHOR_WIDTH);
-    d3$5.select('foreignObject#textbody_' + StringAnchorId).attr('height', thisComp.height - ANCHOR_WIDTH - 5).attr('width', thisComp.width - 4 - ANCHOR_WIDTH);
-    d3$5.select('foreignObject#panel_edit_mode' + StringAnchorId).attr('y', newHeight + 2).attr('x', newWidth - 30);
-    d3$5.select('g#logCirGroup_' + StringAnchorId).attr('transform', () => {
+    d3$6.select('rect#dummyRect_' + StringAnchorId).attr('height', newHeight).attr('width', newWidth);
+    d3$6.select('rect#' + StringAnchorId).attr('height', newHeight);
+    d3$6.select('rect.CompPBody.' + StringAnchorId + '.a').attr('width', newWidth);
+    d3$6.select('rect#statusRect' + StringAnchorId).attr('y', newHeight - 20).attr('width', newWidth - 50);
+    d3$6.select('foreignObject#panel_status_' + StringAnchorId).attr('y', newHeight + 2).attr('width', newWidth - 50);
+    d3$6.select('rect#overlaySelector' + StringAnchorId).attr('height', newHeight - 5);
+    d3$6.select('rect.xyAnchor.' + StringAnchorId).attr('x', thisComp.width - ANCHOR_WIDTH).attr('y', thisComp.height - ANCHOR_WIDTH);
+    d3$6.select('foreignObject#textbody_' + StringAnchorId).attr('height', thisComp.height - ANCHOR_WIDTH - 5).attr('width', thisComp.width - 4 - ANCHOR_WIDTH);
+    d3$6.select('foreignObject#panel_edit_mode' + StringAnchorId).attr('y', newHeight + 2).attr('x', newWidth - 30);
+    d3$6.select('g#logCirGroup_' + StringAnchorId).attr('transform', () => {
       var x = thisComp.width;
       var y = thisComp.height;
       return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
     });
-    d3$5.select('circle#outputCir' + StringAnchorId + '_0').attr('cy', thisComp.height / 2).attr('cx', thisComp.width);
-    d3$5.select('circle#inputCir' + StringAnchorId + '_0').attr('cy', thisComp.height / 2);
+    d3$6.select('circle#outputCir' + StringAnchorId + '_0').attr('cy', thisComp.height / 2).attr('cx', thisComp.width);
+    d3$6.select('circle#inputCir' + StringAnchorId + '_0').attr('cy', thisComp.height / 2);
   });
   node.append('rect').attr('class', 'xyAnchor ' + newcomp.GUID).data([{
     x: newcomp.width - ANCHOR_WIDTH,
@@ -4194,8 +4204,8 @@ function CreateNewPanel(reactContext, FromExisting = null) {
     height: ANCHOR_WIDTH
   }]).attr('width', ANCHOR_WIDTH).attr('height', ANCHOR_WIDTH).attr('x', newcomp.width - ANCHOR_WIDTH).attr('y', newcomp.height - ANCHOR_WIDTH).attr('fill-opacity', 0.01).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).on('mousedown', event => {
     reactContext.setState({
-      anchorMouseXpos: d3$5.pointer(event)[0] - newcomp.width,
-      anchorMouseYpos: d3$5.pointer(event)[1] - newcomp.height,
+      anchorMouseXpos: d3$6.pointer(event)[0] - newcomp.width,
+      anchorMouseYpos: d3$6.pointer(event)[1] - newcomp.height,
       StringAnchorId: newcomp.GUID
     });
   }).call(resize);
@@ -4244,12 +4254,12 @@ function submitPanelEdit(compKey) {
     $__default['default']('foreignObject#textbody_' + StringComp.GUID).html('<div id="jsonTreeViewer' + StringComp.GUID + '"></div>');
     jsonView.format(JSON.stringify(StringComp.inputs[0].value), 'div#jsonTreeViewer' + StringComp.GUID);
   } else if (StringComp.inputs[0].type === 'html') {
-    d3$5.select('foreignObject#textbody_' + compKey).html(textVal).attr('fill', 'black');
+    d3$6.select('foreignObject#textbody_' + compKey).html(textVal).attr('fill', 'black');
   } else if (StringComp.inputs[0].type === 'plot') {
     var data = JSON.parse(JSON.stringify(textVal));
     drawPlotComponent(data, StringComp);
   } else {
-    d3$5.select('foreignObject#textbody_' + compKey).text(textVal).attr('fill', 'black');
+    d3$6.select('foreignObject#textbody_' + compKey).text(textVal).attr('fill', 'black');
   }
 
   StringComp.outputs[0].value = textVal;
@@ -4268,11 +4278,11 @@ function edit_move_mode(compId, mode) {
   var disp = $__default['default']('rect#overlaySelector' + compId).attr('style');
 
   if (disp === 'display: block;') {
-    d3$5.select('rect#overlaySelector' + compId).style('display', 'none');
-    d3$5.select('h5#changeEditMoveMode_' + compId).text('Edit Mode');
+    d3$6.select('rect#overlaySelector' + compId).style('display', 'none');
+    d3$6.select('h5#changeEditMoveMode_' + compId).text('Edit Mode');
   } else {
-    d3$5.select('rect#overlaySelector' + compId).style('display', 'block');
-    d3$5.select('h5#changeEditMoveMode_' + compId).text('Drag Mode');
+    d3$6.select('rect#overlaySelector' + compId).style('display', 'block');
+    d3$6.select('h5#changeEditMoveMode_' + compId).text('Drag Mode');
   }
 }
 
@@ -4292,7 +4302,7 @@ function edit_move_mode(compId, mode) {
 ───────────────────────────────────────────────────────────────────────────────────────────
 */
 
-var d3$4 = require('d3');
+var d3$5 = require('d3');
 
 function CreateNewToggle(reactContext, FromExisting = null) {
   var newcomp;
@@ -4320,7 +4330,7 @@ function CreateNewToggle(reactContext, FromExisting = null) {
 
   newcomp.width = 80; //newcomp.Name.length * one_character_width + titleMarginLeft;
 
-  var allContents = d3$4.select('#allCanvasContents');
+  var allContents = d3$5.select('#allCanvasContents');
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
   var genY;
@@ -4375,11 +4385,11 @@ function CreateNewToggle(reactContext, FromExisting = null) {
   node.append('rect').attr('class', 'CompTBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01') // .attr("filter", "url('#svgshadow')")
   .on('mousemove', function (event) {
     // newcomp.rect = this;
-    d3$4.select(event.currentTarget) // .attr("fill", "#303952")
+    d3$5.select(event.currentTarget) // .attr("fill", "#303952")
     .attr('cursor', 'pointer');
   }).on('mouseout', function (event) {
     // newcomp.rect = this;
-    d3$4.select(event.currentTarget).attr('fill', newcomp.fill);
+    d3$5.select(event.currentTarget).attr('fill', newcomp.fill);
   });
   newcomp.value = newcomp.Name;
 
@@ -4445,7 +4455,7 @@ function CreateNewToggle(reactContext, FromExisting = null) {
 
 */
 
-var d3$3 = require('d3');
+var d3$4 = require('d3');
 
 function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
   var newcomp;
@@ -4472,7 +4482,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
   newcomp.dftype = 'shlow'; // TODO : get the longest text in the component. and set the width based on this.
 
   newcomp.width = 300;
-  var allContents = d3$3.select('#allCanvasContents');
+  var allContents = d3$4.select('#allCanvasContents');
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
     if (FromExisting == null) {
@@ -4546,9 +4556,9 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
     }
   });
   node.append('rect').attr('class', 'CompFBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('x', 90).attr('width', newcomp.width - 90).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
-    d3$3.select(event.currentTarget).attr('cursor', 'pointer');
+    d3$4.select(event.currentTarget).attr('cursor', 'pointer');
   }).on('mouseout', function (event) {
-    d3$3.select(event.currentTarget).attr('fill', newcomp.fill);
+    d3$4.select(event.currentTarget).attr('fill', newcomp.fill);
   });
   newcomp.value = newcomp.Name;
 
@@ -4595,8 +4605,8 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
     };
     theCurrentComp.outputs[0].value = selectedFile;
     console.log(theCurrentComp);
-    d3$3.select('#fileUpload_status_' + thisFormId).html('File Size : ' + (selectedFile.size / (1024 * 1024)).toString() + " MB");
-    d3$3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
+    d3$4.select('#fileUpload_status_' + thisFormId).html('File Size : ' + (selectedFile.size / (1024 * 1024)).toString() + " MB");
+    d3$4.select('#foreignObject_fileUpload' + thisFormId).html(() => {
       return `
                 <div id="TheContainedFile">` + fileName + `</div>
                 <div id="TheContainedFile">Size :` + (selectedFile.size / (1024 * 1024)).toFixed(4).toString() + ` MB</div>
@@ -4622,7 +4632,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 */
 
-var d3$2 = require('d3');
+var d3$3 = require('d3');
 
 function CreateNewListView(reactContext, FromExisting = null, optionlist_predefined_items = null) {
   var newcomp;
@@ -4654,7 +4664,7 @@ function CreateNewListView(reactContext, FromExisting = null, optionlist_predefi
   newcomp.dftype = 'shlow';
   newcomp.width = 200; // TODO : get the longest text in the component. and set the width based on this.
 
-  var allContents = d3$2.select('#allCanvasContents');
+  var allContents = d3$3.select('#allCanvasContents');
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
   var genY;
@@ -4717,9 +4727,9 @@ function CreateNewListView(reactContext, FromExisting = null, optionlist_predefi
     return ListItemsvalueReturn;
   });
   node.append('rect').attr('class', 'CompLBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', 20).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
-    d3$2.select(event.currentTarget).attr('cursor', 'pointer');
+    d3$3.select(event.currentTarget).attr('cursor', 'pointer');
   }).on('mouseout', function (event) {
-    d3$2.select(event.currentTarget).attr('fill', newcomp.fill);
+    d3$3.select(event.currentTarget).attr('fill', newcomp.fill);
   });
   node.append('g').attr('id', 'optionListOption-' + newcomp.GUID);
 
@@ -4753,6 +4763,405 @@ function CreateNewListView(reactContext, FromExisting = null, optionlist_predefi
   reactContext.setState({
     components_selection_data: current_components_selection
   });
+}
+
+var d3$2 = require('d3');
+
+var addInputCirclesFunc;
+var addOutputCirclesFunc;
+var statusBar;
+var Dummyrect;
+var cirGroup;
+var resize1;
+var rect;
+var playrect2;
+var node;
+
+function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwargs = {
+  shortName: "cloud",
+  dfType: "dp"
+}, inputList = [], outputList = [], color = '#0031E7') {
+  var IDLE_COLOR = reactContext.state.IDLE_COLOR;
+  var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
+  var one_character_width = 8;
+  var padding = 20;
+  var titleMargin = 30;
+  var titleMarginLeft = 30;
+  var newcomp;
+
+  if (FromExisting != null) {
+    newcomp = FromExisting;
+  } else {
+    var longestInput = '';
+
+    for (let index = 0; index < inputList.length; index++) {
+      const curr = inputList[index].name;
+
+      if (curr.length > longestInput.length) {
+        longestInput = curr;
+      }
+    }
+
+    var longestOutput = outputList.reduce(function (a, b) {
+      return a.length > b.length ? a : b;
+    }, '');
+    var ThisComponentName = type;
+    let n_inputs = inputList.length;
+    let n_outputs = outputList.length;
+    newcomp = addcomponent(uuidv4('C'), n_inputs, n_outputs, inputList, outputList);
+
+    if (type == null) {
+      ThisComponentName = $__default['default']('div#addComp').attr('type');
+    } else {
+      ThisComponentName = type;
+      newcomp.dftype = kwargs.dfType;
+      newcomp.ShortName = kwargs.shortName;
+      popupMessage(ThisComponentName + ' Component added');
+    }
+
+    newcomp.fill = color;
+    newcomp.type = "cloud";
+    newcomp.Name = "Cloud";
+    newcomp.height = Math.max(80, titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding);
+    newcomp.width = Math.max(100, (longestInput.length + longestOutput.length) * one_character_width + titleMarginLeft); // initiate the parent_children_matrix
+
+    var guid = newcomp.GUID;
+    var data = { ...reactContext.state.parent_child_matrix
+    };
+    data[guid] = [];
+    reactContext.setState({
+      parent_child_matrix: data
+    });
+  }
+
+  var allContents = d3$2.select('#allCanvasContents');
+  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
+  var genX;
+  var genY;
+  node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
+    if (FromExisting == null) {
+      if (kwargs.X !== undefined && kwargs.Y !== undefined) {
+        newcomp.X = kwargs.X;
+        newcomp.Y = kwargs.Y;
+      } else {
+        genX = Math.random() * 500 + 200;
+        genY = Math.random() * 500 + 200;
+        newcomp.X = genX;
+        newcomp.Y = genY;
+      }
+
+      return 'translate(' + newcomp.X + ', ' + newcomp.Y + ')';
+    } else {
+      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
+    }
+  });
+  statusBar = node.append('g') // .attr('id', "cloudResizeHeight")
+  .attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
+  statusBar.append('rect').attr('id', 'statusRect' + newcomp.GUID).attr('width', newcomp.width + 2).attr('x', -1.0).attr('height', 40).attr('fill', IDLE_COLOR).attr('stroke-width', 1).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('opacity', 0.5);
+  statusBar.append('text').attr('class', 'statusTextClass').attr('id', 'statusText' + newcomp.GUID).attr('fill', 'black').attr('x', 5).attr('y', 37).text('Idle...');
+
+  function addInputCircles(newcomp) {
+    var node = newcomp.node;
+    var InputGroup = node.append('g').lower();
+
+    for (let index = 0; index < newcomp.inputs.length; index++) {
+      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'inputCirViual' + newcomp.GUID + '_' + index).attr('class', 'inputCirVisual' + newcomp.GUID + ' ' + index).attr('type', function () {
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          return FromExisting.inputs[index].type;
+        }
+      });
+    }
+
+    InputGroup = node.append('g').lower();
+
+    for (let index = 0; index < newcomp.inputs.length; index++) {
+      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.3').attr('r', '15').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir' + newcomp.GUID + ' ' + index).attr('type', function () {
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          return FromExisting.inputs[index].type;
+        }
+      });
+    }
+
+    var InputGroupText = node.append('g');
+
+    for (let index = 0; index < newcomp.inputs.length; index++) {
+      console.log(newcomp.inputs[index].Name);
+      InputGroupText.append('text').attr('id', 'input-' + newcomp.GUID + '_' + index).attr('class', 'inputTxt' + newcomp.GUID + ' ' + index).attr('transform', 'translate(' + 10 + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.inputs[index].Name).attr('fill', 'black').attr('type', function () {
+        newcomp.inputs[index].textObj = this.id;
+
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          return FromExisting.inputs[index].type;
+        }
+      });
+    }
+  }
+
+  addInputCirclesFunc = addInputCircles;
+
+  function addOutputCircles(newcomp) {
+    var node = newcomp.node;
+    var OutputGroup = node.append('g').lower();
+
+    for (let index = 0; index < newcomp.outputs.length; index++) {
+      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'outputCirVisual' + newcomp.GUID + '_' + index).attr('class', 'outputCirVisual' + newcomp.GUID + ' ' + index).attr('type', function () {
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          return FromExisting.outputs[index].type;
+        }
+      }).lower();
+    }
+
+    OutputGroup = node.append('g').lower();
+
+    for (let index = 0; index < newcomp.outputs.length; index++) {
+      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.5').attr('r', '12').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir' + newcomp.GUID + ' ' + index).attr('type', function () {
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          return FromExisting.outputs[index].type;
+        }
+      });
+    }
+
+    var OutputGroupText = node.append('g');
+
+    for (let index = 0; index < newcomp.outputs.length; index++) {
+      OutputGroupText.append('text').attr('id', 'output-' + newcomp.GUID + '_' + index).attr('class', 'outputTxt' + newcomp.GUID + ' ' + index).attr('transform', 'translate(' + (newcomp.width - newcomp.outputs[index].ShortName.length * 8 - 5).toString() + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.outputs[index].ShortName).attr('fill', 'black').attr('type', function () {
+        newcomp.outputs[index].circle = this;
+
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          newcomp.outputs[index].type = FromExisting.outputs[index].type;
+          return FromExisting.outputs[index].type;
+        }
+      }).attr('type', function () {
+        newcomp.outputs[index].textObj = this.id;
+
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          return FromExisting.outputs[index].type;
+        }
+      });
+    }
+  }
+
+  addOutputCirclesFunc = addOutputCircles;
+  Dummyrect = node.append('rect').attr('class', 'CompCBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', COMPONENT_RADIUS + 1).attr('ry', COMPONENT_RADIUS + 1).attr('stroke-width', '3').attr('stroke', newcomp.fill).attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', '#E8E8E8').on('mousedown', () => {
+    reactContext.setState({
+      rectType: 'component'
+    });
+  });
+  cirGroup = node.append('g').attr('transform', () => {
+    var x = newcomp.width;
+    var y = newcomp.height;
+    return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
+  });
+  var Titlegroup = node.append('g').attr('transform', () => {
+    return 'translate(0, 15)';
+  }); //Title rectangle
+
+  Titlegroup.append('rect').attr('width', newcomp.width - 2).attr('height', 20).attr('fill', newcomp.fill).attr('x', 1.0).attr('y', -14).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS);
+  Titlegroup.append('rect').attr('width', newcomp.width - 2).attr('height', 8).attr('fill', newcomp.fill).attr('x', 1.0).attr('y', -2);
+  resize1 = node.append('rect').attr('width', newcomp.width - 2).attr('height', newcomp.height - 2).attr('x', 1.0).attr('y', 1).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('stroke', newcomp.fill).attr('fill-opacity', 0.0);
+  Titlegroup.append('foreignObject').attr('class', 'nodetitle node_title' + newcomp.GUID).attr('id', 'node_title' + newcomp.GUID).attr('x', 0).attr('y', -10).attr('width', newcomp.width).attr('height', '20').text(newcomp.Name);
+  rect = node.append('rect').attr('class', 'CompCBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
+    d3$2.select(event.currentTarget).attr('cursor', 'pointer');
+  }).on('mouseout', function (event) {
+    d3$2.select(event.currentTarget).attr('fill', newcomp.fill);
+  }).on('dblclick', () => {}).on('mousedown', () => {
+    reactContext.setState({
+      rectType: 'component'
+    });
+  });
+  var icon = node.append('g').attr('transform', 'translate(' + (newcomp.width - 20).toString() + ',1)');
+  icon.append('foreignObject').attr('width', 18).attr('height', 18).attr('style', () => {
+    return `background-image:url(src/img/` + newcomp.Name + `.png);background-size: 15px;background-repeat: no-repeat;background-position: center;`;
+  });
+  playrect2 = node.append('rect').attr('class', 'play ' + newcomp.GUID).attr('id', 'play_' + newcomp.GUID).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('height', 20).attr('width', 20).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('fill', newcomp.fill).attr('stroke', newcomp.fill).attr('stroke-width', '6').style('cursor', 'pointer').on('click', function () {
+    console.log('start calculation');
+    runDeepFunction(newcomp.GUID);
+  });
+  node.append('svg').attr('role', 'img').attr('class', 'removableSVG' + newcomp.GUID).attr('xmlns', 'http://www.w3.org/2000/svg').attr('width', 20).attr('height', 20).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('viewBox', '0 0 512 512').append('path').attr('class', 'play ' + newcomp.GUID).attr('fill', 'white').attr('d', 'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z').on('click', function () {
+    console.log('start calculation');
+    runDeepFunction(newcomp.GUID);
+  });
+  newcomp.addInputCirclesFunc = addInputCirclesFunc;
+  newcomp.addOutputCirclesFunc = addOutputCirclesFunc;
+  newcomp.statusBar = statusBar;
+  newcomp.Dummyrect = Dummyrect;
+  newcomp.cirGroup = cirGroup;
+  newcomp.resize1 = resize1;
+  newcomp.rect = rect;
+  newcomp.playrect2 = playrect2;
+  newcomp.node = node;
+  addInputCirclesFunc(newcomp);
+  addOutputCirclesFunc(newcomp);
+
+  if (FromExisting == null) {
+    var current_all_comp = reactContext.state.allComp.slice();
+    console.log('Adding a generic comp' + newcomp);
+    current_all_comp.push(newcomp);
+    reactContext.setState({
+      allComp: current_all_comp
+    });
+  }
+
+  var current_comp_out = { ...reactContext.state.comp_output_edges
+  };
+  var current_comp_in = { ...reactContext.state.comp_input_edges
+  };
+  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
+  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
+  reactContext.setState({
+    comp_input_edges: current_comp_in,
+    comp_output_edges: current_comp_out
+  });
+  var current_components_selection = { ...reactContext.state.components_selection_data
+  };
+  current_components_selection[newcomp.GUID] = {
+    x0: newcomp.X,
+    y0: newcomp.Y,
+    x1: newcomp.X + newcomp.width,
+    y1: newcomp.Y + newcomp.height
+  };
+  reactContext.setState({
+    components_selection_data: current_components_selection
+  });
+}
+
+function submitCloudEdit(compKey) {
+  try {
+    var cloudComp = selectComp(compKey);
+    var name = $__default['default']('input.cloudProp.Name').val();
+    var inputs = $__default['default']('textarea.cloudProp.Val').val();
+    var url = $__default['default']('input.cloudProp.url').val();
+    cloudComp.inputNames = inputs;
+    cloudComp.inputs = createInputDict(inputs.split('\n'));
+    cloudComp.outputs = createOutputDict(["out"]);
+    cloudComp.url = url;
+    cloudComp.Name = name;
+    d3$2.selectAll('circle.inputCirVisual' + cloudComp.GUID).remove();
+    d3$2.selectAll('circle.inputCir' + cloudComp.GUID).remove();
+    d3$2.selectAll('text.inputTxt' + cloudComp.GUID).remove();
+    d3$2.selectAll('circle.outputCirVisual' + cloudComp.GUID).remove();
+    d3$2.selectAll('circle.outputCir' + cloudComp.GUID).remove();
+    d3$2.selectAll('text.outputTxt' + cloudComp.GUID).remove();
+    addInputCirclesFunc(cloudComp);
+    addOutputCirclesFunc(cloudComp);
+    resize(cloudComp);
+    $__default['default']('foreignObject#node_title' + cloudComp.GUID).text(name);
+    redrawDependents(compKey);
+    $__default['default']('div#propertiesBarContents').html('');
+  } catch (error) {
+    console.log(error);
+    alert("Invalid JSON format!");
+  }
+}
+
+function cancelCloudEdit() {
+  $__default['default']('div#propertiesBarContents').html('');
+}
+
+function resize(newcomp) {
+  var padding = 20;
+  var titleMargin = 30;
+  newcomp.height = Math.max(80, titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding);
+  newcomp.statusBar.attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
+  newcomp.Dummyrect.attr('height', newcomp.height);
+  newcomp.cirGroup.attr('transform', () => {
+    var x = newcomp.width;
+    var y = newcomp.height;
+    return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
+  });
+  newcomp.resize1.attr('height', newcomp.height - 2);
+  newcomp.rect.attr('height', newcomp.height);
+  newcomp.playrect2.attr('y', newcomp.height - 10);
+  d3$2.select('svg.removableSVG' + newcomp.GUID).remove();
+  newcomp.node.append('svg').attr('role', 'img').attr('class', 'removableSVG' + newcomp.GUID).attr('xmlns', 'http://www.w3.org/2000/svg').attr('width', 20).attr('height', 20).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('viewBox', '0 0 512 512').append('path').attr('class', 'play ' + newcomp.GUID).attr('fill', 'white').attr('d', 'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z').on('click', function () {
+    console.log('start calculation');
+    runDeepFunction(newcomp.GUID);
+  });
+}
+
+function createOutputDict(outputsIn) {
+  var outputs = [];
+
+  for (let index = 0; index < outputsIn.length; index++) {
+    try {
+      outputs.push({
+        id: index,
+        circle: null,
+        textObj: null,
+        Name: outputsIn[index],
+        ShortName: outputsIn[index],
+        Description: outputsIn[index].desc,
+        Message: 'short description',
+        type: 'item',
+        datatype: 'int',
+        value: null
+      });
+    } catch {
+      outputs.push({
+        id: index,
+        circle: null,
+        textObj: null,
+        Name: '',
+        ShortName: '',
+        Description: '',
+        Message: 'short description',
+        type: 'item',
+        datatype: 'int',
+        value: null
+      });
+    }
+  }
+
+  return outputs;
+}
+
+function createInputDict(inputsIn) {
+  var inputs = [];
+
+  for (let index = 0; index < inputsIn.length; index++) {
+    try {
+      inputs.push({
+        id: index,
+        circle: null,
+        textObj: null,
+        Name: inputsIn[index],
+        ShortName: inputsIn[index].shortName,
+        Description: inputsIn[index].desc,
+        Message: 'short description',
+        type: 'item',
+        datatype: 'int',
+        value: inputsIn[index].default_value
+      });
+    } catch {
+      inputs.push({
+        id: index,
+        circle: null,
+        textObj: null,
+        Name: '',
+        ShortName: '',
+        Description: '',
+        Message: 'short description',
+        type: 'item',
+        datatype: 'int',
+        value: ''
+      });
+    }
+  }
+
+  return inputs;
 }
 
 var d3$1 = require('d3');
@@ -4832,9 +5241,8 @@ function loadData() {
         allComp: allComponents
       });
       allComponents.forEach(function (element) {
-        if (element.type === 'component') CreateNewComponent(_this, element); //to be handle later
-        else if (element.type === 'slider') CreateNewSlider(_this, element);else if (element.type === 'string') CreateNewPanel(_this, element);else if (element.type === 'toggle') CreateNewToggle(_this, element);else if (element.type === 'optionList') CreateNewOptionList(_this, element); //to be handle later
-          else if (element.type === 'fileUpload') CreateNewFileUpload(_this, element);else if (element.type === 'listView') CreateNewListView(_this, element);
+        console.log(element);
+        if (element.type === 'component') CreateNewComponent(_this, element);else if (element.type === 'slider') CreateNewSlider(_this, element);else if (element.type === 'string') CreateNewPanel(_this, element);else if (element.type === 'toggle') CreateNewToggle(_this, element);else if (element.type === 'optionList') CreateNewOptionList(_this, element);else if (element.type === 'fileUpload') CreateNewFileUpload(_this, element);else if (element.type === 'listView') CreateNewListView(_this, element);else if (element.type === 'cloud') CreateNewCloud(_this, element);
       });
     }
 
@@ -4998,58 +5406,74 @@ class ComponentTab extends React.Component {
     }, /*#__PURE__*/React__default['default'].createElement("div", {
       id: "addSlider",
       onClick: () => CreateNewSlider(this.props.context),
-      className: "mainButtonItem 1 1",
+      className: "mainButtonItem 1 1 tooltip",
       style: {
         backgroundImage: "url(https://image.flaticon.com/icons/png/512/983/983840.png)"
       }
-    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-      id: "hint"
+    }, /*#__PURE__*/React__default['default'].createElement("span", {
+      className: "tooltiptext",
+      id: "hintx"
     }, "Slider")), /*#__PURE__*/React__default['default'].createElement("div", {
       id: "addPanel",
       onClick: () => CreateNewPanel(this.props.context),
-      className: "mainButtonItem 1 1",
+      className: "mainButtonItem 1 1 tooltip",
       style: {
         backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/2274978.png)"
       }
-    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-      id: "hint"
+    }, /*#__PURE__*/React__default['default'].createElement("span", {
+      className: "tooltiptext",
+      id: "hintx"
     }, "Panel")), /*#__PURE__*/React__default['default'].createElement("div", {
       id: "addToggle",
       onClick: () => CreateNewToggle(this.props.context),
-      className: "mainButtonItem 1 1",
+      className: "mainButtonItem 1 1 tooltip",
       style: {
         backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"
       }
-    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-      id: "hint"
+    }, /*#__PURE__*/React__default['default'].createElement("span", {
+      className: "tooltiptext",
+      id: "hintx"
     }, "Toggle")), /*#__PURE__*/React__default['default'].createElement("div", {
       id: "addOptionList",
       onClick: () => CreateNewOptionList(this.props.context),
-      className: "mainButtonItem 1 1",
+      className: "mainButtonItem 1 1 tooltip",
       style: {
         backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"
       }
-    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-      id: "hint"
+    }, /*#__PURE__*/React__default['default'].createElement("span", {
+      className: "tooltiptext",
+      id: "hintx"
     }, "Option list")), /*#__PURE__*/React__default['default'].createElement("div", {
       id: "addListView",
       onClick: () => CreateNewListView(this.props.context),
-      className: "mainButtonItem 1 1",
+      className: "mainButtonItem 1 1 tooltip",
       style: {
         backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"
       }
-    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-      id: "hint"
+    }, /*#__PURE__*/React__default['default'].createElement("span", {
+      className: "tooltiptext",
+      id: "hintx"
     }, "List view")), /*#__PURE__*/React__default['default'].createElement("div", {
       id: "addFile",
       onClick: () => CreateNewFileUpload(this.props.context),
-      className: "mainButtonItem 1 1",
+      className: "mainButtonItem 1 1 tooltip",
       style: {
         backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"
       }
-    }, "\xA0", /*#__PURE__*/React__default['default'].createElement("span", {
-      id: "hint"
-    }, "File upload"))), /*#__PURE__*/React__default['default'].createElement("div", {
+    }, /*#__PURE__*/React__default['default'].createElement("span", {
+      className: "tooltiptext",
+      id: "hintx"
+    }, "File upload")), /*#__PURE__*/React__default['default'].createElement("div", {
+      id: "addFile",
+      onClick: () => CreateNewCloud(this.props.context),
+      className: "mainButtonItem 1 1 tooltip",
+      style: {
+        backgroundImage: "url(https://image.flaticon.com/icons/png/512/1935/1935089.png)"
+      }
+    }, /*#__PURE__*/React__default['default'].createElement("span", {
+      className: "tooltiptext",
+      id: "hintx"
+    }, "Cloud"))), /*#__PURE__*/React__default['default'].createElement("div", {
       id: "toolbar_container_1_2_2",
       className: "toolbarRightToggleNavigator 1"
     }));
@@ -5153,7 +5577,7 @@ function handleComponentSelection() {
   var reactContext = this;
   var allComp = reactContext.state.allComp;
   allComp.forEach(function (element) {
-    if (element.type === 'component' || element.type === 'toggle' || element.type === 'fileUpload' || element.type === 'listView') {
+    if (element.type === 'component' || element.type === 'toggle' || element.type === 'fileUpload' || element.type === 'listView' || element.type === 'cloud') {
       d3.select('g#comp-' + element.GUID).on('click', function () {
         d3.select('rect#' + element.GUID).attr('stroke-width', '2').attr('stroke', '#0064ffa8');
         reactContext.setState({
@@ -5514,6 +5938,33 @@ function handleDoubleClick() {
         });
         redrawDependents(currentToggle.GUID);
       });
+    } else if (element.type === 'cloud') {
+      d3.select('g#comp-' + element.GUID).on('dblclick', function () {
+        if (!reactContext.state.doubleClicked) {
+          reactContext.setState({
+            doubleClicked: true
+          });
+          $__default['default']('div#propertiesBarContents').append("\n                        <div class=\"propertiesbarheader title\">Cloud Function Properties</div>\n                        <div class=\"propertiesbarheader label\">Function Name</div>\n                        <input class=\"cloudProp Name\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Input List</div>\n                        <textarea class=\"cloudProp textarea stringProperties Val\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Cloud function URL</div>\n                        <input class=\"cloudProp url\"></textarea>\n                        <div></div>\n                        <div class=\"propertiesbarheader label\">Log</div>\n                        <div id=\"propertiesBarLog\" class=\"log\"></div>\n                        <button id=\"cloudEditButton\">Apply</button>\n                        <button id=\"cancelCloudEdit\">Cancel</button>");
+          var cloudComp = selectComp(element.GUID);
+          $__default['default']('input.cloudProp.Name').val(cloudComp.Name); // var inputString = JSON.stringify(cloudComp.inputs);
+          // $('textarea.cloudProp.Val').val(inputString.substring(1, inputString.length-1));
+
+          $__default['default']('textarea.cloudProp.Val').val(cloudComp.inputNames);
+          $__default['default']('input.cloudProp.url').val(cloudComp.url);
+          $__default['default']('button#cloudEditButton').on('click', function () {
+            submitCloudEdit(element.GUID);
+            reactContext.setState({
+              doubleClicked: false
+            });
+          });
+          $__default['default']('button#cancelCloudEdit').on('click', function () {
+            cancelCloudEdit();
+            reactContext.setState({
+              doubleClicked: false
+            });
+          });
+        }
+      });
     } //TODO : else if other types than string, then you have to open the properties window.
 
   });
@@ -5525,33 +5976,6 @@ function handleDoubleClick() {
  * This file also contains the mapping between the tab name and its id
  */
 const details = [{
-  name: 'Absolute',
-  shname: 'ABS',
-  desc: 'The absolute of a value',
-  type: 'component',
-  dftype: 'dp',
-  category: 'Basic',
-  subcategory: 'Lists',
-  inputList: [{
-    name: 'Input',
-    shortName: 'in_01',
-    desc: 'input',
-    default_value: '1.0'
-  }, {
-    name: 'url'
-  }],
-  outputList: [{
-    name: 'abs_',
-    shortName: 'abs',
-    desc: 'absolute of value'
-  }, {
-    name: 'log_',
-    shortName: 'log',
-    desc: 'output log'
-  }],
-  color: '#0031E7',
-  backgroundImage: ''
-}, {
   name: 'Average',
   shname: 'AVG',
   desc: 'The average between two values',
@@ -6734,14 +7158,16 @@ const toggleButtonInfo = [{
 function addGenericComponentIcon() {
   for (var index = 0; index < details.length; index++) {
     var currInfo = details[index];
-    var outputNameList = extractOutputName(currInfo.outputList);
-    var newComp = addNewComponentIcon(this, 'addComp', currInfo.name, currInfo.shname, currInfo.desc, currInfo.type, currInfo.dftype, 'mainButtonItem 1 1', currInfo.backgroundImage, currInfo.inputList, outputNameList, currInfo.color);
+    var outputNameList = currInfo.outputList.map(function (elem) {
+      return elem.name;
+    });
+    var newComp = addNewComponentIcon(this, 'addComp', currInfo.name, currInfo.shname, currInfo.desc, currInfo.type, currInfo.dftype, 'mainButtonItem 1 1 tooltip ', currInfo.backgroundImage, currInfo.inputList, outputNameList, currInfo.color);
     $__default['default'](tabIdMapping[currInfo.category]).append(newComp);
   }
 }
 
 function addNewComponentIcon(reactContext, id, name, shname, desc, type, dftype, className, imageUrl, inputList, outputList, color) {
-  var newCompString = '<div id="' + id + '" name="' + name + '" shname="' + shname + '" desc="' + desc + '" type="' + type + '" dftype="' + dftype + '" class="' + className + '" style="background-image:url(' + imageUrl + ')">' + (imageUrl === '' ? name : ' &nbsp; ' + '<span id="hint">' + name + '</span>') + '</div>';
+  var newCompString = '<div id="' + id + '" name="' + name + '" shname="' + shname + '" desc="' + desc + '" type="' + type + '" dftype="' + dftype + '" class="' + className + '" style="background-image:url(' + imageUrl + ')">' + '<p class="iconText">' + (imageUrl === "" ? name : "") + '</p>' + '<span class="tooltiptext" id="hintx">' + name + '</span>' + '</div>';
   var newComp = $__default['default'](newCompString);
   newComp.on('click', function () {
     if (type === 'component') {
@@ -6755,17 +7181,6 @@ function addNewComponentIcon(reactContext, id, name, shname, desc, type, dftype,
     }
   });
   return newComp;
-}
-
-function extractOutputName(array) {
-  var output = [];
-
-  for (var index = 0; index < array.length; index++) {
-    var element = array[index];
-    output.push(element.name);
-  }
-
-  return output;
 }
 
 function addRightToggleButton() {
@@ -6927,7 +7342,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z = "/* Copy from newUIstyle_light.css*/\r\nbody {\r\n    -webkit-user-select: none;\r\n    -khtml-user-select: none;\r\n    -moz-user-select: none;\r\n    -o-user-select: none;\r\n    user-select: none;\r\n    overflow-y: hidden; /* Hide vertical scrollbar */\r\n    overflow-x: hidden;\r\n}\r\n\r\nsvg {\r\n    border: solid 1px #565656;\r\n}\r\n\r\n#checks {\r\n    margin: 10px;\r\n}\r\n\r\ntext {\r\n    pointer-events: none;\r\n    user-select: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu mono';\r\n}\r\n\r\n.nodeLog {\r\n    font-size: small;\r\n    font-family: monospace;\r\n    pointer-events: none;\r\n}\r\n\r\ninput:focus,\r\nselect:focus,\r\ntextarea:focus,\r\nbutton:focus {\r\n    outline: none;\r\n}\r\n\r\nrect:focus {\r\n    outline: none;\r\n}\r\n\r\n.output {\r\n    font-family: monospace;\r\n    font-size: small;\r\n    color: white;\r\n}\r\n\r\n.input {\r\n    font-family: monospace;\r\n    font-size: small;\r\n}\r\n\r\n.nodetitle {\r\n    font-family: 'ubuntu mono';\r\n    font-size: 13px;\r\n    font-weight: bold;\r\n    color: white;\r\n    pointer-events: none;\r\n    text-align: center;\r\n}\r\n\r\ndiv#someData {\r\n    padding: 8px;\r\n    padding-top: 25px;\r\n    font-size: x-small;\r\n    font-family: monospace;\r\n}\r\n\r\ncircle {\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#PropertiesBarSelector {\r\n    width: 4px;\r\n    position: fixed;\r\n    right: 501px;\r\n    background-color: #000000;\r\n    height: 100%;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    background-color: #2b3d50;\r\n    right: 0px;\r\n    top: 0px;\r\n    min-height: 35%;\r\n    transition-timing-function: ease-in-out;\r\n    transition: height 2s;\r\n    transition-delay: 1s;  \r\n    width: 220px;\r\n    top: 60px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n}\r\n\r\ndiv#mainGrid {\r\n    position: relative;\r\n    top: 0px;\r\n    left: 0px;\r\n    background-color: #ececec;\r\n}\r\n\r\ndiv#textAreaBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\ndiv#optionlistBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\nselect#optionListSelectItems {\r\n    background: white;\r\n    opacity: 1;\r\n    font-family: monospace;\r\n    font-weight: bold;\r\n    border: 1px solid black;\r\n    border-radius: 3px;\r\n}\r\n\r\nh5 {\r\n    font-family: monospace;\r\n    margin-top: 1px;\r\n    margin-bottom: 4px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#LeftPropertiesBar {\r\n    width: 200px;\r\n    position: fixed;\r\n    background-color: #2b3d50;\r\n    left: 0px;\r\n    top: 0px;\r\n}\r\n\r\n.additionalData {\r\n    border-radius: 7px;\r\n    font-size: x-small;\r\n    width: 222px;\r\n    background-color: #ffffff47;\r\n    font-family: monospace;\r\n    color: #5d5d5d;\r\n    padding: 3px;\r\n    border: none;\r\n}\r\n\r\ndiv#LeftPropertiesBarSelector {\r\n    width: 5px;\r\n    height: 100%;\r\n    display: none;\r\n    position: fixed;\r\n    left: 200px;\r\n    background-color: #252525;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#TopPropertiesBar {\r\n    position: fixed;\r\n    top: 0px;\r\n    left: 0px;\r\n    width: 100%;\r\n    height: 30px;\r\n    background-color: #e6e6e6;\r\n}\r\n\r\ndiv#TopPropertiesBarSelector {\r\n    height: 2px;\r\n    width: 100%;\r\n    position: fixed;\r\n    left: 0px;\r\n    border-bottom: 1px solid #858585;\r\n    top: 47px;\r\n    cursor: ns-resize;\r\n}\r\n\r\nbutton.menubarButtons {\r\n    background-color: #6d6d6d;\r\n    border: none;\r\n    cursor: pointer;\r\n    color: #444444;\r\n    color: #cacaca;\r\n    font-family: 'Poppins', sans-serif;\r\n}\r\n\r\nbutton.menubarButtons:hover {\r\n    background-color: #aaabaa;\r\n}\r\n\r\ndiv#DefName {\r\n    width: 100%;\r\n    height: 32px;\r\n    padding: 0px 0px;\r\n    background: #2b3d50;\r\n    border-bottom: 1px solid #434343;\r\n}\r\n\r\ndiv#BottomPropertiesBar {\r\n    position: fixed;\r\n    bottom: 0px;\r\n    height: 20px;\r\n    left: 0px;\r\n    border-top: 1px solid #757575;\r\n    box-shadow: 0px -1px 0px #313131;\r\n    background-color: #525252;\r\n    background: linear-gradient(180deg, rgba(96, 96, 96, 1) 0%, rgba(82, 82, 82, 1) 100%);\r\n    width: 100%;\r\n}\r\n\r\na#changeTitleName {\r\n    color: #cfd8dc;\r\n    text-decoration: none;\r\n}\r\n\r\n.ccbody {\r\n    width: 100%;\r\n}\r\n\r\n.ccatheader {\r\n    padding: 0px 3px;\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    /* border: 1px solid #2c67a5; */\r\n    color: #e7e7e7;\r\n    padding: 4px;\r\n    cursor: pointer;\r\n    overflow: hidden;\r\n}\r\n\r\nbutton.standardcat.button {\r\n    vertical-align: middle;\r\n    border: 1px solid #444444;\r\n    width: 32px;\r\n    height: 32px;\r\n    margin: 1px;\r\n    background: none;\r\n    background: -moz-linear-gradient(top, #d6d4d4 0%, #adadad 100%);\r\n    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d6d4d4', endColorstr='#adadad', GradientType=0);\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: x-small;\r\n    color: #ffffff;\r\n    cursor: pointer;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#topLeftLogo {\r\n    width: 27px;\r\n    height: 32px;\r\n    float: left;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70302709-af822a80-1838-11ea-913b-5f935ea282ed.png);\r\n    background-repeat: no-repeat;\r\n    background-size: 26px;\r\n    background-position: center;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#settingsIcon {\r\n    float: right;\r\n    position: fixed;\r\n    top: 0px;\r\n    color: #c5c5c5;\r\n    right: 0px;\r\n    text-align: center;\r\n    padding: 11px;\r\n}\r\n\r\nbutton.standardcat.button:hover {\r\n    background: #c1c1c1;\r\n}\r\n\r\ndiv#Addedmessage {\r\n    font-family: monospace;\r\n    color: white;\r\n    padding: 2px;\r\n}\r\n\r\n#minimizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #2b3d50;\r\n    position: absolute;\r\n    top: 0px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #c5c5c5;\r\n    cursor: pointer;\r\n    border-left: 1px solid #464646;\r\n    border-bottom: 1px solid #464646;\r\n    margin-top: -4px;\r\n}\r\n\r\ndiv#maximizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #5d5d5d;\r\n    position: absolute;\r\n    top: 38px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #ababab;\r\n    cursor: pointer;\r\n    margin-top: -4px;\r\n    text-shadow: 1px 1px 1px #4b4b4b;\r\n}\r\n\r\n.propertiesbar.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbarheader.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbar.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    width: 98%;\r\n    color: #2f2f2f;\r\n    padding: 3px 10px;\r\n    background-color: gray;\r\n    border-bottom: 1px solid #909090;\r\n    border-radius: 6px 6px 0px 0px;\r\n    text-shadow: 1px 1px 0px #a5a5a5;\r\n}\r\n\r\ntextarea.textarea.optionlistProperties {\r\n    width: 98%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    height: 150px;\r\n    border-radius: 0px 0px 6px 6px;\r\n    border: 1px solid gray;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntextarea.textarea.stringProperties {\r\n    resize: none;\r\n    width: 100%;\r\n    padding: 0px;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    min-height: 10vh;\r\n    border: none;\r\n    border-radius: 3px;\r\n    background-color: #ffffffc7;\r\n}\r\n\r\n.propertiesbarheader.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    font-weight: bold;\r\n    width: 100%;\r\n    color: #bcbcbc;\r\n    padding: 3px;\r\n}\r\n\r\nselect#propertisBarSelecId {\r\n    width: 99%;\r\n    padding: 1px 2px;\r\n    background-color: gainsboro;\r\n    border-radius: 0px 0px 6px 6px;\r\n}\r\n\r\ndiv#propertiesBarLog {\r\n    width: 100%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    font-size: small;\r\n    padding: 2px;\r\n}\r\n\r\nrect.optionListoption {\r\n    cursor: pointer;\r\n}\r\n\r\nrect.optionListoption:hover {\r\n    fill: #d9e3e6;\r\n    stroke: #989898;\r\n}\r\n\r\ndiv#error {\r\n    color: #c0392b;\r\n    padding: 8px;\r\n}\r\n\r\nforeignObject.textbody {\r\n    font-family: 'ubuntu mono', monospace;\r\n    font-size: x-small;\r\n    color: #4e4e4e;\r\n    overflow: auto;\r\n}\r\n\r\ndiv#catHead {\r\n    font-family: 'ubuntu';\r\n    font-size: small;\r\n    width: fit-content;\r\n    padding: 2px 6px;\r\n    color: white;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-left: 3px;\r\n}\r\n\r\ndiv#catbody {\r\n    margin: 0px;\r\n    border-bottom: none;\r\n    border-right: none;\r\n}\r\n\r\ndiv#catcard {\r\n    margin-bottom: 4px;\r\n    padding: 0px;\r\n}\r\n\r\nrect.xAnchor {\r\n    cursor: ew-resize;\r\n}\r\n\r\nrect.yAnchor {\r\n    cursor: ns-resize;\r\n}\r\n\r\nrect.xyAnchor {\r\n    cursor: nwse-resize;\r\n}\r\n\r\n/* ::-webkit-scrollbar {\r\n    width: 6px;\r\n    height: 10px;\r\n} */\r\n\r\n/* Track */\r\n\r\n/* ::-webkit-scrollbar-track {\r\n    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\r\n    -webkit-border-radius: 4px;\r\n    border-radius: 4px;\r\n    touch-action: manipulation;\r\n} */\r\n\r\n/* Handle */\r\n\r\n/* ::-webkit-scrollbar-thumb {\r\n    -webkit-border-radius: 4px;\r\n    background: rgb(0, 0, 0);\r\n}\r\n\r\n::-webkit-scrollbar-thumb:window-inactive {\r\n    background: rgba(255, 0, 0, 0.4);\r\n} */\r\n\r\npath.play {\r\n    cursor: pointer;\r\n}\r\n\r\npath.play:hover {\r\n    fill: gray;\r\n}\r\n\r\nth {\r\n    border: none;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntd {\r\n    border: none;\r\n    background-color: whitesmoke;\r\n    overflow: hidden;\r\n}\r\n\r\ntbody {\r\n    font-family: ubuntu;\r\n    font-size: small;\r\n}\r\n\r\nth {\r\n    font-family: ubuntu;\r\n    text-align: left;\r\n    font-size: small;\r\n}\r\n\r\ndiv#propertiesBarContents {\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n    font-weight: normal;\r\n    color: #ffffff;\r\n    margin: 2px 0px 10px 0px;\r\n}\r\n\r\nforeignObject.panel_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ntbody {\r\n    border: none;\r\n}\r\n\r\ntable.dataframe {\r\n    border: none;\r\n}\r\n\r\nrect {\r\n    cursor: move;\r\n}\r\n\r\ninput.stringPnanel.Name {\r\n    width: 98%;\r\n    border: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\nforeignObject.panel_edit_mode a {\r\n    font-size: x-small;\r\n    color: #bdbdbd;\r\n    font-family: 'ubuntu mono';\r\n    position: relative;\r\n    text-decoration: none;\r\n    top: -8px;\r\n}\r\n\r\ndiv#numerical_slider_container {\r\n    padding: 7px;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\ndiv#help_t3 {\r\n    line-height: 1em;\r\n    color: #ec5f66;\r\n    margin-top: 5px;\r\n    margin-bottom: 3px;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_t4 {\r\n    color: #009688;\r\n    margin-left: 18px;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-bottom: 5px;\r\n}\r\n\r\ndiv#help_p {\r\n    margin-left: 36px;\r\n    margin-right: 8px;\r\n    text-align: justify;\r\n}\r\n\r\nspan#code {\r\n    color: #c23d51;\r\n    border-radius: 2px;\r\n    font-family: Courier;\r\n    font-size: xx-small;\r\n    vertical-align: middle;\r\n    padding: 1px 4px;\r\n    background-color: #32c8ac2e;\r\n}\r\n\r\ntable.dataframe {\r\n    font-size: x-small;\r\n}\r\n\r\nthead {\r\n    font-size: x-small;\r\n}\r\n\r\nth {\r\n    font-size: x-small;\r\n}\r\n\r\ntd {\r\n    font-size: x-small;\r\n}\r\n\r\nspan#errorTitle {\r\n    color: #e91e63;\r\n    font-weight: bold;\r\n    background-color: #f4433638;\r\n    border-radius: 3px;\r\n}\r\n\r\na.menubarButtons {\r\n    text-decoration: unset;\r\n    color: #000000;\r\n    text-shadow: 1px 1px 4px #4b4b4b;\r\n    font-size: small;\r\n    padding: 0px 6px;\r\n    margin: 1px 1px;\r\n    float: left;\r\n}\r\n\r\ndiv#buttonClickedname {\r\n    color: white;\r\n    font-size: small;\r\n    padding: 0px 8px;\r\n    margin: 0px;\r\n    float: left;\r\n    position: absolute;\r\n    bottom: 25px;\r\n    left: 224px;\r\n    background-color: #3d3d3d;\r\n}\r\n\r\npre {\r\n    margin: 0px;\r\n}\r\n\r\ninput.inputFileUpload {\r\n    border: none;\r\n    border-radius: 4px;\r\n    margin: 2px 2px;\r\n    background: #2b3d50;\r\n    height: 20px;\r\n    font-family: 'ubuntu mono';\r\n    color: white;\r\n}\r\n\r\ninput.submitFileUpload {\r\n    border-radius: 4px;\r\n    float: right;\r\n    margin: 3px;\r\n}\r\n\r\nforeignObject.fileUpload_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ninput#fileUploadFormToTheCloud {\r\n    border-radius: 1px;\r\n    margin-left: 1px;\r\n    /* height: 20px; */\r\n}\r\n\r\na.open_uploadedFile_link {\r\n    text-decoration: none;\r\n    color: black;\r\n    padding: 0px 6px;\r\n    position: relative;\r\n    top: 1px;\r\n    border-radius: 2px;\r\n    margin-left: 3px;\r\n    background-color: #e8e8e8;\r\n}\r\n\r\ndiv#TheContainedFile {\r\n    color: white;\r\n    padding: 2px 5px;\r\n    font-family: 'ubuntu';\r\n    display: inline;\r\n    font-size: small;\r\n    border-right: 1px solid gray;\r\n}\r\n\r\ndiv#PleaseWaitOverLay {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: #ffffff8a;\r\n    color: black;\r\n    text-align: center;\r\n    margin: auto;\r\n    line-height: 100vh;\r\n}\r\n\r\nselect.listView {\r\n    width: 198px;\r\n    height: 179px;\r\n    background-color: #f0f0f0;\r\n    border: 1px solid gray;\r\n    border-radius: 3px;\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n}\r\n\r\noption#someSelection {\r\n    background-color: #e0e0e0;\r\n    box-shadow: 0px 1px 0px white;\r\n    margin-bottom: 1px;\r\n}\r\n\r\ntext.statusTextClass {\r\n    font-size: x-small;\r\n}\r\n\r\n.subcatheader {\r\n    padding-left: 1em;\r\n    color: #ffca28;\r\n    font-size: small;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_quote {\r\n    border: 1px solid #cfcfcf;\r\n    padding: 2px;\r\n    border-radius: 3px;\r\n    background-color: #f4f4f4;\r\n    font-family: courier new;\r\n    font-size: xx-small;\r\n}\r\n\r\nforeignObject#halign_box {\r\n    font-size: 20px;\r\n    color: white;\r\n    text-decoration: none;\r\n    text-align: center;\r\n}\r\n\r\nforeignObject#halign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    margin: 0px 4px;\r\n}\r\n\r\nforeignObject#halign_box a:hover {\r\n    text-decoration: none;\r\n    color: #ffc107;\r\n}\r\n\r\ni.fa.fa-pause {\r\n    margin-left: -1px;\r\n    padding: 0px;\r\n}\r\n\r\nforeignObject#valign_box {\r\n    font-size: 20px;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n    padding: 4px 2px;\r\n}\r\n\r\nforeignObject#valign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    font-size: 20px;\r\n    display: inline-grid;\r\n}\r\n\r\nforeignObject#valign_box a:hover {\r\n    color: #ffc107;\r\n}\r\n\r\na#valign_icon {\r\n    float: left;\r\n    margin: 5px 4px;\r\n}\r\n\r\na.standardcat.button {\r\n    width: 32px;\r\n    height: 32px;\r\n    border: 1px solid black;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#leftbarcontainer {\r\n    width: 225px;\r\n    min-height: 250px;\r\n    float: left;\r\n    margin-top: 2.5px;\r\n}\r\n\r\n.toolbarTopToggleItem {\r\n    height: 25px;\r\n    display: block;\r\n    line-height: 25px;\r\n    color: #1c1c1c;\r\n    font-size: small;\r\n    float: left;\r\n}\r\n\r\n.toolbarTopToggleContainer {\r\n    width: 225px;\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n    text-align: center;\r\n    float: left;\r\n}\r\n\r\ndiv#toolbar_container_1_1_2 {\r\n    width: 25px;\r\n    float: left;\r\n    background-color: red;\r\n    height: 25px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#toolbar_container_1_2 {\r\n    background-color: #2d2d2d;\r\n    width: 225px;\r\n    height: 250px;\r\n}\r\n\r\ndiv#toolbar_container_1_2_1 {\r\n    box-sizing: border-box;\r\n    width: 200px;\r\n    background-color: #e6e6e6;\r\n    min-height: 200px;\r\n    float: left;\r\n    border: 1px solid #cfcfcf;\r\n}\r\n\r\n.mainButtonItem {\r\n    box-sizing: border-box;\r\n    width: 49.5px;\r\n    height: 49.5px;\r\n    float: left;\r\n    background-color: #6060601f;\r\n    display: inline-block;\r\n    vertical-align: middle;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70328473-107b2400-1874-11ea-88ff-dcca67fd98a9.png);\r\n    line-height: 50px;\r\n    text-align: center;\r\n    border: 1px solid #252525;\r\n    color: #ffffffed;\r\n    background-size: 36px;\r\n    font-size: x-small;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    overflow: hidden;\r\n}\r\n\r\ndiv#toolbar_container_1_2_2 {\r\n    width: 25px;\r\n    float: left;\r\n    height: 200px;\r\n    background-color: #c1c1c1;\r\n    box-sizing: border-box;\r\n    border-right: 1px solid #373737;\r\n}\r\n\r\n.rightToggleButton {\r\n    background-image: url(https://www.corasupport.org/wp-content/uploads/2015/11/placeholder-icon-300x300-v1b.png);\r\n    background-size: 20px;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    cursor: pointer;\r\n    font-size: small;\r\n    background-color: #a3a3a3;\r\n    width: 23px;\r\n    height: 23px;\r\n    text-align: center;\r\n    line-height: 25px;\r\n    border: 1px solid #2d2d2d;\r\n    border-bottom: 1px solid #565656;\r\n}\r\n\r\ndiv#toolbar_container_1_2_0 {\r\n    background-color: #707070;\r\n    font-size: small;\r\n    color: white;\r\n    line-height: 25px;\r\n    font-size: xx-small;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    background-color: #252525;\r\n    transition: 0.2s;\r\n    cursor: pointer;\r\n    border: 1px solid #818181;\r\n}\r\n\r\n.toptoggleitem {\r\n    background-color: #d1d1d1;\r\n    margin: 3px 4px 0px 0px;\r\n    height: 20px;\r\n    padding: 0px 5px;\r\n    line-height: 20px;\r\n    border: 1px solid #aaaaaa;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    background-color: #2b3d50;\r\n    border-color: #2b3d50;\r\n    color: #cfd8dc;\r\n}\r\n\r\n.rightToggleButton:hover {\r\n    background-color: #565656;\r\n    transition: 0.5s;\r\n    color: #ffffff;\r\n    border: 1px solid #cecece;\r\n}\r\n\r\n.rightToggleButton:focus {\r\n    background-color: #ffc107;\r\n    color: black;\r\n    text-shadow: 0px 0px 4px black;\r\n}\r\n\r\n.toptoggleitem:hover {\r\n    border-color: #ffc107;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#NoneTabbedToolBoxText {\r\n    position: relative;\r\n    top: 50%;\r\n    transform: rotate(-90deg);\r\n    font-size: small;\r\n    line-height: 25px;\r\n    text-shadow: 0px 0px 4px #000000;\r\n}\r\n\r\nspan#hint {\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n    display: none;\r\n    background-color: #00000066;\r\n    border: 1px solid #565656;\r\n    opacity: 0;\r\n}\r\n\r\ndiv.rightToggleButton:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\n.canvas_container {\r\n    position: fixed;\r\n    top: 30px;\r\n    left: 225px;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.canvas_container_inner {\r\n    margin: 3px;\r\n}\r\n\r\n.canvas_tab_container {\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n}\r\n\r\nh1 {\r\n    margin: 0px;\r\n}\r\n\r\ndiv#somethingLater {\r\n    width: 100%;\r\n    height: 1000px;\r\n    background-color: #666666;\r\n    overflow: scroll;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\ntextarea#script_body_editor {\r\n    height: 100vh;\r\n}\r\n\r\ndiv#codeBody {\r\n    height: 100vh;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    transition: 2s;\r\n}\r\n\r\n.toptoggleitem.selected:hover {\r\n    transition: 2s;\r\n    min-height: 36%;\r\n}\r\n\r\n/* Copy from jsonview.css */\r\n/*\r\nbody {\r\n    font-family: 'Open Sans';\r\n    font-size: 16px;\r\n    background-color: #252525;\r\n    color: #808080;\r\n    box-sizing: border-box;\r\n}\r\n\r\n.line {\r\n    margin: 4px 0;\r\n    display: flex;\r\n    justify-content: flex-start;\r\n}\r\n\r\n.caret-icon {\r\n    width: 18px;\r\n    text-align: center;\r\n    cursor: pointer;\r\n}\r\n\r\n.empty-icon {\r\n    width: 18px;\r\n}\r\n\r\n.json-type {\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n.json-key {\r\n    color: #444;\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n.json-index {\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n\r\n.json-value {\r\n    margin-left: 8px;\r\n}\r\n\r\n.json-number {\r\n    color: #f9ae58;\r\n}\r\n\r\n.json-boolean {\r\n    color: #ec5f66;\r\n}\r\n\r\n.json-string {\r\n    color: #86b25c;\r\n}\r\n\r\n.json-size {\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n.hide {\r\n    display: none;\r\n}\r\n\r\n*/";
+var css_248z = "/* Copy from newUIstyle_light.css*/\r\nbody {\r\n    -webkit-user-select: none;\r\n    -khtml-user-select: none;\r\n    -moz-user-select: none;\r\n    -o-user-select: none;\r\n    user-select: none;\r\n    overflow-y: hidden; /* Hide vertical scrollbar */\r\n    overflow-x: hidden;\r\n}\r\n\r\nsvg {\r\n    border: solid 1px #565656;\r\n}\r\n\r\n#checks {\r\n    margin: 10px;\r\n}\r\n\r\ntext {\r\n    pointer-events: none;\r\n    user-select: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu mono';\r\n}\r\n\r\n.nodeLog {\r\n    font-size: small;\r\n    font-family: monospace;\r\n    pointer-events: none;\r\n}\r\n\r\ninput:focus,\r\nselect:focus,\r\ntextarea:focus,\r\nbutton:focus {\r\n    outline: none;\r\n}\r\n\r\nrect:focus {\r\n    outline: none;\r\n}\r\n\r\n.output {\r\n    font-family: monospace;\r\n    font-size: small;\r\n    color: white;\r\n}\r\n\r\n.input {\r\n    font-family: monospace;\r\n    font-size: small;\r\n}\r\n\r\n.nodetitle {\r\n    font-family: 'ubuntu mono';\r\n    font-size: 13px;\r\n    font-weight: bold;\r\n    color: white;\r\n    pointer-events: none;\r\n    text-align: center;\r\n}\r\n\r\ndiv#someData {\r\n    padding: 8px;\r\n    padding-top: 25px;\r\n    font-size: x-small;\r\n    font-family: monospace;\r\n}\r\n\r\ncircle {\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#PropertiesBarSelector {\r\n    width: 4px;\r\n    position: fixed;\r\n    right: 501px;\r\n    background-color: #000000;\r\n    height: 100%;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    background-color: #2b3d50;\r\n    right: 0px;\r\n    top: 0px;\r\n    min-height: 35%;\r\n    transition-timing-function: ease-in-out;\r\n    transition: height 2s;\r\n    transition-delay: 1s;  \r\n    width: 220px;\r\n    top: 60px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n}\r\n\r\ndiv#mainGrid {\r\n    position: relative;\r\n    top: 0px;\r\n    left: 0px;\r\n    background-color: #ececec;\r\n}\r\n\r\ndiv#textAreaBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\ndiv#optionlistBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\nselect#optionListSelectItems {\r\n    background: white;\r\n    opacity: 1;\r\n    font-family: monospace;\r\n    font-weight: bold;\r\n    border: 1px solid black;\r\n    border-radius: 3px;\r\n}\r\n\r\nh5 {\r\n    font-family: monospace;\r\n    margin-top: 1px;\r\n    margin-bottom: 4px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#LeftPropertiesBar {\r\n    width: 200px;\r\n    position: fixed;\r\n    background-color: #2b3d50;\r\n    left: 0px;\r\n    top: 0px;\r\n}\r\n\r\n.additionalData {\r\n    border-radius: 7px;\r\n    font-size: x-small;\r\n    width: 222px;\r\n    background-color: #ffffff47;\r\n    font-family: monospace;\r\n    color: #5d5d5d;\r\n    padding: 3px;\r\n    border: none;\r\n}\r\n\r\ndiv#LeftPropertiesBarSelector {\r\n    width: 5px;\r\n    height: 100%;\r\n    display: none;\r\n    position: fixed;\r\n    left: 200px;\r\n    background-color: #252525;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#TopPropertiesBar {\r\n    position: fixed;\r\n    top: 0px;\r\n    left: 0px;\r\n    width: 100%;\r\n    height: 30px;\r\n    background-color: #e6e6e6;\r\n}\r\n\r\ndiv#TopPropertiesBarSelector {\r\n    height: 2px;\r\n    width: 100%;\r\n    position: fixed;\r\n    left: 0px;\r\n    border-bottom: 1px solid #858585;\r\n    top: 47px;\r\n    cursor: ns-resize;\r\n}\r\n\r\nbutton.menubarButtons {\r\n    background-color: #6d6d6d;\r\n    border: none;\r\n    cursor: pointer;\r\n    color: #444444;\r\n    color: #cacaca;\r\n    font-family: 'Poppins', sans-serif;\r\n}\r\n\r\nbutton.menubarButtons:hover {\r\n    background-color: #aaabaa;\r\n}\r\n\r\ndiv#DefName {\r\n    width: 100%;\r\n    height: 32px;\r\n    padding: 0px 0px;\r\n    background: #2b3d50;\r\n    border-bottom: 1px solid #434343;\r\n}\r\n\r\ndiv#BottomPropertiesBar {\r\n    position: fixed;\r\n    bottom: 0px;\r\n    height: 20px;\r\n    left: 0px;\r\n    border-top: 1px solid #757575;\r\n    box-shadow: 0px -1px 0px #313131;\r\n    background-color: #525252;\r\n    background: linear-gradient(180deg, rgba(96, 96, 96, 1) 0%, rgba(82, 82, 82, 1) 100%);\r\n    width: 100%;\r\n}\r\n\r\na#changeTitleName {\r\n    color: #cfd8dc;\r\n    text-decoration: none;\r\n}\r\n\r\n.ccbody {\r\n    width: 100%;\r\n}\r\n\r\n.ccatheader {\r\n    padding: 0px 3px;\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    /* border: 1px solid #2c67a5; */\r\n    color: #e7e7e7;\r\n    padding: 4px;\r\n    cursor: pointer;\r\n    overflow: hidden;\r\n}\r\n\r\nbutton.standardcat.button {\r\n    vertical-align: middle;\r\n    border: 1px solid #444444;\r\n    width: 32px;\r\n    height: 32px;\r\n    margin: 1px;\r\n    background: none;\r\n    background: -moz-linear-gradient(top, #d6d4d4 0%, #adadad 100%);\r\n    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d6d4d4', endColorstr='#adadad', GradientType=0);\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: x-small;\r\n    color: #ffffff;\r\n    cursor: pointer;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#topLeftLogo {\r\n    width: 27px;\r\n    height: 32px;\r\n    float: left;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70302709-af822a80-1838-11ea-913b-5f935ea282ed.png);\r\n    background-repeat: no-repeat;\r\n    background-size: 26px;\r\n    background-position: center;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#settingsIcon {\r\n    float: right;\r\n    position: fixed;\r\n    top: 0px;\r\n    color: #c5c5c5;\r\n    right: 0px;\r\n    text-align: center;\r\n    padding: 11px;\r\n}\r\n\r\nbutton.standardcat.button:hover {\r\n    background: #c1c1c1;\r\n}\r\n\r\ndiv#Addedmessage {\r\n    font-family: monospace;\r\n    color: white;\r\n    padding: 2px;\r\n}\r\n\r\n#minimizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #2b3d50;\r\n    position: absolute;\r\n    top: 0px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #c5c5c5;\r\n    cursor: pointer;\r\n    border-left: 1px solid #464646;\r\n    border-bottom: 1px solid #464646;\r\n    margin-top: -4px;\r\n}\r\n\r\ndiv#maximizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #5d5d5d;\r\n    position: absolute;\r\n    top: 38px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #ababab;\r\n    cursor: pointer;\r\n    margin-top: -4px;\r\n    text-shadow: 1px 1px 1px #4b4b4b;\r\n}\r\n\r\n.propertiesbar.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbarheader.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbar.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    width: 98%;\r\n    color: #2f2f2f;\r\n    padding: 3px 10px;\r\n    background-color: gray;\r\n    border-bottom: 1px solid #909090;\r\n    border-radius: 6px 6px 0px 0px;\r\n    text-shadow: 1px 1px 0px #a5a5a5;\r\n}\r\n\r\ntextarea.textarea.optionlistProperties {\r\n    width: 98%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    height: 150px;\r\n    border-radius: 0px 0px 6px 6px;\r\n    border: 1px solid gray;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntextarea.textarea.stringProperties {\r\n    resize: none;\r\n    width: 100%;\r\n    padding: 0px;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    min-height: 10vh;\r\n    border: none;\r\n    border-radius: 3px;\r\n    background-color: #ffffffc7;\r\n}\r\n\r\n.propertiesbarheader.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    font-weight: bold;\r\n    width: 100%;\r\n    color: #bcbcbc;\r\n    padding: 3px;\r\n}\r\n\r\nselect#propertisBarSelecId {\r\n    width: 99%;\r\n    padding: 1px 2px;\r\n    background-color: gainsboro;\r\n    border-radius: 0px 0px 6px 6px;\r\n}\r\n\r\ndiv#propertiesBarLog {\r\n    width: 100%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    font-size: small;\r\n    padding: 2px;\r\n}\r\n\r\nrect.optionListoption {\r\n    cursor: pointer;\r\n}\r\n\r\nrect.optionListoption:hover {\r\n    fill: #d9e3e6;\r\n    stroke: #989898;\r\n}\r\n\r\ndiv#error {\r\n    color: #c0392b;\r\n    padding: 8px;\r\n}\r\n\r\nforeignObject.textbody {\r\n    font-family: 'ubuntu mono', monospace;\r\n    font-size: x-small;\r\n    color: #4e4e4e;\r\n    overflow: auto;\r\n}\r\n\r\ndiv#catHead {\r\n    font-family: 'ubuntu';\r\n    font-size: small;\r\n    width: fit-content;\r\n    padding: 2px 6px;\r\n    color: white;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-left: 3px;\r\n}\r\n\r\ndiv#catbody {\r\n    margin: 0px;\r\n    border-bottom: none;\r\n    border-right: none;\r\n}\r\n\r\ndiv#catcard {\r\n    margin-bottom: 4px;\r\n    padding: 0px;\r\n}\r\n\r\nrect.xAnchor {\r\n    cursor: ew-resize;\r\n}\r\n\r\nrect.yAnchor {\r\n    cursor: ns-resize;\r\n}\r\n\r\nrect.xyAnchor {\r\n    cursor: nwse-resize;\r\n}\r\n\r\n/* ::-webkit-scrollbar {\r\n    width: 6px;\r\n    height: 10px;\r\n} */\r\n\r\n/* Track */\r\n\r\n/* ::-webkit-scrollbar-track {\r\n    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\r\n    -webkit-border-radius: 4px;\r\n    border-radius: 4px;\r\n    touch-action: manipulation;\r\n} */\r\n\r\n/* Handle */\r\n\r\n/* ::-webkit-scrollbar-thumb {\r\n    -webkit-border-radius: 4px;\r\n    background: rgb(0, 0, 0);\r\n}\r\n\r\n::-webkit-scrollbar-thumb:window-inactive {\r\n    background: rgba(255, 0, 0, 0.4);\r\n} */\r\n\r\npath.play {\r\n    cursor: pointer;\r\n}\r\n\r\npath.play:hover {\r\n    fill: gray;\r\n}\r\n\r\nth {\r\n    border: none;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntd {\r\n    border: none;\r\n    background-color: whitesmoke;\r\n    overflow: hidden;\r\n}\r\n\r\ntbody {\r\n    font-family: ubuntu;\r\n    font-size: small;\r\n}\r\n\r\nth {\r\n    font-family: ubuntu;\r\n    text-align: left;\r\n    font-size: small;\r\n}\r\n\r\ndiv#propertiesBarContents {\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n    font-weight: normal;\r\n    color: #ffffff;\r\n    margin: 2px 0px 10px 0px;\r\n}\r\n\r\nforeignObject.panel_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ntbody {\r\n    border: none;\r\n}\r\n\r\ntable.dataframe {\r\n    border: none;\r\n}\r\n\r\nrect {\r\n    cursor: move;\r\n}\r\n\r\ninput.stringPnanel.Name {\r\n    width: 98%;\r\n    border: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\nforeignObject.panel_edit_mode a {\r\n    font-size: x-small;\r\n    color: #bdbdbd;\r\n    font-family: 'ubuntu mono';\r\n    position: relative;\r\n    text-decoration: none;\r\n    top: -8px;\r\n}\r\n\r\ndiv#numerical_slider_container {\r\n    padding: 7px;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\ndiv#help_t3 {\r\n    line-height: 1em;\r\n    color: #ec5f66;\r\n    margin-top: 5px;\r\n    margin-bottom: 3px;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_t4 {\r\n    color: #009688;\r\n    margin-left: 18px;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-bottom: 5px;\r\n}\r\n\r\ndiv#help_p {\r\n    margin-left: 36px;\r\n    margin-right: 8px;\r\n    text-align: justify;\r\n}\r\n\r\nspan#code {\r\n    color: #c23d51;\r\n    border-radius: 2px;\r\n    font-family: Courier;\r\n    font-size: xx-small;\r\n    vertical-align: middle;\r\n    padding: 1px 4px;\r\n    background-color: #32c8ac2e;\r\n}\r\n\r\ntable.dataframe {\r\n    font-size: x-small;\r\n}\r\n\r\nthead {\r\n    font-size: x-small;\r\n}\r\n\r\nth {\r\n    font-size: x-small;\r\n}\r\n\r\ntd {\r\n    font-size: x-small;\r\n}\r\n\r\nspan#errorTitle {\r\n    color: #e91e63;\r\n    font-weight: bold;\r\n    background-color: #f4433638;\r\n    border-radius: 3px;\r\n}\r\n\r\na.menubarButtons {\r\n    text-decoration: unset;\r\n    color: #000000;\r\n    text-shadow: 1px 1px 4px #4b4b4b;\r\n    font-size: small;\r\n    padding: 0px 6px;\r\n    margin: 1px 1px;\r\n    float: left;\r\n}\r\n\r\ndiv#buttonClickedname {\r\n    color: white;\r\n    font-size: small;\r\n    padding: 0px 8px;\r\n    margin: 0px;\r\n    float: left;\r\n    position: absolute;\r\n    bottom: 25px;\r\n    left: 224px;\r\n    background-color: #3d3d3d;\r\n}\r\n\r\npre {\r\n    margin: 0px;\r\n}\r\n\r\ninput.inputFileUpload {\r\n    border: none;\r\n    border-radius: 4px;\r\n    margin: 2px 2px;\r\n    background: #2b3d50;\r\n    height: 20px;\r\n    font-family: 'ubuntu mono';\r\n    color: white;\r\n}\r\n\r\ninput.submitFileUpload {\r\n    border-radius: 4px;\r\n    float: right;\r\n    margin: 3px;\r\n}\r\n\r\nforeignObject.fileUpload_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ninput#fileUploadFormToTheCloud {\r\n    border-radius: 1px;\r\n    margin-left: 1px;\r\n    /* height: 20px; */\r\n}\r\n\r\na.open_uploadedFile_link {\r\n    text-decoration: none;\r\n    color: black;\r\n    padding: 0px 6px;\r\n    position: relative;\r\n    top: 1px;\r\n    border-radius: 2px;\r\n    margin-left: 3px;\r\n    background-color: #e8e8e8;\r\n}\r\n\r\ndiv#TheContainedFile {\r\n    color: white;\r\n    padding: 2px 5px;\r\n    font-family: 'ubuntu';\r\n    display: inline;\r\n    font-size: small;\r\n    border-right: 1px solid gray;\r\n}\r\n\r\ndiv#PleaseWaitOverLay {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: #ffffff8a;\r\n    color: black;\r\n    text-align: center;\r\n    margin: auto;\r\n    line-height: 100vh;\r\n}\r\n\r\nselect.listView {\r\n    width: 198px;\r\n    height: 179px;\r\n    background-color: #f0f0f0;\r\n    border: 1px solid gray;\r\n    border-radius: 3px;\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n}\r\n\r\noption#someSelection {\r\n    background-color: #e0e0e0;\r\n    box-shadow: 0px 1px 0px white;\r\n    margin-bottom: 1px;\r\n}\r\n\r\ntext.statusTextClass {\r\n    font-size: x-small;\r\n}\r\n\r\n.subcatheader {\r\n    padding-left: 1em;\r\n    color: #ffca28;\r\n    font-size: small;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_quote {\r\n    border: 1px solid #cfcfcf;\r\n    padding: 2px;\r\n    border-radius: 3px;\r\n    background-color: #f4f4f4;\r\n    font-family: courier new;\r\n    font-size: xx-small;\r\n}\r\n\r\nforeignObject#halign_box {\r\n    font-size: 20px;\r\n    color: white;\r\n    text-decoration: none;\r\n    text-align: center;\r\n}\r\n\r\nforeignObject#halign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    margin: 0px 4px;\r\n}\r\n\r\nforeignObject#halign_box a:hover {\r\n    text-decoration: none;\r\n    color: #ffc107;\r\n}\r\n\r\ni.fa.fa-pause {\r\n    margin-left: -1px;\r\n    padding: 0px;\r\n}\r\n\r\nforeignObject#valign_box {\r\n    font-size: 20px;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n    padding: 4px 2px;\r\n}\r\n\r\nforeignObject#valign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    font-size: 20px;\r\n    display: inline-grid;\r\n}\r\n\r\nforeignObject#valign_box a:hover {\r\n    color: #ffc107;\r\n}\r\n\r\na#valign_icon {\r\n    float: left;\r\n    margin: 5px 4px;\r\n}\r\n\r\na.standardcat.button {\r\n    width: 32px;\r\n    height: 32px;\r\n    border: 1px solid black;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#leftbarcontainer {\r\n    width: 225px;\r\n    min-height: 250px;\r\n    float: left;\r\n    margin-top: 2.5px;\r\n}\r\n\r\n.toolbarTopToggleItem {\r\n    height: 25px;\r\n    display: block;\r\n    line-height: 25px;\r\n    color: #1c1c1c;\r\n    font-size: small;\r\n    float: left;\r\n}\r\n\r\n.toolbarTopToggleContainer {\r\n    width: 225px;\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n    text-align: center;\r\n    float: left;\r\n}\r\n\r\ndiv#toolbar_container_1_1_2 {\r\n    width: 25px;\r\n    float: left;\r\n    background-color: red;\r\n    height: 25px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#toolbar_container_1_2 {\r\n    background-color: #2d2d2d;\r\n    width: 225px;\r\n    height: 250px;\r\n}\r\n\r\ndiv#toolbar_container_1_2_1 {\r\n    box-sizing: border-box;\r\n    width: 200px;\r\n    background-color: #e6e6e6;\r\n    min-height: 200px;\r\n    float: left;\r\n    border: 1px solid #cfcfcf;\r\n}\r\n\r\n.mainButtonItem {\r\n    box-sizing: border-box;\r\n    width: 49.5px;\r\n    height: 49.5px;\r\n    float: left;\r\n    background-color: #6060601f;\r\n    display: inline-block;\r\n    vertical-align: middle;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70328473-107b2400-1874-11ea-88ff-dcca67fd98a9.png);\r\n    line-height: 50px;\r\n    text-align: center;\r\n    border: 1px solid #252525;\r\n    color: #ffffffed;\r\n    background-size: 36px;\r\n    font-size: x-small;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    overflow: hidden;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    overflow: visible;\r\n}\r\n\r\ndiv#toolbar_container_1_2_2 {\r\n    width: 25px;\r\n    float: left;\r\n    height: 200px;\r\n    background-color: #c1c1c1;\r\n    box-sizing: border-box;\r\n    border-right: 1px solid #373737;\r\n}\r\n\r\n.rightToggleButton {\r\n    background-image: url(https://www.corasupport.org/wp-content/uploads/2015/11/placeholder-icon-300x300-v1b.png);\r\n    background-size: 20px;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    cursor: pointer;\r\n    font-size: small;\r\n    background-color: #a3a3a3;\r\n    width: 23px;\r\n    height: 23px;\r\n    text-align: center;\r\n    line-height: 25px;\r\n    border: 1px solid #2d2d2d;\r\n    border-bottom: 1px solid #565656;\r\n}\r\n\r\ndiv#toolbar_container_1_2_0 {\r\n    background-color: #707070;\r\n    font-size: small;\r\n    color: white;\r\n    line-height: 25px;\r\n    font-size: xx-small;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    background-color: #252525;\r\n    transition: 0.2s;\r\n    cursor: pointer;\r\n    border: 1px solid #818181;\r\n}\r\n\r\n.toptoggleitem {\r\n    background-color: #d1d1d1;\r\n    margin: 3px 4px 0px 0px;\r\n    height: 20px;\r\n    padding: 0px 5px;\r\n    line-height: 20px;\r\n    border: 1px solid #aaaaaa;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    background-color: #2b3d50;\r\n    border-color: #2b3d50;\r\n    color: #cfd8dc;\r\n}\r\n\r\n.rightToggleButton:hover {\r\n    background-color: #565656;\r\n    transition: 0.5s;\r\n    color: #ffffff;\r\n    border: 1px solid #cecece;\r\n}\r\n\r\n.rightToggleButton:focus {\r\n    background-color: #ffc107;\r\n    color: black;\r\n    text-shadow: 0px 0px 4px black;\r\n}\r\n\r\n.toptoggleitem:hover {\r\n    border-color: #ffc107;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#NoneTabbedToolBoxText {\r\n    position: relative;\r\n    top: 50%;\r\n    transform: rotate(-90deg);\r\n    font-size: small;\r\n    line-height: 25px;\r\n    text-shadow: 0px 0px 4px #000000;\r\n}\r\n\r\ndiv.rightToggleButton span#hint {\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n    display: none;\r\n    background-color: #00000066;\r\n    border: 1px solid #565656;\r\n    opacity: 0;\r\n}\r\n\r\n.tooltip {\r\n    position: relative;\r\n    display: inline-block;\r\n    /* border-bottom: 1px dotted black; */\r\n  }\r\n  \r\nspan.tooltiptext {\r\n    visibility: hidden;\r\n    text-align: center;\r\n    border-radius: 6px;\r\n    padding: 0px 4px;\r\n    /* Position the tooltip */\r\n    position: absolute;\r\n    display: block;\r\n    color: black;\r\n    background-color: white;\r\n    line-height: normal;\r\n    width: fit-content;\r\n    top: 3px;\r\n    left: 25px;  \r\n    z-index: 1;\r\n}\r\n\r\n.tooltip:hover .tooltiptext {\r\n    visibility: visible;\r\n}\r\n\r\np.iconText {\r\n    display: block;\r\n    text-overflow: ellipsis;\r\n    width: 40px;\r\n    overflow: hidden;\r\n    white-space: nowrap;\r\n    padding: 5px;\r\n    line-height: normal;\r\n}\r\n  \r\ndiv.mainButtonItem span#hint {\r\n    position: relative;\r\n    width: fit-content;\r\n    display: none;\r\n    opacity: 0;\r\n    background-color: #ffffff;\r\n    color: #000000;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    overflow: visible;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n}\r\n\r\ndiv.rightToggleButton:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\n.canvas_container {\r\n    position: fixed;\r\n    top: 30px;\r\n    left: 225px;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.canvas_container_inner {\r\n    margin: 3px;\r\n}\r\n\r\n.canvas_tab_container {\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n}\r\n\r\nh1 {\r\n    margin: 0px;\r\n}\r\n\r\ndiv#somethingLater {\r\n    width: 100%;\r\n    height: 1000px;\r\n    background-color: #666666;\r\n    overflow: scroll;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\ntextarea#script_body_editor {\r\n    height: 100vh;\r\n}\r\n\r\ndiv#codeBody {\r\n    height: 100vh;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    transition: 2s;\r\n}\r\n\r\n.toptoggleitem.selected:hover {\r\n    transition: 2s;\r\n    min-height: 36%;\r\n}\r\n\r\n/* Copy from jsonview.css */\r\n/*\r\nbody {\r\n    font-family: 'Open Sans';\r\n    font-size: 16px;\r\n    background-color: #252525;\r\n    color: #808080;\r\n    box-sizing: border-box;\r\n}\r\n\r\n.line {\r\n    margin: 4px 0;\r\n    display: flex;\r\n    justify-content: flex-start;\r\n}\r\n\r\n.caret-icon {\r\n    width: 18px;\r\n    text-align: center;\r\n    cursor: pointer;\r\n}\r\n\r\n.empty-icon {\r\n    width: 18px;\r\n}\r\n\r\n.json-type {\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n.json-key {\r\n    color: #444;\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n.json-index {\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n\r\n.json-value {\r\n    margin-left: 8px;\r\n}\r\n\r\n.json-number {\r\n    color: #f9ae58;\r\n}\r\n\r\n.json-boolean {\r\n    color: #ec5f66;\r\n}\r\n\r\n.json-string {\r\n    color: #86b25c;\r\n}\r\n\r\n.json-size {\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n.hide {\r\n    display: none;\r\n}\r\n\r\n*/";
 styleInject(css_248z);
 
 var Canvas = /*#__PURE__*/function (_React$Component) {

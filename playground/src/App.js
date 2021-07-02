@@ -31,7 +31,7 @@ const newComps = [
         category: 'Basic',
         subcategory: 'Math',
         inputList: [
-            { name: 'input', shortName: 'in_01', desc: 'first input', default_value: '10.0' }
+            { name: 'input', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
         ],
         outputList: [
             { name: 'output_', shortName: 'out_', desc: 'product' },

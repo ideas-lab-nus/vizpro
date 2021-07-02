@@ -5,18 +5,14 @@ var d3 = require('d3');
 
 function calculateCloud(compId) {
     d3.select('div#PleaseWaitOverLay').style('display', 'block');
-    var thisComp = selectComp(compId);
-    var inputGroup = [];
-    thisComp.inputs.forEach(input => {
-        inputGroup.push(input.value);
-    });
+    var cloudComp = selectComp(compId);
+    var functionName = cloudComp.Name;
+    var args = cloudComp.inputs.map(input => input.value);
+    var url = cloudComp.url;
+    const result = absolute(args, url);
 
-    var functionName = thisComp.Name;
-    var args = inputGroup;
-
-    const result = mapFunction[functionName](args);
     try {
-        thisComp.outputs.forEach(function (output, i) {
+        cloudComp.outputs.forEach(function (output, i) {
             output.type = result['type'][i];
             output.value = result['value'][i];
             console.log(result);
@@ -25,26 +21,27 @@ function calculateCloud(compId) {
         d3.select('div#PleaseWaitOverLay').style('display', 'none');
     } catch (error) {
         console.log(error);
+        alert(error);
         d3.select('div#PleaseWaitOverLay').style('display', 'none');
     }
 }
 
-const mapFunction = {
-    Absolute: absolute
-};
-
-function absolute(args) {
+function absolute(args, url) {
     var log_ = 'Success';
-    var parameters = args[0];
-    var url = args[1] + '/' + 'there?p1=' + parameters.toString();
-    var data = { parameters: parameters.toString() };
+    var queryStr = '';
+    for (let i = 1; i <= args.length; i++) {
+        queryStr += '&p' + i + '=' + args[i - 1];
+    }
+    //Replace first  & with  ?
+    var urlCall = url + queryStr.replace('&', '?');
+    // var data = { parameters: p1 };
 
     const req = $.ajax({
         type: 'POST',
         dataType: 'json',
         async: false,
-        url: url,
-        data: JSON.stringify(data),
+        url: urlCall,
+        // data: JSON.stringify(data),
         // "headers": headers,
         beforeSend: function (xhr, settings) {}
     });

@@ -7,6 +7,7 @@ import { CreateNewPanel } from './panel.js';
 import { CreateNewToggle } from './toggle.js';
 import { CreateNewFileUpload } from './fileUpload.js';
 import { CreateNewListView } from './listView.js';
+import { CreateNewCloud } from './cloudComp.js';
 var d3 = require('d3');
 
 function getCurrentData(reactContext) {
@@ -77,15 +78,15 @@ function loadData() {
                 allComp: allComponents
             });
             allComponents.forEach(element => {
+                console.log(element);
                 if (element.type === 'component') CreateNewComponent(this, element);
-                //to be handle later
                 else if (element.type === 'slider') CreateNewSlider(this, element);
                 else if (element.type === 'string') CreateNewPanel(this, element);
                 else if (element.type === 'toggle') CreateNewToggle(this, element);
                 else if (element.type === 'optionList') CreateNewOptionList(this, element);
-                //to be handle later
                 else if (element.type === 'fileUpload') CreateNewFileUpload(this, element);
                 else if (element.type === 'listView') CreateNewListView(this, element);
+                else if (element.type === 'cloud') CreateNewCloud(this, element);
             });
         }
         if (allData.edges !== undefined && allData.edges !== null) {

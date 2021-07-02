@@ -6,7 +6,7 @@ import { CreateNewOptionList } from './optionlist.js';
 function addGenericComponentIcon() {
     for (let index = 0; index < details.length; index++) {
         const currInfo = details[index];
-        var outputNameList = extractOutputName(currInfo.outputList);
+        var outputNameList = currInfo.outputList.map(elem => elem.name);
         var newComp = addNewComponentIcon(
             this,
             'addComp',
@@ -15,7 +15,7 @@ function addGenericComponentIcon() {
             currInfo.desc,
             currInfo.type,
             currInfo.dftype,
-            'mainButtonItem 1 1',
+            'mainButtonItem 1 1 tooltip ',
             currInfo.backgroundImage,
             currInfo.inputList,
             outputNameList,
@@ -57,7 +57,10 @@ function addNewComponentIcon(
         '" style="background-image:url(' +
         imageUrl +
         ')">' +
-        (imageUrl === '' ? name : ' &nbsp; ' + '<span id="hint">' + name + '</span>') +
+        '<p class="iconText">' + 
+        (imageUrl === "" ? name : "") + 
+        '</p>' + 
+        '<span class="tooltiptext" id="hintx">' + name + '</span>' +
         '</div>';
     var newComp = $(newCompString);
     newComp.on('click', () => {
@@ -69,15 +72,6 @@ function addNewComponentIcon(
         }
     });
     return newComp;
-}
-
-function extractOutputName(array) {
-    let output = [];
-    for (let index = 0; index < array.length; index++) {
-        const element = array[index];
-        output.push(element.name);
-    }
-    return output;
 }
 
 function addRightToggleButton() {
