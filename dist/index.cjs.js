@@ -3180,7 +3180,7 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
     var InputGroup = node.append('g').lower();
 
     for (let index = 0; index < newcomp.inputs.length; index++) {
-      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'inputCirViual' + newcomp.GUID + '_' + index).attr('class', 'inputCirVisual ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'inputCirViual' + newcomp.GUID + '_' + index).attr('class', 'inputCirVisual' + newcomp.GUID + ' ' + index).attr('type', function () {
         if (FromExisting == null) {
           return 'text';
         } else {
@@ -3192,7 +3192,7 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
     InputGroup = node.append('g').lower();
 
     for (let index = 0; index < newcomp.inputs.length; index++) {
-      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.3').attr('r', '15').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.3').attr('r', '15').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir' + newcomp.GUID + ' ' + index).attr('type', function () {
         if (FromExisting == null) {
           return 'text';
         } else {
@@ -3205,7 +3205,7 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
 
     for (let index = 0; index < newcomp.inputs.length; index++) {
       console.log(newcomp.inputs[index].Name);
-      InputGroupText.append('text').attr('id', 'input-' + newcomp.GUID + '_' + index).attr('class', 'inputTxt ' + newcomp.GUID + ' ' + index).attr('transform', 'translate(' + 10 + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.inputs[index].Name).attr('fill', 'black').attr('type', function () {
+      InputGroupText.append('text').attr('id', 'input-' + newcomp.GUID + '_' + index).attr('class', 'inputTxt' + newcomp.GUID + ' ' + index).attr('transform', 'translate(' + 10 + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.inputs[index].Name).attr('fill', 'black').attr('type', function () {
         newcomp.inputs[index].textObj = this.id;
 
         if (FromExisting == null) {
@@ -3224,7 +3224,7 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
     var OutputGroup = node.append('g').lower();
 
     for (let index = 0; index < newcomp.outputs.length; index++) {
-      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'outputCirVisual' + newcomp.GUID + '_' + index).attr('class', 'outputCirVisual ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'outputCirVisual' + newcomp.GUID + '_' + index).attr('class', 'outputCirVisual' + newcomp.GUID + ' ' + index).attr('type', function () {
         if (FromExisting == null) {
           return 'text';
         } else {
@@ -3236,7 +3236,7 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
     OutputGroup = node.append('g').lower();
 
     for (let index = 0; index < newcomp.outputs.length; index++) {
-      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.5').attr('r', '12').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.5').attr('r', '12').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir' + newcomp.GUID + ' ' + index).attr('type', function () {
         if (FromExisting == null) {
           return 'text';
         } else {
@@ -3248,7 +3248,7 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
     var OutputGroupText = node.append('g');
 
     for (let index = 0; index < newcomp.outputs.length; index++) {
-      OutputGroupText.append('text').attr('id', 'output-' + newcomp.GUID + '_' + index).attr('class', 'outputTxt ' + newcomp.GUID + ' ' + index).attr('transform', 'translate(' + (newcomp.width - newcomp.outputs[index].ShortName.length * 8 - 5).toString() + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.outputs[index].ShortName).attr('fill', 'black').attr('type', function () {
+      OutputGroupText.append('text').attr('id', 'output-' + newcomp.GUID + '_' + index).attr('class', 'outputTxt' + newcomp.GUID + ' ' + index).attr('transform', 'translate(' + (newcomp.width - newcomp.outputs[index].ShortName.length * 8 - 5).toString() + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.outputs[index].ShortName).attr('fill', 'black').attr('type', function () {
         newcomp.outputs[index].circle = this;
 
         if (FromExisting == null) {

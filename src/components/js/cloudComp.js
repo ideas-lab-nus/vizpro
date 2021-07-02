@@ -162,7 +162,7 @@ function CreateNewCloud(
                 .attr('stroke', newcomp.fill)
                 .attr('stroke-width', '2')
                 .attr('id', 'inputCirViual' + newcomp.GUID + '_' + index)
-                .attr('class', 'inputCirVisual ' + newcomp.GUID + ' ' + index)
+                .attr('class', 'inputCirVisual' + newcomp.GUID + ' ' + index)
                 .attr('type', function () {
                     if (FromExisting == null) {
                         return 'text';
@@ -182,7 +182,7 @@ function CreateNewCloud(
                 .attr('fill-opacity', '0.3')
                 .attr('r', '15')
                 .attr('id', 'inputCir' + newcomp.GUID + '_' + index)
-                .attr('class', 'inputCir ' + newcomp.GUID + ' ' + index)
+                .attr('class', 'inputCir' + newcomp.GUID + ' ' + index)
                 .attr('type', function () {
                     if (FromExisting == null) {
                         return 'text';
@@ -198,7 +198,7 @@ function CreateNewCloud(
             console.log(newcomp.inputs[index].Name)
             var inptext = InputGroupText.append('text')
                 .attr('id', 'input-' + newcomp.GUID + '_' + index)
-                .attr('class', 'inputTxt ' + newcomp.GUID + ' ' + index)
+                .attr('class', 'inputTxt' + newcomp.GUID + ' ' + index)
                 .attr(
                     'transform',
                     'translate(' + 10 + ' , ' + (index * padding + titleMargin + 5).toString() + ')'
@@ -230,7 +230,7 @@ function CreateNewCloud(
                 .attr('stroke', newcomp.fill)
                 .attr('stroke-width', '2')
                 .attr('id', 'outputCirVisual' + newcomp.GUID + '_' + index)
-                .attr('class', 'outputCirVisual ' + newcomp.GUID + ' ' + index)
+                .attr('class', 'outputCirVisual' + newcomp.GUID + ' ' + index)
                 .attr('type', function () {
                     if (FromExisting == null) {
                         return 'text';
@@ -250,7 +250,7 @@ function CreateNewCloud(
                 .attr('fill-opacity', '0.5')
                 .attr('r', '12')
                 .attr('id', 'outputCir' + newcomp.GUID + '_' + index)
-                .attr('class', 'outputCir ' + newcomp.GUID + ' ' + index)
+                .attr('class', 'outputCir' + newcomp.GUID + ' ' + index)
                 .attr('type', function () {
                     if (FromExisting == null) {
                         return 'text';
@@ -264,7 +264,7 @@ function CreateNewCloud(
         for (let index = 0; index < newcomp.outputs.length; index++) {
             var outtext = OutputGroupText.append('text')
                 .attr('id', 'output-' + newcomp.GUID + '_' + index)
-                .attr('class', 'outputTxt ' + newcomp.GUID + ' ' + index)
+                .attr('class', 'outputTxt' + newcomp.GUID + ' ' + index)
                 .attr(
                     'transform',
                     'translate(' +
