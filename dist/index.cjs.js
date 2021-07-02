@@ -3175,11 +3175,12 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
   statusBar.append('rect').attr('id', 'statusRect' + newcomp.GUID).attr('width', newcomp.width + 2).attr('x', -1.0).attr('height', 40).attr('fill', IDLE_COLOR).attr('stroke-width', 1).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('opacity', 0.5);
   statusBar.append('text').attr('class', 'statusTextClass').attr('id', 'statusText' + newcomp.GUID).attr('fill', 'black').attr('x', 5).attr('y', 37).text('Idle...');
 
-  function addInputCircles() {
+  function addInputCircles(newcomp) {
+    var node = newcomp.node;
     var InputGroup = node.append('g').lower();
 
     for (let index = 0; index < newcomp.inputs.length; index++) {
-      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'inputCirViual' + newcomp.GUID + '_' + index).attr('class', 'inputCirVisual ' + newcomp.GUID + ' ' + index + " removables").attr('type', function () {
+      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'inputCirViual' + newcomp.GUID + '_' + index).attr('class', 'inputCirVisual ' + newcomp.GUID + ' ' + index).attr('type', function () {
         if (FromExisting == null) {
           return 'text';
         } else {
@@ -3191,7 +3192,7 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
     InputGroup = node.append('g').lower();
 
     for (let index = 0; index < newcomp.inputs.length; index++) {
-      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.3').attr('r', '15').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index + " removables").attr('type', function () {
+      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.3').attr('r', '15').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
         if (FromExisting == null) {
           return 'text';
         } else {
@@ -3204,7 +3205,7 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
 
     for (let index = 0; index < newcomp.inputs.length; index++) {
       console.log(newcomp.inputs[index].Name);
-      InputGroupText.append('text').attr('id', 'input-' + newcomp.GUID + '_' + index).attr('class', 'inputTxt ' + newcomp.GUID + ' ' + index + " removables").attr('transform', 'translate(' + 10 + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.inputs[index].Name).attr('fill', 'black').attr('type', function () {
+      InputGroupText.append('text').attr('id', 'input-' + newcomp.GUID + '_' + index).attr('class', 'inputTxt ' + newcomp.GUID + ' ' + index).attr('transform', 'translate(' + 10 + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.inputs[index].Name).attr('fill', 'black').attr('type', function () {
         newcomp.inputs[index].textObj = this.id;
 
         if (FromExisting == null) {
@@ -3218,11 +3219,12 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
 
   addInputCirclesFunc = addInputCircles;
 
-  function addOutputCircles() {
+  function addOutputCircles(newcomp) {
+    var node = newcomp.node;
     var OutputGroup = node.append('g').lower();
 
     for (let index = 0; index < newcomp.outputs.length; index++) {
-      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'outputCirVisual' + newcomp.GUID + '_' + index).attr('class', 'outputCirVisual ' + newcomp.GUID + ' ' + index + " removables").attr('type', function () {
+      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'outputCirVisual' + newcomp.GUID + '_' + index).attr('class', 'outputCirVisual ' + newcomp.GUID + ' ' + index).attr('type', function () {
         if (FromExisting == null) {
           return 'text';
         } else {
@@ -3234,7 +3236,7 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
     OutputGroup = node.append('g').lower();
 
     for (let index = 0; index < newcomp.outputs.length; index++) {
-      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.5').attr('r', '12').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + index + " removables").attr('type', function () {
+      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.5').attr('r', '12').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
         if (FromExisting == null) {
           return 'text';
         } else {
@@ -3246,7 +3248,7 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
     var OutputGroupText = node.append('g');
 
     for (let index = 0; index < newcomp.outputs.length; index++) {
-      OutputGroupText.append('text').attr('id', 'output-' + newcomp.GUID + '_' + index).attr('class', 'outputTxt ' + newcomp.GUID + ' ' + index + " removables").attr('transform', 'translate(' + (newcomp.width - newcomp.outputs[index].ShortName.length * 8 - 5).toString() + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.outputs[index].ShortName).attr('fill', 'black').attr('type', function () {
+      OutputGroupText.append('text').attr('id', 'output-' + newcomp.GUID + '_' + index).attr('class', 'outputTxt ' + newcomp.GUID + ' ' + index).attr('transform', 'translate(' + (newcomp.width - newcomp.outputs[index].ShortName.length * 8 - 5).toString() + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.outputs[index].ShortName).attr('fill', 'black').attr('type', function () {
         newcomp.outputs[index].circle = this;
 
         if (FromExisting == null) {
@@ -3303,12 +3305,21 @@ function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwarg
     console.log('start calculation');
     runDeepFunction(newcomp.GUID);
   });
-  node.append('svg').attr('role', 'img').attr('class', 'removableSVG').attr('xmlns', 'http://www.w3.org/2000/svg').attr('width', 20).attr('height', 20).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('viewBox', '0 0 512 512').append('path').attr('class', 'play ' + newcomp.GUID).attr('fill', 'white').attr('d', 'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z').on('click', function () {
+  node.append('svg').attr('role', 'img').attr('class', 'removableSVG' + newcomp.GUID).attr('xmlns', 'http://www.w3.org/2000/svg').attr('width', 20).attr('height', 20).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('viewBox', '0 0 512 512').append('path').attr('class', 'play ' + newcomp.GUID).attr('fill', 'white').attr('d', 'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z').on('click', function () {
     console.log('start calculation');
     runDeepFunction(newcomp.GUID);
   });
-  addInputCirclesFunc();
-  addOutputCirclesFunc();
+  newcomp.addInputCirclesFunc = addInputCirclesFunc;
+  newcomp.addOutputCirclesFunc = addOutputCirclesFunc;
+  newcomp.statusBar = statusBar;
+  newcomp.Dummyrect = Dummyrect;
+  newcomp.cirGroup = cirGroup;
+  newcomp.resize1 = resize1;
+  newcomp.rect = rect;
+  newcomp.playrect2 = playrect2;
+  newcomp.node = node;
+  addInputCirclesFunc(newcomp);
+  addOutputCirclesFunc(newcomp);
 
   if (FromExisting == null) {
     var current_all_comp = reactContext.state.allComp.slice();
@@ -3353,10 +3364,14 @@ function submitCloudEdit(compKey) {
     cloudComp.outputs = createOutputDict(["out"]);
     cloudComp.url = url;
     cloudComp.Name = name;
-    d3$8.selectAll('circle.removables').remove();
-    d3$8.selectAll('text.removables').remove();
-    addInputCirclesFunc();
-    addOutputCirclesFunc();
+    d3$8.selectAll('circle.inputCirVisual' + cloudComp.GUID).remove();
+    d3$8.selectAll('circle.inputCir' + cloudComp.GUID).remove();
+    d3$8.selectAll('text.inputTxt' + cloudComp.GUID).remove();
+    d3$8.selectAll('circle.outputCirVisual' + cloudComp.GUID).remove();
+    d3$8.selectAll('circle.outputCir' + cloudComp.GUID).remove();
+    d3$8.selectAll('text.outputTxt' + cloudComp.GUID).remove();
+    addInputCirclesFunc(cloudComp);
+    addOutputCirclesFunc(cloudComp);
     resize(cloudComp);
     $__default['default']('foreignObject#node_title' + cloudComp.GUID).text(name);
     redrawDependents(compKey);
@@ -3375,18 +3390,18 @@ function resize(newcomp) {
   var padding = 20;
   var titleMargin = 30;
   newcomp.height = Math.max(80, titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding);
-  statusBar.attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
-  Dummyrect.attr('height', newcomp.height);
-  cirGroup.attr('transform', () => {
+  newcomp.statusBar.attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
+  newcomp.Dummyrect.attr('height', newcomp.height);
+  newcomp.cirGroup.attr('transform', () => {
     var x = newcomp.width;
     var y = newcomp.height;
     return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
   });
-  resize1.attr('height', newcomp.height - 2);
-  rect.attr('height', newcomp.height);
-  playrect2.attr('y', newcomp.height - 10);
-  d3$8.select('svg.removableSVG').remove();
-  node.append('svg').attr('role', 'img').attr('class', 'removableSVG').attr('xmlns', 'http://www.w3.org/2000/svg').attr('width', 20).attr('height', 20).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('viewBox', '0 0 512 512').append('path').attr('class', 'play ' + newcomp.GUID).attr('fill', 'white').attr('d', 'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z').on('click', function () {
+  newcomp.resize1.attr('height', newcomp.height - 2);
+  newcomp.rect.attr('height', newcomp.height);
+  newcomp.playrect2.attr('y', newcomp.height - 10);
+  d3$8.select('svg.removableSVG' + newcomp.GUID).remove();
+  newcomp.node.append('svg').attr('role', 'img').attr('class', 'removableSVG' + newcomp.GUID).attr('xmlns', 'http://www.w3.org/2000/svg').attr('width', 20).attr('height', 20).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('viewBox', '0 0 512 512').append('path').attr('class', 'play ' + newcomp.GUID).attr('fill', 'white').attr('d', 'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z').on('click', function () {
     console.log('start calculation');
     runDeepFunction(newcomp.GUID);
   });

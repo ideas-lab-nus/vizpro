@@ -149,7 +149,8 @@ function CreateNewCloud(
         .attr('y', 37)
         .text('Idle...');
 
-    function addInputCircles() {
+    function addInputCircles(newcomp) {
+        var node = newcomp.node;
         var InputGroup = node.append('g').lower();
         for (let index = 0; index < newcomp.inputs.length; index++) {
             var inp = InputGroup.append('circle')
@@ -161,7 +162,7 @@ function CreateNewCloud(
                 .attr('stroke', newcomp.fill)
                 .attr('stroke-width', '2')
                 .attr('id', 'inputCirViual' + newcomp.GUID + '_' + index)
-                .attr('class', 'inputCirVisual ' + newcomp.GUID + ' ' + index + " removables")
+                .attr('class', 'inputCirVisual ' + newcomp.GUID + ' ' + index)
                 .attr('type', function () {
                     if (FromExisting == null) {
                         return 'text';
@@ -181,7 +182,7 @@ function CreateNewCloud(
                 .attr('fill-opacity', '0.3')
                 .attr('r', '15')
                 .attr('id', 'inputCir' + newcomp.GUID + '_' + index)
-                .attr('class', 'inputCir ' + newcomp.GUID + ' ' + index + " removables")
+                .attr('class', 'inputCir ' + newcomp.GUID + ' ' + index)
                 .attr('type', function () {
                     if (FromExisting == null) {
                         return 'text';
@@ -197,7 +198,7 @@ function CreateNewCloud(
             console.log(newcomp.inputs[index].Name)
             var inptext = InputGroupText.append('text')
                 .attr('id', 'input-' + newcomp.GUID + '_' + index)
-                .attr('class', 'inputTxt ' + newcomp.GUID + ' ' + index + " removables")
+                .attr('class', 'inputTxt ' + newcomp.GUID + ' ' + index)
                 .attr(
                     'transform',
                     'translate(' + 10 + ' , ' + (index * padding + titleMargin + 5).toString() + ')'
@@ -217,7 +218,8 @@ function CreateNewCloud(
 
     addInputCirclesFunc = addInputCircles;
 
-    function addOutputCircles() {
+    function addOutputCircles(newcomp) {
+        var node = newcomp.node;
         var OutputGroup = node.append('g').lower();
         for (let index = 0; index < newcomp.outputs.length; index++) {
             var out = OutputGroup.append('circle')
@@ -228,7 +230,7 @@ function CreateNewCloud(
                 .attr('stroke', newcomp.fill)
                 .attr('stroke-width', '2')
                 .attr('id', 'outputCirVisual' + newcomp.GUID + '_' + index)
-                .attr('class', 'outputCirVisual ' + newcomp.GUID + ' ' + index + " removables")
+                .attr('class', 'outputCirVisual ' + newcomp.GUID + ' ' + index)
                 .attr('type', function () {
                     if (FromExisting == null) {
                         return 'text';
@@ -248,7 +250,7 @@ function CreateNewCloud(
                 .attr('fill-opacity', '0.5')
                 .attr('r', '12')
                 .attr('id', 'outputCir' + newcomp.GUID + '_' + index)
-                .attr('class', 'outputCir ' + newcomp.GUID + ' ' + index + " removables")
+                .attr('class', 'outputCir ' + newcomp.GUID + ' ' + index)
                 .attr('type', function () {
                     if (FromExisting == null) {
                         return 'text';
@@ -262,7 +264,7 @@ function CreateNewCloud(
         for (let index = 0; index < newcomp.outputs.length; index++) {
             var outtext = OutputGroupText.append('text')
                 .attr('id', 'output-' + newcomp.GUID + '_' + index)
-                .attr('class', 'outputTxt ' + newcomp.GUID + ' ' + index + " removables")
+                .attr('class', 'outputTxt ' + newcomp.GUID + ' ' + index)
                 .attr(
                     'transform',
                     'translate(' +
@@ -421,7 +423,7 @@ function CreateNewCloud(
     var playrect = node
         .append('svg')
         .attr('role', 'img')
-        .attr('class', 'removableSVG')
+        .attr('class', 'removableSVG' + newcomp.GUID)
         .attr('xmlns', 'http://www.w3.org/2000/svg')
         .attr('width', 20)
         .attr('height', 20)
@@ -438,11 +440,20 @@ function CreateNewCloud(
         .on('click', function () {
             console.log('start calculation');
             runDeepFunction(newcomp.GUID);
-        });    
+        });            
 
-        
-    addInputCirclesFunc();
-    addOutputCirclesFunc();
+    newcomp.addInputCirclesFunc = addInputCirclesFunc;
+    newcomp.addOutputCirclesFunc = addOutputCirclesFunc;
+    newcomp.statusBar = statusBar;
+    newcomp.Dummyrect = Dummyrect;
+    newcomp.cirGroup = cirGroup;
+    newcomp.resize1 = resize1;
+    newcomp.rect = rect;
+    newcomp.playrect2 = playrect2;
+    newcomp.node = node;
+    
+    addInputCirclesFunc(newcomp);
+    addOutputCirclesFunc(newcomp);
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
@@ -488,10 +499,15 @@ function submitCloudEdit(compKey) {
         cloudComp.url = url;
         cloudComp.Name = name;
     
-        d3.selectAll('circle.removables').remove();
-        d3.selectAll('text.removables').remove();
-        addInputCirclesFunc();
-        addOutputCirclesFunc();
+        d3.selectAll('circle.inputCirVisual' + cloudComp.GUID).remove();
+        d3.selectAll('circle.inputCir' + cloudComp.GUID).remove();
+        d3.selectAll('text.inputTxt' + cloudComp.GUID).remove();
+        d3.selectAll('circle.outputCirVisual' + cloudComp.GUID).remove();
+        d3.selectAll('circle.outputCir' + cloudComp.GUID).remove();
+        d3.selectAll('text.outputTxt' + cloudComp.GUID).remove();
+
+        addInputCirclesFunc(cloudComp);
+        addOutputCirclesFunc(cloudComp);
 
         resize(cloudComp);
 
@@ -515,29 +531,29 @@ function resize(newcomp) {
     newcomp.height = Math.max(80,
         titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding);
 
-    statusBar
+    newcomp.statusBar
         .attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
-    Dummyrect
+    newcomp.Dummyrect
         .attr('height', newcomp.height);
-    cirGroup
+    newcomp.cirGroup
         .attr('transform', () => {
             var x = newcomp.width;
             var y = newcomp.height;
             return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
         });
-    resize1
+    newcomp.resize1
         .attr('height', newcomp.height - 2);
-    rect
+    newcomp.rect
         .attr('height', newcomp.height);
-    playrect2
+    newcomp.playrect2
         .attr('y', newcomp.height - 10);
 
-    d3.select('svg.removableSVG').remove();
+    d3.select('svg.removableSVG' + newcomp.GUID).remove();
 
-    node
+    newcomp.node
         .append('svg')
         .attr('role', 'img')
-        .attr('class', 'removableSVG')
+        .attr('class', 'removableSVG' + newcomp.GUID)
         .attr('xmlns', 'http://www.w3.org/2000/svg')
         .attr('width', 20)
         .attr('height', 20)
