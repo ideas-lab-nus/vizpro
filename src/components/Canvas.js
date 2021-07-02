@@ -1,7 +1,6 @@
 import React from 'react';
 import ScriptTag from 'react-script-tag';
 import { globalVars } from './logic/constants.js';
-import { handleFileUpload } from './logic/fileUpload.js';
 import { manageCanvas } from './logic/layout.js'; 
 import { manageGrid } from './logic/mainGrid.js';
 import { dummyToSetState } from './logic/functions.js';
@@ -25,7 +24,6 @@ export default class Canvas extends React.Component {
         this.handleDoubleClick = handleDoubleClick.bind(this);
         this.handleEdgeInitialization = handleEdgeInitialization.bind(this);
         this.handleTheClickOnAllComponents = handleTheClickOnAllComponents.bind(this);
-        this.handleFileUpload = handleFileUpload.bind(this);
         this.manageCanvas = manageCanvas.bind(this);
         this.manageGrid = manageGrid.bind(this);
         this.dummyToSetState = dummyToSetState.bind(this);
@@ -62,7 +60,7 @@ export default class Canvas extends React.Component {
                 <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
                 <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
                 <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>
-                <ScriptTag>{this.handleFileUpload()}</ScriptTag>
+                
                 
                 <Grid />   
 
