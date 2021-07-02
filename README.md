@@ -31,21 +31,36 @@ Besides using pre-defined components in the package, users can define their own 
 - `type` : Allowed type values -> [`component`, `optionList`, `string`, `cloud`]
 - `dftype` : Allowed dataflow values -> [`shlow`, `dp`]
 - `category` : Allowed categories -> [`Basic`, `BuildSimHub`, `OsiSoft`, `Pandas`, `String Operations`]
+- `inputList` : A list of dictionary for each input, each with attributes `name`, `shortName`, `desc`, `default_value`
+- `outputList` : A list of dictionary for each output, each with attributes `name`, `shortName`, `desc`, `default_value`
 - `name`: Attribute required for each entry in `inputList`, `outputList`
 
-Shallow functions (type != `cloud`, dftype = `shlow`)
-    - `func` : Function that is executed when the component is connected to an input. A function must return a dictionary that has 2 keys: `type` and `value`. The corresponding value of `type` is a list containing the return type of all the outputs. The return type must be either `text`, `html`, `json`, `list` or `plot`. The corresponding value of `value` is a list containing the value that will be displayed of all the outputs. The size of both lists must be the same as the size of the `output list`.
+#### Shallow functions (type != `cloud`, dftype = `shlow`)
 
-Cloud functions (type = `cloud`, dftype = `dp`)
-    - `url` : URL of the cloud function
+- `func` : The function that is executed when the component is connected to an input. 
+
+`func` must return a dictionary of the form: 
+
+```
+{
+  type:  [],
+  value: []
+}
+```
+
+where the length of both lists is the number of outputs in `outputList`. 
+
+The `type` list gives the type of the corresponding entry in the `value` list, and allowed type values are [`text`, `html`, `json`, `list`, `plot`]
+
+#### Cloud functions (type = `cloud`, dftype = `dp`)
+
+- `url` : URL of the cloud function
 
 ### Optional
 
 - `name` : Name
 - `shname` : Short name
 - `desc` : Description
-- `inputList` : A list of dictionary
-- `outputList` : A list of dictionary
 - `color` : Color (in hex)
 - `backgroundImage` : URL to the image
 
