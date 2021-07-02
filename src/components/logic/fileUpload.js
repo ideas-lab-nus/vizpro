@@ -37,10 +37,8 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
-import { addcomponent, redrawDependents, selectComp } from './functions.js';
-import { uuidv4 } from './handle.js';
+import { addcomponent, redrawDependents, selectComp, uuidv4 } from './functions.js';
 import $ from 'jquery';
-import axios from 'axios';
 var d3 = require('d3');
 
 function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
@@ -189,7 +187,6 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
         .attr('id', 'dummyRect_' + newcomp.GUID)
         .attr('rx', '3')
         .attr('ry', '3')
-        //.attr("filter", "url(#f2")
         .attr('stroke-width', '1')
         .attr('stroke', 'black')
         .attr('width', newcomp.width)
@@ -248,13 +245,13 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
             } else {
                 return (
                     `
-                <div id="TheContainedFile">` +
-                    newcomp.outputs[0].Description.Name +
-                    `</div>
-                <div id="TheContainedFile">Size :` +
-                    (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() +
-                    ` MB</div>
-            `
+                        <div id="TheContainedFile">` +
+                            newcomp.outputs[0].Description.Name +
+                            `</div>
+                        <div id="TheContainedFile">Size :` +
+                            (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() +
+                            ` MB</div>
+                    `
                 );
             }
         });
@@ -305,108 +302,41 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
         y1: newcomp.Y + newcomp.height
     };
     reactContext.setState({
-        components_selection_data: current_components_selection
+        components_selection_data: current_components_selection,
     });
-}
-
-function handleFileUpload() {
     $('input#fileUploadFormToTheCloud').on('change', function (e) {
-    //     var selectedFile = e.target.files[0];
-    //     console.log(selectedFile);
-    //     var thisFormId = $(this).attr('class');
-    //     console.log(thisFormId);
+        var selectedFile = e.target.files[0];
+        var thisFormId = $(this).attr('class');     
 
-    //     var this_form_element = $('#form_' + thisFormId);
-    //     console.log(this_form_element);
-
-    //     var form_data = new FormData(this_form_element[0]);
-    //     console.log(form_data);
-
-    //     var reader = new FileReader();
-    //     reader.readAsText(selectedFile);
-    //     reader.onload = (event) => {
-    //         console.log('inside handle file read');
-    //         console.log(event.target.result);
-    //         //var save = JSON.parse(event.target.result);
-    //        // console.log(save)
-    //         window.localStorage.setItem(thisFormId, event.target.result);
-    //         console.log(window.localStorage);
-    //     };
-
-    //     var fileName = selectedFile.name;
-    //     var fileSize = selectedFile.size;
-    //     console.log(fileName);
-    //     var theCurrentComp = selectComp(thisFormId);
-    //     theCurrentComp.outputs[0].Name = fileName;
-    //     theCurrentComp.outputs[0].Description = {
-    //         Name: fileName,
-    //         size: fileSize,
-    //         //url: res.publicURL
-    //     };
-    //     //theCurrentComp.outputs[0].value = res.publicURL; //to be handled later
-    //     console.log(theCurrentComp);
-    //     d3.select('#fileUpload_status_' + thisFormId).html(
-    //         'File Size : ' +
-    //             (selectedFile.size / (1024 * 1024)).toString() +
-    //             " MB <a class='open_uploadedFile_link' href='" +
-    //             //res.publicURL +
-    //             "' target='blank'>open</a>"
-    //     );
-    //     d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
-    //         return (
-    //             `
-    //             <div id="TheContainedFile">` +
-    //                 fileName +
-    //                 `</div>
-    //             <div id="TheContainedFile">Size :` +
-    //                 (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
-    //                 ` MB</div>
-    //             `
-    //         );
-    //     });
-        var thisFormId = $(this).attr("class");
-
-        var this_form_element = $("#form_" + thisFormId);
-
-        var form_data = new FormData(this_form_element[0]);
-        console.log(form_data)
-
-        var fileName = $(this).val();
-        console.log(fileName);
-
-        const thefileuploadajax = $.ajax({
-            "type": "POST",
-            "accepts": "text/json",
-            "url": "www.example.com",
-            "data": form_data,
-            processData: false,
-            contentType: false,
-            "beforeSend": function(xhr, settings) {
-                d3.select("#fileUpload_status_" + thisFormId)
-                    .html("Uploading ..... ")
-
-            },
-            "success": function(res) {
-                console.log(res);
-                theCurrentComp = selectComp(thisFormId);
-                theCurrentComp.outputs[0].Name = res.FileName;
-                theCurrentComp.outputs[0].Description = { "Name": res.FileName, "size": res.FileSize, "url": res.publicURL };
-                theCurrentComp.outputs[0].value = res.publicURL;
-                d3.select("#fileUpload_status_" + thisFormId)
-                    .html("File Size : " + (res["FileSize"] / (1024 * 1024)).toString() + " MB " + "<a class='open_uploadedFile_link' href='" + res.publicURL + "' target='blank'>open</a>")
-
-                d3.select("#foreignObject_fileUpload" + thisFormId)
-                    .html(() => {
-                        return `
-                    <div id="TheContainedFile">` + res.FileName + `</div>
-                    <div id="TheContainedFile">Size :` + (res.FileSize / (1024 * 1024)).toFixed(4).toString() + ` MB</div>
+        var fileName = selectedFile.name;
+        var fileSize = selectedFile.size;
+        var theCurrentComp = selectComp(thisFormId);
+        theCurrentComp.outputs[0].Name = fileName;
+        theCurrentComp.outputs[0].Description = {
+            Name: fileName,
+            size: fileSize,
+        };
+        theCurrentComp.outputs[0].value = selectedFile;
+        console.log(theCurrentComp);
+        d3.select('#fileUpload_status_' + thisFormId).html(
+            'File Size : ' +
+            (selectedFile.size / (1024 * 1024)).toString() +
+            " MB"
+        );
+        d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
+            return (
                 `
-                    })
-                redrawDependents(thisFormId);
-            }
-
+                <div id="TheContainedFile">` +
+                    fileName +
+                    `</div>
+                <div id="TheContainedFile">Size :` +
+                    (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
+                    ` MB</div>
+                `
+            );
         });
-    });
+        redrawDependents(thisFormId);
+    })
 }
 
-export { CreateNewFileUpload, handleFileUpload };
+export { CreateNewFileUpload };

@@ -23,23 +23,11 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
-
-import { 
-    uuidv4, 
-    addCircle, 
-    addcomponent, 
-    selectComp, 
-    addOptionDropdownList } from './functions.js';
-import $ from 'jquery';
+import { addcomponent, uuidv4, addCircle } from './functions.js';
+import '@fontsource/ubuntu-mono';
 var d3 = require('d3');
-var optionListComp;
-var OptionListValues;
 
-function CreateNewOptionList(
-    reactContext,
-    FromExisting = null,
-    optionlist_predefined_items = null
-) {
+function CreateNewListView(reactContext, FromExisting = null, optionlist_predefined_items = null) {
     var newcomp;
 
     if (FromExisting == null) {
@@ -51,6 +39,20 @@ function CreateNewOptionList(
             parent_child_matrix: data
         });
         newcomp.Name = 'Select item';
+        newcomp.value = [
+            ['dummy_Option1', 0],
+            [1.022235, 1],
+            [2235, 0],
+            ['shouldBeSelected', 1],
+            ['dummy_Option1', 0],
+            [1.022235, 1],
+            [2235, 0],
+            ['shouldBeSelected', 1],
+            ['dummy_Option1', 0],
+            [1.022235, 1],
+            [2235, 0],
+            ['shouldBeSelected', 1]
+        ];
 
         if (optionlist_predefined_items != null) {
             newcomp.optionListValues = JSON.parse(optionlist_predefined_items);
@@ -59,18 +61,17 @@ function CreateNewOptionList(
         newcomp = FromExisting;
     }
 
-    newcomp.fill = 'white';
+    newcomp.fill = 'url(#grad1ient)';
     var padding = 20;
     var titleMargin = 30;
-    newcomp.height = 20;
-    newcomp.type = 'optionList';
+    newcomp.height = 200;
+    newcomp.type = 'listView';
     newcomp.dftype = 'shlow';
+    newcomp.width = 200;
 
     // TODO : get the longest text in the component. and set the width based on this.
 
     var allContents = d3.select('#allCanvasContents');
-
-    newcomp.width = 200;
 
     var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
 
@@ -137,7 +138,7 @@ function CreateNewOptionList(
         var out = OutputGroup.append('circle')
             .attr('cx', newcomp.width)
             .attr('cy', newcomp.height / 2)
-            .attr('fill', 'gray')
+            .attr('fill', 'gray') //newcomp.fill)
             .attr('r', '5')
             .attr('stroke', 'black')
             .attr('stroke-width', '2')
@@ -153,7 +154,7 @@ function CreateNewOptionList(
 
     var Dummyrect = node
         .append('rect')
-        .attr('class', 'CompOBodyDummy ' + newcomp.GUID)
+        .attr('class', 'CompLBodyDummy ' + newcomp.GUID)
         .attr('id', 'dummyRect_' + newcomp.GUID)
         .attr('rx', '3')
         .attr('ry', '3')
@@ -162,54 +163,78 @@ function CreateNewOptionList(
         .attr('stroke', 'black')
         .attr('width', newcomp.width)
         .attr('height', newcomp.height)
-        .attr('fill', newcomp.fill);
+        .attr('fill', '#CECECE');
 
-    var cirGroup = node.append('g').attr('transform', () => {
-        let x = newcomp.width;
-        let y = newcomp.height;
-        return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
-    });
-
-    var log = cirGroup
-        .append('text')
-        .attr('id', 'nodeLog' + newcomp.GUID)
-        .attr('class', 'nodeLog ' + newcomp.GUID)
-        .attr('transform', 'translate(10, 10)')
-        .text(newcomp.log.logText)
+    node.append('text')
+        .attr('x', 5)
+        .attr('y', 15)
+        .text('listItems')
         .attr('fill', 'black')
-        .style('display', 'none');
+        .style('font-family', 'Ubuntu Mono');
+
+    //listbox items
+    node.append('foreignObject')
+        .attr('class', 'listView CompLBody' + newcomp.GUID)
+        .attr('id', 'listView-' + newcomp.GUID)
+        .attr('y', 20)
+        .attr('x', 1)
+        .attr('width', newcomp.width - 2)
+        .attr('height', newcomp.height - 20)
+        .html(() => {
+            var selectedOptions = [];
+            var ListItemsvalueReturn =
+                `<select id="listviewSelect" class="listView ` +
+                newcomp.GUID +
+                `" size="5"  multiple>`;
+            newcomp.value.forEach(option => {
+                if (option[1] === 0) {
+                    ListItemsvalueReturn +=
+                        `<option id="someSelection" class="listViewOption ` +
+                        newcomp.GUID +
+                        `" value="` +
+                        option[0] +
+                        `">` +
+                        option[0] +
+                        `</option>`;
+                } else {
+                    ListItemsvalueReturn +=
+                        `<option id="someSelection" class="listViewOption ` +
+                        newcomp.GUID +
+                        `" value="` +
+                        option[0] +
+                        `" selected>` +
+                        option[0] +
+                        `</option>`;
+                    selectedOptions.push(option[0]);
+                }
+            });
+            newcomp.outputs[0].value = JSON.stringify(selectedOptions);
+            ListItemsvalueReturn += `</select>`;
+            return ListItemsvalueReturn;
+        });
 
     var rect = node
         .append('rect')
-        .attr('class', 'CompOBody ' + newcomp.GUID)
+        .attr('class', 'CompLBody ' + newcomp.GUID)
         .attr('id', newcomp.GUID)
         .attr('rx', '3')
         .attr('ry', '3')
         .attr('width', newcomp.width)
-        .attr('height', newcomp.height)
-        .attr('fill', 'white')
-        .attr('stroke', 'black')
-        .attr('stroke-width', '1')
+        .attr('height', 20)
+        .attr('fill', newcomp.fill)
+        .attr('fill-opacity', '0.01')
         .on('mousemove', function (event) {
             d3.select(event.currentTarget).attr('cursor', 'pointer');
+        })
+        .on('mouseout', function (event) {
+            d3.select(event.currentTarget).attr('fill', newcomp.fill);
         });
-
-    var Titlegroup = node.append('g').attr('transform', () => {
-        return 'translate(0, 15)';
-    });
-
-    var Title = Titlegroup.append('text')
-        .attr('class', 'nodetitle node_title' + newcomp.GUID)
-        .attr('id', 'option-' + newcomp.GUID)
-        .text(newcomp.Name)
-        .attr('fill', 'black')
-        .attr('transform', 'translate(' + 20 + ', 0)');
 
     node.append('g').attr('id', 'optionListOption-' + newcomp.GUID);
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log('Adding an option list' + newcomp);
+        console.log('Adding a list view' + newcomp);
         current_all_comp.push(newcomp);
         reactContext.setState({
             allComp: current_all_comp
@@ -237,63 +262,4 @@ function CreateNewOptionList(
     });
 }
 
-function submitOptionListEdit(compKey) {
-    optionListComp = selectComp(compKey);
-    OptionListValues = optionListComp['optionListValues'];
-    $('textarea.textarea.optionlistProperties').text(function () {
-        let optionListOptionsfromTextarea = '';
-        let forTheHTMLpreview = '';
-        for (const option in optionListComp['optionListValues']) {
-            if (optionListComp['optionListValues'].hasOwnProperty(option)) {
-                optionListOptionsfromTextarea +=
-                    '<option value="' +
-                    optionListComp['optionListValues'][option] +
-                    '">' +
-                    option +
-                    '</option>';
-                forTheHTMLpreview +=
-                    option + '-->' + optionListComp['optionListValues'][option] + '<br>';
-            }
-        }
-        $('div#propertiesBarLog').html(
-            '<div id="success">Success:<br>' + forTheHTMLpreview + '</div>'
-        );
-        $('select#propertisBarSelecId').html(optionListOptionsfromTextarea);
-
-        return JSON.stringify(optionListComp['optionListValues']);
-    });
-
-    $('textarea.textarea.optionlistProperties').on('focusout', function (e) {
-        try {
-            let thedict = JSON.parse($(this).val());
-            OptionListValues = thedict;
-            $('select#propertisBarSelecId').html(function () {
-                let optionListOptionsfromTextarea = '';
-                let forTheHTMLpreview = '';
-                for (const option in thedict) {
-                    if (thedict.hasOwnProperty(option)) {
-                        optionListOptionsfromTextarea +=
-                            '<option value="' + thedict[option] + '">' + option + '</option>';
-                        forTheHTMLpreview += option + '-->' + thedict[option] + '<br>';
-                    }
-                }
-                $('div#propertiesBarLog').html(
-                    '<div id="success">Success:<br>' + forTheHTMLpreview + '</div>'
-                );
-                return optionListOptionsfromTextarea;
-            });
-        } catch {
-            $('div#propertiesBarLog').html(
-                '<div id="error">Error: check Dictionary syntax,<br>example : {"key1":value1, "key2":value2}</div>'
-            );
-        }
-    });
-}
-
-function readyToGoSubmit(compKey) {
-    optionListComp['optionListValues'] = OptionListValues;
-    $('div#propertiesBarContents').html('');
-    addOptionDropdownList(compKey);
-}
-
-export { CreateNewOptionList, submitOptionListEdit, readyToGoSubmit };
+export { CreateNewListView };

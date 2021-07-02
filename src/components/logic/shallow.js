@@ -846,6 +846,8 @@ function imDisplay(args) {
      */
 
     var _url = args[0];
+    // console.log(_url);
+    // console.log(typeof _url);
 
     var image_ = null;
 
@@ -856,7 +858,11 @@ function imDisplay(args) {
             value: [image_]
         };
     } else {
-        image_ = `<img src="` + _url + `" style="width:100%; height:100%">`;
+        if (typeof _url === 'string') {
+            image_ = `<img src="` + _url + `" style="width:100%; height:100%">`;
+        } else {
+            image_ = `<img src="` + URL.createObjectURL(_url) + `" style="width:100%; height:100%">`;
+        }
         return {
             type: ['html'],
             value: [image_]
@@ -924,16 +930,26 @@ function calculateShallow(compId) {
     var thisComp = selectComp(compId); // selects the component that is under test.
     var inputGroup = []; // reads the inputs from the component and put them in a list to be mapped to the corresponding shallow function.
     thisComp.inputs.forEach(input => {
-        inputGroup.push(input.value);
+        console.log(input);
+        if (typeof input !== 'string' && input.file !== undefined) {
+            inputGroup.push(input.file);
+        } else {
+            inputGroup.push(input.value);
+        }
     });
 
     var d = shallow_functions[thisComp.Name](inputGroup);
     console.log(d);
+    console.log(d.length);
 
-    thisComp.outputs.forEach(function (output, i) {
-        output.value = d['value'][i];
-        output.type = d['type'][i];
-    });
+    if (d.type.length !== thisComp.outputs.length || d.value.length !== thisComp.outputs.length) {
+        alert("The number of outputs does not match the number of values in the return function. Please check again");
+    } else {
+        thisComp.outputs.forEach(function (output, i) {
+            output.value = d['value'][i];
+            output.type = d['type'][i];
+        });
+    }
 }
 
 export { calculateShallow, shallow_functions };

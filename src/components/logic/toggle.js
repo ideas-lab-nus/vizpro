@@ -23,8 +23,7 @@
  * @author Mahmoud AbdelRahman
  * @since  x.x.x
  */
-import { addcomponent } from './functions.js';
-import { uuidv4 } from './handle.js';
+import { addcomponent, uuidv4 } from './functions.js';
 var d3 = require('d3');
 
 function CreateNewToggle(reactContext, FromExisting = null) {

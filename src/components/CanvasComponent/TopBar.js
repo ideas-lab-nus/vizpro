@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { clearData } from './js/saveAndLoadData.js';
-import { onMaximizeClick, onMinimizeClick } from './js/layout.js';
+import { clearData } from '../logic/saveAndLoadData.js';
+import { onMaximizeClick, onMinimizeClick } from '../logic/layout.js';
 
 export default class TopBar extends Component {
     constructor(props) {

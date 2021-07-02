@@ -6,7 +6,6 @@ function isNumeric(n) {
 }
 
 function exponential(args) {
-    console.log("inside exponential");
     let input = args[0];
     console.log(input);
     if (!isNumeric(input)) {

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ScriptTag from 'react-script-tag';
 import $ from 'jquery';
 import Plotly from 'plotly';
-import 'axios';
 import '@fontsource/ubuntu-mono';
 
 function ownKeys(object, enumerableOnly) {
@@ -1304,7 +1303,9 @@ function imDisplay(args) {
    * @param {array} args
    * @return {html}
    */
-  var _url = args[0];
+  var _url = args[0]; // console.log(_url);
+  // console.log(typeof _url);
+
   var image_ = null;
 
   if (_url == null) {
@@ -1314,7 +1315,12 @@ function imDisplay(args) {
       value: [image_]
     };
   } else {
-    image_ = `<img src="` + _url + `" style="width:100%; height:100%">`;
+    if (typeof _url === 'string') {
+      image_ = `<img src="` + _url + `" style="width:100%; height:100%">`;
+    } else {
+      image_ = `<img src="` + URL.createObjectURL(_url) + `" style="width:100%; height:100%">`;
+    }
+
     return {
       type: ['html'],
       value: [image_]
@@ -1378,14 +1384,26 @@ function calculateShallow(compId) {
   var inputGroup = []; // reads the inputs from the component and put them in a list to be mapped to the corresponding shallow function.
 
   thisComp.inputs.forEach(input => {
-    inputGroup.push(input.value);
+    console.log(input);
+
+    if (typeof input !== 'string' && input.file !== undefined) {
+      inputGroup.push(input.file);
+    } else {
+      inputGroup.push(input.value);
+    }
   });
   var d = shallow_functions[thisComp.Name](inputGroup);
   console.log(d);
-  thisComp.outputs.forEach(function (output, i) {
-    output.value = d['value'][i];
-    output.type = d['type'][i];
-  });
+  console.log(d.length);
+
+  if (d.type.length !== thisComp.outputs.length || d.value.length !== thisComp.outputs.length) {
+    alert("The number of outputs does not match the number of values in the return function. Please check again");
+  } else {
+    thisComp.outputs.forEach(function (output, i) {
+      output.value = d['value'][i];
+      output.type = d['type'][i];
+    });
+  }
 }
 
 var d3$d = require('d3');
@@ -1467,8 +1485,6 @@ function dummyToSetState() {
   parent_child_matrix_fast_check = reactContext$1.state.parent_child_matrix_fast_check;
   components_selection_data = reactContext$1.state.components_selection_data;
   runDeep = reactContext$1.state.runDeep;
-  reactContext$1.state.mouseInsideOption;
-  reactContext$1.state.messageshown;
 }
 
 function uuidv4(ini) {
@@ -1791,9 +1807,8 @@ function redrawDependents(parentComp) {
       var ch = selectComp(element[1]);
 
       if (parent.type === 'slider') {
-        console.log('setting slider value to child');
         ch.inputs[element[2]].value = parent.value;
-      } else if (parent.type === 'string' || parent.type === 'fileUpload') {
+      } else if (parent.type === 'string') {
         ch.inputs[element[2]].value = parent.outputs[element[0]].value;
       } else if (parent.type === 'listView') {
         ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -1811,6 +1826,9 @@ function redrawDependents(parentComp) {
           console.log(error);
           componentStatus(parent.GUID, ERROR_COLOR);
         }
+      } else if (parent.type === 'fileUpload') {
+        ch.inputs[element[2]].value = parent.outputs[element[0]].value === null ? null : parent.outputs[element[0]].Description.Name;
+        ch.inputs[element[2]].file = parent.outputs[element[0]].value;
       }
 
       updatShallowCompRender(ch);
@@ -2302,6 +2320,9 @@ function deleteEdge(edge_to_be_deleted) {
 
 function popupMessage(message) {
   d3$c.select('div#buttonClickedname').text(message).style('opacity', function () {
+    reactContext$1.setState({
+      messageshown: true
+    });
     return 0.8;
   });
 } // End of popupMessage
@@ -2344,1543 +2365,6 @@ function runDeepFunction(compId) {
     runDeep: false
   });
 }
-
-/*
-──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-─██████████████─██████████████─██████████████─██████████─██████████████─██████──────────██████────██████─────────██████████─██████████████─██████████████─
-─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─██░░██████████──██░░██────██░░██─────────██░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
-─██░░██████░░██─██░░██████░░██─██████░░██████─████░░████─██░░██████░░██─██░░░░░░░░░░██──██░░██────██░░██─────────████░░████─██░░██████████─██████░░██████─
-─██░░██──██░░██─██░░██──██░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██████░░██──██░░██────██░░██───────────██░░██───██░░██─────────────██░░██─────
-─██░░██──██░░██─██░░██████░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██░░██████████─────██░░██─────
-─██░░██──██░░██─██░░░░░░░░░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██░░░░░░░░░░██─────██░░██─────
-─██░░██──██░░██─██░░██████████─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██████████░░██─────██░░██─────
-─██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██████░░██────██░░██───────────██░░██───────────██░░██─────██░░██─────
-─██░░██████░░██─██░░██─────────────██░░██─────████░░████─██░░██████░░██─██░░██──██░░░░░░░░░░██────██░░██████████─████░░████─██████████░░██─────██░░██─────
-─██░░░░░░░░░░██─██░░██─────────────██░░██─────██░░░░░░██─██░░░░░░░░░░██─██░░██──██████████░░██────██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─────██░░██─────
-─██████████████─██████─────────────██████─────██████████─██████████████─██████──────────██████────██████████████─██████████─██████████████─────██████─────
-──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-*/
-
-var d3$b = require('d3');
-
-var optionListComp;
-var OptionListValues;
-
-function CreateNewOptionList(reactContext, FromExisting = null, optionlist_predefined_items = null) {
-  var newcomp;
-
-  if (FromExisting == null) {
-    newcomp = addcomponent(uuidv4('C'), 1, 1);
-    var guid = newcomp.GUID;
-    var data = { ...reactContext.state.parent_child_matrix
-    };
-    data[guid] = [];
-    reactContext.setState({
-      parent_child_matrix: data
-    });
-    newcomp.Name = 'Select item';
-
-    if (optionlist_predefined_items != null) {
-      newcomp.optionListValues = JSON.parse(optionlist_predefined_items);
-    }
-  } else {
-    newcomp = FromExisting;
-  }
-
-  newcomp.fill = 'white';
-  var padding = 20;
-  var titleMargin = 30;
-  newcomp.height = 20;
-  newcomp.type = 'optionList';
-  newcomp.dftype = 'shlow'; // TODO : get the longest text in the component. and set the width based on this.
-
-  var allContents = d3$b.select('#allCanvasContents');
-  newcomp.width = 200;
-  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
-  var genX;
-  var genY;
-  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
-    if (FromExisting == null) {
-      genX = Math.random() * 500 + 200;
-      genY = Math.random() * 500 + 200;
-      newcomp.X = genX;
-      newcomp.Y = genY;
-      return 'translate(' + genX + ', ' + genY + ')';
-    } else {
-      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
-    }
-  }).data([{
-    x: FromExisting ? FromExisting.X : genX,
-    y: FromExisting ? FromExisting.Y : genY
-  }]);
-  var InputGroup = node.append('g');
-
-  for (let index = 0; index < newcomp.inputs.length; index++) {
-    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
-    .attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
-      newcomp.inputs[index].circle = addCircle();
-      newcomp.inputs[index].circle.element = this.id;
-      newcomp.inputs[index].circle.CX = 0;
-      newcomp.inputs[index].circle.CY = index * padding + titleMargin;
-      newcomp.inputs[index].type = 'input';
-      return 'input';
-    });
-  }
-
-  var OutputGroup = node.append('g');
-
-  for (let index = 0; index < newcomp.outputs.length; index++) {
-    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
-      newcomp.outputs[index].circle = this;
-      newcomp.outputs[index].type = 'output';
-      return 'output';
-    }).lower();
-  }
-
-  node.append('rect').attr('class', 'CompOBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3') //.attr("filter", "url(#f2")
-  .attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
-  var cirGroup = node.append('g').attr('transform', () => {
-    let x = newcomp.width;
-    let y = newcomp.height;
-    return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
-  });
-  cirGroup.append('text').attr('id', 'nodeLog' + newcomp.GUID).attr('class', 'nodeLog ' + newcomp.GUID).attr('transform', 'translate(10, 10)').text(newcomp.log.logText).attr('fill', 'black').style('display', 'none');
-  node.append('rect').attr('class', 'CompOBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', 'white').attr('stroke', 'black').attr('stroke-width', '1').on('mousemove', function (event) {
-    d3$b.select(event.currentTarget).attr('cursor', 'pointer');
-  });
-  var Titlegroup = node.append('g').attr('transform', () => {
-    return 'translate(0, 15)';
-  });
-  Titlegroup.append('text').attr('class', 'nodetitle node_title' + newcomp.GUID).attr('id', 'option-' + newcomp.GUID).text(newcomp.Name).attr('fill', 'black').attr('transform', 'translate(' + 20 + ', 0)');
-  node.append('g').attr('id', 'optionListOption-' + newcomp.GUID);
-
-  if (FromExisting == null) {
-    var current_all_comp = reactContext.state.allComp.slice();
-    console.log('Adding an option list' + newcomp);
-    current_all_comp.push(newcomp);
-    reactContext.setState({
-      allComp: current_all_comp
-    });
-  }
-
-  var current_comp_out = { ...reactContext.state.comp_output_edges
-  };
-  var current_comp_in = { ...reactContext.state.comp_input_edges
-  };
-  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
-  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
-  reactContext.setState({
-    comp_input_edges: current_comp_in,
-    comp_output_edges: current_comp_out
-  });
-  var current_components_selection = { ...reactContext.state.components_selection_data
-  };
-  current_components_selection[newcomp.GUID] = {
-    x0: newcomp.X,
-    y0: newcomp.Y,
-    x1: newcomp.X + newcomp.width,
-    y1: newcomp.Y + newcomp.height
-  };
-  reactContext.setState({
-    components_selection_data: current_components_selection
-  });
-}
-
-function submitOptionListEdit(compKey) {
-  optionListComp = selectComp(compKey);
-  OptionListValues = optionListComp['optionListValues'];
-  $('textarea.textarea.optionlistProperties').text(function () {
-    let optionListOptionsfromTextarea = '';
-    let forTheHTMLpreview = '';
-
-    for (const option in optionListComp['optionListValues']) {
-      if (optionListComp['optionListValues'].hasOwnProperty(option)) {
-        optionListOptionsfromTextarea += '<option value="' + optionListComp['optionListValues'][option] + '">' + option + '</option>';
-        forTheHTMLpreview += option + '-->' + optionListComp['optionListValues'][option] + '<br>';
-      }
-    }
-
-    $('div#propertiesBarLog').html('<div id="success">Success:<br>' + forTheHTMLpreview + '</div>');
-    $('select#propertisBarSelecId').html(optionListOptionsfromTextarea);
-    return JSON.stringify(optionListComp['optionListValues']);
-  });
-  $('textarea.textarea.optionlistProperties').on('focusout', function (e) {
-    try {
-      let thedict = JSON.parse($(this).val());
-      OptionListValues = thedict;
-      $('select#propertisBarSelecId').html(function () {
-        let optionListOptionsfromTextarea = '';
-        let forTheHTMLpreview = '';
-
-        for (const option in thedict) {
-          if (thedict.hasOwnProperty(option)) {
-            optionListOptionsfromTextarea += '<option value="' + thedict[option] + '">' + option + '</option>';
-            forTheHTMLpreview += option + '-->' + thedict[option] + '<br>';
-          }
-        }
-
-        $('div#propertiesBarLog').html('<div id="success">Success:<br>' + forTheHTMLpreview + '</div>');
-        return optionListOptionsfromTextarea;
-      });
-    } catch {
-      $('div#propertiesBarLog').html('<div id="error">Error: check Dictionary syntax,<br>example : {"key1":value1, "key2":value2}</div>');
-    }
-  });
-}
-
-function readyToGoSubmit(compKey) {
-  optionListComp['optionListValues'] = OptionListValues;
-  $('div#propertiesBarContents').html('');
-  addOptionDropdownList(compKey);
-}
-
-/*
-───────────────────────────────────────────────────────────────────────────────────────────
-─██████████████─██████─────────██████████─████████████───██████████████─████████████████───
-─██░░░░░░░░░░██─██░░██─────────██░░░░░░██─██░░░░░░░░████─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
-─██░░██████████─██░░██─────────████░░████─██░░████░░░░██─██░░██████████─██░░████████░░██───
-─██░░██─────────██░░██───────────██░░██───██░░██──██░░██─██░░██─────────██░░██────██░░██───
-─██░░██████████─██░░██───────────██░░██───██░░██──██░░██─██░░██████████─██░░████████░░██───
-─██░░░░░░░░░░██─██░░██───────────██░░██───██░░██──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
-─██████████░░██─██░░██───────────██░░██───██░░██──██░░██─██░░██████████─██░░██████░░████───
-─────────██░░██─██░░██───────────██░░██───██░░██──██░░██─██░░██─────────██░░██──██░░██─────
-─██████████░░██─██░░██████████─████░░████─██░░████░░░░██─██░░██████████─██░░██──██░░██████─
-─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░████─██░░░░░░░░░░██─██░░██──██░░░░░░██─
-─██████████████─██████████████─██████████─████████████───██████████████─██████──██████████─
-*/
-
-var d3$a = require('d3');
-
-function addSlider(guid, min = 0, max = 100, step = 1.0) {
-  var initSlider = {
-    GUID: guid,
-    X: 0,
-    Y: 0,
-    width: 150,
-    height: 30,
-    Name: 'Slider',
-    ShortName: 'Num',
-    Description: 'Dummy Slider',
-    Message: 'short description',
-    inputs: [],
-    outputs: [],
-    min: min,
-    max: max,
-    value: 0,
-    step: step,
-    typeName: null,
-    selection: 'selectable',
-    view: 'visible',
-    // hidden , disabled
-    fill: 'url(#grad1ient)',
-    rect: null,
-    type: 'slider',
-    dftype: 'shlow',
-    child: false
-  };
-  return initSlider;
-} //End of addSlider
-//TODO : save and retrieve the slider values.
-
-
-function CreateNewSlider(reactContext, FromExisting = null) {
-  var SLIDER_END_POSITION = reactContext.state.SLIDER_END_POSITION;
-  var SLIDER_START_POSITION = reactContext.state.SLIDER_START_POSITION;
-  var newSlider;
-
-  if (FromExisting != null) {
-    newSlider = FromExisting;
-  } else {
-    newSlider = addSlider(uuidv4('S'), 0, 100, 1.0); //Fix dict creation
-
-    var guid = newSlider.GUID;
-    var data = { ...reactContext.state.parent_child_matrix
-    };
-    data[guid] = [];
-    reactContext.setState({
-      parent_child_matrix: data
-    });
-    newSlider.Name = 'Numeric';
-    newSlider.value = 50.0;
-    newSlider.anchorValue = (SLIDER_END_POSITION - SLIDER_START_POSITION) / 2;
-  }
-
-  newSlider.fill = '#bdc4c8';
-  var titleMarginLeft = 5;
-  newSlider.height = 20;
-  newSlider.width = 250;
-  newSlider.dftype = 'shlow';
-  var allContents = d3$a.select('#allCanvasContents');
-  var cont = allContents.append('g').attr('class', 'slider').attr('id', newSlider.GUID);
-  var genX;
-  var genY;
-  var node = cont.append('g').attr('class', 'SliderGroup ' + newSlider.selection + ' ' + newSlider.view + ' ' + newSlider.GUID).attr('id', 'comp-' + newSlider.GUID).attr('transform', () => {
-    if (FromExisting == null) {
-      genX = Math.random() * 500 + 200;
-      genY = Math.random() * 500 + 200;
-      newSlider.X = genX;
-      newSlider.Y = genY;
-      return 'translate(' + genX + ', ' + genY + ')';
-    } else {
-      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
-    }
-  }).data([{
-    x: FromExisting ? FromExisting.X : genX,
-    y: FromExisting ? FromExisting.Y : genY
-  }]).on('mousedown', () => {
-    reactContext.setState({
-      rectType: 'slider'
-    });
-  });
-  var OutputGroup = node.append('g');
-  OutputGroup.append('circle').attr('cx', newSlider.width).attr('cy', '10').attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newSlider.GUID).attr('class', 'outputCir ' + newSlider.GUID + ' 0').on('mousemove', function () {
-    reactContext.setState({
-      targetcircleIN: true
-    });
-  }).on('mouseout', function () {
-    reactContext.setState({
-      targetcircleIN: false
-    });
-  });
-  var rect = node.append('rect').attr('class', 'CompSBody ' + newSlider.GUID).attr('id', newSlider.GUID).attr('rx', '3').attr('ry', '3').attr('stroke-width', '2').attr('stroke', '#3a4c69').attr('width', newSlider.width).attr('height', newSlider.height).attr('fill', '#dddddd').on('mousemove', function () {
-    var current_slider = { ...reactContext.state.selectedSliderComponent
-    };
-    current_slider.rect = this;
-    reactContext.setState({
-      selectedSliderComponent: current_slider
-    });
-    d3$a.select(current_slider.rect).attr('cursor', 'pointer');
-  }).on('mouseout', function () {
-    newSlider.rect = this;
-  }).on('dblclick', () => {}).on('mousedown', () => {
-    reactContext.setState({
-      rectType: 'slider'
-    });
-  });
-  var ValueTextGroup = node.append('g').attr('transform', () => {
-    return 'translate(-80, 0)';
-  });
-  ValueTextGroup.append('rect').attr('cx', '0').attr('cy', '0').attr('rx', '3').attr('ry', '3').attr('fill', 'black').attr('width', '80').attr('height', '20').attr('opacity', '0.5');
-  ValueTextGroup.append('text').attr('id', 'sliderValueText_' + newSlider.GUID).attr('class', 'sliderValueText ' + newSlider.GUID).attr('transform', 'translate(2, 14)').attr('fill', 'white').text(newSlider.value.toString());
-  var Titlegroup = node.append('g').attr('transform', () => {
-    return 'translate(0, 15)';
-  });
-  Titlegroup.append('text').attr('class', 'sliderTitle slider_title' + newSlider.GUID).text(newSlider.Name).attr('fill', 'black').attr('transform', 'translate(' + titleMarginLeft / 2.0 + ', 0)');
-  var SlidingGroup = node.append('g').attr('transform', 'translate(60, 0)');
-  SlidingGroup.append('rect').attr('height', '3').attr('width', '185').attr('rx', '2').attr('ry', '2').attr('transform', 'translate(0, 8)').attr('stroke', '#677184');
-  SlidingGroup.append('line').attr('x1', '2').attr('y1', '11').attr('x2', '184').attr('y2', '11').attr('stroke', 'gray').attr('stroke-width', '1');
-
-  function anchorUpdate() {
-    slidingAnchor.attr('transform', d => `translate(${d.x},3)`);
-  }
-
-  var anchorDragHandler = d3$a.drag().on('start', (event, d) => rect.attr('stroke', 'red')).on('drag', (event, d) => {
-    var selectedSliderComponent = reactContext.state.selectedSliderComponent;
-    var sliderRectId = reactContext.state.sliderRectId;
-    var slider_anchor_value;
-    var slider_value;
-    var the_slider_slope = (selectedSliderComponent.max - selectedSliderComponent.min) / (SLIDER_END_POSITION - SLIDER_START_POSITION);
-    var y_intersection = selectedSliderComponent.min - the_slider_slope * SLIDER_START_POSITION;
-
-    if (event.x <= SLIDER_START_POSITION) {
-      slider_anchor_value = 0;
-      slider_value = selectedSliderComponent.min;
-    } else if (event.x >= SLIDER_END_POSITION) {
-      slider_anchor_value = SLIDER_END_POSITION - SLIDER_START_POSITION;
-      slider_value = selectedSliderComponent.max;
-    } else {
-      slider_anchor_value = event.x - SLIDER_START_POSITION;
-      slider_value = event.x * the_slider_slope + y_intersection;
-    }
-
-    selectedSliderComponent.anchorValue = slider_anchor_value;
-    d.x = slider_anchor_value;
-    d3$a.select('#sliderValueText_' + sliderRectId.replace('SliderAnchor_', '')).text(slider_value.toFixed(6));
-    selectedSliderComponent.value = slider_value;
-    reactContext.setState({
-      selectedSliderComponent: selectedSliderComponent
-    });
-    redrawDependents(selectedSliderComponent.GUID);
-  }).on('end', (event, d) => rect.attr('stroke', '#3a4c69')).on('start.update drag.update end.update', anchorUpdate);
-  var slidingAnchor = SlidingGroup.append('rect').attr('id', 'SliderAnchor_' + newSlider.GUID).attr('width', '10').attr('height', '15').attr('rx', '5').attr('ry', '5').attr('fill', '#3a4d69').style('cursor', 'pointer').attr('transform', 'translate(' + newSlider.anchorValue.toString() + ', 3)').data([{
-    x: newSlider.anchorValue,
-    y: 3
-  }]).on('mousemove', function (event) {
-    d3$a.select(event.currentTarget).attr('fill', 'url(#gradientlsider)').attr('cursor', 'pointer').attr('stroke', 'black');
-  }).on('mouseleave', function (event) {
-    d3$a.select(event.currentTarget).attr('fill', '#3a4d69').attr('stroke', 'none');
-  }).on('mousedown', function () {
-    reactContext.setState({
-      sliderRectId: this.id,
-      // SliderAnchorclicked: true,
-      selectedSliderComponent: newSlider
-    });
-  }).on('mouseup', function () {
-    reactContext.setState({
-      // SliderAnchorclicked: false,
-      selectedSliderComponent: null
-    });
-  }).call(anchorDragHandler); //Make a copy of the current states
-
-  var current_comp_out = { ...reactContext.state.comp_output_edges
-  };
-  var current_comp_in = { ...reactContext.state.comp_input_edges
-  };
-  current_comp_out[newSlider.GUID] = new Array(1);
-  current_comp_in[newSlider.GUID] = new Array(1);
-  reactContext.setState({
-    comp_input_edges: current_comp_in,
-    comp_output_edges: current_comp_out
-  });
-
-  if (FromExisting == null) {
-    //Make a copy of the array
-    var current_all_comp = reactContext.state.allComp.slice();
-    console.log('Adding a slider' + newSlider);
-    current_all_comp.push(newSlider);
-    reactContext.setState({
-      allComp: current_all_comp
-    });
-  } //Moving the slider body
-
-
-  d3$a.selectAll('g.SliderGroup').on('mousedown', function (d, i) {
-    reactContext.setState({
-      rectType: 'slider'
-    });
-  });
-  var current_components_selection = { ...reactContext.state.components_selection_data
-  };
-  current_components_selection[newSlider.GUID] = {
-    x0: newSlider.X,
-    y0: newSlider.Y,
-    x1: newSlider.X + newSlider.width,
-    y1: newSlider.Y + newSlider.height
-  };
-  reactContext.setState({
-    components_selection_data: current_components_selection
-  });
-}
-/**
- * Double click the slider => the property bar appears
- * Handles the event when the Save button on the property bar is clicked
- * @param {String} compKey The ID of the clicked components
- */
-
-
-function submitSliderEdit(compKey) {
-  var slider_component = selectComp(compKey);
-  const SLIDER_START_POSITION = 60;
-  const SLIDER_END_POSITION = 238;
-  slider_component.min = parseFloat($('input#new_slider_min_value').val());
-  slider_component.max = parseFloat($('input#new_slider_max_value').val());
-  slider_component.value = parseFloat($('input#new_slider_current_value').val());
-  var slider_anchor_slope = (SLIDER_END_POSITION - SLIDER_START_POSITION) / (slider_component.max - slider_component.min);
-  var slider_anchor_y_intersection = SLIDER_END_POSITION - SLIDER_START_POSITION - slider_anchor_slope * slider_component.max;
-  var slider_anchor_currrent_position = slider_anchor_slope * slider_component.value + slider_anchor_y_intersection;
-  d3$a.select('rect#SliderAnchor_' + slider_component.GUID).attr('transform', function () {
-    return 'translate(' + slider_anchor_currrent_position.toString() + ',3)';
-  });
-  d3$a.select('#sliderValueText_' + slider_component.GUID.replace('SliderAnchor_', '')).text(slider_component.value.toFixed(6));
-  redrawDependents(slider_component.GUID);
-  $('div#propertiesBarContents').html('');
-}
-/**
- * Double click the slider => the property bar appears
- * Handles the event when the Cancel button on the property bar is clicked
- */
-
-
-function cancelSliderEdit() {
-  $('div#propertiesBarContents').html('');
-}
-
-/*
-───────────────────────────────────────────────────────────────────────────────────────────────────
-─██████████████─██████████████─████████████████───██████████─██████──────────██████─██████████████─
-─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───██░░░░░░██─██░░██████████──██░░██─██░░░░░░░░░░██─
-─██░░██████████─██████░░██████─██░░████████░░██───████░░████─██░░░░░░░░░░██──██░░██─██░░██████████─
-─██░░██─────────────██░░██─────██░░██────██░░██─────██░░██───██░░██████░░██──██░░██─██░░██─────────
-─██░░██████████─────██░░██─────██░░████████░░██─────██░░██───██░░██──██░░██──██░░██─██░░██─────────
-─██░░░░░░░░░░██─────██░░██─────██░░░░░░░░░░░░██─────██░░██───██░░██──██░░██──██░░██─██░░██──██████─
-─██████████░░██─────██░░██─────██░░██████░░████─────██░░██───██░░██──██░░██──██░░██─██░░██──██░░██─
-─────────██░░██─────██░░██─────██░░██──██░░██───────██░░██───██░░██──██░░██████░░██─██░░██──██░░██─
-─██████████░░██─────██░░██─────██░░██──██░░██████─████░░████─██░░██──██░░░░░░░░░░██─██░░██████░░██─
-─██░░░░░░░░░░██─────██░░██─────██░░██──██░░░░░░██─██░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─
-─██████████████─────██████─────██████──██████████─██████████─██████──────────██████─██████████████─
-*/
-
-var d3$9 = require('d3'); //TODO : check this for the text overflow : https://bl.ocks.org/mbostock/1424037
-
-
-function CreateNewPanel(reactContext, FromExisting = null) {
-  var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
-  var ANCHOR_WIDTH = reactContext.state.ANCHOR_WIDTH;
-  var newcomp;
-
-  if (FromExisting == null) {
-    newcomp = addcomponent(uuidv4('C'), 1, 1);
-    var guid = newcomp.GUID;
-    var data = { ...reactContext.state.parent_child_matrix
-    };
-    data[guid] = [];
-    reactContext.setState({
-      parent_child_matrix: data
-    });
-    newcomp.Name = 'Panel';
-    newcomp.width = 300;
-  } else {
-    newcomp = FromExisting;
-    newcomp.value = newcomp.outputs[0].value;
-  }
-
-  newcomp.fill = 'white'; //"#fbedcc";
-
-  newcomp.type = 'string';
-  newcomp.dftype = 'shlow';
-  newcomp.inputs[0].value = newcomp.value;
-  var allContents = d3$9.select('#allCanvasContents');
-  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
-  var genX;
-  var genY;
-  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
-    if (FromExisting == null) {
-      genX = Math.random() * 500 + 200;
-      genY = Math.random() * 500 + 200;
-      newcomp.X = genX;
-      newcomp.Y = genY;
-      return 'translate(' + genX + ', ' + genY + ')';
-    } else {
-      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
-    }
-  }).data([{
-    x: FromExisting ? FromExisting.X : genX,
-    y: FromExisting ? FromExisting.Y : genY
-  }]);
-  node.append('rect').attr('class', 'CompPBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('y', '-15').attr('width', () => {
-    return 10 + newcomp.Name.length * 6;
-  }).attr('height', newcomp.height + 10).attr('fill', '#525252').attr('fill-opacity', '1.0').on('mouseover', function (event) {
-    d3$9.select(event.currentTarget).attr('cursor', 'pointer');
-  });
-  var InputGroup = node.append('g');
-
-  for (let index = 0; index < newcomp.inputs.length; index++) {
-    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
-    .attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
-      newcomp.inputs[index].circle = this;
-
-      if (FromExisting == null) {
-        newcomp.inputs[index].type = 'text';
-      }
-
-      return 'input';
-    }).on('mousemove', function () {
-      reactContext.setState({
-        targetcircleIN: true
-      });
-    }).on('mouseout', function () {
-      reactContext.setState({
-        targetcircleIN: false
-      });
-    }).lower();
-  }
-
-  var OutputGroup = node.append('g');
-
-  for (let index = 0; index < newcomp.outputs.length; index++) {
-    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
-      newcomp.outputs[index].circle = this;
-      newcomp.outputs[index].type = 'output';
-      return 'output';
-    }).on('mousemove', function () {
-      reactContext.setState({
-        targetcircleIN: true
-      });
-    }).on('mouseout', function () {
-      reactContext.setState({
-        targetcircleIN: false
-      });
-    }).lower();
-  }
-
-  node.append('rect').attr('class', 'CompPBody statusRect ' + newcomp.GUID).attr('id', 'statusRect' + newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('x', '50').attr('y', newcomp.height - 20).attr('width', newcomp.width - 50).attr('height', 35).attr('fill', '#525252').attr('fill-opacity', '1.0');
-  node.append('foreignObject').attr('id', 'panel_status_' + newcomp.GUID).attr('class', 'panel_status ' + newcomp.GUID).html('Type : ' + newcomp.inputs[0].type).attr('x', '55').attr('y', newcomp.height + 2).attr('width', newcomp.width - 50).attr('height', 15).attr('fill', 'white');
-  node.append('foreignObject').attr('id', 'panel_edit_mode' + newcomp.GUID).attr('class', 'panel_edit_mode ' + newcomp.GUID).html(() => {
-    return '<h5 id="changeEditMoveMode_' + newcomp.GUID + '" style="color:white; margin-top:1px" ">Edit</h5>';
-  }).attr('x', newcomp.width - 30).attr('y', newcomp.height + 2).attr('width', 30).attr('height', 15).attr('fill', 'white').on('click', () => edit_move_mode(newcomp.GUID)).attr('style', 'cursor: pointer;');
-  var Dummyrect = node.append('rect').attr('class', 'CompPBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS) //.attr("filter", "url(#f2")
-  .attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
-  var Titlegroup = node.append('g').attr('transform', () => {
-    return 'translate(0, 15)';
-  });
-  Titlegroup.append('text').attr('class', 'nodetitle node_title' + newcomp.GUID).attr('id', 'nodeTitle' + newcomp.GUID).text(newcomp.Name).attr('fill', 'white').attr('x', 5).attr('y', -18);
-  node.append('foreignObject').attr('id', 'textbody_' + newcomp.GUID).attr('class', 'textbody ' + newcomp.GUID).attr('height', newcomp.height - ANCHOR_WIDTH - 5).html(function () {
-    if (newcomp.inputs[0].type === 'html' || newcomp.inputs[0].type === 'input') {
-      return newcomp.inputs[0].value;
-    } else if (newcomp.inputs[0].type === 'text') {
-      return '<pre>' + newcomp.inputs[0].value + '</pre>';
-    }
-  }).attr('transform', 'translate(5, 5)').attr('width', newcomp.width - 4 - ANCHOR_WIDTH);
-  var data2;
-
-  if (newcomp.inputs[0].type === 'json') {
-    $('foreignObject#textbody_' + newcomp.GUID).html('<div id="jsonTreeViewer' + newcomp.GUID + '"></div>');
-    jsonView.format(newcomp.inputs[0].value, 'div#jsonTreeViewer' + newcomp.GUID);
-  } else if (newcomp.inputs[0].type === 'plot') {
-    data2 = JSON.parse(newcomp.inputs[0].value);
-    drawPlotComponent(data2, newcomp);
-  } else if (newcomp.inputs[0].type === 'spatial') {
-    data2 = JSON.parse(newcomp.inputs[0].value);
-    var unparseData = newcomp.inputs[0].value;
-    visualizeSpatialComponent(data2, unparseData, newcomp);
-  } //White Text Box
-
-
-  node.append('rect').attr('class', 'CompPBody ' + newcomp.GUID + ' a').attr('id', 'overlaySelector' + newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('y', '0').attr('width', newcomp.width - 5).attr('height', newcomp.height - 5).attr('fill', 'white') //"#ffeec7")
-  .attr('fill-opacity', '0.15').on('mousemove', function (event) {
-    d3$9.select(event.currentTarget).attr('cursor', 'pointer');
-  });
-  var resize = d3$9.drag().on('start', (event, d) => Dummyrect.attr('stroke', 'red')).on('end', (event, d) => Dummyrect.attr('stroke', '#3a4c69')).on('drag', function (event, d) {
-    var anchorMouseYpos = reactContext.state.anchorMouseYpos;
-    var anchorMouseXpos = reactContext.state.anchorMouseXpos;
-    var StringAnchorId = reactContext.state.StringAnchorId;
-    var newHeight = event.y - anchorMouseYpos;
-
-    if (newHeight <= 50) {
-      newHeight = 52;
-    }
-
-    var newWidth = event.x - anchorMouseXpos;
-
-    if (newWidth <= 300) {
-      newWidth = 301;
-    }
-
-    d.x = newWidth;
-    d.y = newHeight;
-    d.width = newWidth;
-    d.height = newHeight;
-    var thisComp = selectComp(StringAnchorId);
-    thisComp.height = newHeight;
-    thisComp.width = newWidth;
-    d3$9.select('rect#dummyRect_' + StringAnchorId).attr('height', newHeight).attr('width', newWidth);
-    d3$9.select('rect#' + StringAnchorId).attr('height', newHeight);
-    d3$9.select('rect.CompPBody.' + StringAnchorId + '.a').attr('width', newWidth);
-    d3$9.select('rect#statusRect' + StringAnchorId).attr('y', newHeight - 20).attr('width', newWidth - 50);
-    d3$9.select('foreignObject#panel_status_' + StringAnchorId).attr('y', newHeight + 2).attr('width', newWidth - 50);
-    d3$9.select('rect#overlaySelector' + StringAnchorId).attr('height', newHeight - 5);
-    d3$9.select('rect.xyAnchor.' + StringAnchorId).attr('x', thisComp.width - ANCHOR_WIDTH).attr('y', thisComp.height - ANCHOR_WIDTH);
-    d3$9.select('foreignObject#textbody_' + StringAnchorId).attr('height', thisComp.height - ANCHOR_WIDTH - 5).attr('width', thisComp.width - 4 - ANCHOR_WIDTH);
-    d3$9.select('foreignObject#panel_edit_mode' + StringAnchorId).attr('y', newHeight + 2).attr('x', newWidth - 30);
-    d3$9.select('g#logCirGroup_' + StringAnchorId).attr('transform', () => {
-      var x = thisComp.width;
-      var y = thisComp.height;
-      return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
-    });
-    d3$9.select('circle#outputCir' + StringAnchorId + '_0').attr('cy', thisComp.height / 2).attr('cx', thisComp.width);
-    d3$9.select('circle#inputCir' + StringAnchorId + '_0').attr('cy', thisComp.height / 2);
-  });
-  node.append('rect').attr('class', 'xyAnchor ' + newcomp.GUID).data([{
-    x: newcomp.width - ANCHOR_WIDTH,
-    y: newcomp.height - ANCHOR_WIDTH,
-    width: ANCHOR_WIDTH,
-    height: ANCHOR_WIDTH
-  }]).attr('width', ANCHOR_WIDTH).attr('height', ANCHOR_WIDTH).attr('x', newcomp.width - ANCHOR_WIDTH).attr('y', newcomp.height - ANCHOR_WIDTH).attr('fill-opacity', 0.01).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).on('mousedown', event => {
-    reactContext.setState({
-      anchorMouseXpos: d3$9.pointer(event)[0] - newcomp.width,
-      anchorMouseYpos: d3$9.pointer(event)[1] - newcomp.height,
-      StringAnchorId: newcomp.GUID
-    });
-  }).call(resize);
-
-  if (FromExisting == null) {
-    var current_all_comp = reactContext.state.allComp.slice();
-    console.log('Adding a panel' + newcomp);
-    current_all_comp.push(newcomp);
-    reactContext.setState({
-      allComp: current_all_comp
-    });
-  }
-
-  var current_comp_out = { ...reactContext.state.comp_output_edges
-  };
-  var current_comp_in = { ...reactContext.state.comp_input_edges
-  };
-  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
-  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
-  reactContext.setState({
-    comp_input_edges: current_comp_in,
-    comp_output_edges: current_comp_out
-  });
-  var current_components_selection = { ...reactContext.state.components_selection_data
-  };
-  current_components_selection[newcomp.GUID] = {
-    x0: newcomp.X,
-    y0: newcomp.Y,
-    x1: newcomp.X + newcomp.width,
-    y1: newcomp.Y + newcomp.height
-  };
-  reactContext.setState({
-    components_selection_data: current_components_selection
-  });
-} //Need to save the new information?
-//Plot errors. in operator not recognized -> not json
-
-
-function submitPanelEdit(compKey) {
-  var StringComp = selectComp(compKey);
-  var textVal = $('textarea.textarea.stringProperties').val();
-  StringComp.inputs[0].type = $("input[name='type']:checked").val();
-  $('foreignObject#panel_status_' + StringComp.GUID).text('Type : ' + StringComp.inputs[0].type);
-
-  if (StringComp.inputs[0].type === 'json') {
-    $('foreignObject#textbody_' + StringComp.GUID).html('<div id="jsonTreeViewer' + StringComp.GUID + '"></div>');
-    jsonView.format(JSON.stringify(StringComp.inputs[0].value), 'div#jsonTreeViewer' + StringComp.GUID);
-  } else if (StringComp.inputs[0].type === 'html') {
-    d3$9.select('foreignObject#textbody_' + compKey).html(textVal).attr('fill', 'black');
-  } else if (StringComp.inputs[0].type === 'plot') {
-    var data = JSON.parse(JSON.stringify(textVal));
-    drawPlotComponent(data, StringComp);
-  } else {
-    d3$9.select('foreignObject#textbody_' + compKey).text(textVal).attr('fill', 'black');
-  }
-
-  StringComp.outputs[0].value = textVal;
-  StringComp.inputs[0].value = textVal;
-  StringComp.value = textVal;
-  StringComp.Name = $('input.stringPnanel.Name').val();
-  redrawDependents(compKey);
-  $('div#propertiesBarContents').html('');
-}
-
-function cancelPanelEdit() {
-  $('div#propertiesBarContents').html('');
-}
-
-function edit_move_mode(compId, mode) {
-  var disp = $('rect#overlaySelector' + compId).attr('style');
-
-  if (disp === 'display: block;') {
-    d3$9.select('rect#overlaySelector' + compId).style('display', 'none');
-    d3$9.select('h5#changeEditMoveMode_' + compId).text('Edit Mode');
-  } else {
-    d3$9.select('rect#overlaySelector' + compId).style('display', 'block');
-    d3$9.select('h5#changeEditMoveMode_' + compId).text('Drag Mode');
-  }
-}
-
-var d3$8 = require('d3');
-
-var addInputCirclesFunc;
-var addOutputCirclesFunc;
-var statusBar;
-var Dummyrect;
-var cirGroup;
-var resize1;
-var rect;
-var playrect2;
-var node;
-
-function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwargs = {
-  shortName: "cloud",
-  dfType: "dp"
-}, inputList = [], outputList = [], color = '#0031E7') {
-  var IDLE_COLOR = reactContext.state.IDLE_COLOR;
-  var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
-  var one_character_width = 8;
-  var padding = 20;
-  var titleMargin = 30;
-  var titleMarginLeft = 30;
-  var newcomp;
-
-  if (FromExisting != null) {
-    newcomp = FromExisting;
-  } else {
-    var longestInput = '';
-
-    for (let index = 0; index < inputList.length; index++) {
-      const curr = inputList[index].name;
-
-      if (curr.length > longestInput.length) {
-        longestInput = curr;
-      }
-    }
-
-    var longestOutput = outputList.reduce(function (a, b) {
-      return a.length > b.length ? a : b;
-    }, '');
-    var ThisComponentName = type;
-    let n_inputs = inputList.length;
-    let n_outputs = outputList.length;
-    newcomp = addcomponent(uuidv4('C'), n_inputs, n_outputs, inputList, outputList);
-
-    if (type == null) {
-      ThisComponentName = $('div#addComp').attr('type');
-    } else {
-      ThisComponentName = type;
-      newcomp.dftype = kwargs.dfType;
-      newcomp.ShortName = kwargs.shortName;
-      popupMessage(ThisComponentName + ' Component added');
-    }
-
-    newcomp.fill = color;
-    newcomp.type = "cloud";
-    newcomp.Name = "Cloud";
-    newcomp.height = Math.max(80, titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding);
-    newcomp.width = Math.max(100, (longestInput.length + longestOutput.length) * one_character_width + titleMarginLeft); // initiate the parent_children_matrix
-
-    var guid = newcomp.GUID;
-    var data = { ...reactContext.state.parent_child_matrix
-    };
-    data[guid] = [];
-    reactContext.setState({
-      parent_child_matrix: data
-    });
-  }
-
-  var allContents = d3$8.select('#allCanvasContents');
-  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
-  var genX;
-  var genY;
-  node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
-    if (FromExisting == null) {
-      if (kwargs.X !== undefined && kwargs.Y !== undefined) {
-        newcomp.X = kwargs.X;
-        newcomp.Y = kwargs.Y;
-      } else {
-        genX = Math.random() * 500 + 200;
-        genY = Math.random() * 500 + 200;
-        newcomp.X = genX;
-        newcomp.Y = genY;
-      }
-
-      return 'translate(' + newcomp.X + ', ' + newcomp.Y + ')';
-    } else {
-      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
-    }
-  });
-  statusBar = node.append('g') // .attr('id', "cloudResizeHeight")
-  .attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
-  statusBar.append('rect').attr('id', 'statusRect' + newcomp.GUID).attr('width', newcomp.width + 2).attr('x', -1.0).attr('height', 40).attr('fill', IDLE_COLOR).attr('stroke-width', 1).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('opacity', 0.5);
-  statusBar.append('text').attr('class', 'statusTextClass').attr('id', 'statusText' + newcomp.GUID).attr('fill', 'black').attr('x', 5).attr('y', 37).text('Idle...');
-
-  function addInputCircles(newcomp) {
-    var node = newcomp.node;
-    var InputGroup = node.append('g').lower();
-
-    for (let index = 0; index < newcomp.inputs.length; index++) {
-      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'inputCirViual' + newcomp.GUID + '_' + index).attr('class', 'inputCirVisual' + newcomp.GUID + ' ' + index).attr('type', function () {
-        if (FromExisting == null) {
-          return 'text';
-        } else {
-          return FromExisting.inputs[index].type;
-        }
-      });
-    }
-
-    InputGroup = node.append('g').lower();
-
-    for (let index = 0; index < newcomp.inputs.length; index++) {
-      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.3').attr('r', '15').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir' + newcomp.GUID + ' ' + index).attr('type', function () {
-        if (FromExisting == null) {
-          return 'text';
-        } else {
-          return FromExisting.inputs[index].type;
-        }
-      });
-    }
-
-    var InputGroupText = node.append('g');
-
-    for (let index = 0; index < newcomp.inputs.length; index++) {
-      console.log(newcomp.inputs[index].Name);
-      InputGroupText.append('text').attr('id', 'input-' + newcomp.GUID + '_' + index).attr('class', 'inputTxt' + newcomp.GUID + ' ' + index).attr('transform', 'translate(' + 10 + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.inputs[index].Name).attr('fill', 'black').attr('type', function () {
-        newcomp.inputs[index].textObj = this.id;
-
-        if (FromExisting == null) {
-          return 'text';
-        } else {
-          return FromExisting.inputs[index].type;
-        }
-      });
-    }
-  }
-
-  addInputCirclesFunc = addInputCircles;
-
-  function addOutputCircles(newcomp) {
-    var node = newcomp.node;
-    var OutputGroup = node.append('g').lower();
-
-    for (let index = 0; index < newcomp.outputs.length; index++) {
-      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'outputCirVisual' + newcomp.GUID + '_' + index).attr('class', 'outputCirVisual' + newcomp.GUID + ' ' + index).attr('type', function () {
-        if (FromExisting == null) {
-          return 'text';
-        } else {
-          return FromExisting.outputs[index].type;
-        }
-      }).lower();
-    }
-
-    OutputGroup = node.append('g').lower();
-
-    for (let index = 0; index < newcomp.outputs.length; index++) {
-      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.5').attr('r', '12').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir' + newcomp.GUID + ' ' + index).attr('type', function () {
-        if (FromExisting == null) {
-          return 'text';
-        } else {
-          return FromExisting.outputs[index].type;
-        }
-      });
-    }
-
-    var OutputGroupText = node.append('g');
-
-    for (let index = 0; index < newcomp.outputs.length; index++) {
-      OutputGroupText.append('text').attr('id', 'output-' + newcomp.GUID + '_' + index).attr('class', 'outputTxt' + newcomp.GUID + ' ' + index).attr('transform', 'translate(' + (newcomp.width - newcomp.outputs[index].ShortName.length * 8 - 5).toString() + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.outputs[index].ShortName).attr('fill', 'black').attr('type', function () {
-        newcomp.outputs[index].circle = this;
-
-        if (FromExisting == null) {
-          return 'text';
-        } else {
-          newcomp.outputs[index].type = FromExisting.outputs[index].type;
-          return FromExisting.outputs[index].type;
-        }
-      }).attr('type', function () {
-        newcomp.outputs[index].textObj = this.id;
-
-        if (FromExisting == null) {
-          return 'text';
-        } else {
-          return FromExisting.outputs[index].type;
-        }
-      });
-    }
-  }
-
-  addOutputCirclesFunc = addOutputCircles;
-  Dummyrect = node.append('rect').attr('class', 'CompCBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', COMPONENT_RADIUS + 1).attr('ry', COMPONENT_RADIUS + 1).attr('stroke-width', '3').attr('stroke', newcomp.fill).attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', '#E8E8E8').on('mousedown', () => {
-    reactContext.setState({
-      rectType: 'component'
-    });
-  });
-  cirGroup = node.append('g').attr('transform', () => {
-    var x = newcomp.width;
-    var y = newcomp.height;
-    return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
-  });
-  var Titlegroup = node.append('g').attr('transform', () => {
-    return 'translate(0, 15)';
-  }); //Title rectangle
-
-  Titlegroup.append('rect').attr('width', newcomp.width - 2).attr('height', 20).attr('fill', newcomp.fill).attr('x', 1.0).attr('y', -14).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS);
-  Titlegroup.append('rect').attr('width', newcomp.width - 2).attr('height', 8).attr('fill', newcomp.fill).attr('x', 1.0).attr('y', -2);
-  resize1 = node.append('rect').attr('width', newcomp.width - 2).attr('height', newcomp.height - 2).attr('x', 1.0).attr('y', 1).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('stroke', newcomp.fill).attr('fill-opacity', 0.0);
-  Titlegroup.append('foreignObject').attr('class', 'nodetitle node_title' + newcomp.GUID).attr('id', 'node_title' + newcomp.GUID).attr('x', 0).attr('y', -10).attr('width', newcomp.width).attr('height', '20').text(newcomp.Name);
-  rect = node.append('rect').attr('class', 'CompCBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
-    d3$8.select(event.currentTarget).attr('cursor', 'pointer');
-  }).on('mouseout', function (event) {
-    d3$8.select(event.currentTarget).attr('fill', newcomp.fill);
-  }).on('dblclick', () => {}).on('mousedown', () => {
-    reactContext.setState({
-      rectType: 'component'
-    });
-  });
-  var icon = node.append('g').attr('transform', 'translate(' + (newcomp.width - 20).toString() + ',1)');
-  icon.append('foreignObject').attr('width', 18).attr('height', 18).attr('style', () => {
-    return `background-image:url(src/img/` + newcomp.Name + `.png);background-size: 15px;background-repeat: no-repeat;background-position: center;`;
-  });
-  playrect2 = node.append('rect').attr('class', 'play ' + newcomp.GUID).attr('id', 'play_' + newcomp.GUID).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('height', 20).attr('width', 20).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('fill', newcomp.fill).attr('stroke', newcomp.fill).attr('stroke-width', '6').style('cursor', 'pointer').on('click', function () {
-    console.log('start calculation');
-    runDeepFunction(newcomp.GUID);
-  });
-  node.append('svg').attr('role', 'img').attr('class', 'removableSVG' + newcomp.GUID).attr('xmlns', 'http://www.w3.org/2000/svg').attr('width', 20).attr('height', 20).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('viewBox', '0 0 512 512').append('path').attr('class', 'play ' + newcomp.GUID).attr('fill', 'white').attr('d', 'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z').on('click', function () {
-    console.log('start calculation');
-    runDeepFunction(newcomp.GUID);
-  });
-  newcomp.addInputCirclesFunc = addInputCirclesFunc;
-  newcomp.addOutputCirclesFunc = addOutputCirclesFunc;
-  newcomp.statusBar = statusBar;
-  newcomp.Dummyrect = Dummyrect;
-  newcomp.cirGroup = cirGroup;
-  newcomp.resize1 = resize1;
-  newcomp.rect = rect;
-  newcomp.playrect2 = playrect2;
-  newcomp.node = node;
-  addInputCirclesFunc(newcomp);
-  addOutputCirclesFunc(newcomp);
-
-  if (FromExisting == null) {
-    var current_all_comp = reactContext.state.allComp.slice();
-    console.log('Adding a generic comp' + newcomp);
-    current_all_comp.push(newcomp);
-    reactContext.setState({
-      allComp: current_all_comp
-    });
-  }
-
-  var current_comp_out = { ...reactContext.state.comp_output_edges
-  };
-  var current_comp_in = { ...reactContext.state.comp_input_edges
-  };
-  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
-  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
-  reactContext.setState({
-    comp_input_edges: current_comp_in,
-    comp_output_edges: current_comp_out
-  });
-  var current_components_selection = { ...reactContext.state.components_selection_data
-  };
-  current_components_selection[newcomp.GUID] = {
-    x0: newcomp.X,
-    y0: newcomp.Y,
-    x1: newcomp.X + newcomp.width,
-    y1: newcomp.Y + newcomp.height
-  };
-  reactContext.setState({
-    components_selection_data: current_components_selection
-  });
-}
-
-function submitCloudEdit(compKey) {
-  try {
-    var cloudComp = selectComp(compKey);
-    var name = $('input.cloudProp.Name').val();
-    var inputs = $('textarea.cloudProp.Val').val();
-    var url = $('input.cloudProp.url').val();
-    cloudComp.inputNames = inputs;
-    cloudComp.inputs = createInputDict(inputs.split('\n'));
-    cloudComp.outputs = createOutputDict(["out"]);
-    cloudComp.url = url;
-    cloudComp.Name = name;
-    d3$8.selectAll('circle.inputCirVisual' + cloudComp.GUID).remove();
-    d3$8.selectAll('circle.inputCir' + cloudComp.GUID).remove();
-    d3$8.selectAll('text.inputTxt' + cloudComp.GUID).remove();
-    d3$8.selectAll('circle.outputCirVisual' + cloudComp.GUID).remove();
-    d3$8.selectAll('circle.outputCir' + cloudComp.GUID).remove();
-    d3$8.selectAll('text.outputTxt' + cloudComp.GUID).remove();
-    addInputCirclesFunc(cloudComp);
-    addOutputCirclesFunc(cloudComp);
-    resize(cloudComp);
-    $('foreignObject#node_title' + cloudComp.GUID).text(name);
-    redrawDependents(compKey);
-    $('div#propertiesBarContents').html('');
-  } catch (error) {
-    console.log(error);
-    alert("Invalid JSON format!");
-  }
-}
-
-function cancelCloudEdit() {
-  $('div#propertiesBarContents').html('');
-}
-
-function resize(newcomp) {
-  var padding = 20;
-  var titleMargin = 30;
-  newcomp.height = Math.max(80, titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding);
-  newcomp.statusBar.attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
-  newcomp.Dummyrect.attr('height', newcomp.height);
-  newcomp.cirGroup.attr('transform', () => {
-    var x = newcomp.width;
-    var y = newcomp.height;
-    return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
-  });
-  newcomp.resize1.attr('height', newcomp.height - 2);
-  newcomp.rect.attr('height', newcomp.height);
-  newcomp.playrect2.attr('y', newcomp.height - 10);
-  d3$8.select('svg.removableSVG' + newcomp.GUID).remove();
-  newcomp.node.append('svg').attr('role', 'img').attr('class', 'removableSVG' + newcomp.GUID).attr('xmlns', 'http://www.w3.org/2000/svg').attr('width', 20).attr('height', 20).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('viewBox', '0 0 512 512').append('path').attr('class', 'play ' + newcomp.GUID).attr('fill', 'white').attr('d', 'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z').on('click', function () {
-    console.log('start calculation');
-    runDeepFunction(newcomp.GUID);
-  });
-}
-
-function createOutputDict(outputsIn) {
-  var outputs = [];
-
-  for (let index = 0; index < outputsIn.length; index++) {
-    try {
-      outputs.push({
-        id: index,
-        circle: null,
-        textObj: null,
-        Name: outputsIn[index],
-        ShortName: outputsIn[index],
-        Description: outputsIn[index].desc,
-        Message: 'short description',
-        type: 'item',
-        datatype: 'int',
-        value: null
-      });
-    } catch {
-      outputs.push({
-        id: index,
-        circle: null,
-        textObj: null,
-        Name: '',
-        ShortName: '',
-        Description: '',
-        Message: 'short description',
-        type: 'item',
-        datatype: 'int',
-        value: null
-      });
-    }
-  }
-
-  return outputs;
-}
-
-function createInputDict(inputsIn) {
-  var inputs = [];
-
-  for (let index = 0; index < inputsIn.length; index++) {
-    try {
-      inputs.push({
-        id: index,
-        circle: null,
-        textObj: null,
-        Name: inputsIn[index],
-        ShortName: inputsIn[index].shortName,
-        Description: inputsIn[index].desc,
-        Message: 'short description',
-        type: 'item',
-        datatype: 'int',
-        value: inputsIn[index].default_value
-      });
-    } catch {
-      inputs.push({
-        id: index,
-        circle: null,
-        textObj: null,
-        Name: '',
-        ShortName: '',
-        Description: '',
-        Message: 'short description',
-        type: 'item',
-        datatype: 'int',
-        value: ''
-      });
-    }
-  }
-
-  return inputs;
-}
-
-var d3$7 = require('d3');
-
-function addEdge(from, to, fromComp, toComp) {
-  var initLink = {
-    GUID: uuidv4('E'),
-    path: null,
-    path_id: '',
-    circleX: 0,
-    circleY: 0,
-    from: from,
-    to: to,
-    fromComp: fromComp,
-    toComp: toComp
-  };
-  return initLink;
-}
-
-function handleComponentSelection() {
-  var reactContext = this;
-  var allComp = reactContext.state.allComp;
-  allComp.forEach(function (element) {
-    if (element.type === 'component' || element.type === 'toggle' || element.type === 'fileUpload' || element.type === 'listView' || element.type === 'cloud') {
-      d3$7.select('g#comp-' + element.GUID).on('click', function () {
-        d3$7.select('rect#' + element.GUID).attr('stroke-width', '2').attr('stroke', '#0064ffa8');
-        reactContext.setState({
-          selected_component_id: element.GUID
-        });
-      });
-      d3$7.select('rect#' + element.GUID).on('focusout', function () {
-        d3$7.select('rect#' + element.GUID).attr('stroke-width', '0').attr('stroke', 'none');
-      });
-    } else if (element.type === 'string') {
-      d3$7.selectAll('rect#' + element.GUID + ', rect.CompPBody.' + element.GUID + '.a').on('click', function () {
-        d3$7.select('rect#' + element.GUID).attr('stroke-width', '2').attr('stroke', '#0064ffa8');
-        d3$7.select('rect#statusRect' + element.GUID).attr('fill', '#0081ff');
-        reactContext.setState({
-          selected_component_id: element.GUID
-        });
-      });
-      d3$7.selectAll('rect#' + element.GUID + ', rect#overlaySelector' + element.GUID).on('focusout', function () {
-        d3$7.select('rect#' + element.GUID).attr('stroke-width', '0').attr('stroke', 'none');
-        d3$7.select('rect#statusRect' + element.GUID).attr('fill', '#525252');
-      });
-    } else if (element.type === 'slider') {
-      d3$7.select('rect#' + element.GUID).on('click', function () {
-        d3$7.select('rect#' + element.GUID).attr('stroke-width', '2').attr('stroke', '#0064ffa8');
-        reactContext.setState({
-          selected_component_id: element.GUID
-        });
-      }).on('focusout', function () {
-        d3$7.select('rect#' + element.GUID).attr('stroke-width', '1').attr('stroke', 'black');
-      });
-    } else if (element.type === 'optionList') {
-      d3$7.select('g#comp-' + element.GUID).on('click', function () {
-        d3$7.select('rect#' + element.GUID).attr('stroke-width', '2').attr('stroke', '#0064ffa8');
-        showDropDownList(element.GUID);
-        reactContext.setState({
-          selected_component_id: element.GUID,
-          optionListStarted: true,
-          optionlistRectid: element.GUID
-        });
-      });
-      d3$7.select('rect#' + element.GUID).on('focusout', function () {
-        d3$7.select('rect#' + element.GUID).attr('stroke-width', '0').attr('stroke', 'none');
-      });
-    }
-  });
-  ViewListRedrawing();
-} // End of handleComponentSelection
-//Slider component id changed to CompSBody hence will not be picked up
-//by this function. Lookout for side effects!
-//Panel changed to CompPBody
-//Toggle changed to CompTBody
-//fileUpload changed to CompFBody
-
-
-function handleTheClickOnAllComponents() {
-  var reactContext = this;
-  reactContext.state.allComp;
-  d3$7.selectAll('rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody, rect.CompCBody').on('mousedown', function (event) {
-    var coordinates = d3$7.pointer(event);
-    var pos = $('g#comp-' + this.id.replace('overlaySelector', '')).attr('transform').split('translate(')[1].replace(')', '').split(',').map(function (item) {
-      return parseFloat(item, 10);
-    });
-    reactContext.setState({
-      dragX: pos[0],
-      dragY: pos[1],
-      componentClickX: coordinates[0],
-      componentClickY: coordinates[1],
-      clicked: true,
-      startDrag: true,
-      clickedId: this.id.replace('overlaySelector', ''),
-      selected_components: [this.id.replace('overlaySelector', '')],
-      rectType: 'component'
-    });
-  });
-} // End of handleTheClickOnAllComponents
-
-
-function handleEdgeInitialization() {
-  var reactContext = this;
-  var allContents = d3$7.select('#allCanvasContents');
-  var toComponent = null;
-  d3$7.selectAll('circle').on('mousedown', function (event) {
-    reactContext.setState({
-      targetcircleId: this.id
-    });
-    var edgeStarted = reactContext.state.edgeStarted;
-    var targetcircleIN = reactContext.state.targetcircleIN;
-
-    var fromCircle = _objectSpread2({}, reactContext.state.fromCircle);
-
-    var comp_output_edges = _objectSpread2({}, reactContext.state.comp_output_edges);
-
-    var selectedcircleId;
-
-    if (edgeStarted && targetcircleIN && this !== fromCircle.element) ; else {
-      if (this.classList[0] === 'outputCir') {
-        if (comp_output_edges[this.classList[1]][this.classList[2]] === undefined || comp_output_edges[this.classList[1]][this.classList[2]] === null) {
-          selectedcircleId = this.id;
-          reactContext.setState({
-            selectedcircleId: selectedcircleId
-          });
-        } else {
-          selectedcircleId = this.id + comp_output_edges[this.classList[1]][this.classList[2]].length.toString();
-          reactContext.setState({
-            selectedcircleId: selectedcircleId
-          });
-        }
-
-        reactContext.setState({
-          edgeStarted: true
-        });
-        var x = d3$7.pointer(event, allContents.node())[0];
-        var y = d3$7.pointer(event, allContents.node())[1];
-        var initEdgex1 = x;
-        var initEdgey1 = y;
-        d3$7.select('g#allPaths').append('path').attr('stroke-dasharray', '4').attr('d', function () {
-          return 'M ' + initEdgex1 + ' ' + initEdgey1 + ' L ' + x + ' ' + y;
-        }).attr('stroke', 'black').attr('stroke-width', '3').attr('id', 'Path' + selectedcircleId);
-        fromCircle.element = this;
-        reactContext.setState({
-          selectedcircleId: 'Path' + selectedcircleId,
-          fromCircle: fromCircle,
-          initEdgex1: initEdgex1,
-          initEdgey1: initEdgey1
-        });
-      }
-    }
-  }).on('mousemove', function () {
-    reactContext.setState({
-      targetcircleIN: true
-    });
-  }).on('mouseout', function () {
-    reactContext.setState({
-      targetcircleIN: false
-    });
-  }).on('mouseup', function () {
-    //This event is called when the mouse cursor is inside the input circle, this means that the line is now complete and ready to be created.
-    var edgeStarted = reactContext.state.edgeStarted;
-    var allEdges = reactContext.state.allEdges;
-    var targetcircleIN = reactContext.state.targetcircleIN;
-
-    var fromCircle = _objectSpread2({}, reactContext.state.fromCircle);
-
-    var toCircle = _objectSpread2({}, reactContext.state.toCircle);
-
-    var comp_input_edges = _objectSpread2({}, reactContext.state.comp_input_edges);
-
-    var comp_output_edges = _objectSpread2({}, reactContext.state.comp_output_edges);
-
-    var root_components = reactContext.state.root_components; //What.
-
-    var parent_child_matrix = reactContext.state.parent_child_matrix;
-
-    var parent_child_matrix_fast_check = _toConsumableArray(reactContext.state.parent_child_matrix_fast_check);
-
-    var selectedcircleId = reactContext.state.selectedcircleId;
-
-    if (edgeStarted && targetcircleIN && this !== fromCircle.element && (comp_input_edges[this.classList[1]][this.classList[2]] === undefined || comp_input_edges[this.classList[1]][this.classList[2]] === null)) {
-      toCircle.element = this;
-      reactContext.setState({
-        toCircle: toCircle
-      });
-      toComponent = selectComp(toCircle.element.classList[1]);
-      selectComp(fromCircle.element.classList[1]);
-
-      if (!parent_child_matrix_fast_check.includes(fromCircle.element.classList[2] + ' ' + fromCircle.element.classList[1] + ' ' + toCircle.element.classList[2] + ' ' + toCircle.element.classList[1])) {
-        var thisEdge = addEdge(fromCircle, toCircle, fromCircle.element.classList, toCircle.element.classList);
-        var thisPath = d3$7.select('#' + selectedcircleId);
-        thisEdge.path_id = thisPath['_groups'][0][0].id;
-
-        if (comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]] === undefined || comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]] === null) {
-          comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]] = [thisEdge.path_id];
-        } else {
-          comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]].push(thisEdge.path_id);
-        }
-
-        if (comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]] === undefined || comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]] === null) {
-          comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]] = [thisEdge.path_id];
-        } else {
-          comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]].push(thisEdge.path_id);
-        } // Datatree control. FIX UNCOMMENR
-
-
-        var current_edge_comp_matrix = _objectSpread2({}, reactContext.state.edge_comp_matrix);
-
-        current_edge_comp_matrix[thisEdge.path_id] = {
-          from: fromCircle.element.classList[1],
-          to: toCircle.element.classList[1],
-          from_index: fromCircle.element.classList[2],
-          to_index: toCircle.element.classList[2]
-        };
-        reactContext.setState({
-          comp_input_edges: comp_input_edges,
-          comp_output_edges: comp_output_edges,
-          edge_comp_matrix: current_edge_comp_matrix
-        });
-
-        try {
-          if (root_components[fromCircle.element.classList[1]] !== 'branch') {
-            root_components[fromCircle.element.classList[1]] = 'root';
-            reactContext.setState({
-              root_components: root_components
-            });
-            toComponent.child = false;
-          }
-        } catch (err) {
-          console.log(err);
-        }
-
-        parent_child_matrix_fast_check.push(fromCircle.element.classList[2] + ' ' + fromCircle.element.classList[1] + ' ' + toCircle.element.classList[2] + ' ' + toCircle.element.classList[1]);
-        parent_child_matrix[fromCircle.element.classList[1]].push([fromCircle.element.classList[2], toCircle.element.classList[1], toCircle.element.classList[2]]);
-        root_components[toCircle.element.classList[1]] = 'branch';
-        toComponent.child = true;
-        allEdges.push(thisEdge);
-        reactContext.setState({
-          parent_child_matrix: parent_child_matrix,
-          parent_child_matrix_fast_check: parent_child_matrix_fast_check,
-          root_components: root_components,
-          allEdges: allEdges,
-          edgeStarted: false
-        });
-        updateAll();
-        redrawDependents(fromCircle.element.classList[1]);
-      } else {
-        console.log('Issue in parentchildmatrix (edgeInit)');
-      }
-    } else {
-      console.log('Not entering if (edgeInit)');
-    }
-  });
-} // End of handleEdgeInitialization
-
-
-function handleDoubleClick() {
-  var reactContext = this;
-  var allComp = reactContext.state.allComp;
-  allComp.forEach(function (element) {
-    if (element.type === 'string') {
-      d3$7.select('g#comp-' + element.GUID).on('dblclick', function () {
-        if (!reactContext.state.doubleClicked) {
-          reactContext.setState({
-            doubleClicked: true
-          });
-          $('div#propertiesBarContents').append("\n                        <div class=\"propertiesbarheader title\">String Panel Properties</div>\n                        <div class=\"propertiesbarheader label\">Name</div>\n                        <input class=\"stringPnanel Name\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Value</div>\n                        <textarea class=\"textarea stringProperties\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Panel Type</div>\n                        <form>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_text\" value=\"text\"> text<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_html\" value=\"html\"> html<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_json\" value=\"json\"> json<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_lsit\" value=\"lsit\"> list<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_plot\" value=\"plot\"> plot <br>\n                        </form>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Log</div>\n                        <div id=\"propertiesBarLog\" class=\"log\"></div>\n                        <button id=\"stringEditButton\">Apply</button>\n                        <button id=\"cancelStringEdit\">Cancel</button>");
-          element.outputs[0].value = element.value;
-          var StringComp = selectComp(element.GUID);
-          $('input#string_radio_' + StringComp.inputs[0].type).prop('checked', true);
-          var newName;
-          $('input.stringPnanel.Name').on('change keyup paste', function () {
-            newName = $('input.stringPnanel.Name').val();
-            d3$7.select('text#nodeTitle' + StringComp.GUID).text(newName); // StringComp.Name = newName;
-
-            d3$7.select('rect#' + StringComp.GUID).attr('width', 10 + newName.length * 6);
-          });
-
-          if (StringComp.child) {
-            $('textarea.textarea.stringProperties').prop('disabled', true);
-            $('textarea.stringProperties').text(function () {
-              return StringComp.inputs[0].value;
-            });
-            $('body').on('mousemove', function () {
-              $('textarea.stringProperties').text(function () {
-                return StringComp.inputs[0].value;
-              });
-            });
-          } else {
-            $('textarea.stringProperties').text(function () {
-              return StringComp.inputs[0].value;
-            });
-          }
-
-          $('input.stringPnanel.Name').val(StringComp.Name);
-          $('button#stringEditButton').on('click', function () {
-            submitPanelEdit(element.GUID);
-            reactContext.setState({
-              doubleClicked: false
-            });
-          });
-          $('button#cancelStringEdit').on('click', function () {
-            cancelPanelEdit();
-            reactContext.setState({
-              doubleClicked: false
-            });
-          });
-        }
-      });
-    } else if (element.type === 'optionList') {
-      d3$7.select('g#comp-' + element.GUID).on('dblclick', function () {
-        d3$7.select('rect#' + element.GUID).attr('stroke-width', '1').attr('stroke', 'black');
-        reactContext.setState({
-          optionListStarted: true,
-          optionlistRectid: element.GUID
-        });
-
-        if (!reactContext.state.doubleClicked) {
-          reactContext.setState({
-            doubleClicked: true
-          });
-          $('div#propertiesBarContents').append("\n                        <div class=\"propertiesbar title\">Option list properties.</div>\n                        <div class=\"propertiesbar label\">options (as dictionary)</div>\n                        <textarea class=\"textarea optionlistProperties\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbar label\">\n                            Preview:\n                        </div>\n                        <select id=\"propertisBarSelecId\">\n\n                        </select>\n                        <hr>\n                        <div class=\"propertiesbar label\">\n                            Log\n                        </div>\n                        <div id=\"propertiesBarLog\" class=\"log\"></div>\n                        <button id=\"applyChangeButton\">Apply</button>\n                        ");
-          var compKey = element.GUID;
-          submitOptionListEdit(compKey);
-          $('button#applyChangeButton').on('click', function (e) {
-            readyToGoSubmit(compKey);
-            reactContext.setState({
-              doubleClicked: false
-            });
-          });
-        }
-      });
-    } else if (element.type === 'slider') {
-      d3$7.select('g#comp-' + element.GUID).on('dblclick', function () {
-        if (!reactContext.state.doubleClicked) {
-          reactContext.setState({
-            doubleClicked: true
-          });
-          $('div#propertiesBarContents').append("\n                        <div class=\"propertiesbarheader label\">Slider</div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Min-value : </div><input type=\"number\" id=\"new_slider_min_value\"></div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Max-value: </div><input type=\"number\" id=\"new_slider_max_value\"></div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Step: </div><input type=\"number\" id=\"new_slider_step_value\"></div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Current-value: </div><input type=\"number\" id=\"new_slider_current_value\"></div>\n                        <button id=\"sliderEditButton\">Save</button>\n                        <button id=\"cancelSliderEdit\">Cancel</button>\n                        ");
-          $('input#new_slider_min_value').val(element.min);
-          $('input#new_slider_max_value').val(element.max);
-          $('input#new_slider_step_value').val(element.step);
-          $('input#new_slider_current_value').val(element.value); //On save, set double clicked to false
-
-          $('button#sliderEditButton').on('click', function (e) {
-            submitSliderEdit(element.GUID);
-            reactContext.setState({
-              doubleClicked: false
-            });
-          });
-          $('button#cancelSliderEdit').on('click', function (e) {
-            cancelSliderEdit();
-            reactContext.setState({
-              doubleClicked: false
-            });
-          });
-        }
-      });
-    } else if (element.type === 'toggle') {
-      var currentToggle = selectComp(element.GUID);
-      d3$7.select('g#comp-' + element.GUID).on('dblclick', function () {
-        var toggleValue = $('text.nodetitle.node_title' + element.GUID).text();
-        d3$7.select('text.nodetitle.node_title' + element.GUID).text(function () {
-          if (toggleValue === 'True') {
-            currentToggle.value = 'False';
-            currentToggle.outputs[0].value = 'False';
-            return 'False';
-          } else {
-            currentToggle.value = 'True';
-            currentToggle.outputs[0].value = 'True';
-            return 'True';
-          }
-        }).attr('fill', function () {
-          if (toggleValue === 'True') {
-            d3$7.select('#dummyRect_' + element.GUID).attr('fill', '#2c3e50');
-            return '#ecf0f1';
-          } else {
-            d3$7.select('#dummyRect_' + element.GUID).attr('fill', '#ecf0f1');
-            return '#2c3e50';
-          }
-        });
-        redrawDependents(currentToggle.GUID);
-      });
-    } else if (element.type === 'cloud') {
-      d3$7.select('g#comp-' + element.GUID).on('dblclick', function () {
-        if (!reactContext.state.doubleClicked) {
-          reactContext.setState({
-            doubleClicked: true
-          });
-          $('div#propertiesBarContents').append("\n                        <div class=\"propertiesbarheader title\">Cloud Function Properties</div>\n                        <div class=\"propertiesbarheader label\">Function Name</div>\n                        <input class=\"cloudProp Name\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Input List</div>\n                        <textarea class=\"cloudProp textarea stringProperties Val\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Cloud function URL</div>\n                        <input class=\"cloudProp url\"></textarea>\n                        <div></div>\n                        <div class=\"propertiesbarheader label\">Log</div>\n                        <div id=\"propertiesBarLog\" class=\"log\"></div>\n                        <button id=\"cloudEditButton\">Apply</button>\n                        <button id=\"cancelCloudEdit\">Cancel</button>");
-          var cloudComp = selectComp(element.GUID);
-          $('input.cloudProp.Name').val(cloudComp.Name); // var inputString = JSON.stringify(cloudComp.inputs);
-          // $('textarea.cloudProp.Val').val(inputString.substring(1, inputString.length-1));
-
-          $('textarea.cloudProp.Val').val(cloudComp.inputNames);
-          $('input.cloudProp.url').val(cloudComp.url);
-          $('button#cloudEditButton').on('click', function () {
-            submitCloudEdit(element.GUID);
-            reactContext.setState({
-              doubleClicked: false
-            });
-          });
-          $('button#cancelCloudEdit').on('click', function () {
-            cancelCloudEdit();
-            reactContext.setState({
-              doubleClicked: false
-            });
-          });
-        }
-      });
-    } //TODO : else if other types than string, then you have to open the properties window.
-
-  });
-} // End of HandleDoubleClick
 
 var globalVars = {
   initEdgex1: 0,
@@ -3962,239 +2446,6 @@ var globalVars = {
   dataLoad: 0
 };
 
-var d3$6 = require('d3');
-
-function CreateNewFileUpload(reactContext) {
-  var FromExisting = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var newcomp;
-
-  if (FromExisting == null) {
-    newcomp = addcomponent(uuidv4('C'), 0, 1);
-    var guid = newcomp.GUID;
-
-    var data = _objectSpread2({}, reactContext.state.parent_child_matrix);
-
-    data[guid] = [];
-    reactContext.setState({
-      parent_child_matrix: data
-    });
-  } else {
-    newcomp = FromExisting;
-  }
-
-  newcomp.fill = '#5e6b7a';
-  newcomp.Name = 'False';
-  var padding = 20;
-  var titleMargin = 30;
-  newcomp.height = 25;
-  newcomp.type = 'fileUpload';
-  newcomp.dftype = 'shlow'; // TODO : get the longest text in the component. and set the width based on this.
-
-  newcomp.width = 300;
-  var allContents = d3$6.select('#allCanvasContents');
-  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
-  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', function () {
-    if (FromExisting == null) {
-      var mousex = reactContext.state.mousex;
-      var mousey = reactContext.state.mousey;
-      newcomp.X = mousex + Math.random() * 500;
-      newcomp.Y = mousey + Math.random() * 500;
-      return 'translate(' + newcomp.X + ', ' + newcomp.Y + ')';
-    } else {
-      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
-    }
-  }).data([{
-    x: FromExisting ? FromExisting.X : newcomp.X,
-    y: FromExisting ? FromExisting.Y : newcomp.Y
-  }]);
-  var InputGroup = node.append('g');
-
-  var _loop = function _loop(index) {
-    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
-      newcomp.inputs[index].circle = reactContext.state.fromCircle;
-      newcomp.inputs[index].circle.element = this.id;
-      newcomp.inputs[index].circle.CX = 0;
-      newcomp.inputs[index].circle.CY = index * padding + titleMargin;
-      newcomp.inputs[index].type = 'input';
-      return 'input';
-    });
-  };
-
-  for (var index = 0; index < newcomp.inputs.length; index++) {
-
-    _loop(index);
-  }
-
-  var OutputGroup = node.append('g');
-
-  var _loop2 = function _loop2(_index) {
-    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + _index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + _index).attr('type', function () {
-      newcomp.outputs[_index].circle = this;
-      newcomp.outputs[_index].type = 'output';
-      return 'output';
-    }).lower();
-  };
-
-  for (var _index = 0; _index < newcomp.outputs.length; _index++) {
-
-    _loop2(_index);
-  }
-
-  node.append('rect').attr('class', 'CompFBody statusRect ' + newcomp.GUID).attr('id', 'statusRect' + newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('x', '50').attr('y', newcomp.height - 5).attr('width', newcomp.width - 50).attr('height', 20).attr('fill', '#242424').attr('fill-opacity', '1.0');
-  node.append('foreignObject').attr('id', 'fileUpload_status_' + newcomp.GUID).attr('class', 'fileUpload_status ' + newcomp.GUID).html(function () {
-    if (newcomp.outputs[0].value == null || newcomp.outputs[0].value === undefined) {
-      return 'File Size : None';
-    } else {
-      return 'File Size : ' + (newcomp.outputs[0].Description.size / (1024 * 1024)).toString() + " MB <a class='open_uploadedFile_link' href='" + newcomp.outputs[0].Description.url + "' target='blank'>open</a>";
-    }
-  }).attr('x', '55').attr('y', newcomp.height + 2).attr('width', newcomp.width - 50).attr('height', 15).attr('fill', 'white');
-  node.append('rect').attr('class', 'CompFBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3') //.attr("filter", "url(#f2")
-  .attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
-  var cirGroup = node.append('g').attr('transform', function () {
-    var x = newcomp.width;
-    var y = newcomp.height;
-    return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
-  });
-  cirGroup.append('text').attr('id', 'nodeLog' + newcomp.GUID).attr('class', 'nodeLog ' + newcomp.GUID).attr('transform', 'translate(10, 10)').text(newcomp.log.logText).attr('fill', 'black').style('display', 'none');
-  node.append('g').attr('transform', function () {
-    return 'translate(0, 15)';
-  });
-  node.append('rect').attr('width', newcomp.width - 2).attr('height', 10).attr('x', 1).attr('y', 1).attr('rx', 2).attr('ry', 2).attr('fill', 'url(#gradient2)').attr('fill-opacity', 0.4);
-  node.append('foreignObject').attr('id', 'foreignObject_fileUpload' + newcomp.GUID).attr('class', 'foreignObject_fileUpload').attr('width', newcomp.width).attr('height', newcomp.height).attr('y', '-1.1px').html(function () {
-    if (newcomp.outputs[0].value == null || newcomp.outputs[0].value === undefined) {
-      var form = "\n                    <form method=\"post\" enctype=\"multipart/form-data\" id=\"form_" + newcomp.GUID + "\">\n                    <input id=\"fileUploadFormToTheCloud\" class=\"" + newcomp.GUID + "\" type=\"file\" name=\"myFile\">\n                    </form>\n                    ";
-      return form;
-    } else {
-      return "\n                <div id=\"TheContainedFile\">" + newcomp.outputs[0].Description.Name + "</div>\n                <div id=\"TheContainedFile\">Size :" + (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() + " MB</div>\n            ";
-    }
-  });
-  node.append('rect').attr('class', 'CompFBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('x', 90).attr('width', newcomp.width - 90).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
-    d3$6.select(event.currentTarget).attr('cursor', 'pointer');
-  }).on('mouseout', function (event) {
-    d3$6.select(event.currentTarget).attr('fill', newcomp.fill);
-  });
-  newcomp.value = newcomp.Name;
-
-  if (FromExisting == null) {
-    var current_all_comp = reactContext.state.allComp.slice();
-    console.log('Adding a fileUpload' + newcomp);
-    current_all_comp.push(newcomp);
-    reactContext.setState({
-      allComp: current_all_comp
-    });
-  }
-
-  var current_comp_out = _objectSpread2({}, reactContext.state.comp_output_edges);
-
-  var current_comp_in = _objectSpread2({}, reactContext.state.comp_input_edges);
-
-  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
-  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
-  reactContext.setState({
-    comp_input_edges: current_comp_in,
-    comp_output_edges: current_comp_out
-  });
-
-  var current_components_selection = _objectSpread2({}, reactContext.state.components_selection_data);
-
-  current_components_selection[newcomp.GUID] = {
-    x0: newcomp.X,
-    y0: newcomp.Y,
-    x1: newcomp.X + newcomp.width,
-    y1: newcomp.Y + newcomp.height
-  };
-  reactContext.setState({
-    components_selection_data: current_components_selection
-  });
-}
-
-function handleFileUpload() {
-  $('input#fileUploadFormToTheCloud').on('change', function (e) {
-    //     var selectedFile = e.target.files[0];
-    //     console.log(selectedFile);
-    //     var thisFormId = $(this).attr('class');
-    //     console.log(thisFormId);
-    //     var this_form_element = $('#form_' + thisFormId);
-    //     console.log(this_form_element);
-    //     var form_data = new FormData(this_form_element[0]);
-    //     console.log(form_data);
-    //     var reader = new FileReader();
-    //     reader.readAsText(selectedFile);
-    //     reader.onload = (event) => {
-    //         console.log('inside handle file read');
-    //         console.log(event.target.result);
-    //         //var save = JSON.parse(event.target.result);
-    //        // console.log(save)
-    //         window.localStorage.setItem(thisFormId, event.target.result);
-    //         console.log(window.localStorage);
-    //     };
-    //     var fileName = selectedFile.name;
-    //     var fileSize = selectedFile.size;
-    //     console.log(fileName);
-    //     var theCurrentComp = selectComp(thisFormId);
-    //     theCurrentComp.outputs[0].Name = fileName;
-    //     theCurrentComp.outputs[0].Description = {
-    //         Name: fileName,
-    //         size: fileSize,
-    //         //url: res.publicURL
-    //     };
-    //     //theCurrentComp.outputs[0].value = res.publicURL; //to be handled later
-    //     console.log(theCurrentComp);
-    //     d3.select('#fileUpload_status_' + thisFormId).html(
-    //         'File Size : ' +
-    //             (selectedFile.size / (1024 * 1024)).toString() +
-    //             " MB <a class='open_uploadedFile_link' href='" +
-    //             //res.publicURL +
-    //             "' target='blank'>open</a>"
-    //     );
-    //     d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
-    //         return (
-    //             `
-    //             <div id="TheContainedFile">` +
-    //                 fileName +
-    //                 `</div>
-    //             <div id="TheContainedFile">Size :` +
-    //                 (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
-    //                 ` MB</div>
-    //             `
-    //         );
-    //     });
-    var thisFormId = $(this).attr("class");
-    var this_form_element = $("#form_" + thisFormId);
-    var form_data = new FormData(this_form_element[0]);
-    console.log(form_data);
-    var fileName = $(this).val();
-    console.log(fileName);
-    $.ajax({
-      "type": "POST",
-      "accepts": "text/json",
-      "url": "www.example.com",
-      "data": form_data,
-      processData: false,
-      contentType: false,
-      "beforeSend": function beforeSend(xhr, settings) {
-        d3$6.select("#fileUpload_status_" + thisFormId).html("Uploading ..... ");
-      },
-      "success": function success(res) {
-        console.log(res);
-        theCurrentComp = selectComp(thisFormId);
-        theCurrentComp.outputs[0].Name = res.FileName;
-        theCurrentComp.outputs[0].Description = {
-          "Name": res.FileName,
-          "size": res.FileSize,
-          "url": res.publicURL
-        };
-        theCurrentComp.outputs[0].value = res.publicURL;
-        d3$6.select("#fileUpload_status_" + thisFormId).html("File Size : " + (res["FileSize"] / (1024 * 1024)).toString() + " MB " + "<a class='open_uploadedFile_link' href='" + res.publicURL + "' target='blank'>open</a>");
-        d3$6.select("#foreignObject_fileUpload" + thisFormId).html(function () {
-          return "\n                    <div id=\"TheContainedFile\">" + res.FileName + "</div>\n                    <div id=\"TheContainedFile\">Size :" + (res.FileSize / (1024 * 1024)).toFixed(4).toString() + " MB</div>\n                ";
-        });
-        redrawDependents(thisFormId);
-      }
-    });
-  });
-}
-
 /*
 ───────────────────────────────────────────────────────────────────────────────────────────────
 ─██████─────────██████████████─████████──████████─██████████████─██████──██████─██████████████─
@@ -4211,38 +2462,38 @@ function handleFileUpload() {
 ───────────────────────────────────────────────────────────────────────────────────────────────
 */
 
-var d3$5 = require('d3');
+var d3$b = require('d3');
 
 function onMinimizeClick() {
-  d3$5.select('#maximizeUpperBar').transition().style('display', 'block');
-  d3$5.select('#minimizeUpperBar').style('display', 'none');
-  d3$5.select('#TopPropertiesBar').transition().duration(200).style('top', '-60px');
-  d3$5.select('#LeftPropertiesBar').transition().duration(200).style('top', '0px');
-  d3$5.select('#PropertiesBar').transition().duration(200).style('top', '0px');
-  d3$5.select('#LeftPropertiesBarSelector').transition().duration(200).style('top', '0px');
-  d3$5.select('#PropertiesBarSelector').transition().duration(200).style('top', '0px');
-  d3$5.select('.canvas_container').transition().duration(200).style('top', '0px');
-  d3$5.select('#maximizeUpperBar').transition().duration(200).style('right', '300px').style('top', '61px');
-  d3$5.select('#minimizeUpperBar').transition().duration(200).style('right', '300px').style('top', '61px');
+  d3$b.select('#maximizeUpperBar').transition().style('display', 'block');
+  d3$b.select('#minimizeUpperBar').style('display', 'none');
+  d3$b.select('#TopPropertiesBar').transition().duration(200).style('top', '-60px');
+  d3$b.select('#LeftPropertiesBar').transition().duration(200).style('top', '0px');
+  d3$b.select('#PropertiesBar').transition().duration(200).style('top', '0px');
+  d3$b.select('#LeftPropertiesBarSelector').transition().duration(200).style('top', '0px');
+  d3$b.select('#PropertiesBarSelector').transition().duration(200).style('top', '0px');
+  d3$b.select('.canvas_container').transition().duration(200).style('top', '0px');
+  d3$b.select('#maximizeUpperBar').transition().duration(200).style('right', '300px').style('top', '61px');
+  d3$b.select('#minimizeUpperBar').transition().duration(200).style('right', '300px').style('top', '61px');
 }
 
 function onMaximizeClick() {
-  d3$5.select('#maximizeUpperBar').style('display', 'none');
-  d3$5.select('#minimizeUpperBar').style('display', 'block');
-  d3$5.select('#TopPropertiesBar').transition().duration(200).style('top', '0px');
-  d3$5.select('#LeftPropertiesBar').transition().duration(200).style('top', '30px');
-  d3$5.select('#PropertiesBar').transition().duration(200).style('top', '30px');
-  d3$5.select('#LeftPropertiesBarSelector').transition().duration(200).style('top', '30px');
-  d3$5.select('#PropertiesBarSelector').transition().duration(200).style('top', '30px');
-  d3$5.select('.canvas_container').transition().duration(200).style('top', '30px');
-  d3$5.select('#maximizeeUpperBar').transition().duration(200).style('right', '0px').style('top', '38px');
-  d3$5.select('#minimizeUpperBar').transition().duration(200).style('right', '0px').style('top', '0px');
-  d3$5.select('i#tomaximize').transition().duration(200).style('transform', 'rotate(180deg)');
+  d3$b.select('#maximizeUpperBar').style('display', 'none');
+  d3$b.select('#minimizeUpperBar').style('display', 'block');
+  d3$b.select('#TopPropertiesBar').transition().duration(200).style('top', '0px');
+  d3$b.select('#LeftPropertiesBar').transition().duration(200).style('top', '30px');
+  d3$b.select('#PropertiesBar').transition().duration(200).style('top', '30px');
+  d3$b.select('#LeftPropertiesBarSelector').transition().duration(200).style('top', '30px');
+  d3$b.select('#PropertiesBarSelector').transition().duration(200).style('top', '30px');
+  d3$b.select('.canvas_container').transition().duration(200).style('top', '30px');
+  d3$b.select('#maximizeeUpperBar').transition().duration(200).style('right', '0px').style('top', '38px');
+  d3$b.select('#minimizeUpperBar').transition().duration(200).style('right', '0px').style('top', '0px');
+  d3$b.select('i#tomaximize').transition().duration(200).style('transform', 'rotate(180deg)');
 }
 
 function manageCanvas() {
   var reactContext = this;
-  var svgContainer = d3$5.select('svg');
+  var svgContainer = d3$b.select('svg');
   var allContents = svgContainer.append('g').attr('id', 'allCanvasContents');
   var currentLeftColWidth = reactContext.state.currentLeftColWidth;
   var currentTopBarHeight = reactContext.state.currentTopBarHeight;
@@ -4254,7 +2505,7 @@ function manageCanvas() {
   var leftColIsdisplayed = reactContext.state.leftColIsdisplayed;
   allContents.append('rect').attr('fill', 'url(#img122)').attr('x', -1000).attr('y', -1000).attr('width', 6000).attr('height', 6000).style('cursor', 'default');
   allContents.append('g').attr('id', 'allPaths');
-  svgContainer.call(d3$5.zoom().filter(function (event) {
+  svgContainer.call(d3$b.zoom().filter(function (event) {
     return !(reactContext.state.startDrag || reactContext.state.StringAnchorclicked || reactContext.state.SliderAnchorclicked || reactContext.state.edgeStarted || reactContext.state.selection_groud_selected) && event.button === 0;
   }).on('zoom', function (event) {
     if (!reactContext.state.startDrag) {
@@ -4291,54 +2542,47 @@ function manageCanvas() {
 
     return text;
   });
-  d3$5.select('div#LeftPropertiesBar').style('width', function () {
+  d3$b.select('div#LeftPropertiesBar').style('width', function () {
     return currentLeftColWidth + 'px';
   }).style('top', function () {
     return currentTopBarHeight.toString() + 'px';
   });
-  d3$5.select('div#LeftPropertiesBarSelector').style('top', function () {
+  d3$b.select('div#LeftPropertiesBarSelector').style('top', function () {
     return currentTopBarHeight.toString() + 'px';
-  }).style('left', currentLeftColWidth + 'px'); // d3.select('div#PropertiesBar')
-  //     .style('width', () => {
-  //         return currentRightColWidth + 'px';
-  //     })
-  //     .style('top', () => {
-  //         return currentTopBarHeight.toString() + 'px';
-  //     });
-
-  d3$5.select('div#PropertiesBarSelector').style('top', function () {
+  }).style('left', currentLeftColWidth + 'px');
+  d3$b.select('div#PropertiesBarSelector').style('top', function () {
     return currentTopBarHeight.toString() + 'px';
   }).style('right', currentRightColWidth + 'px');
-  d3$5.select('div#TopPropertiesBar').style('height', function () {
+  d3$b.select('div#TopPropertiesBar').style('height', function () {
     return currentTopBarHeight + 'px';
   });
-  d3$5.select('div#PropertiesBarSelector').on('mousedown', function () {
+  d3$b.select('div#PropertiesBarSelector').on('mousedown', function () {
     currentRightColWidth = parseInt($('div#PropertiesBar').css('width').replace('px', ''));
     rightColumnIsSelected = true;
   });
-  d3$5.select('div#LeftPropertiesBarSelector').on('mousedown', function () {
+  d3$b.select('div#LeftPropertiesBarSelector').on('mousedown', function () {
     currentLeftColWidth = parseInt($('div#LeftPropertiesBar').css('width').replace('px', ''));
     leftColumnIsSelected = true;
   });
-  d3$5.select('body').on('mousemove', function (event) {
-    d3$5.select(event.currentTarget).style('cursor', 'auto');
+  d3$b.select('body').on('mousemove', function (event) {
+    d3$b.select(event.currentTarget).style('cursor', 'auto');
     currentRightColWidth = window.innerWidth - 16 - event.clientX;
     currentLeftColWidth = event.clientX;
 
     if (rightColumnIsSelected) {
-      d3$5.select('div#PropertiesBar').style('width', function () {
+      d3$b.select('div#PropertiesBar').style('width', function () {
         if (currentRightColWidth >= 50) {
-          if (!rightColIsdisplayed) d3$5.select('div#PropertiesBar').style('display', 'block');
-          d3$5.select('div#PropertiesBarSelector').style('background-color', '#252525');
+          if (!rightColIsdisplayed) d3$b.select('div#PropertiesBar').style('display', 'block');
+          d3$b.select('div#PropertiesBarSelector').style('background-color', '#252525');
           rightColIsdisplayed = true;
           return currentRightColWidth.toString() + 'px';
         } else {
           rightColIsdisplayed = false;
-          d3$5.select('div#PropertiesBar').style('display', 'none');
-          d3$5.select('div#PropertiesBarSelector').style('background-color', '#1abc9c');
+          d3$b.select('div#PropertiesBar').style('display', 'none');
+          d3$b.select('div#PropertiesBarSelector').style('background-color', '#1abc9c');
         }
       });
-      d3$5.select('div#PropertiesBarSelector').style('right', function () {
+      d3$b.select('div#PropertiesBarSelector').style('right', function () {
         if (currentRightColWidth >= 50) {
           return currentRightColWidth.toString() + 'px';
         } else {
@@ -4348,20 +2592,20 @@ function manageCanvas() {
     }
 
     if (leftColumnIsSelected) {
-      d3$5.select('body').style('cursor', 'ew-resize');
-      d3$5.select('div#LeftPropertiesBar').style('width', function () {
+      d3$b.select('body').style('cursor', 'ew-resize');
+      d3$b.select('div#LeftPropertiesBar').style('width', function () {
         if (currentLeftColWidth >= 50) {
-          if (!leftColIsdisplayed) d3$5.select('div#LeftPropertiesBar').style('display', 'block');
-          d3$5.select('div#LeftPropertiesBarSelector').style('background-color', '#252525');
+          if (!leftColIsdisplayed) d3$b.select('div#LeftPropertiesBar').style('display', 'block');
+          d3$b.select('div#LeftPropertiesBarSelector').style('background-color', '#252525');
           leftColIsdisplayed = true;
           return currentLeftColWidth.toString() + 'px';
         } else {
           leftColIsdisplayed = false;
-          d3$5.select('div#LeftPropertiesBar').style('display', 'none');
-          d3$5.select('div#LeftPropertiesBarSelector').style('background-color', '#1abc9c');
+          d3$b.select('div#LeftPropertiesBar').style('display', 'none');
+          d3$b.select('div#LeftPropertiesBarSelector').style('background-color', '#1abc9c');
         }
       });
-      d3$5.select('div#LeftPropertiesBarSelector').style('left', function () {
+      d3$b.select('div#LeftPropertiesBarSelector').style('left', function () {
         if (currentLeftColWidth >= 50) {
           return currentLeftColWidth.toString() + 'px';
         } else {
@@ -4371,12 +2615,12 @@ function manageCanvas() {
     }
 
     if (messageshown) {
-      var trns = d3$5.transition().duration(500).ease(d3$5.easeLinear);
-      d3$5.select('div#Addedmessage').transition(trns).style('opacity', function () {
+      var trns = d3$b.transition().duration(500).ease(d3$b.easeLinear);
+      d3$b.select('div#Addedmessage').transition(trns).style('opacity', function () {
         messageshown = false;
         return 0;
       });
-      d3$5.select('div#buttonClickedname').transition(trns).style('opacity', function () {
+      d3$b.select('div#buttonClickedname').transition(trns).style('opacity', function () {
         messageshown = false;
         return 0;
       });
@@ -4387,7 +2631,7 @@ function manageCanvas() {
   });
 }
 
-var d3$4 = require('d3');
+var d3$a = require('d3');
 
 var selection_box_x = 0;
 var selection_box_y = 0;
@@ -4421,7 +2665,7 @@ var reactContext;
 
 function manageGrid() {
   reactContext = this;
-  var allContents = d3$4.select('#allCanvasContents');
+  var allContents = d3$a.select('#allCanvasContents');
   var optionListStarted = reactContext.state.optionListStarted;
   var startDrag = reactContext.state.startDrag;
   var mouseInsideOption = reactContext.state.mouseInsideOption;
@@ -4432,8 +2676,8 @@ function manageGrid() {
     return 'white';
   }).on('mousedown', function () {
     if (optionListStarted && !startDrag && !mouseInsideOption) {
-      d3$4.selectAll('rect.optionListoption').style('display', 'none');
-      d3$4.selectAll('text.optionListoptiontext').style('display', 'none');
+      d3$a.selectAll('rect.optionListoption').style('display', 'none');
+      d3$a.selectAll('text.optionListoptiontext').style('display', 'none');
       reactContext.setState({
         optionListStarted: false,
         mouseInsideOption: false
@@ -4467,28 +2711,28 @@ function manageGrid() {
       }
     }
   }).on('dblclick', function (event) {
-    d3$4.select('div#buttonClickedname').text('dblclick').style('opacity', function () {
+    d3$a.select('div#buttonClickedname').text('dblclick').style('opacity', function () {
       reactContext.setState({
         messageshown: true
       });
       return 1;
     });
     reactContext.setState({
-      mousex: d3$4.pointer(event, allContents.node())[0],
-      mousey: d3$4.pointer(event, allContents.node())[1]
+      mousex: d3$a.pointer(event, allContents.node())[0],
+      mousey: d3$a.pointer(event, allContents.node())[1]
     });
-    d3$4.select('body').append('option');
+    d3$a.select('body').append('option');
   }).on('contextmenu', function (event) {
     //context menu event raised on right click
     event.preventDefault();
     popupMessage('RMB');
     selection_box_started = true;
-    selection_box_x = d3$4.pointer(event, allContents.node())[0];
-    selection_box_y = d3$4.pointer(event, allContents.node())[1];
+    selection_box_x = d3$a.pointer(event, allContents.node())[0];
+    selection_box_y = d3$a.pointer(event, allContents.node())[1];
     selection_box = allContents.append('polyline');
   }).on('mousemove', function (event) {
-    var mousex = d3$4.pointer(event, allContents.node())[0];
-    var mousey = d3$4.pointer(event, allContents.node())[1];
+    var mousex = d3$a.pointer(event, allContents.node())[0];
+    var mousey = d3$a.pointer(event, allContents.node())[1];
     reactContext.setState({
       mousex: mousex,
       mousey: mousey
@@ -4501,7 +2745,7 @@ function manageGrid() {
     }
 
     if (reactContext.state.edgeStarted) {
-      d3$4.select('#' + reactContext.state.selectedcircleId).attr('d', function () {
+      d3$a.select('#' + reactContext.state.selectedcircleId).attr('d', function () {
         return returnCurveString(reactContext.state.initEdgex1, reactContext.state.initEdgey1, mousex, mousey);
       }).attr('fill', 'none').attr('stroke-opacity', '0.2').attr('interpolate', 'basis');
     }
@@ -4510,13 +2754,13 @@ function manageGrid() {
     var optionlistRectid = reactContext.state.optionlistRectid;
 
     if (reactContext.state.textareaStarted) {
-      var selectedRect = getlocationFromTransform(d3$4.select('g#comp-' + textAreaRectId).attr('transform'));
-      d3$4.select('#TextAreaSelector').style('position', 'absolute').style('height', (parseFloat(d3$4.select('rect#' + textAreaRectId).attr('height')) - 50).toString() + 'px').style('left', selectedRect[0] + 4 + 'px').style('top', selectedRect[1] + 17 + 'px').style('border', 'none');
+      var selectedRect = getlocationFromTransform(d3$a.select('g#comp-' + textAreaRectId).attr('transform'));
+      d3$a.select('#TextAreaSelector').style('position', 'absolute').style('height', (parseFloat(d3$a.select('rect#' + textAreaRectId).attr('height')) - 50).toString() + 'px').style('left', selectedRect[0] + 4 + 'px').style('top', selectedRect[1] + 17 + 'px').style('border', 'none');
     }
 
     if (reactContext.state.optionListStarted) {
-      selectedRect = getlocationFromTransform(d3$4.select('g#comp-' + optionlistRectid).attr('transform'));
-      d3$4.select('#optionListSelectItems' + optionlistRectid).style('position', 'absolute').style('height', (parseFloat(d3$4.select('rect#' + optionlistRectid).attr('height')) - 50).toString() + 'px').style('left', selectedRect[0] + 20 + 'px').style('top', selectedRect[1] + 1 + 'px');
+      selectedRect = getlocationFromTransform(d3$a.select('g#comp-' + optionlistRectid).attr('transform'));
+      d3$a.select('#optionListSelectItems' + optionlistRectid).style('position', 'absolute').style('height', (parseFloat(d3$a.select('rect#' + optionlistRectid).attr('height')) - 50).toString() + 'px').style('left', selectedRect[0] + 20 + 'px').style('top', selectedRect[1] + 1 + 'px');
     } // if (reactContext.state.StringAnchorclicked) {
     //     if (StringAnchorType === YANCHOR) {
     //         //TODO : encabsulate this in a function.
@@ -4601,12 +2845,12 @@ function manageGrid() {
     if (selection_box_started) {
       var x1 = selection_box_x;
       var y1 = selection_box_y;
-      var x2 = d3$4.pointer(event, allContents.node())[0];
+      var x2 = d3$a.pointer(event, allContents.node())[0];
       var y2 = selection_box_y;
-      var x3 = d3$4.pointer(event, allContents.node())[0];
-      var y3 = d3$4.pointer(event, allContents.node())[1];
+      var x3 = d3$a.pointer(event, allContents.node())[0];
+      var y3 = d3$a.pointer(event, allContents.node())[1];
       var x4 = selection_box_x;
-      var y4 = d3$4.pointer(event, allContents.node())[1];
+      var y4 = d3$a.pointer(event, allContents.node())[1];
       selection_box.attr('x', selection_box_x).attr('points', function () {
         return x1 + ',' + y1 + ' ' + x2 + ',' + y2 + ' ' + x3 + ',' + y3 + ' ' + x4 + ',' + y4 + ' ' + x1 + ',' + y1 + ' ';
       }).attr('fill', function () {
@@ -4647,7 +2891,7 @@ function manageGrid() {
       reactContext.setState({
         edgeStarted: false
       });
-      d3$4.select('#' + reactContext.state.selectedcircleId).remove();
+      d3$a.select('#' + reactContext.state.selectedcircleId).remove();
     }
 
     if (reactContext.state.StringAnchorclicked) {
@@ -4690,7 +2934,7 @@ function manageGrid() {
 
       for (var key in components_selection_data) {
         if (components_selection_data.hasOwnProperty(key)) {
-          if (components_selection_data[key].x0 > selection_box_x && components_selection_data[key].y0 > selection_box_y && components_selection_data[key].x1 < d3$4.pointer(allContents.node())[0] && components_selection_data[key].y1 < d3$4.pointer(allContents.node())[1]) {
+          if (components_selection_data[key].x0 > selection_box_x && components_selection_data[key].y0 > selection_box_y && components_selection_data[key].x1 < d3$a.pointer(allContents.node())[0] && components_selection_data[key].y1 < d3$a.pointer(allContents.node())[1]) {
             temp_selected_xs.push(components_selection_data[key].x0);
             temp_selected_xs.push(components_selection_data[key].x1);
             temp_selected_ys.push(components_selection_data[key].y0);
@@ -4718,7 +2962,7 @@ function manageGrid() {
 var someCircle;
 
 function highlightSelection(components_list, temp_selected_xs, temp_selected_ys) {
-  var allContents = d3$4.select('#allCanvasContents');
+  var allContents = d3$a.select('#allCanvasContents');
 
   if (selection_rectangle_group != null) {
     selection_rectangle_group.remove();
@@ -5057,7 +3301,7 @@ var Grid = /*#__PURE__*/function (_Component) {
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 */
 
-var d3$3 = require('d3');
+var d3$9 = require('d3');
 /**
  * Create a new generic component (everything except slider, option list, panel, file upload, toogle, list view).
  * Example of calling this function for Average component:
@@ -5125,7 +3369,7 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
     });
   }
 
-  var allContents = d3$3.select('#allCanvasContents');
+  var allContents = d3$9.select('#allCanvasContents');
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
   var genY;
@@ -5253,9 +3497,9 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
   }
 
   node.append('rect').attr('class', 'CompCBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
-    d3$3.select(event.currentTarget).attr('cursor', 'pointer');
+    d3$9.select(event.currentTarget).attr('cursor', 'pointer');
   }).on('mouseout', function (event) {
-    d3$3.select(event.currentTarget).attr('fill', newcomp.fill);
+    d3$9.select(event.currentTarget).attr('fill', newcomp.fill);
   }).on('dblclick', () => {}).on('mousedown', () => {
     reactContext.setState({
       rectType: 'component'
@@ -5310,6 +3554,728 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
 }
 
 /*
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+─██████████████─██████████████─██████████████─██████████─██████████████─██████──────────██████────██████─────────██████████─██████████████─██████████████─
+─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─██░░██████████──██░░██────██░░██─────────██░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
+─██░░██████░░██─██░░██████░░██─██████░░██████─████░░████─██░░██████░░██─██░░░░░░░░░░██──██░░██────██░░██─────────████░░████─██░░██████████─██████░░██████─
+─██░░██──██░░██─██░░██──██░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██████░░██──██░░██────██░░██───────────██░░██───██░░██─────────────██░░██─────
+─██░░██──██░░██─██░░██████░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██░░██████████─────██░░██─────
+─██░░██──██░░██─██░░░░░░░░░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██░░░░░░░░░░██─────██░░██─────
+─██░░██──██░░██─██░░██████████─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██████████░░██─────██░░██─────
+─██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██████░░██────██░░██───────────██░░██───────────██░░██─────██░░██─────
+─██░░██████░░██─██░░██─────────────██░░██─────████░░████─██░░██████░░██─██░░██──██░░░░░░░░░░██────██░░██████████─████░░████─██████████░░██─────██░░██─────
+─██░░░░░░░░░░██─██░░██─────────────██░░██─────██░░░░░░██─██░░░░░░░░░░██─██░░██──██████████░░██────██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─────██░░██─────
+─██████████████─██████─────────────██████─────██████████─██████████████─██████──────────██████────██████████████─██████████─██████████████─────██████─────
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+*/
+
+var d3$8 = require('d3');
+
+var optionListComp;
+var OptionListValues;
+
+function CreateNewOptionList(reactContext, FromExisting = null, optionlist_predefined_items = null) {
+  var newcomp;
+
+  if (FromExisting == null) {
+    newcomp = addcomponent(uuidv4('C'), 1, 1);
+    var guid = newcomp.GUID;
+    var data = { ...reactContext.state.parent_child_matrix
+    };
+    data[guid] = [];
+    reactContext.setState({
+      parent_child_matrix: data
+    });
+    newcomp.Name = 'Select item';
+
+    if (optionlist_predefined_items != null) {
+      newcomp.optionListValues = JSON.parse(optionlist_predefined_items);
+    }
+  } else {
+    newcomp = FromExisting;
+  }
+
+  newcomp.fill = 'white';
+  var padding = 20;
+  var titleMargin = 30;
+  newcomp.height = 20;
+  newcomp.type = 'optionList';
+  newcomp.dftype = 'shlow'; // TODO : get the longest text in the component. and set the width based on this.
+
+  var allContents = d3$8.select('#allCanvasContents');
+  newcomp.width = 200;
+  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
+  var genX;
+  var genY;
+  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
+    if (FromExisting == null) {
+      genX = Math.random() * 500 + 200;
+      genY = Math.random() * 500 + 200;
+      newcomp.X = genX;
+      newcomp.Y = genY;
+      return 'translate(' + genX + ', ' + genY + ')';
+    } else {
+      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
+    }
+  }).data([{
+    x: FromExisting ? FromExisting.X : genX,
+    y: FromExisting ? FromExisting.Y : genY
+  }]);
+  var InputGroup = node.append('g');
+
+  for (let index = 0; index < newcomp.inputs.length; index++) {
+    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      newcomp.inputs[index].circle = addCircle();
+      newcomp.inputs[index].circle.element = this.id;
+      newcomp.inputs[index].circle.CX = 0;
+      newcomp.inputs[index].circle.CY = index * padding + titleMargin;
+      newcomp.inputs[index].type = 'input';
+      return 'input';
+    });
+  }
+
+  var OutputGroup = node.append('g');
+
+  for (let index = 0; index < newcomp.outputs.length; index++) {
+    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      newcomp.outputs[index].circle = this;
+      newcomp.outputs[index].type = 'output';
+      return 'output';
+    }).lower();
+  }
+
+  node.append('rect').attr('class', 'CompOBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
+  var cirGroup = node.append('g').attr('transform', () => {
+    let x = newcomp.width;
+    let y = newcomp.height;
+    return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
+  });
+  cirGroup.append('text').attr('id', 'nodeLog' + newcomp.GUID).attr('class', 'nodeLog ' + newcomp.GUID).attr('transform', 'translate(10, 10)').text(newcomp.log.logText).attr('fill', 'black').style('display', 'none');
+  node.append('rect').attr('class', 'CompOBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', 'white').attr('stroke', 'black').attr('stroke-width', '1').on('mousemove', function (event) {
+    d3$8.select(event.currentTarget).attr('cursor', 'pointer');
+  });
+  var Titlegroup = node.append('g').attr('transform', () => {
+    return 'translate(0, 15)';
+  });
+  Titlegroup.append('text').attr('class', 'nodetitle node_title' + newcomp.GUID).attr('id', 'option-' + newcomp.GUID).text(newcomp.Name).attr('fill', 'black').attr('transform', 'translate(' + 20 + ', 0)');
+  node.append('g').attr('id', 'optionListOption-' + newcomp.GUID);
+
+  if (FromExisting == null) {
+    var current_all_comp = reactContext.state.allComp.slice();
+    console.log('Adding an option list' + newcomp);
+    current_all_comp.push(newcomp);
+    reactContext.setState({
+      allComp: current_all_comp
+    });
+  }
+
+  var current_comp_out = { ...reactContext.state.comp_output_edges
+  };
+  var current_comp_in = { ...reactContext.state.comp_input_edges
+  };
+  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
+  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
+  reactContext.setState({
+    comp_input_edges: current_comp_in,
+    comp_output_edges: current_comp_out
+  });
+  var current_components_selection = { ...reactContext.state.components_selection_data
+  };
+  current_components_selection[newcomp.GUID] = {
+    x0: newcomp.X,
+    y0: newcomp.Y,
+    x1: newcomp.X + newcomp.width,
+    y1: newcomp.Y + newcomp.height
+  };
+  reactContext.setState({
+    components_selection_data: current_components_selection
+  });
+}
+
+function submitOptionListEdit(compKey) {
+  optionListComp = selectComp(compKey);
+  OptionListValues = optionListComp['optionListValues'];
+  $('textarea.textarea.optionlistProperties').text(function () {
+    let optionListOptionsfromTextarea = '';
+    let forTheHTMLpreview = '';
+
+    for (const option in optionListComp['optionListValues']) {
+      if (optionListComp['optionListValues'].hasOwnProperty(option)) {
+        optionListOptionsfromTextarea += '<option value="' + optionListComp['optionListValues'][option] + '">' + option + '</option>';
+        forTheHTMLpreview += option + '-->' + optionListComp['optionListValues'][option] + '<br>';
+      }
+    }
+
+    $('div#propertiesBarLog').html('<div id="success">Success:<br>' + forTheHTMLpreview + '</div>');
+    $('select#propertisBarSelecId').html(optionListOptionsfromTextarea);
+    return JSON.stringify(optionListComp['optionListValues']);
+  });
+  $('textarea.textarea.optionlistProperties').on('focusout', function (e) {
+    try {
+      let thedict = JSON.parse($(this).val());
+      OptionListValues = thedict;
+      $('select#propertisBarSelecId').html(function () {
+        let optionListOptionsfromTextarea = '';
+        let forTheHTMLpreview = '';
+
+        for (const option in thedict) {
+          if (thedict.hasOwnProperty(option)) {
+            optionListOptionsfromTextarea += '<option value="' + thedict[option] + '">' + option + '</option>';
+            forTheHTMLpreview += option + '-->' + thedict[option] + '<br>';
+          }
+        }
+
+        $('div#propertiesBarLog').html('<div id="success">Success:<br>' + forTheHTMLpreview + '</div>');
+        return optionListOptionsfromTextarea;
+      });
+    } catch {
+      $('div#propertiesBarLog').html('<div id="error">Error: check Dictionary syntax,<br>example : {"key1":value1, "key2":value2}</div>');
+    }
+  });
+}
+
+function readyToGoSubmit(compKey) {
+  optionListComp['optionListValues'] = OptionListValues;
+  $('div#propertiesBarContents').html('');
+  addOptionDropdownList(compKey);
+}
+
+/*
+───────────────────────────────────────────────────────────────────────────────────────────
+─██████████████─██████─────────██████████─████████████───██████████████─████████████████───
+─██░░░░░░░░░░██─██░░██─────────██░░░░░░██─██░░░░░░░░████─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
+─██░░██████████─██░░██─────────████░░████─██░░████░░░░██─██░░██████████─██░░████████░░██───
+─██░░██─────────██░░██───────────██░░██───██░░██──██░░██─██░░██─────────██░░██────██░░██───
+─██░░██████████─██░░██───────────██░░██───██░░██──██░░██─██░░██████████─██░░████████░░██───
+─██░░░░░░░░░░██─██░░██───────────██░░██───██░░██──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
+─██████████░░██─██░░██───────────██░░██───██░░██──██░░██─██░░██████████─██░░██████░░████───
+─────────██░░██─██░░██───────────██░░██───██░░██──██░░██─██░░██─────────██░░██──██░░██─────
+─██████████░░██─██░░██████████─████░░████─██░░████░░░░██─██░░██████████─██░░██──██░░██████─
+─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░████─██░░░░░░░░░░██─██░░██──██░░░░░░██─
+─██████████████─██████████████─██████████─████████████───██████████████─██████──██████████─
+*/
+
+var d3$7 = require('d3');
+
+function addSlider(guid, min = 0, max = 100, step = 1.0) {
+  var initSlider = {
+    GUID: guid,
+    X: 0,
+    Y: 0,
+    width: 150,
+    height: 30,
+    Name: 'Slider',
+    ShortName: 'Num',
+    Description: 'Dummy Slider',
+    Message: 'short description',
+    inputs: [],
+    outputs: [],
+    min: min,
+    max: max,
+    value: 0,
+    step: step,
+    typeName: null,
+    selection: 'selectable',
+    view: 'visible',
+    // hidden , disabled
+    fill: 'url(#grad1ient)',
+    rect: null,
+    type: 'slider',
+    dftype: 'shlow',
+    child: false
+  };
+  return initSlider;
+} //End of addSlider
+//TODO : save and retrieve the slider values.
+
+
+function CreateNewSlider(reactContext, FromExisting = null) {
+  var SLIDER_END_POSITION = reactContext.state.SLIDER_END_POSITION;
+  var SLIDER_START_POSITION = reactContext.state.SLIDER_START_POSITION;
+  var newSlider;
+
+  if (FromExisting != null) {
+    newSlider = FromExisting;
+  } else {
+    newSlider = addSlider(uuidv4('S'), 0, 100, 1.0); //Fix dict creation
+
+    var guid = newSlider.GUID;
+    var data = { ...reactContext.state.parent_child_matrix
+    };
+    data[guid] = [];
+    reactContext.setState({
+      parent_child_matrix: data
+    });
+    newSlider.Name = 'Numeric';
+    newSlider.value = 50.0;
+    newSlider.anchorValue = (SLIDER_END_POSITION - SLIDER_START_POSITION) / 2;
+  }
+
+  newSlider.fill = '#bdc4c8';
+  var titleMarginLeft = 5;
+  newSlider.height = 20;
+  newSlider.width = 250;
+  newSlider.dftype = 'shlow';
+  var allContents = d3$7.select('#allCanvasContents');
+  var cont = allContents.append('g').attr('class', 'slider').attr('id', newSlider.GUID);
+  var genX;
+  var genY;
+  var node = cont.append('g').attr('class', 'SliderGroup ' + newSlider.selection + ' ' + newSlider.view + ' ' + newSlider.GUID).attr('id', 'comp-' + newSlider.GUID).attr('transform', () => {
+    if (FromExisting == null) {
+      genX = Math.random() * 500 + 200;
+      genY = Math.random() * 500 + 200;
+      newSlider.X = genX;
+      newSlider.Y = genY;
+      return 'translate(' + genX + ', ' + genY + ')';
+    } else {
+      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
+    }
+  }).data([{
+    x: FromExisting ? FromExisting.X : genX,
+    y: FromExisting ? FromExisting.Y : genY
+  }]).on('mousedown', () => {
+    reactContext.setState({
+      rectType: 'slider'
+    });
+  });
+  var OutputGroup = node.append('g');
+  OutputGroup.append('circle').attr('cx', newSlider.width).attr('cy', '10').attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newSlider.GUID).attr('class', 'outputCir ' + newSlider.GUID + ' 0').on('mousemove', function () {
+    reactContext.setState({
+      targetcircleIN: true
+    });
+  }).on('mouseout', function () {
+    reactContext.setState({
+      targetcircleIN: false
+    });
+  });
+  var rect = node.append('rect').attr('class', 'CompSBody ' + newSlider.GUID).attr('id', newSlider.GUID).attr('rx', '3').attr('ry', '3').attr('stroke-width', '2').attr('stroke', '#3a4c69').attr('width', newSlider.width).attr('height', newSlider.height).attr('fill', '#dddddd').on('mousemove', function () {
+    var current_slider = { ...reactContext.state.selectedSliderComponent
+    };
+    current_slider.rect = this;
+    reactContext.setState({
+      selectedSliderComponent: current_slider
+    });
+    d3$7.select(current_slider.rect).attr('cursor', 'pointer');
+  }).on('mouseout', function () {
+    newSlider.rect = this;
+  }).on('dblclick', () => {}).on('mousedown', () => {
+    reactContext.setState({
+      rectType: 'slider'
+    });
+  });
+  var ValueTextGroup = node.append('g').attr('transform', () => {
+    return 'translate(-80, 0)';
+  });
+  ValueTextGroup.append('rect').attr('cx', '0').attr('cy', '0').attr('rx', '3').attr('ry', '3').attr('fill', 'black').attr('width', '80').attr('height', '20').attr('opacity', '0.5');
+  ValueTextGroup.append('text').attr('id', 'sliderValueText_' + newSlider.GUID).attr('class', 'sliderValueText ' + newSlider.GUID).attr('transform', 'translate(2, 14)').attr('fill', 'white').text(newSlider.value.toString());
+  var Titlegroup = node.append('g').attr('transform', () => {
+    return 'translate(0, 15)';
+  });
+  Titlegroup.append('text').attr('class', 'sliderTitle slider_title' + newSlider.GUID).text(newSlider.Name).attr('fill', 'black').attr('transform', 'translate(' + titleMarginLeft / 2.0 + ', 0)');
+  var SlidingGroup = node.append('g').attr('transform', 'translate(60, 0)');
+  SlidingGroup.append('rect').attr('height', '3').attr('width', '185').attr('rx', '2').attr('ry', '2').attr('transform', 'translate(0, 8)').attr('stroke', '#677184');
+  SlidingGroup.append('line').attr('x1', '2').attr('y1', '11').attr('x2', '184').attr('y2', '11').attr('stroke', 'gray').attr('stroke-width', '1');
+
+  function anchorUpdate() {
+    slidingAnchor.attr('transform', d => `translate(${d.x},3)`);
+  }
+
+  var anchorDragHandler = d3$7.drag().on('start', (event, d) => rect.attr('stroke', 'red')).on('drag', (event, d) => {
+    var selectedSliderComponent = reactContext.state.selectedSliderComponent;
+    var sliderRectId = reactContext.state.sliderRectId;
+    var slider_anchor_value;
+    var slider_value;
+    var the_slider_slope = (selectedSliderComponent.max - selectedSliderComponent.min) / (SLIDER_END_POSITION - SLIDER_START_POSITION);
+    var y_intersection = selectedSliderComponent.min - the_slider_slope * SLIDER_START_POSITION;
+
+    if (event.x <= SLIDER_START_POSITION) {
+      slider_anchor_value = 0;
+      slider_value = selectedSliderComponent.min;
+    } else if (event.x >= SLIDER_END_POSITION) {
+      slider_anchor_value = SLIDER_END_POSITION - SLIDER_START_POSITION;
+      slider_value = selectedSliderComponent.max;
+    } else {
+      slider_anchor_value = event.x - SLIDER_START_POSITION;
+      slider_value = event.x * the_slider_slope + y_intersection;
+    }
+
+    selectedSliderComponent.anchorValue = slider_anchor_value;
+    d.x = slider_anchor_value;
+    d3$7.select('#sliderValueText_' + sliderRectId.replace('SliderAnchor_', '')).text(slider_value.toFixed(6));
+    selectedSliderComponent.value = slider_value;
+    reactContext.setState({
+      selectedSliderComponent: selectedSliderComponent
+    });
+    redrawDependents(selectedSliderComponent.GUID);
+  }).on('end', (event, d) => rect.attr('stroke', '#3a4c69')).on('start.update drag.update end.update', anchorUpdate);
+  var slidingAnchor = SlidingGroup.append('rect').attr('id', 'SliderAnchor_' + newSlider.GUID).attr('width', '10').attr('height', '15').attr('rx', '5').attr('ry', '5').attr('fill', '#3a4d69').style('cursor', 'pointer').attr('transform', 'translate(' + newSlider.anchorValue.toString() + ', 3)').data([{
+    x: newSlider.anchorValue,
+    y: 3
+  }]).on('mousemove', function (event) {
+    d3$7.select(event.currentTarget).attr('fill', 'url(#gradientlsider)').attr('cursor', 'pointer').attr('stroke', 'black');
+  }).on('mouseleave', function (event) {
+    d3$7.select(event.currentTarget).attr('fill', '#3a4d69').attr('stroke', 'none');
+  }).on('mousedown', function () {
+    reactContext.setState({
+      sliderRectId: this.id,
+      // SliderAnchorclicked: true,
+      selectedSliderComponent: newSlider
+    });
+  }).on('mouseup', function () {
+    reactContext.setState({
+      // SliderAnchorclicked: false,
+      selectedSliderComponent: null
+    });
+  }).call(anchorDragHandler); //Make a copy of the current states
+
+  var current_comp_out = { ...reactContext.state.comp_output_edges
+  };
+  var current_comp_in = { ...reactContext.state.comp_input_edges
+  };
+  current_comp_out[newSlider.GUID] = new Array(1);
+  current_comp_in[newSlider.GUID] = new Array(1);
+  reactContext.setState({
+    comp_input_edges: current_comp_in,
+    comp_output_edges: current_comp_out
+  });
+
+  if (FromExisting == null) {
+    //Make a copy of the array
+    var current_all_comp = reactContext.state.allComp.slice();
+    console.log('Adding a slider' + newSlider);
+    current_all_comp.push(newSlider);
+    reactContext.setState({
+      allComp: current_all_comp
+    });
+  } //Moving the slider body
+
+
+  d3$7.selectAll('g.SliderGroup').on('mousedown', function (d, i) {
+    reactContext.setState({
+      rectType: 'slider'
+    });
+  });
+  var current_components_selection = { ...reactContext.state.components_selection_data
+  };
+  current_components_selection[newSlider.GUID] = {
+    x0: newSlider.X,
+    y0: newSlider.Y,
+    x1: newSlider.X + newSlider.width,
+    y1: newSlider.Y + newSlider.height
+  };
+  reactContext.setState({
+    components_selection_data: current_components_selection
+  });
+}
+/**
+ * Double click the slider => the property bar appears
+ * Handles the event when the Save button on the property bar is clicked
+ * @param {String} compKey The ID of the clicked components
+ */
+
+
+function submitSliderEdit(compKey) {
+  var slider_component = selectComp(compKey);
+  const SLIDER_START_POSITION = 60;
+  const SLIDER_END_POSITION = 238;
+  slider_component.min = parseFloat($('input#new_slider_min_value').val());
+  slider_component.max = parseFloat($('input#new_slider_max_value').val());
+  slider_component.value = parseFloat($('input#new_slider_current_value').val());
+  var slider_anchor_slope = (SLIDER_END_POSITION - SLIDER_START_POSITION) / (slider_component.max - slider_component.min);
+  var slider_anchor_y_intersection = SLIDER_END_POSITION - SLIDER_START_POSITION - slider_anchor_slope * slider_component.max;
+  var slider_anchor_currrent_position = slider_anchor_slope * slider_component.value + slider_anchor_y_intersection;
+  d3$7.select('rect#SliderAnchor_' + slider_component.GUID).attr('transform', function () {
+    return 'translate(' + slider_anchor_currrent_position.toString() + ',3)';
+  });
+  d3$7.select('#sliderValueText_' + slider_component.GUID.replace('SliderAnchor_', '')).text(slider_component.value.toFixed(6));
+  redrawDependents(slider_component.GUID);
+  $('div#propertiesBarContents').html('');
+}
+/**
+ * Double click the slider => the property bar appears
+ * Handles the event when the Cancel button on the property bar is clicked
+ */
+
+
+function cancelSliderEdit() {
+  $('div#propertiesBarContents').html('');
+}
+
+/*
+───────────────────────────────────────────────────────────────────────────────────────────────────
+─██████████████─██████████████─████████████████───██████████─██████──────────██████─██████████████─
+─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───██░░░░░░██─██░░██████████──██░░██─██░░░░░░░░░░██─
+─██░░██████████─██████░░██████─██░░████████░░██───████░░████─██░░░░░░░░░░██──██░░██─██░░██████████─
+─██░░██─────────────██░░██─────██░░██────██░░██─────██░░██───██░░██████░░██──██░░██─██░░██─────────
+─██░░██████████─────██░░██─────██░░████████░░██─────██░░██───██░░██──██░░██──██░░██─██░░██─────────
+─██░░░░░░░░░░██─────██░░██─────██░░░░░░░░░░░░██─────██░░██───██░░██──██░░██──██░░██─██░░██──██████─
+─██████████░░██─────██░░██─────██░░██████░░████─────██░░██───██░░██──██░░██──██░░██─██░░██──██░░██─
+─────────██░░██─────██░░██─────██░░██──██░░██───────██░░██───██░░██──██░░██████░░██─██░░██──██░░██─
+─██████████░░██─────██░░██─────██░░██──██░░██████─████░░████─██░░██──██░░░░░░░░░░██─██░░██████░░██─
+─██░░░░░░░░░░██─────██░░██─────██░░██──██░░░░░░██─██░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─
+─██████████████─────██████─────██████──██████████─██████████─██████──────────██████─██████████████─
+*/
+
+var d3$6 = require('d3'); //TODO : check this for the text overflow : https://bl.ocks.org/mbostock/1424037
+
+
+function CreateNewPanel(reactContext, FromExisting = null) {
+  var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
+  var ANCHOR_WIDTH = reactContext.state.ANCHOR_WIDTH;
+  var newcomp;
+
+  if (FromExisting == null) {
+    newcomp = addcomponent(uuidv4('C'), 1, 1);
+    var guid = newcomp.GUID;
+    var data = { ...reactContext.state.parent_child_matrix
+    };
+    data[guid] = [];
+    reactContext.setState({
+      parent_child_matrix: data
+    });
+    newcomp.Name = 'Panel';
+    newcomp.width = 300;
+  } else {
+    newcomp = FromExisting;
+    newcomp.value = newcomp.outputs[0].value;
+  }
+
+  newcomp.fill = 'white'; //"#fbedcc";
+
+  newcomp.type = 'string';
+  newcomp.dftype = 'shlow';
+  newcomp.inputs[0].value = newcomp.value;
+  var allContents = d3$6.select('#allCanvasContents');
+  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
+  var genX;
+  var genY;
+  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
+    if (FromExisting == null) {
+      genX = Math.random() * 500 + 200;
+      genY = Math.random() * 500 + 200;
+      newcomp.X = genX;
+      newcomp.Y = genY;
+      return 'translate(' + genX + ', ' + genY + ')';
+    } else {
+      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
+    }
+  }).data([{
+    x: FromExisting ? FromExisting.X : genX,
+    y: FromExisting ? FromExisting.Y : genY
+  }]);
+  node.append('rect').attr('class', 'CompPBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('y', '-15').attr('width', () => {
+    return 10 + newcomp.Name.length * 6;
+  }).attr('height', newcomp.height + 10).attr('fill', '#525252').attr('fill-opacity', '1.0').on('mouseover', function (event) {
+    d3$6.select(event.currentTarget).attr('cursor', 'pointer');
+  });
+  var InputGroup = node.append('g');
+
+  for (let index = 0; index < newcomp.inputs.length; index++) {
+    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray') //newcomp.fill)
+    .attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      newcomp.inputs[index].circle = this;
+
+      if (FromExisting == null) {
+        newcomp.inputs[index].type = 'text';
+      }
+
+      return 'input';
+    }).on('mousemove', function () {
+      reactContext.setState({
+        targetcircleIN: true
+      });
+    }).on('mouseout', function () {
+      reactContext.setState({
+        targetcircleIN: false
+      });
+    }).lower();
+  }
+
+  var OutputGroup = node.append('g');
+
+  for (let index = 0; index < newcomp.outputs.length; index++) {
+    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      newcomp.outputs[index].circle = this;
+      newcomp.outputs[index].type = 'output';
+      return 'output';
+    }).on('mousemove', function () {
+      reactContext.setState({
+        targetcircleIN: true
+      });
+    }).on('mouseout', function () {
+      reactContext.setState({
+        targetcircleIN: false
+      });
+    }).lower();
+  }
+
+  node.append('rect').attr('class', 'CompPBody statusRect ' + newcomp.GUID).attr('id', 'statusRect' + newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('x', '50').attr('y', newcomp.height - 20).attr('width', newcomp.width - 50).attr('height', 35).attr('fill', '#525252').attr('fill-opacity', '1.0');
+  node.append('foreignObject').attr('id', 'panel_status_' + newcomp.GUID).attr('class', 'panel_status ' + newcomp.GUID).html('Type : ' + newcomp.inputs[0].type).attr('x', '55').attr('y', newcomp.height + 2).attr('width', newcomp.width - 50).attr('height', 15).attr('fill', 'white');
+  node.append('foreignObject').attr('id', 'panel_edit_mode' + newcomp.GUID).attr('class', 'panel_edit_mode ' + newcomp.GUID).html(() => {
+    return '<h5 id="changeEditMoveMode_' + newcomp.GUID + '" style="color:white; margin-top:1px" ">Edit</h5>';
+  }).attr('x', newcomp.width - 30).attr('y', newcomp.height + 2).attr('width', 30).attr('height', 15).attr('fill', 'white').on('click', () => edit_move_mode(newcomp.GUID)).attr('style', 'cursor: pointer;');
+  var Dummyrect = node.append('rect').attr('class', 'CompPBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS) //.attr("filter", "url(#f2")
+  .attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
+  var Titlegroup = node.append('g').attr('transform', () => {
+    return 'translate(0, 15)';
+  });
+  Titlegroup.append('text').attr('class', 'nodetitle node_title' + newcomp.GUID).attr('id', 'nodeTitle' + newcomp.GUID).text(newcomp.Name).attr('fill', 'white').attr('x', 5).attr('y', -18);
+  node.append('foreignObject').attr('id', 'textbody_' + newcomp.GUID).attr('class', 'textbody ' + newcomp.GUID).attr('height', newcomp.height - ANCHOR_WIDTH - 5).html(function () {
+    if (newcomp.inputs[0].type === 'html' || newcomp.inputs[0].type === 'input') {
+      return newcomp.inputs[0].value;
+    } else if (newcomp.inputs[0].type === 'text') {
+      return '<pre>' + newcomp.inputs[0].value + '</pre>';
+    }
+  }).attr('transform', 'translate(5, 5)').attr('width', newcomp.width - 4 - ANCHOR_WIDTH);
+  var data2;
+
+  if (newcomp.inputs[0].type === 'json') {
+    $('foreignObject#textbody_' + newcomp.GUID).html('<div id="jsonTreeViewer' + newcomp.GUID + '"></div>');
+    jsonView.format(newcomp.inputs[0].value, 'div#jsonTreeViewer' + newcomp.GUID);
+  } else if (newcomp.inputs[0].type === 'plot') {
+    data2 = JSON.parse(newcomp.inputs[0].value);
+    drawPlotComponent(data2, newcomp);
+  } else if (newcomp.inputs[0].type === 'spatial') {
+    data2 = JSON.parse(newcomp.inputs[0].value);
+    var unparseData = newcomp.inputs[0].value;
+    visualizeSpatialComponent(data2, unparseData, newcomp);
+  } //White Text Box
+
+
+  node.append('rect').attr('class', 'CompPBody ' + newcomp.GUID + ' a').attr('id', 'overlaySelector' + newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('y', '0').attr('width', newcomp.width - 5).attr('height', newcomp.height - 5).attr('fill', 'white') //"#ffeec7")
+  .attr('fill-opacity', '0.15').on('mousemove', function (event) {
+    d3$6.select(event.currentTarget).attr('cursor', 'pointer');
+  });
+  var resize = d3$6.drag().on('start', (event, d) => Dummyrect.attr('stroke', 'red')).on('end', (event, d) => Dummyrect.attr('stroke', '#3a4c69')).on('drag', function (event, d) {
+    var anchorMouseYpos = reactContext.state.anchorMouseYpos;
+    var anchorMouseXpos = reactContext.state.anchorMouseXpos;
+    var StringAnchorId = reactContext.state.StringAnchorId;
+    var newHeight = event.y - anchorMouseYpos;
+
+    if (newHeight <= 50) {
+      newHeight = 52;
+    }
+
+    var newWidth = event.x - anchorMouseXpos;
+
+    if (newWidth <= 300) {
+      newWidth = 301;
+    }
+
+    d.x = newWidth;
+    d.y = newHeight;
+    d.width = newWidth;
+    d.height = newHeight;
+    var thisComp = selectComp(StringAnchorId);
+    thisComp.height = newHeight;
+    thisComp.width = newWidth;
+    d3$6.select('rect#dummyRect_' + StringAnchorId).attr('height', newHeight).attr('width', newWidth);
+    d3$6.select('rect#' + StringAnchorId).attr('height', newHeight);
+    d3$6.select('rect.CompPBody.' + StringAnchorId + '.a').attr('width', newWidth);
+    d3$6.select('rect#statusRect' + StringAnchorId).attr('y', newHeight - 20).attr('width', newWidth - 50);
+    d3$6.select('foreignObject#panel_status_' + StringAnchorId).attr('y', newHeight + 2).attr('width', newWidth - 50);
+    d3$6.select('rect#overlaySelector' + StringAnchorId).attr('height', newHeight - 5);
+    d3$6.select('rect.xyAnchor.' + StringAnchorId).attr('x', thisComp.width - ANCHOR_WIDTH).attr('y', thisComp.height - ANCHOR_WIDTH);
+    d3$6.select('foreignObject#textbody_' + StringAnchorId).attr('height', thisComp.height - ANCHOR_WIDTH - 5).attr('width', thisComp.width - 4 - ANCHOR_WIDTH);
+    d3$6.select('foreignObject#panel_edit_mode' + StringAnchorId).attr('y', newHeight + 2).attr('x', newWidth - 30);
+    d3$6.select('g#logCirGroup_' + StringAnchorId).attr('transform', () => {
+      var x = thisComp.width;
+      var y = thisComp.height;
+      return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
+    });
+    d3$6.select('circle#outputCir' + StringAnchorId + '_0').attr('cy', thisComp.height / 2).attr('cx', thisComp.width);
+    d3$6.select('circle#inputCir' + StringAnchorId + '_0').attr('cy', thisComp.height / 2);
+  });
+  node.append('rect').attr('class', 'xyAnchor ' + newcomp.GUID).data([{
+    x: newcomp.width - ANCHOR_WIDTH,
+    y: newcomp.height - ANCHOR_WIDTH,
+    width: ANCHOR_WIDTH,
+    height: ANCHOR_WIDTH
+  }]).attr('width', ANCHOR_WIDTH).attr('height', ANCHOR_WIDTH).attr('x', newcomp.width - ANCHOR_WIDTH).attr('y', newcomp.height - ANCHOR_WIDTH).attr('fill-opacity', 0.01).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).on('mousedown', event => {
+    reactContext.setState({
+      anchorMouseXpos: d3$6.pointer(event)[0] - newcomp.width,
+      anchorMouseYpos: d3$6.pointer(event)[1] - newcomp.height,
+      StringAnchorId: newcomp.GUID
+    });
+  }).call(resize);
+
+  if (FromExisting == null) {
+    var current_all_comp = reactContext.state.allComp.slice();
+    console.log('Adding a panel' + newcomp);
+    current_all_comp.push(newcomp);
+    reactContext.setState({
+      allComp: current_all_comp
+    });
+  }
+
+  var current_comp_out = { ...reactContext.state.comp_output_edges
+  };
+  var current_comp_in = { ...reactContext.state.comp_input_edges
+  };
+  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
+  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
+  reactContext.setState({
+    comp_input_edges: current_comp_in,
+    comp_output_edges: current_comp_out
+  });
+  var current_components_selection = { ...reactContext.state.components_selection_data
+  };
+  current_components_selection[newcomp.GUID] = {
+    x0: newcomp.X,
+    y0: newcomp.Y,
+    x1: newcomp.X + newcomp.width,
+    y1: newcomp.Y + newcomp.height
+  };
+  reactContext.setState({
+    components_selection_data: current_components_selection
+  });
+} //Need to save the new information?
+//Plot errors. in operator not recognized -> not json
+
+
+function submitPanelEdit(compKey) {
+  var StringComp = selectComp(compKey);
+  var textVal = $('textarea.textarea.stringProperties').val();
+  StringComp.inputs[0].type = $("input[name='type']:checked").val();
+  $('foreignObject#panel_status_' + StringComp.GUID).text('Type : ' + StringComp.inputs[0].type);
+
+  if (StringComp.inputs[0].type === 'json') {
+    $('foreignObject#textbody_' + StringComp.GUID).html('<div id="jsonTreeViewer' + StringComp.GUID + '"></div>');
+    jsonView.format(JSON.stringify(StringComp.inputs[0].value), 'div#jsonTreeViewer' + StringComp.GUID);
+  } else if (StringComp.inputs[0].type === 'html') {
+    d3$6.select('foreignObject#textbody_' + compKey).html(textVal).attr('fill', 'black');
+  } else if (StringComp.inputs[0].type === 'plot') {
+    var data = JSON.parse(JSON.stringify(textVal));
+    drawPlotComponent(data, StringComp);
+  } else {
+    d3$6.select('foreignObject#textbody_' + compKey).text(textVal).attr('fill', 'black');
+  }
+
+  StringComp.outputs[0].value = textVal;
+  StringComp.inputs[0].value = textVal;
+  StringComp.value = textVal;
+  StringComp.Name = $('input.stringPnanel.Name').val();
+  redrawDependents(compKey);
+  $('div#propertiesBarContents').html('');
+}
+
+function cancelPanelEdit() {
+  $('div#propertiesBarContents').html('');
+}
+
+function edit_move_mode(compId, mode) {
+  var disp = $('rect#overlaySelector' + compId).attr('style');
+
+  if (disp === 'display: block;') {
+    d3$6.select('rect#overlaySelector' + compId).style('display', 'none');
+    d3$6.select('h5#changeEditMoveMode_' + compId).text('Edit Mode');
+  } else {
+    d3$6.select('rect#overlaySelector' + compId).style('display', 'block');
+    d3$6.select('h5#changeEditMoveMode_' + compId).text('Drag Mode');
+  }
+}
+
+/*
 ───────────────────────────────────────────────────────────────────────────────────────────
 ─██████████████─██████████████─██████████████─██████████████─██████─────────██████████████─
 ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██─────────██░░░░░░░░░░██─
@@ -5325,7 +4291,7 @@ function CreateNewComponent(reactContext, FromExisting = null, type = null, kwar
 ───────────────────────────────────────────────────────────────────────────────────────────
 */
 
-var d3$2 = require('d3');
+var d3$5 = require('d3');
 
 function CreateNewToggle(reactContext, FromExisting = null) {
   var newcomp;
@@ -5353,7 +4319,7 @@ function CreateNewToggle(reactContext, FromExisting = null) {
 
   newcomp.width = 80; //newcomp.Name.length * one_character_width + titleMarginLeft;
 
-  var allContents = d3$2.select('#allCanvasContents');
+  var allContents = d3$5.select('#allCanvasContents');
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
   var genY;
@@ -5408,11 +4374,11 @@ function CreateNewToggle(reactContext, FromExisting = null) {
   node.append('rect').attr('class', 'CompTBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01') // .attr("filter", "url('#svgshadow')")
   .on('mousemove', function (event) {
     // newcomp.rect = this;
-    d3$2.select(event.currentTarget) // .attr("fill", "#303952")
+    d3$5.select(event.currentTarget) // .attr("fill", "#303952")
     .attr('cursor', 'pointer');
   }).on('mouseout', function (event) {
     // newcomp.rect = this;
-    d3$2.select(event.currentTarget).attr('fill', newcomp.fill);
+    d3$5.select(event.currentTarget).attr('fill', newcomp.fill);
   });
   newcomp.value = newcomp.Name;
 
@@ -5449,6 +4415,197 @@ function CreateNewToggle(reactContext, FromExisting = null) {
 }
 
 /*
+──────────────────────────────────────────────────────────────────────────────────────────
+─────────────██████████████─██████████─██████─────────██████████████──────────────────────
+─────────────██░░░░░░░░░░██─██░░░░░░██─██░░██─────────██░░░░░░░░░░██──────────────────────
+─────────────██░░██████████─████░░████─██░░██─────────██░░██████████──────────────────────
+─────────────██░░██───────────██░░██───██░░██─────────██░░██──────────────────────────────
+─────────────██░░██████████───██░░██───██░░██─────────██░░██████████──────────────────────
+─────────────██░░░░░░░░░░██───██░░██───██░░██─────────██░░░░░░░░░░██──────────────────────
+─────────────██░░██████████───██░░██───██░░██─────────██░░██████████──────────────────────
+─────────────██░░██───────────██░░██───██░░██─────────██░░██──────────────────────────────
+─────────────██░░██─────────████░░████─██░░██████████─██░░██████████──────────────────────
+─────────────██░░██─────────██░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██──────────────────────
+─────────────██████─────────██████████─██████████████─██████████████──────────────────────
+──────────────────────────────────────────────────────────────────────────────────────────
+───────────────────────────────────────────────────────────────────────────────────────────
+─██████──██████─██████████████─██████─────────██████████████─██████████████─████████████───
+─██░░██──██░░██─██░░░░░░░░░░██─██░░██─────────██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░████─
+─██░░██──██░░██─██░░██████░░██─██░░██─────────██░░██████░░██─██░░██████░░██─██░░████░░░░██─
+─██░░██──██░░██─██░░██──██░░██─██░░██─────────██░░██──██░░██─██░░██──██░░██─██░░██──██░░██─
+─██░░██──██░░██─██░░██████░░██─██░░██─────────██░░██──██░░██─██░░██████░░██─██░░██──██░░██─
+─██░░██──██░░██─██░░░░░░░░░░██─██░░██─────────██░░██──██░░██─██░░░░░░░░░░██─██░░██──██░░██─
+─██░░██──██░░██─██░░██████████─██░░██─────────██░░██──██░░██─██░░██████░░██─██░░██──██░░██─
+─██░░██──██░░██─██░░██─────────██░░██─────────██░░██──██░░██─██░░██──██░░██─██░░██──██░░██─
+─██░░██████░░██─██░░██─────────██░░██████████─██░░██████░░██─██░░██──██░░██─██░░████░░░░██─
+─██░░░░░░░░░░██─██░░██─────────██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░████─
+─██████████████─██████─────────██████████████─██████████████─██████──██████─████████████───
+───────────────────────────────────────────────────────────────────────────────────────────
+
+*/
+
+var d3$4 = require('d3');
+
+function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
+  var newcomp;
+
+  if (FromExisting == null) {
+    newcomp = addcomponent(uuidv4('C'), 0, 1);
+    var guid = newcomp.GUID;
+    var data = { ...reactContext.state.parent_child_matrix
+    };
+    data[guid] = [];
+    reactContext.setState({
+      parent_child_matrix: data
+    });
+  } else {
+    newcomp = FromExisting;
+  }
+
+  newcomp.fill = '#5e6b7a';
+  newcomp.Name = 'False';
+  var padding = 20;
+  var titleMargin = 30;
+  newcomp.height = 25;
+  newcomp.type = 'fileUpload';
+  newcomp.dftype = 'shlow'; // TODO : get the longest text in the component. and set the width based on this.
+
+  newcomp.width = 300;
+  var allContents = d3$4.select('#allCanvasContents');
+  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
+  var node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
+    if (FromExisting == null) {
+      var mousex = reactContext.state.mousex;
+      var mousey = reactContext.state.mousey;
+      newcomp.X = mousex + Math.random() * 500;
+      newcomp.Y = mousey + Math.random() * 500;
+      return 'translate(' + newcomp.X + ', ' + newcomp.Y + ')';
+    } else {
+      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
+    }
+  }).data([{
+    x: FromExisting ? FromExisting.X : newcomp.X,
+    y: FromExisting ? FromExisting.Y : newcomp.Y
+  }]);
+  var InputGroup = node.append('g');
+
+  for (let index = 0; index < newcomp.inputs.length; index++) {
+    InputGroup.append('circle').lower().attr('cx', '0').attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      newcomp.inputs[index].circle = reactContext.state.fromCircle;
+      newcomp.inputs[index].circle.element = this.id;
+      newcomp.inputs[index].circle.CX = 0;
+      newcomp.inputs[index].circle.CY = index * padding + titleMargin;
+      newcomp.inputs[index].type = 'input';
+      return 'input';
+    });
+  }
+
+  var OutputGroup = node.append('g');
+
+  for (let index = 0; index < newcomp.outputs.length; index++) {
+    OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', newcomp.height / 2).attr('fill', 'gray').attr('r', '5').attr('stroke', 'black').attr('stroke-width', '2').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir ' + newcomp.GUID + ' ' + index).attr('type', function () {
+      newcomp.outputs[index].circle = this;
+      newcomp.outputs[index].type = 'output';
+      return 'output';
+    }).lower();
+  }
+
+  node.append('rect').attr('class', 'CompFBody statusRect ' + newcomp.GUID).attr('id', 'statusRect' + newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('x', '50').attr('y', newcomp.height - 5).attr('width', newcomp.width - 50).attr('height', 20).attr('fill', '#242424').attr('fill-opacity', '1.0');
+  node.append('foreignObject').attr('id', 'fileUpload_status_' + newcomp.GUID).attr('class', 'fileUpload_status ' + newcomp.GUID).html(() => {
+    if (newcomp.outputs[0].value == null || newcomp.outputs[0].value === undefined) {
+      return 'File Size : None';
+    } else {
+      return 'File Size : ' + (newcomp.outputs[0].Description.size / (1024 * 1024)).toString() + " MB <a class='open_uploadedFile_link' href='" + newcomp.outputs[0].Description.url + "' target='blank'>open</a>";
+    }
+  }).attr('x', '55').attr('y', newcomp.height + 2).attr('width', newcomp.width - 50).attr('height', 15).attr('fill', 'white');
+  node.append('rect').attr('class', 'CompFBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill);
+  var cirGroup = node.append('g').attr('transform', () => {
+    var x = newcomp.width;
+    var y = newcomp.height;
+    return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
+  });
+  cirGroup.append('text').attr('id', 'nodeLog' + newcomp.GUID).attr('class', 'nodeLog ' + newcomp.GUID).attr('transform', 'translate(10, 10)').text(newcomp.log.logText).attr('fill', 'black').style('display', 'none');
+  node.append('g').attr('transform', () => {
+    return 'translate(0, 15)';
+  });
+  node.append('rect').attr('width', newcomp.width - 2).attr('height', 10).attr('x', 1).attr('y', 1).attr('rx', 2).attr('ry', 2).attr('fill', 'url(#gradient2)').attr('fill-opacity', 0.4);
+  node.append('foreignObject').attr('id', 'foreignObject_fileUpload' + newcomp.GUID).attr('class', 'foreignObject_fileUpload').attr('width', newcomp.width).attr('height', newcomp.height).attr('y', '-1.1px').html(() => {
+    if (newcomp.outputs[0].value == null || newcomp.outputs[0].value === undefined) {
+      var form = `
+                    <form method="post" enctype="multipart/form-data" id="form_` + newcomp.GUID + `">
+                    <input id="fileUploadFormToTheCloud" class="` + newcomp.GUID + `" type="file" name="myFile">
+                    </form>
+                    `;
+      return form;
+    } else {
+      return `
+                        <div id="TheContainedFile">` + newcomp.outputs[0].Description.Name + `</div>
+                        <div id="TheContainedFile">Size :` + (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() + ` MB</div>
+                    `;
+    }
+  });
+  node.append('rect').attr('class', 'CompFBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('x', 90).attr('width', newcomp.width - 90).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
+    d3$4.select(event.currentTarget).attr('cursor', 'pointer');
+  }).on('mouseout', function (event) {
+    d3$4.select(event.currentTarget).attr('fill', newcomp.fill);
+  });
+  newcomp.value = newcomp.Name;
+
+  if (FromExisting == null) {
+    var current_all_comp = reactContext.state.allComp.slice();
+    console.log('Adding a fileUpload' + newcomp);
+    current_all_comp.push(newcomp);
+    reactContext.setState({
+      allComp: current_all_comp
+    });
+  }
+
+  var current_comp_out = { ...reactContext.state.comp_output_edges
+  };
+  var current_comp_in = { ...reactContext.state.comp_input_edges
+  };
+  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
+  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
+  reactContext.setState({
+    comp_input_edges: current_comp_in,
+    comp_output_edges: current_comp_out
+  });
+  var current_components_selection = { ...reactContext.state.components_selection_data
+  };
+  current_components_selection[newcomp.GUID] = {
+    x0: newcomp.X,
+    y0: newcomp.Y,
+    x1: newcomp.X + newcomp.width,
+    y1: newcomp.Y + newcomp.height
+  };
+  reactContext.setState({
+    components_selection_data: current_components_selection
+  });
+  $('input#fileUploadFormToTheCloud').on('change', function (e) {
+    var selectedFile = e.target.files[0];
+    var thisFormId = $(this).attr('class');
+    var fileName = selectedFile.name;
+    var fileSize = selectedFile.size;
+    var theCurrentComp = selectComp(thisFormId);
+    theCurrentComp.outputs[0].Name = fileName;
+    theCurrentComp.outputs[0].Description = {
+      Name: fileName,
+      size: fileSize
+    };
+    theCurrentComp.outputs[0].value = selectedFile;
+    console.log(theCurrentComp);
+    d3$4.select('#fileUpload_status_' + thisFormId).html('File Size : ' + (selectedFile.size / (1024 * 1024)).toString() + " MB");
+    d3$4.select('#foreignObject_fileUpload' + thisFormId).html(() => {
+      return `
+                <div id="TheContainedFile">` + fileName + `</div>
+                <div id="TheContainedFile">Size :` + (selectedFile.size / (1024 * 1024)).toFixed(4).toString() + ` MB</div>
+                `;
+    });
+    redrawDependents(thisFormId);
+  });
+}
+
+/*
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ─██████████████─██████████████─██████████████─██████████─██████████████─██████──────────██████────██████─────────██████████─██████████████─██████████████─
 ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─██░░██████████──██░░██────██░░██─────────██░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
@@ -5464,7 +4621,7 @@ function CreateNewToggle(reactContext, FromExisting = null) {
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 */
 
-var d3$1 = require('d3');
+var d3$3 = require('d3');
 
 function CreateNewListView(reactContext, FromExisting = null, optionlist_predefined_items = null) {
   var newcomp;
@@ -5496,16 +4653,7 @@ function CreateNewListView(reactContext, FromExisting = null, optionlist_predefi
   newcomp.dftype = 'shlow';
   newcomp.width = 200; // TODO : get the longest text in the component. and set the width based on this.
 
-  var allContents = d3$1.select('#allCanvasContents');
-
-  function update() {
-    node.attr('transform', d => `translate(${d.x},${d.y})`);
-  }
-
-  d3$1.drag().on('start', (event, d) => Dummyrect.attr('stroke', 'red')).on('drag', (event, d) => {
-    d.x = event.x;
-    d.y = event.y;
-  }).on('end', (event, d) => Dummyrect.attr('stroke', '#3a4c69')).on('start.update drag.update end.update', update);
+  var allContents = d3$3.select('#allCanvasContents');
   var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
   var genX;
   var genY;
@@ -5548,7 +4696,7 @@ function CreateNewListView(reactContext, FromExisting = null, optionlist_predefi
     }).lower();
   }
 
-  var Dummyrect = node.append('rect').attr('class', 'CompLBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3') //.attr("filter", "url(#f2")
+  node.append('rect').attr('class', 'CompLBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', '3').attr('ry', '3') //.attr("filter", "url(#f2")
   .attr('stroke-width', '1').attr('stroke', 'black').attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', '#CECECE');
   node.append('text').attr('x', 5).attr('y', 15).text('listItems').attr('fill', 'black').style('font-family', 'Ubuntu Mono'); //listbox items
 
@@ -5568,9 +4716,9 @@ function CreateNewListView(reactContext, FromExisting = null, optionlist_predefi
     return ListItemsvalueReturn;
   });
   node.append('rect').attr('class', 'CompLBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', '3').attr('ry', '3').attr('width', newcomp.width).attr('height', 20).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
-    d3$1.select(event.currentTarget).attr('cursor', 'pointer');
+    d3$3.select(event.currentTarget).attr('cursor', 'pointer');
   }).on('mouseout', function (event) {
-    d3$1.select(event.currentTarget).attr('fill', newcomp.fill);
+    d3$3.select(event.currentTarget).attr('fill', newcomp.fill);
   });
   node.append('g').attr('id', 'optionListOption-' + newcomp.GUID);
 
@@ -5606,16 +4754,416 @@ function CreateNewListView(reactContext, FromExisting = null, optionlist_predefi
   });
 }
 
-var d3 = require('d3');
+var d3$2 = require('d3');
+
+var addInputCirclesFunc;
+var addOutputCirclesFunc;
+var statusBar;
+var Dummyrect;
+var cirGroup;
+var resize1;
+var rect;
+var playrect2;
+var node;
+
+function CreateNewCloud(reactContext, FromExisting = null, type = "cloud", kwargs = {
+  shortName: "cloud",
+  dfType: "dp"
+}, inputList = [], outputList = [], color = '#0031E7') {
+  var IDLE_COLOR = reactContext.state.IDLE_COLOR;
+  var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
+  var one_character_width = 8;
+  var padding = 20;
+  var titleMargin = 30;
+  var titleMarginLeft = 30;
+  var newcomp;
+
+  if (FromExisting != null) {
+    newcomp = FromExisting;
+  } else {
+    var longestInput = '';
+
+    for (let index = 0; index < inputList.length; index++) {
+      const curr = inputList[index].name;
+
+      if (curr.length > longestInput.length) {
+        longestInput = curr;
+      }
+    }
+
+    var longestOutput = outputList.reduce(function (a, b) {
+      return a.length > b.length ? a : b;
+    }, '');
+    var ThisComponentName = type;
+    let n_inputs = inputList.length;
+    let n_outputs = outputList.length;
+    newcomp = addcomponent(uuidv4('C'), n_inputs, n_outputs, inputList, outputList);
+
+    if (type == null) {
+      ThisComponentName = $('div#addComp').attr('type');
+    } else {
+      ThisComponentName = type;
+      newcomp.dftype = kwargs.dfType;
+      newcomp.ShortName = kwargs.shortName;
+      popupMessage(ThisComponentName + ' Component added');
+    }
+
+    newcomp.fill = color;
+    newcomp.type = "cloud";
+    newcomp.Name = "Cloud";
+    newcomp.height = Math.max(80, titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding);
+    newcomp.width = Math.max(100, (longestInput.length + longestOutput.length) * one_character_width + titleMarginLeft); // initiate the parent_children_matrix
+
+    var guid = newcomp.GUID;
+    var data = { ...reactContext.state.parent_child_matrix
+    };
+    data[guid] = [];
+    reactContext.setState({
+      parent_child_matrix: data
+    });
+  }
+
+  var allContents = d3$2.select('#allCanvasContents');
+  var cont = allContents.append('g').attr('class', 'component').attr('id', newcomp.GUID);
+  var genX;
+  var genY;
+  node = cont.append('g').attr('class', newcomp.type + ' ' + newcomp.state + ' ' + newcomp.selection + ' ' + newcomp.view + ' ' + newcomp.GUID).attr('id', 'comp-' + newcomp.GUID).attr('transform', () => {
+    if (FromExisting == null) {
+      if (kwargs.X !== undefined && kwargs.Y !== undefined) {
+        newcomp.X = kwargs.X;
+        newcomp.Y = kwargs.Y;
+      } else {
+        genX = Math.random() * 500 + 200;
+        genY = Math.random() * 500 + 200;
+        newcomp.X = genX;
+        newcomp.Y = genY;
+      }
+
+      return 'translate(' + newcomp.X + ', ' + newcomp.Y + ')';
+    } else {
+      return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
+    }
+  });
+  statusBar = node.append('g') // .attr('id', "cloudResizeHeight")
+  .attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
+  statusBar.append('rect').attr('id', 'statusRect' + newcomp.GUID).attr('width', newcomp.width + 2).attr('x', -1.0).attr('height', 40).attr('fill', IDLE_COLOR).attr('stroke-width', 1).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('opacity', 0.5);
+  statusBar.append('text').attr('class', 'statusTextClass').attr('id', 'statusText' + newcomp.GUID).attr('fill', 'black').attr('x', 5).attr('y', 37).text('Idle...');
+
+  function addInputCircles(newcomp) {
+    var node = newcomp.node;
+    var InputGroup = node.append('g').lower();
+
+    for (let index = 0; index < newcomp.inputs.length; index++) {
+      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'inputCirViual' + newcomp.GUID + '_' + index).attr('class', 'inputCirVisual' + newcomp.GUID + ' ' + index).attr('type', function () {
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          return FromExisting.inputs[index].type;
+        }
+      });
+    }
+
+    InputGroup = node.append('g').lower();
+
+    for (let index = 0; index < newcomp.inputs.length; index++) {
+      InputGroup.append('circle').lower().attr('cx', '0').attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.3').attr('r', '15').attr('id', 'inputCir' + newcomp.GUID + '_' + index).attr('class', 'inputCir' + newcomp.GUID + ' ' + index).attr('type', function () {
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          return FromExisting.inputs[index].type;
+        }
+      });
+    }
+
+    var InputGroupText = node.append('g');
+
+    for (let index = 0; index < newcomp.inputs.length; index++) {
+      console.log(newcomp.inputs[index].Name);
+      InputGroupText.append('text').attr('id', 'input-' + newcomp.GUID + '_' + index).attr('class', 'inputTxt' + newcomp.GUID + ' ' + index).attr('transform', 'translate(' + 10 + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.inputs[index].Name).attr('fill', 'black').attr('type', function () {
+        newcomp.inputs[index].textObj = this.id;
+
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          return FromExisting.inputs[index].type;
+        }
+      });
+    }
+  }
+
+  addInputCirclesFunc = addInputCircles;
+
+  function addOutputCircles(newcomp) {
+    var node = newcomp.node;
+    var OutputGroup = node.append('g').lower();
+
+    for (let index = 0; index < newcomp.outputs.length; index++) {
+      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('r', '7').attr('stroke', newcomp.fill).attr('stroke-width', '2').attr('id', 'outputCirVisual' + newcomp.GUID + '_' + index).attr('class', 'outputCirVisual' + newcomp.GUID + ' ' + index).attr('type', function () {
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          return FromExisting.outputs[index].type;
+        }
+      }).lower();
+    }
+
+    OutputGroup = node.append('g').lower();
+
+    for (let index = 0; index < newcomp.outputs.length; index++) {
+      OutputGroup.append('circle').attr('cx', newcomp.width).attr('cy', (index * padding + titleMargin).toString()).attr('fill', newcomp.fill).attr('fill-opacity', '0.5').attr('r', '12').attr('id', 'outputCir' + newcomp.GUID + '_' + index).attr('class', 'outputCir' + newcomp.GUID + ' ' + index).attr('type', function () {
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          return FromExisting.outputs[index].type;
+        }
+      });
+    }
+
+    var OutputGroupText = node.append('g');
+
+    for (let index = 0; index < newcomp.outputs.length; index++) {
+      OutputGroupText.append('text').attr('id', 'output-' + newcomp.GUID + '_' + index).attr('class', 'outputTxt' + newcomp.GUID + ' ' + index).attr('transform', 'translate(' + (newcomp.width - newcomp.outputs[index].ShortName.length * 8 - 5).toString() + ' , ' + (index * padding + titleMargin + 5).toString() + ')').text(newcomp.outputs[index].ShortName).attr('fill', 'black').attr('type', function () {
+        newcomp.outputs[index].circle = this;
+
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          newcomp.outputs[index].type = FromExisting.outputs[index].type;
+          return FromExisting.outputs[index].type;
+        }
+      }).attr('type', function () {
+        newcomp.outputs[index].textObj = this.id;
+
+        if (FromExisting == null) {
+          return 'text';
+        } else {
+          return FromExisting.outputs[index].type;
+        }
+      });
+    }
+  }
+
+  addOutputCirclesFunc = addOutputCircles;
+  Dummyrect = node.append('rect').attr('class', 'CompCBodyDummy ' + newcomp.GUID).attr('id', 'dummyRect_' + newcomp.GUID).attr('rx', COMPONENT_RADIUS + 1).attr('ry', COMPONENT_RADIUS + 1).attr('stroke-width', '3').attr('stroke', newcomp.fill).attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', '#E8E8E8').on('mousedown', () => {
+    reactContext.setState({
+      rectType: 'component'
+    });
+  });
+  cirGroup = node.append('g').attr('transform', () => {
+    var x = newcomp.width;
+    var y = newcomp.height;
+    return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
+  });
+  var Titlegroup = node.append('g').attr('transform', () => {
+    return 'translate(0, 15)';
+  }); //Title rectangle
+
+  Titlegroup.append('rect').attr('width', newcomp.width - 2).attr('height', 20).attr('fill', newcomp.fill).attr('x', 1.0).attr('y', -14).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS);
+  Titlegroup.append('rect').attr('width', newcomp.width - 2).attr('height', 8).attr('fill', newcomp.fill).attr('x', 1.0).attr('y', -2);
+  resize1 = node.append('rect').attr('width', newcomp.width - 2).attr('height', newcomp.height - 2).attr('x', 1.0).attr('y', 1).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('stroke', newcomp.fill).attr('fill-opacity', 0.0);
+  Titlegroup.append('foreignObject').attr('class', 'nodetitle node_title' + newcomp.GUID).attr('id', 'node_title' + newcomp.GUID).attr('x', 0).attr('y', -10).attr('width', newcomp.width).attr('height', '20').text(newcomp.Name);
+  rect = node.append('rect').attr('class', 'CompCBody ' + newcomp.GUID).attr('id', newcomp.GUID).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('width', newcomp.width).attr('height', newcomp.height).attr('fill', newcomp.fill).attr('fill-opacity', '0.01').on('mousemove', function (event) {
+    d3$2.select(event.currentTarget).attr('cursor', 'pointer');
+  }).on('mouseout', function (event) {
+    d3$2.select(event.currentTarget).attr('fill', newcomp.fill);
+  }).on('dblclick', () => {}).on('mousedown', () => {
+    reactContext.setState({
+      rectType: 'component'
+    });
+  });
+  var icon = node.append('g').attr('transform', 'translate(' + (newcomp.width - 20).toString() + ',1)');
+  icon.append('foreignObject').attr('width', 18).attr('height', 18).attr('style', () => {
+    return `background-image:url(src/img/` + newcomp.Name + `.png);background-size: 15px;background-repeat: no-repeat;background-position: center;`;
+  });
+  playrect2 = node.append('rect').attr('class', 'play ' + newcomp.GUID).attr('id', 'play_' + newcomp.GUID).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('height', 20).attr('width', 20).attr('rx', COMPONENT_RADIUS).attr('ry', COMPONENT_RADIUS).attr('fill', newcomp.fill).attr('stroke', newcomp.fill).attr('stroke-width', '6').style('cursor', 'pointer').on('click', function () {
+    console.log('start calculation');
+    runDeepFunction(newcomp.GUID);
+  });
+  node.append('svg').attr('role', 'img').attr('class', 'removableSVG' + newcomp.GUID).attr('xmlns', 'http://www.w3.org/2000/svg').attr('width', 20).attr('height', 20).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('viewBox', '0 0 512 512').append('path').attr('class', 'play ' + newcomp.GUID).attr('fill', 'white').attr('d', 'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z').on('click', function () {
+    console.log('start calculation');
+    runDeepFunction(newcomp.GUID);
+  });
+  newcomp.addInputCirclesFunc = addInputCirclesFunc;
+  newcomp.addOutputCirclesFunc = addOutputCirclesFunc;
+  newcomp.statusBar = statusBar;
+  newcomp.Dummyrect = Dummyrect;
+  newcomp.cirGroup = cirGroup;
+  newcomp.resize1 = resize1;
+  newcomp.rect = rect;
+  newcomp.playrect2 = playrect2;
+  newcomp.node = node;
+  addInputCirclesFunc(newcomp);
+  addOutputCirclesFunc(newcomp);
+
+  if (FromExisting == null) {
+    var current_all_comp = reactContext.state.allComp.slice();
+    console.log('Adding a generic comp' + newcomp);
+    current_all_comp.push(newcomp);
+    reactContext.setState({
+      allComp: current_all_comp
+    });
+  }
+
+  var current_comp_out = { ...reactContext.state.comp_output_edges
+  };
+  var current_comp_in = { ...reactContext.state.comp_input_edges
+  };
+  current_comp_out[newcomp.GUID] = new Array(newcomp.inputs.length);
+  current_comp_in[newcomp.GUID] = new Array(newcomp.outputs.length);
+  reactContext.setState({
+    comp_input_edges: current_comp_in,
+    comp_output_edges: current_comp_out
+  });
+  var current_components_selection = { ...reactContext.state.components_selection_data
+  };
+  current_components_selection[newcomp.GUID] = {
+    x0: newcomp.X,
+    y0: newcomp.Y,
+    x1: newcomp.X + newcomp.width,
+    y1: newcomp.Y + newcomp.height
+  };
+  reactContext.setState({
+    components_selection_data: current_components_selection
+  });
+}
+
+function submitCloudEdit(compKey) {
+  try {
+    var cloudComp = selectComp(compKey);
+    var name = $('input.cloudProp.Name').val();
+    var inputs = $('textarea.cloudProp.Val').val();
+    var url = $('input.cloudProp.url').val();
+    cloudComp.inputNames = inputs;
+    cloudComp.inputs = createInputDict(inputs.split('\n'));
+    cloudComp.outputs = createOutputDict(["out"]);
+    cloudComp.url = url;
+    cloudComp.Name = name;
+    d3$2.selectAll('circle.inputCirVisual' + cloudComp.GUID).remove();
+    d3$2.selectAll('circle.inputCir' + cloudComp.GUID).remove();
+    d3$2.selectAll('text.inputTxt' + cloudComp.GUID).remove();
+    d3$2.selectAll('circle.outputCirVisual' + cloudComp.GUID).remove();
+    d3$2.selectAll('circle.outputCir' + cloudComp.GUID).remove();
+    d3$2.selectAll('text.outputTxt' + cloudComp.GUID).remove();
+    addInputCirclesFunc(cloudComp);
+    addOutputCirclesFunc(cloudComp);
+    resize(cloudComp);
+    $('foreignObject#node_title' + cloudComp.GUID).text(name);
+    redrawDependents(compKey);
+    $('div#propertiesBarContents').html('');
+  } catch (error) {
+    console.log(error);
+    alert("Invalid JSON format!");
+  }
+}
+
+function cancelCloudEdit() {
+  $('div#propertiesBarContents').html('');
+}
+
+function resize(newcomp) {
+  var padding = 20;
+  var titleMargin = 30;
+  newcomp.height = Math.max(80, titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding);
+  newcomp.statusBar.attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
+  newcomp.Dummyrect.attr('height', newcomp.height);
+  newcomp.cirGroup.attr('transform', () => {
+    var x = newcomp.width;
+    var y = newcomp.height;
+    return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
+  });
+  newcomp.resize1.attr('height', newcomp.height - 2);
+  newcomp.rect.attr('height', newcomp.height);
+  newcomp.playrect2.attr('y', newcomp.height - 10);
+  d3$2.select('svg.removableSVG' + newcomp.GUID).remove();
+  newcomp.node.append('svg').attr('role', 'img').attr('class', 'removableSVG' + newcomp.GUID).attr('xmlns', 'http://www.w3.org/2000/svg').attr('width', 20).attr('height', 20).attr('x', newcomp.width / 2.0 - 10).attr('y', newcomp.height - 10).attr('viewBox', '0 0 512 512').append('path').attr('class', 'play ' + newcomp.GUID).attr('fill', 'white').attr('d', 'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm115.7 272l-176 101c-15.8 8.8-35.7-2.5-35.7-21V152c0-18.4 19.8-29.8 35.7-21l176 107c16.4 9.2 16.4 32.9 0 42z').on('click', function () {
+    console.log('start calculation');
+    runDeepFunction(newcomp.GUID);
+  });
+}
+
+function createOutputDict(outputsIn) {
+  var outputs = [];
+
+  for (let index = 0; index < outputsIn.length; index++) {
+    try {
+      outputs.push({
+        id: index,
+        circle: null,
+        textObj: null,
+        Name: outputsIn[index],
+        ShortName: outputsIn[index],
+        Description: outputsIn[index].desc,
+        Message: 'short description',
+        type: 'item',
+        datatype: 'int',
+        value: null
+      });
+    } catch {
+      outputs.push({
+        id: index,
+        circle: null,
+        textObj: null,
+        Name: '',
+        ShortName: '',
+        Description: '',
+        Message: 'short description',
+        type: 'item',
+        datatype: 'int',
+        value: null
+      });
+    }
+  }
+
+  return outputs;
+}
+
+function createInputDict(inputsIn) {
+  var inputs = [];
+
+  for (let index = 0; index < inputsIn.length; index++) {
+    try {
+      inputs.push({
+        id: index,
+        circle: null,
+        textObj: null,
+        Name: inputsIn[index],
+        ShortName: inputsIn[index].shortName,
+        Description: inputsIn[index].desc,
+        Message: 'short description',
+        type: 'item',
+        datatype: 'int',
+        value: inputsIn[index].default_value
+      });
+    } catch {
+      inputs.push({
+        id: index,
+        circle: null,
+        textObj: null,
+        Name: '',
+        ShortName: '',
+        Description: '',
+        Message: 'short description',
+        type: 'item',
+        datatype: 'int',
+        value: ''
+      });
+    }
+  }
+
+  return inputs;
+}
+
+var d3$1 = require('d3');
 
 function getCurrentData(reactContext) {
-  var allContents = d3.select('#allCanvasContents');
-  var svgContainer = d3.select('svg');
+  var allContents = d3$1.select('#allCanvasContents');
+  var svgContainer = d3$1.select('svg');
   reactContext.state.allEdges.forEach(function (element) {
     element['d'] = $('path#' + element.path_id).attr('d');
     element['circleX'] = $('rect#pathCircle' + element.path_id).attr('x');
     element['circleY'] = $('rect#pathCircle' + element.path_id).attr('y');
   });
+  console.log(reactContext.state.allComp);
   var data = {
     components: reactContext.state.allComp,
     edges: reactContext.state.allEdges,
@@ -5629,8 +5177,8 @@ function getCurrentData(reactContext) {
       transform: allContents.attr('transform'),
       kXY: svgContainer._groups[0][0].__zoom
     },
-    currentRightColWidth: parseFloat(d3.select('div#PropertiesBar').style('width')),
-    currentLeftColWidth: parseFloat(d3.select('div#LeftPropertiesBar').style('width'))
+    currentRightColWidth: parseFloat(d3$1.select('div#PropertiesBar').style('width')),
+    currentLeftColWidth: parseFloat(d3$1.select('div#LeftPropertiesBar').style('width'))
   };
   var fileData = JSON.stringify(data);
   return fileData;
@@ -5665,8 +5213,8 @@ function loadData() {
   var _this = this;
 
   var allData = JSON.parse(window.localStorage.getItem('data'));
-  var allContents = d3.select('#allCanvasContents');
-  var svgContainer = d3.select('svg');
+  var allContents = d3$1.select('#allCanvasContents');
+  var svgContainer = d3$1.select('svg');
 
   if (allData !== null) {
     if (allData.canvas_transform !== undefined && allData.canvas_transform !== null) {
@@ -5706,7 +5254,7 @@ function loadData() {
 }
 
 function CreatePaths(theEdge) {
-  d3.select('g#allPaths').append('path').attr('d', function () {
+  d3$1.select('g#allPaths').append('path').attr('d', function () {
     return theEdge.d;
   }).attr('stroke', 'black').attr('stroke-width', '5').attr('id', theEdge.path_id).attr('stroke-dasharray', '4').attr('stroke-linecap', 'round').attr('fill', 'none').attr('stroke-opacity', '0.5').lower();
   addEdgeCircle(theEdge, theEdge.d).attr('x', theEdge.circleX).attr('y', theEdge.circleY).attr('style', 'display:block');
@@ -5996,6 +5544,420 @@ var LeftContainer = /*#__PURE__*/function (_Component) {
 
   return LeftContainer;
 }(Component);
+
+var d3 = require('d3');
+
+function addEdge(from, to, fromComp, toComp) {
+  var initLink = {
+    GUID: uuidv4('E'),
+    path: null,
+    path_id: '',
+    circleX: 0,
+    circleY: 0,
+    from: from,
+    to: to,
+    fromComp: fromComp,
+    toComp: toComp
+  };
+  return initLink;
+}
+
+function handleComponentSelection() {
+  var reactContext = this;
+  var allComp = reactContext.state.allComp;
+  allComp.forEach(function (element) {
+    if (element.type === 'component' || element.type === 'toggle' || element.type === 'fileUpload' || element.type === 'listView' || element.type === 'cloud') {
+      d3.select('g#comp-' + element.GUID).on('click', function () {
+        d3.select('rect#' + element.GUID).attr('stroke-width', '2').attr('stroke', '#0064ffa8');
+        reactContext.setState({
+          selected_component_id: element.GUID
+        });
+      });
+      d3.select('rect#' + element.GUID).on('focusout', function () {
+        d3.select('rect#' + element.GUID).attr('stroke-width', '0').attr('stroke', 'none');
+      });
+    } else if (element.type === 'string') {
+      d3.selectAll('rect#' + element.GUID + ', rect.CompPBody.' + element.GUID + '.a').on('click', function () {
+        d3.select('rect#' + element.GUID).attr('stroke-width', '2').attr('stroke', '#0064ffa8');
+        d3.select('rect#statusRect' + element.GUID).attr('fill', '#0081ff');
+        reactContext.setState({
+          selected_component_id: element.GUID
+        });
+      });
+      d3.selectAll('rect#' + element.GUID + ', rect#overlaySelector' + element.GUID).on('focusout', function () {
+        d3.select('rect#' + element.GUID).attr('stroke-width', '0').attr('stroke', 'none');
+        d3.select('rect#statusRect' + element.GUID).attr('fill', '#525252');
+      });
+    } else if (element.type === 'slider') {
+      d3.select('rect#' + element.GUID).on('click', function () {
+        d3.select('rect#' + element.GUID).attr('stroke-width', '2').attr('stroke', '#0064ffa8');
+        reactContext.setState({
+          selected_component_id: element.GUID
+        });
+      }).on('focusout', function () {
+        d3.select('rect#' + element.GUID).attr('stroke-width', '1').attr('stroke', 'black');
+      });
+    } else if (element.type === 'optionList') {
+      d3.select('g#comp-' + element.GUID).on('click', function () {
+        d3.select('rect#' + element.GUID).attr('stroke-width', '2').attr('stroke', '#0064ffa8');
+        showDropDownList(element.GUID);
+        reactContext.setState({
+          selected_component_id: element.GUID,
+          optionListStarted: true,
+          optionlistRectid: element.GUID
+        });
+      });
+      d3.select('rect#' + element.GUID).on('focusout', function () {
+        d3.select('rect#' + element.GUID).attr('stroke-width', '0').attr('stroke', 'none');
+      });
+    }
+  });
+  ViewListRedrawing();
+} // End of handleComponentSelection
+//Slider component id changed to CompSBody hence will not be picked up
+//by this function. Lookout for side effects!
+//Panel changed to CompPBody
+//Toggle changed to CompTBody
+//fileUpload changed to CompFBody
+
+
+function handleTheClickOnAllComponents() {
+  var reactContext = this;
+  reactContext.state.allComp;
+  d3.selectAll('rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody, rect.CompCBody').on('mousedown', function (event) {
+    var coordinates = d3.pointer(event);
+    var pos = $('g#comp-' + this.id.replace('overlaySelector', '')).attr('transform').split('translate(')[1].replace(')', '').split(',').map(function (item) {
+      return parseFloat(item, 10);
+    });
+    reactContext.setState({
+      dragX: pos[0],
+      dragY: pos[1],
+      componentClickX: coordinates[0],
+      componentClickY: coordinates[1],
+      clicked: true,
+      startDrag: true,
+      clickedId: this.id.replace('overlaySelector', ''),
+      selected_components: [this.id.replace('overlaySelector', '')],
+      rectType: 'component'
+    });
+  });
+} // End of handleTheClickOnAllComponents
+
+
+function handleEdgeInitialization() {
+  var reactContext = this;
+  var allContents = d3.select('#allCanvasContents');
+  var toComponent = null;
+  d3.selectAll('circle').on('mousedown', function (event) {
+    reactContext.setState({
+      targetcircleId: this.id
+    });
+    var edgeStarted = reactContext.state.edgeStarted;
+    var targetcircleIN = reactContext.state.targetcircleIN;
+
+    var fromCircle = _objectSpread2({}, reactContext.state.fromCircle);
+
+    var comp_output_edges = _objectSpread2({}, reactContext.state.comp_output_edges);
+
+    var selectedcircleId;
+
+    if (edgeStarted && targetcircleIN && this !== fromCircle.element) ; else {
+      if (this.classList[0] === 'outputCir') {
+        if (comp_output_edges[this.classList[1]][this.classList[2]] === undefined || comp_output_edges[this.classList[1]][this.classList[2]] === null) {
+          selectedcircleId = this.id;
+          reactContext.setState({
+            selectedcircleId: selectedcircleId
+          });
+        } else {
+          selectedcircleId = this.id + comp_output_edges[this.classList[1]][this.classList[2]].length.toString();
+          reactContext.setState({
+            selectedcircleId: selectedcircleId
+          });
+        }
+
+        reactContext.setState({
+          edgeStarted: true
+        });
+        var x = d3.pointer(event, allContents.node())[0];
+        var y = d3.pointer(event, allContents.node())[1];
+        var initEdgex1 = x;
+        var initEdgey1 = y;
+        d3.select('g#allPaths').append('path').attr('stroke-dasharray', '4').attr('d', function () {
+          return 'M ' + initEdgex1 + ' ' + initEdgey1 + ' L ' + x + ' ' + y;
+        }).attr('stroke', 'black').attr('stroke-width', '3').attr('id', 'Path' + selectedcircleId);
+        fromCircle.element = this;
+        reactContext.setState({
+          selectedcircleId: 'Path' + selectedcircleId,
+          fromCircle: fromCircle,
+          initEdgex1: initEdgex1,
+          initEdgey1: initEdgey1
+        });
+      }
+    }
+  }).on('mousemove', function () {
+    reactContext.setState({
+      targetcircleIN: true
+    });
+  }).on('mouseout', function () {
+    reactContext.setState({
+      targetcircleIN: false
+    });
+  }).on('mouseup', function () {
+    //This event is called when the mouse cursor is inside the input circle, this means that the line is now complete and ready to be created.
+    var edgeStarted = reactContext.state.edgeStarted;
+    var allEdges = reactContext.state.allEdges;
+    var targetcircleIN = reactContext.state.targetcircleIN;
+
+    var fromCircle = _objectSpread2({}, reactContext.state.fromCircle);
+
+    var toCircle = _objectSpread2({}, reactContext.state.toCircle);
+
+    var comp_input_edges = _objectSpread2({}, reactContext.state.comp_input_edges);
+
+    var comp_output_edges = _objectSpread2({}, reactContext.state.comp_output_edges);
+
+    var root_components = reactContext.state.root_components; //What.
+
+    var parent_child_matrix = reactContext.state.parent_child_matrix;
+
+    var parent_child_matrix_fast_check = _toConsumableArray(reactContext.state.parent_child_matrix_fast_check);
+
+    var selectedcircleId = reactContext.state.selectedcircleId;
+
+    if (edgeStarted && targetcircleIN && this !== fromCircle.element && (comp_input_edges[this.classList[1]][this.classList[2]] === undefined || comp_input_edges[this.classList[1]][this.classList[2]] === null)) {
+      toCircle.element = this;
+      reactContext.setState({
+        toCircle: toCircle
+      });
+      toComponent = selectComp(toCircle.element.classList[1]);
+      selectComp(fromCircle.element.classList[1]);
+
+      if (!parent_child_matrix_fast_check.includes(fromCircle.element.classList[2] + ' ' + fromCircle.element.classList[1] + ' ' + toCircle.element.classList[2] + ' ' + toCircle.element.classList[1])) {
+        var thisEdge = addEdge(fromCircle, toCircle, fromCircle.element.classList, toCircle.element.classList);
+        var thisPath = d3.select('#' + selectedcircleId);
+        thisEdge.path_id = thisPath['_groups'][0][0].id;
+
+        if (comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]] === undefined || comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]] === null) {
+          comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]] = [thisEdge.path_id];
+        } else {
+          comp_input_edges[toCircle.element.classList[1]][toCircle.element.classList[2]].push(thisEdge.path_id);
+        }
+
+        if (comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]] === undefined || comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]] === null) {
+          comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]] = [thisEdge.path_id];
+        } else {
+          comp_output_edges[fromCircle.element.classList[1]][fromCircle.element.classList[2]].push(thisEdge.path_id);
+        } // Datatree control. FIX UNCOMMENR
+
+
+        var current_edge_comp_matrix = _objectSpread2({}, reactContext.state.edge_comp_matrix);
+
+        current_edge_comp_matrix[thisEdge.path_id] = {
+          from: fromCircle.element.classList[1],
+          to: toCircle.element.classList[1],
+          from_index: fromCircle.element.classList[2],
+          to_index: toCircle.element.classList[2]
+        };
+        reactContext.setState({
+          comp_input_edges: comp_input_edges,
+          comp_output_edges: comp_output_edges,
+          edge_comp_matrix: current_edge_comp_matrix
+        });
+
+        try {
+          if (root_components[fromCircle.element.classList[1]] !== 'branch') {
+            root_components[fromCircle.element.classList[1]] = 'root';
+            reactContext.setState({
+              root_components: root_components
+            });
+            toComponent.child = false;
+          }
+        } catch (err) {
+          console.log(err);
+        }
+
+        parent_child_matrix_fast_check.push(fromCircle.element.classList[2] + ' ' + fromCircle.element.classList[1] + ' ' + toCircle.element.classList[2] + ' ' + toCircle.element.classList[1]);
+        parent_child_matrix[fromCircle.element.classList[1]].push([fromCircle.element.classList[2], toCircle.element.classList[1], toCircle.element.classList[2]]);
+        root_components[toCircle.element.classList[1]] = 'branch';
+        toComponent.child = true;
+        allEdges.push(thisEdge);
+        reactContext.setState({
+          parent_child_matrix: parent_child_matrix,
+          parent_child_matrix_fast_check: parent_child_matrix_fast_check,
+          root_components: root_components,
+          allEdges: allEdges,
+          edgeStarted: false
+        });
+        updateAll();
+        redrawDependents(fromCircle.element.classList[1]);
+      } else {
+        console.log('Issue in parentchildmatrix (edgeInit)');
+      }
+    } else {
+      console.log('Not entering if (edgeInit)');
+    }
+  });
+} // End of handleEdgeInitialization
+
+
+function handleDoubleClick() {
+  var reactContext = this;
+  var allComp = reactContext.state.allComp;
+  allComp.forEach(function (element) {
+    if (element.type === 'string') {
+      d3.select('g#comp-' + element.GUID).on('dblclick', function () {
+        if (!reactContext.state.doubleClicked) {
+          reactContext.setState({
+            doubleClicked: true
+          });
+          $('div#propertiesBarContents').append("\n                        <div class=\"propertiesbarheader title\">String Panel Properties</div>\n                        <div class=\"propertiesbarheader label\">Name</div>\n                        <input class=\"stringPnanel Name\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Value</div>\n                        <textarea class=\"textarea stringProperties\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Panel Type</div>\n                        <form>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_text\" value=\"text\"> text<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_html\" value=\"html\"> html<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_json\" value=\"json\"> json<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_lsit\" value=\"lsit\"> list<br>\n                            <input type=\"radio\" name=\"type\" id=\"string_radio_plot\" value=\"plot\"> plot <br>\n                        </form>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Log</div>\n                        <div id=\"propertiesBarLog\" class=\"log\"></div>\n                        <button id=\"stringEditButton\">Apply</button>\n                        <button id=\"cancelStringEdit\">Cancel</button>");
+          element.outputs[0].value = element.value;
+          var StringComp = selectComp(element.GUID);
+          $('input#string_radio_' + StringComp.inputs[0].type).prop('checked', true);
+          var newName;
+          $('input.stringPnanel.Name').on('change keyup paste', function () {
+            newName = $('input.stringPnanel.Name').val();
+            d3.select('text#nodeTitle' + StringComp.GUID).text(newName); // StringComp.Name = newName;
+
+            d3.select('rect#' + StringComp.GUID).attr('width', 10 + newName.length * 6);
+          });
+
+          if (StringComp.child) {
+            $('textarea.textarea.stringProperties').prop('disabled', true);
+            $('textarea.stringProperties').text(function () {
+              return StringComp.inputs[0].value;
+            });
+            $('body').on('mousemove', function () {
+              $('textarea.stringProperties').text(function () {
+                return StringComp.inputs[0].value;
+              });
+            });
+          } else {
+            $('textarea.stringProperties').text(function () {
+              return StringComp.inputs[0].value;
+            });
+          }
+
+          $('input.stringPnanel.Name').val(StringComp.Name);
+          $('button#stringEditButton').on('click', function () {
+            submitPanelEdit(element.GUID);
+            reactContext.setState({
+              doubleClicked: false
+            });
+          });
+          $('button#cancelStringEdit').on('click', function () {
+            cancelPanelEdit();
+            reactContext.setState({
+              doubleClicked: false
+            });
+          });
+        }
+      });
+    } else if (element.type === 'optionList') {
+      d3.select('g#comp-' + element.GUID).on('dblclick', function () {
+        d3.select('rect#' + element.GUID).attr('stroke-width', '1').attr('stroke', 'black');
+        reactContext.setState({
+          optionListStarted: true,
+          optionlistRectid: element.GUID
+        });
+
+        if (!reactContext.state.doubleClicked) {
+          reactContext.setState({
+            doubleClicked: true
+          });
+          $('div#propertiesBarContents').append("\n                        <div class=\"propertiesbar title\">Option list properties.</div>\n                        <div class=\"propertiesbar label\">options (as dictionary)</div>\n                        <textarea class=\"textarea optionlistProperties\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbar label\">\n                            Preview:\n                        </div>\n                        <select id=\"propertisBarSelecId\">\n\n                        </select>\n                        <hr>\n                        <div class=\"propertiesbar label\">\n                            Log\n                        </div>\n                        <div id=\"propertiesBarLog\" class=\"log\"></div>\n                        <button id=\"applyChangeButton\">Apply</button>\n                        ");
+          var compKey = element.GUID;
+          submitOptionListEdit(compKey);
+          $('button#applyChangeButton').on('click', function (e) {
+            readyToGoSubmit(compKey);
+            reactContext.setState({
+              doubleClicked: false
+            });
+          });
+        }
+      });
+    } else if (element.type === 'slider') {
+      d3.select('g#comp-' + element.GUID).on('dblclick', function () {
+        if (!reactContext.state.doubleClicked) {
+          reactContext.setState({
+            doubleClicked: true
+          });
+          $('div#propertiesBarContents').append("\n                        <div class=\"propertiesbarheader label\">Slider</div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Min-value : </div><input type=\"number\" id=\"new_slider_min_value\"></div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Max-value: </div><input type=\"number\" id=\"new_slider_max_value\"></div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Step: </div><input type=\"number\" id=\"new_slider_step_value\"></div>\n                        <div id=\"numerical_slider_container\"><div id=\"string_input_label\">Current-value: </div><input type=\"number\" id=\"new_slider_current_value\"></div>\n                        <button id=\"sliderEditButton\">Save</button>\n                        <button id=\"cancelSliderEdit\">Cancel</button>\n                        ");
+          $('input#new_slider_min_value').val(element.min);
+          $('input#new_slider_max_value').val(element.max);
+          $('input#new_slider_step_value').val(element.step);
+          $('input#new_slider_current_value').val(element.value); //On save, set double clicked to false
+
+          $('button#sliderEditButton').on('click', function (e) {
+            submitSliderEdit(element.GUID);
+            reactContext.setState({
+              doubleClicked: false
+            });
+          });
+          $('button#cancelSliderEdit').on('click', function (e) {
+            cancelSliderEdit();
+            reactContext.setState({
+              doubleClicked: false
+            });
+          });
+        }
+      });
+    } else if (element.type === 'toggle') {
+      var currentToggle = selectComp(element.GUID);
+      d3.select('g#comp-' + element.GUID).on('dblclick', function () {
+        var toggleValue = $('text.nodetitle.node_title' + element.GUID).text();
+        d3.select('text.nodetitle.node_title' + element.GUID).text(function () {
+          if (toggleValue === 'True') {
+            currentToggle.value = 'False';
+            currentToggle.outputs[0].value = 'False';
+            return 'False';
+          } else {
+            currentToggle.value = 'True';
+            currentToggle.outputs[0].value = 'True';
+            return 'True';
+          }
+        }).attr('fill', function () {
+          if (toggleValue === 'True') {
+            d3.select('#dummyRect_' + element.GUID).attr('fill', '#2c3e50');
+            return '#ecf0f1';
+          } else {
+            d3.select('#dummyRect_' + element.GUID).attr('fill', '#ecf0f1');
+            return '#2c3e50';
+          }
+        });
+        redrawDependents(currentToggle.GUID);
+      });
+    } else if (element.type === 'cloud') {
+      d3.select('g#comp-' + element.GUID).on('dblclick', function () {
+        if (!reactContext.state.doubleClicked) {
+          reactContext.setState({
+            doubleClicked: true
+          });
+          $('div#propertiesBarContents').append("\n                        <div class=\"propertiesbarheader title\">Cloud Function Properties</div>\n                        <div class=\"propertiesbarheader label\">Function Name</div>\n                        <input class=\"cloudProp Name\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Input List</div>\n                        <textarea class=\"cloudProp textarea stringProperties Val\"></textarea>\n                        <hr>\n                        <div class=\"propertiesbarheader label\">Cloud function URL</div>\n                        <input class=\"cloudProp url\"></textarea>\n                        <div></div>\n                        <div class=\"propertiesbarheader label\">Log</div>\n                        <div id=\"propertiesBarLog\" class=\"log\"></div>\n                        <button id=\"cloudEditButton\">Apply</button>\n                        <button id=\"cancelCloudEdit\">Cancel</button>");
+          var cloudComp = selectComp(element.GUID);
+          $('input.cloudProp.Name').val(cloudComp.Name); // var inputString = JSON.stringify(cloudComp.inputs);
+          // $('textarea.cloudProp.Val').val(inputString.substring(1, inputString.length-1));
+
+          $('textarea.cloudProp.Val').val(cloudComp.inputNames);
+          $('input.cloudProp.url').val(cloudComp.url);
+          $('button#cloudEditButton').on('click', function () {
+            submitCloudEdit(element.GUID);
+            reactContext.setState({
+              doubleClicked: false
+            });
+          });
+          $('button#cancelCloudEdit').on('click', function () {
+            cancelCloudEdit();
+            reactContext.setState({
+              doubleClicked: false
+            });
+          });
+        }
+      });
+    } //TODO : else if other types than string, then you have to open the properties window.
+
+  });
+} // End of HandleDoubleClick
 
 /**
  * This file contains all information about the component, which are:
@@ -7262,13 +7224,17 @@ var typeList = ['component', 'optionList', 'string'];
 var dftypeList = ['shlow', 'dp'];
 var categoryList = ['Basic', 'BuildSimHub', 'OsiSoft', 'Pandas', 'String Operations'];
 
-function addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color = "#F23322", backgroundImage = "", calledFunc = undefined) {
+function addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList) {
+  var color = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : "#F23322";
+  var backgroundImage = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : "";
+  var calledFunc = arguments.length > 10 && arguments[10] !== undefined ? arguments[10] : undefined;
+
   //check requirements
   if (typeList.includes(type) && dftypeList.includes(dftype) && categoryList.includes(category)) {
-    let nameCheck = true;
+    var nameCheck = true;
 
-    for (let index = 0; index < inputList.length; index++) {
-      const element = inputList[index];
+    for (var index = 0; index < inputList.length; index++) {
+      var element = inputList[index];
 
       if (element.name === undefined) {
         nameCheck = false;
@@ -7276,17 +7242,17 @@ function addNewUdo(name, shname, desc, type, dftype, category, inputList, output
       }
     }
 
-    for (let index = 0; index < outputList.length; index++) {
-      const element = outputList[index];
+    for (var _index = 0; _index < outputList.length; _index++) {
+      var _element = outputList[_index];
 
-      if (element.name === undefined) {
+      if (_element.name === undefined) {
         nameCheck = false;
         break;
       }
     }
 
     if (nameCheck) {
-      let newComp = {
+      var newComp = {
         name: name,
         shname: shname,
         desc: desc,
@@ -7320,19 +7286,19 @@ function addNewUdo(name, shname, desc, type, dftype, category, inputList, output
 
 function addAllUdo(list) {
   if (list !== undefined) {
-    for (let index = 0; index < list.length; index++) {
-      const element = list[index];
-      let name = element.name;
-      let shname = element.shname;
-      let desc = element.desc;
-      let type = element.type;
-      let dftype = element.dftype;
-      let category = element.category;
-      let inputList = element.inputList;
-      let outputList = element.outputList;
-      let color = element.color === undefined ? '#F23322' : element.color;
-      let backgroundImage = element.backgroundImage === undefined ? '' : element.backgroundImage;
-      let calledFunc = element.func;
+    for (var index = 0; index < list.length; index++) {
+      var element = list[index];
+      var name = element.name;
+      var shname = element.shname;
+      var desc = element.desc;
+      var type = element.type;
+      var dftype = element.dftype;
+      var category = element.category;
+      var inputList = element.inputList;
+      var outputList = element.outputList;
+      var color = element.color === undefined ? '#F23322' : element.color;
+      var backgroundImage = element.backgroundImage === undefined ? '' : element.backgroundImage;
+      var calledFunc = element.func;
       addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color, backgroundImage, calledFunc);
     }
   }
@@ -7365,7 +7331,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z = "body {\r\n    -webkit-user-select: none;\r\n    -khtml-user-select: none;\r\n    -moz-user-select: none;\r\n    -o-user-select: none;\r\n    user-select: none;\r\n    overflow-y: hidden; /* Hide vertical scrollbar */\r\n    overflow-x: hidden;\r\n}\r\n\r\nsvg {\r\n    border: solid 1px #565656;\r\n}\r\n\r\n#checks {\r\n    margin: 10px;\r\n}\r\n\r\ntext {\r\n    pointer-events: none;\r\n    user-select: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu mono';\r\n}\r\n\r\n.nodeLog {\r\n    font-size: small;\r\n    font-family: monospace;\r\n    pointer-events: none;\r\n}\r\n\r\ninput:focus,\r\nselect:focus,\r\ntextarea:focus,\r\nbutton:focus {\r\n    outline: none;\r\n}\r\n\r\nrect:focus {\r\n    outline: none;\r\n}\r\n\r\n.output {\r\n    font-family: monospace;\r\n    font-size: small;\r\n    color: white;\r\n}\r\n\r\n.input {\r\n    font-family: monospace;\r\n    font-size: small;\r\n}\r\n\r\n.nodetitle {\r\n    font-family: 'ubuntu mono';\r\n    font-size: 13px;\r\n    font-weight: bold;\r\n    color: white;\r\n    pointer-events: none;\r\n    text-align: center;\r\n}\r\n\r\ndiv#someData {\r\n    padding: 8px;\r\n    padding-top: 25px;\r\n    font-size: x-small;\r\n    font-family: monospace;\r\n}\r\n\r\ncircle {\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#PropertiesBarSelector {\r\n    width: 4px;\r\n    position: fixed;\r\n    right: 501px;\r\n    background-color: #000000;\r\n    height: 100%;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    background-color: #2b3d50;\r\n    right: 0px;\r\n    top: 0px;\r\n    min-height: 35%;\r\n    transition-timing-function: ease-in-out;\r\n    transition: height 2s;\r\n    transition-delay: 1s;  \r\n    width: 220px;\r\n    top: 60px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n}\r\n\r\ndiv#mainGrid {\r\n    position: relative;\r\n    top: 0px;\r\n    left: 0px;\r\n    background-color: #ececec;\r\n}\r\n\r\ndiv#textAreaBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\ndiv#optionlistBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\nselect#optionListSelectItems {\r\n    background: white;\r\n    opacity: 1;\r\n    font-family: monospace;\r\n    font-weight: bold;\r\n    border: 1px solid black;\r\n    border-radius: 3px;\r\n}\r\n\r\nh5 {\r\n    font-family: monospace;\r\n    margin-top: 1px;\r\n    margin-bottom: 4px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#LeftPropertiesBar {\r\n    width: 200px;\r\n    position: fixed;\r\n    background-color: #2b3d50;\r\n    left: 0px;\r\n    top: 0px;\r\n}\r\n\r\n.additionalData {\r\n    border-radius: 7px;\r\n    font-size: x-small;\r\n    width: 222px;\r\n    background-color: #ffffff47;\r\n    font-family: monospace;\r\n    color: #5d5d5d;\r\n    padding: 3px;\r\n    border: none;\r\n}\r\n\r\ndiv#LeftPropertiesBarSelector {\r\n    width: 5px;\r\n    height: 100%;\r\n    display: none;\r\n    position: fixed;\r\n    left: 200px;\r\n    background-color: #252525;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#TopPropertiesBar {\r\n    position: fixed;\r\n    top: 0px;\r\n    left: 0px;\r\n    width: 100%;\r\n    height: 30px;\r\n    background-color: #e6e6e6;\r\n}\r\n\r\ndiv#TopPropertiesBarSelector {\r\n    height: 2px;\r\n    width: 100%;\r\n    position: fixed;\r\n    left: 0px;\r\n    border-bottom: 1px solid #858585;\r\n    top: 47px;\r\n    cursor: ns-resize;\r\n}\r\n\r\nbutton.menubarButtons {\r\n    background-color: #6d6d6d;\r\n    border: none;\r\n    cursor: pointer;\r\n    color: #444444;\r\n    color: #cacaca;\r\n    font-family: 'Poppins', sans-serif;\r\n}\r\n\r\nbutton.menubarButtons:hover {\r\n    background-color: #aaabaa;\r\n}\r\n\r\ndiv#DefName {\r\n    width: 100%;\r\n    height: 32px;\r\n    padding: 0px 0px;\r\n    background: #2b3d50;\r\n    border-bottom: 1px solid #434343;\r\n}\r\n\r\ndiv#BottomPropertiesBar {\r\n    position: fixed;\r\n    bottom: 0px;\r\n    height: 20px;\r\n    left: 0px;\r\n    border-top: 1px solid #757575;\r\n    box-shadow: 0px -1px 0px #313131;\r\n    background-color: #525252;\r\n    background: linear-gradient(180deg, rgba(96, 96, 96, 1) 0%, rgba(82, 82, 82, 1) 100%);\r\n    width: 100%;\r\n}\r\n\r\na#changeTitleName {\r\n    color: #cfd8dc;\r\n    text-decoration: none;\r\n}\r\n\r\n.ccbody {\r\n    width: 100%;\r\n}\r\n\r\n.ccatheader {\r\n    padding: 0px 3px;\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    /* border: 1px solid #2c67a5; */\r\n    color: #e7e7e7;\r\n    padding: 4px;\r\n    cursor: pointer;\r\n    overflow: hidden;\r\n}\r\n\r\nbutton.standardcat.button {\r\n    vertical-align: middle;\r\n    border: 1px solid #444444;\r\n    width: 32px;\r\n    height: 32px;\r\n    margin: 1px;\r\n    background: none;\r\n    background: -moz-linear-gradient(top, #d6d4d4 0%, #adadad 100%);\r\n    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d6d4d4', endColorstr='#adadad', GradientType=0);\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: x-small;\r\n    color: #ffffff;\r\n    cursor: pointer;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#topLeftLogo {\r\n    width: 27px;\r\n    height: 32px;\r\n    float: left;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70302709-af822a80-1838-11ea-913b-5f935ea282ed.png);\r\n    background-repeat: no-repeat;\r\n    background-size: 26px;\r\n    background-position: center;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#settingsIcon {\r\n    float: right;\r\n    position: fixed;\r\n    top: 0px;\r\n    color: #c5c5c5;\r\n    right: 0px;\r\n    text-align: center;\r\n    padding: 11px;\r\n}\r\n\r\nbutton.standardcat.button:hover {\r\n    background: #c1c1c1;\r\n}\r\n\r\ndiv#Addedmessage {\r\n    font-family: monospace;\r\n    color: white;\r\n    padding: 2px;\r\n}\r\n\r\n#minimizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #2b3d50;\r\n    position: absolute;\r\n    top: 0px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #c5c5c5;\r\n    cursor: pointer;\r\n    border-left: 1px solid #464646;\r\n    border-bottom: 1px solid #464646;\r\n    margin-top: -4px;\r\n}\r\n\r\ndiv#maximizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #5d5d5d;\r\n    position: absolute;\r\n    top: 38px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #ababab;\r\n    cursor: pointer;\r\n    margin-top: -4px;\r\n    text-shadow: 1px 1px 1px #4b4b4b;\r\n}\r\n\r\n.propertiesbar.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbarheader.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbar.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    width: 98%;\r\n    color: #2f2f2f;\r\n    padding: 3px 10px;\r\n    background-color: gray;\r\n    border-bottom: 1px solid #909090;\r\n    border-radius: 6px 6px 0px 0px;\r\n    text-shadow: 1px 1px 0px #a5a5a5;\r\n}\r\n\r\ntextarea.textarea.optionlistProperties {\r\n    width: 98%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    height: 150px;\r\n    border-radius: 0px 0px 6px 6px;\r\n    border: 1px solid gray;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntextarea.textarea.stringProperties {\r\n    width: 100%;\r\n    padding: 0px;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    min-height: 10vh;\r\n    border: none;\r\n    border-radius: 3px;\r\n    background-color: #ffffffc7;\r\n}\r\n\r\n.propertiesbarheader.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    font-weight: bold;\r\n    width: 100%;\r\n    color: #bcbcbc;\r\n    padding: 3px;\r\n}\r\n\r\nselect#propertisBarSelecId {\r\n    width: 99%;\r\n    padding: 1px 2px;\r\n    background-color: gainsboro;\r\n    border-radius: 0px 0px 6px 6px;\r\n}\r\n\r\ndiv#propertiesBarLog {\r\n    width: 100%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    font-size: small;\r\n    padding: 2px;\r\n}\r\n\r\nrect.optionListoption {\r\n    cursor: pointer;\r\n}\r\n\r\nrect.optionListoption:hover {\r\n    fill: #d9e3e6;\r\n    stroke: #989898;\r\n}\r\n\r\ndiv#error {\r\n    color: #c0392b;\r\n    padding: 8px;\r\n}\r\n\r\nforeignObject.textbody {\r\n    font-family: 'ubuntu mono', monospace;\r\n    font-size: x-small;\r\n    color: #4e4e4e;\r\n    overflow: auto;\r\n}\r\n\r\ndiv#catHead {\r\n    font-family: 'ubuntu';\r\n    font-size: small;\r\n    width: fit-content;\r\n    padding: 2px 6px;\r\n    color: white;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-left: 3px;\r\n}\r\n\r\ndiv#catbody {\r\n    margin: 0px;\r\n    border-bottom: none;\r\n    border-right: none;\r\n}\r\n\r\ndiv#catcard {\r\n    margin-bottom: 4px;\r\n    padding: 0px;\r\n}\r\n\r\nrect.xAnchor {\r\n    cursor: ew-resize;\r\n}\r\n\r\nrect.yAnchor {\r\n    cursor: ns-resize;\r\n}\r\n\r\nrect.xyAnchor {\r\n    cursor: nwse-resize;\r\n}\r\n\r\n/* ::-webkit-scrollbar {\r\n    width: 6px;\r\n    height: 10px;\r\n} */\r\n\r\n/* Track */\r\n\r\n/* ::-webkit-scrollbar-track {\r\n    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\r\n    -webkit-border-radius: 4px;\r\n    border-radius: 4px;\r\n    touch-action: manipulation;\r\n} */\r\n\r\n/* Handle */\r\n\r\n/* ::-webkit-scrollbar-thumb {\r\n    -webkit-border-radius: 4px;\r\n    background: rgb(0, 0, 0);\r\n}\r\n\r\n::-webkit-scrollbar-thumb:window-inactive {\r\n    background: rgba(255, 0, 0, 0.4);\r\n} */\r\n\r\npath.play {\r\n    cursor: pointer;\r\n}\r\n\r\npath.play:hover {\r\n    fill: gray;\r\n}\r\n\r\nth {\r\n    border: none;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntd {\r\n    border: none;\r\n    background-color: whitesmoke;\r\n    overflow: hidden;\r\n}\r\n\r\ntbody {\r\n    font-family: ubuntu;\r\n    font-size: small;\r\n}\r\n\r\nth {\r\n    font-family: ubuntu;\r\n    text-align: left;\r\n    font-size: small;\r\n}\r\n\r\ndiv#propertiesBarContents {\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n    font-weight: normal;\r\n    color: #ffffff;\r\n    margin: 2px 0px 10px 0px;\r\n}\r\n\r\nforeignObject.panel_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ntbody {\r\n    border: none;\r\n}\r\n\r\ntable.dataframe {\r\n    border: none;\r\n}\r\n\r\nrect {\r\n    cursor: move;\r\n}\r\n\r\ninput.stringPnanel.Name {\r\n    width: 98%;\r\n    border: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\nforeignObject.panel_edit_mode a {\r\n    font-size: x-small;\r\n    color: #bdbdbd;\r\n    font-family: 'ubuntu mono';\r\n    position: relative;\r\n    text-decoration: none;\r\n    top: -8px;\r\n}\r\n\r\ndiv#numerical_slider_container {\r\n    padding: 7px;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\ndiv#help_t3 {\r\n    line-height: 1em;\r\n    color: #ec5f66;\r\n    margin-top: 5px;\r\n    margin-bottom: 3px;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_t4 {\r\n    color: #009688;\r\n    margin-left: 18px;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-bottom: 5px;\r\n}\r\n\r\ndiv#help_p {\r\n    margin-left: 36px;\r\n    margin-right: 8px;\r\n    text-align: justify;\r\n}\r\n\r\nspan#code {\r\n    color: #c23d51;\r\n    border-radius: 2px;\r\n    font-family: Courier;\r\n    font-size: xx-small;\r\n    vertical-align: middle;\r\n    padding: 1px 4px;\r\n    background-color: #32c8ac2e;\r\n}\r\n\r\ntable.dataframe {\r\n    font-size: x-small;\r\n}\r\n\r\nthead {\r\n    font-size: x-small;\r\n}\r\n\r\nth {\r\n    font-size: x-small;\r\n}\r\n\r\ntd {\r\n    font-size: x-small;\r\n}\r\n\r\nspan#errorTitle {\r\n    color: #e91e63;\r\n    font-weight: bold;\r\n    background-color: #f4433638;\r\n    border-radius: 3px;\r\n}\r\n\r\na.menubarButtons {\r\n    text-decoration: unset;\r\n    color: #000000;\r\n    text-shadow: 1px 1px 4px #4b4b4b;\r\n    font-size: small;\r\n    padding: 0px 6px;\r\n    margin: 1px 1px;\r\n    float: left;\r\n}\r\n\r\ndiv#buttonClickedname {\r\n    color: white;\r\n    font-size: small;\r\n    padding: 0px 8px;\r\n    margin: 0px;\r\n    float: left;\r\n    position: absolute;\r\n    bottom: 25px;\r\n    left: 224px;\r\n    background-color: #3d3d3d;\r\n}\r\n\r\npre {\r\n    margin: 0px;\r\n}\r\n\r\ninput.inputFileUpload {\r\n    border: none;\r\n    border-radius: 4px;\r\n    margin: 2px 2px;\r\n    background: #2b3d50;\r\n    height: 20px;\r\n    font-family: 'ubuntu mono';\r\n    color: white;\r\n}\r\n\r\ninput.submitFileUpload {\r\n    border-radius: 4px;\r\n    float: right;\r\n    margin: 3px;\r\n}\r\n\r\nforeignObject.fileUpload_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ninput#fileUploadFormToTheCloud {\r\n    border-radius: 1px;\r\n    margin-left: 1px;\r\n    /* height: 20px; */\r\n}\r\n\r\na.open_uploadedFile_link {\r\n    text-decoration: none;\r\n    color: black;\r\n    padding: 0px 6px;\r\n    position: relative;\r\n    top: 1px;\r\n    border-radius: 2px;\r\n    margin-left: 3px;\r\n    background-color: #e8e8e8;\r\n}\r\n\r\ndiv#TheContainedFile {\r\n    color: white;\r\n    padding: 2px 5px;\r\n    font-family: 'ubuntu';\r\n    display: inline;\r\n    font-size: small;\r\n    border-right: 1px solid gray;\r\n}\r\n\r\ndiv#PleaseWaitOverLay {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: #ffffff8a;\r\n    color: black;\r\n    text-align: center;\r\n    margin: auto;\r\n    line-height: 100vh;\r\n}\r\n\r\nselect.listView {\r\n    width: 198px;\r\n    height: 179px;\r\n    background-color: #f0f0f0;\r\n    border: 1px solid gray;\r\n    border-radius: 3px;\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n}\r\n\r\noption#someSelection {\r\n    background-color: #e0e0e0;\r\n    box-shadow: 0px 1px 0px white;\r\n    margin-bottom: 1px;\r\n}\r\n\r\ntext.statusTextClass {\r\n    font-size: x-small;\r\n}\r\n\r\n.subcatheader {\r\n    padding-left: 1em;\r\n    color: #ffca28;\r\n    font-size: small;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_quote {\r\n    border: 1px solid #cfcfcf;\r\n    padding: 2px;\r\n    border-radius: 3px;\r\n    background-color: #f4f4f4;\r\n    font-family: courier new;\r\n    font-size: xx-small;\r\n}\r\n\r\nforeignObject#halign_box {\r\n    font-size: 20px;\r\n    color: white;\r\n    text-decoration: none;\r\n    text-align: center;\r\n}\r\n\r\nforeignObject#halign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    margin: 0px 4px;\r\n}\r\n\r\nforeignObject#halign_box a:hover {\r\n    text-decoration: none;\r\n    color: #ffc107;\r\n}\r\n\r\ni.fa.fa-pause {\r\n    margin-left: -1px;\r\n    padding: 0px;\r\n}\r\n\r\nforeignObject#valign_box {\r\n    font-size: 20px;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n    padding: 4px 2px;\r\n}\r\n\r\nforeignObject#valign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    font-size: 20px;\r\n    display: inline-grid;\r\n}\r\n\r\nforeignObject#valign_box a:hover {\r\n    color: #ffc107;\r\n}\r\n\r\na#valign_icon {\r\n    float: left;\r\n    margin: 5px 4px;\r\n}\r\n\r\na.standardcat.button {\r\n    width: 32px;\r\n    height: 32px;\r\n    border: 1px solid black;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#leftbarcontainer {\r\n    width: 225px;\r\n    min-height: 250px;\r\n    float: left;\r\n    margin-top: 2.5px;\r\n}\r\n\r\n.toolbarTopToggleItem {\r\n    height: 25px;\r\n    display: block;\r\n    line-height: 25px;\r\n    color: #1c1c1c;\r\n    font-size: small;\r\n    float: left;\r\n}\r\n\r\n.toolbarTopToggleContainer {\r\n    width: 225px;\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n    text-align: center;\r\n    float: left;\r\n}\r\n\r\ndiv#toolbar_container_1_1_2 {\r\n    width: 25px;\r\n    float: left;\r\n    background-color: red;\r\n    height: 25px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#toolbar_container_1_2 {\r\n    background-color: #2d2d2d;\r\n    width: 225px;\r\n    height: 250px;\r\n}\r\n\r\ndiv#toolbar_container_1_2_1 {\r\n    box-sizing: border-box;\r\n    width: 200px;\r\n    background-color: #e6e6e6;\r\n    min-height: 200px;\r\n    float: left;\r\n    border: 1px solid #cfcfcf;\r\n}\r\n\r\n.mainButtonItem {\r\n    box-sizing: border-box;\r\n    width: 49.5px;\r\n    height: 49.5px;\r\n    float: left;\r\n    background-color: #6060601f;\r\n    display: inline-block;\r\n    vertical-align: middle;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70328473-107b2400-1874-11ea-88ff-dcca67fd98a9.png);\r\n    line-height: 50px;\r\n    text-align: center;\r\n    border: 1px solid #252525;\r\n    color: #ffffffed;\r\n    background-size: 36px;\r\n    font-size: x-small;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    overflow: hidden;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    overflow: visible;\r\n}\r\n\r\ndiv#toolbar_container_1_2_2 {\r\n    width: 25px;\r\n    float: left;\r\n    height: 200px;\r\n    background-color: #c1c1c1;\r\n    box-sizing: border-box;\r\n    border-right: 1px solid #373737;\r\n}\r\n\r\n.rightToggleButton {\r\n    background-image: url(https://www.corasupport.org/wp-content/uploads/2015/11/placeholder-icon-300x300-v1b.png);\r\n    background-size: 20px;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    cursor: pointer;\r\n    font-size: small;\r\n    background-color: #a3a3a3;\r\n    width: 23px;\r\n    height: 23px;\r\n    text-align: center;\r\n    line-height: 25px;\r\n    border: 1px solid #2d2d2d;\r\n    border-bottom: 1px solid #565656;\r\n}\r\n\r\ndiv#toolbar_container_1_2_0 {\r\n    background-color: #707070;\r\n    font-size: small;\r\n    color: white;\r\n    line-height: 25px;\r\n    font-size: xx-small;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    background-color: #252525;\r\n    transition: 0.2s;\r\n    cursor: pointer;\r\n    border: 1px solid #818181;\r\n}\r\n\r\n.toptoggleitem {\r\n    background-color: #d1d1d1;\r\n    margin: 3px 4px 0px 0px;\r\n    height: 20px;\r\n    padding: 0px 5px;\r\n    line-height: 20px;\r\n    border: 1px solid #aaaaaa;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    background-color: #2b3d50;\r\n    border-color: #2b3d50;\r\n    color: #cfd8dc;\r\n}\r\n\r\n.rightToggleButton:hover {\r\n    background-color: #565656;\r\n    transition: 0.5s;\r\n    color: #ffffff;\r\n    border: 1px solid #cecece;\r\n}\r\n\r\n.rightToggleButton:focus {\r\n    background-color: #ffc107;\r\n    color: black;\r\n    text-shadow: 0px 0px 4px black;\r\n}\r\n\r\n.toptoggleitem:hover {\r\n    border-color: #ffc107;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#NoneTabbedToolBoxText {\r\n    position: relative;\r\n    top: 50%;\r\n    transform: rotate(-90deg);\r\n    font-size: small;\r\n    line-height: 25px;\r\n    text-shadow: 0px 0px 4px #000000;\r\n}\r\n\r\ndiv.rightToggleButton span#hint {\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n    display: none;\r\n    background-color: #00000066;\r\n    border: 1px solid #565656;\r\n    opacity: 0;\r\n}\r\n\r\n.tooltip {\r\n    position: relative;\r\n    display: inline-block;\r\n    /* border-bottom: 1px dotted black; */\r\n  }\r\n  \r\nspan.tooltiptext {\r\n    visibility: hidden;\r\n    text-align: center;\r\n    border-radius: 6px;\r\n    padding: 0px 4px;\r\n    /* Position the tooltip */\r\n    position: absolute;\r\n    display: block;\r\n    color: black;\r\n    background-color: white;\r\n    line-height: normal;\r\n    width: fit-content;\r\n    top: 3px;\r\n    left: 25px;  \r\n    z-index: 1;\r\n}\r\n\r\n.tooltip:hover .tooltiptext {\r\n    visibility: visible;\r\n}\r\n\r\np.iconText {\r\n    display: block;\r\n    text-overflow: ellipsis;\r\n    width: 40px;\r\n    overflow: hidden;\r\n    white-space: nowrap;\r\n    padding: 5px;\r\n    line-height: normal;\r\n}\r\n  \r\ndiv.mainButtonItem span#hint {\r\n    position: relative;\r\n    width: fit-content;\r\n    display: none;\r\n    opacity: 0;\r\n    background-color: #ffffff;\r\n    color: #000000;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    overflow: visible;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n}\r\n\r\ndiv.rightToggleButton:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\n.canvas_container {\r\n    position: fixed;\r\n    top: 30px;\r\n    left: 225px;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.canvas_container_inner {\r\n    margin: 3px;\r\n}\r\n\r\n.canvas_tab_container {\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n}\r\n\r\nh1 {\r\n    margin: 0px;\r\n}\r\n\r\ndiv#somethingLater {\r\n    width: 100%;\r\n    height: 1000px;\r\n    background-color: #666666;\r\n    overflow: scroll;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\ntextarea#script_body_editor {\r\n    height: 100vh;\r\n}\r\n\r\ndiv#codeBody {\r\n    height: 100vh;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    transition: 2s;\r\n}\r\n\r\n.toptoggleitem.selected:hover {\r\n    transition: 2s;\r\n    min-height: 36%;\r\n}";
+var css_248z = "/* Copy from newUIstyle_light.css*/\r\nbody {\r\n    -webkit-user-select: none;\r\n    -khtml-user-select: none;\r\n    -moz-user-select: none;\r\n    -o-user-select: none;\r\n    user-select: none;\r\n    overflow-y: hidden; /* Hide vertical scrollbar */\r\n    overflow-x: hidden;\r\n}\r\n\r\nsvg {\r\n    border: solid 1px #565656;\r\n}\r\n\r\n#checks {\r\n    margin: 10px;\r\n}\r\n\r\ntext {\r\n    pointer-events: none;\r\n    user-select: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu mono';\r\n}\r\n\r\n.nodeLog {\r\n    font-size: small;\r\n    font-family: monospace;\r\n    pointer-events: none;\r\n}\r\n\r\ninput:focus,\r\nselect:focus,\r\ntextarea:focus,\r\nbutton:focus {\r\n    outline: none;\r\n}\r\n\r\nrect:focus {\r\n    outline: none;\r\n}\r\n\r\n.output {\r\n    font-family: monospace;\r\n    font-size: small;\r\n    color: white;\r\n}\r\n\r\n.input {\r\n    font-family: monospace;\r\n    font-size: small;\r\n}\r\n\r\n.nodetitle {\r\n    font-family: 'ubuntu mono';\r\n    font-size: 13px;\r\n    font-weight: bold;\r\n    color: white;\r\n    pointer-events: none;\r\n    text-align: center;\r\n}\r\n\r\ndiv#someData {\r\n    padding: 8px;\r\n    padding-top: 25px;\r\n    font-size: x-small;\r\n    font-family: monospace;\r\n}\r\n\r\ncircle {\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#PropertiesBarSelector {\r\n    width: 4px;\r\n    position: fixed;\r\n    right: 501px;\r\n    background-color: #000000;\r\n    height: 100%;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#PropertiesBar {\r\n    background-color: #2b3d50;\r\n    right: 0px;\r\n    top: 0px;\r\n    min-height: 35%;\r\n    transition-timing-function: ease-in-out;\r\n    transition: height 2s;\r\n    transition-delay: 1s;  \r\n    width: 220px;\r\n    top: 60px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n}\r\n\r\ndiv#mainGrid {\r\n    position: relative;\r\n    top: 0px;\r\n    left: 0px;\r\n    background-color: #ececec;\r\n}\r\n\r\ndiv#textAreaBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\ndiv#optionlistBox {\r\n    position: absolute;\r\n    top: 0px;\r\n    left: 0px;\r\n    opacity: 0.8;\r\n}\r\n\r\nselect#optionListSelectItems {\r\n    background: white;\r\n    opacity: 1;\r\n    font-family: monospace;\r\n    font-weight: bold;\r\n    border: 1px solid black;\r\n    border-radius: 3px;\r\n}\r\n\r\nh5 {\r\n    font-family: monospace;\r\n    margin-top: 1px;\r\n    margin-bottom: 4px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#LeftPropertiesBar {\r\n    width: 200px;\r\n    position: fixed;\r\n    background-color: #2b3d50;\r\n    left: 0px;\r\n    top: 0px;\r\n}\r\n\r\n.additionalData {\r\n    border-radius: 7px;\r\n    font-size: x-small;\r\n    width: 222px;\r\n    background-color: #ffffff47;\r\n    font-family: monospace;\r\n    color: #5d5d5d;\r\n    padding: 3px;\r\n    border: none;\r\n}\r\n\r\ndiv#LeftPropertiesBarSelector {\r\n    width: 5px;\r\n    height: 100%;\r\n    display: none;\r\n    position: fixed;\r\n    left: 200px;\r\n    background-color: #252525;\r\n    top: 0px;\r\n    cursor: ew-resize;\r\n}\r\n\r\ndiv#TopPropertiesBar {\r\n    position: fixed;\r\n    top: 0px;\r\n    left: 0px;\r\n    width: 100%;\r\n    height: 30px;\r\n    background-color: #e6e6e6;\r\n}\r\n\r\ndiv#TopPropertiesBarSelector {\r\n    height: 2px;\r\n    width: 100%;\r\n    position: fixed;\r\n    left: 0px;\r\n    border-bottom: 1px solid #858585;\r\n    top: 47px;\r\n    cursor: ns-resize;\r\n}\r\n\r\nbutton.menubarButtons {\r\n    background-color: #6d6d6d;\r\n    border: none;\r\n    cursor: pointer;\r\n    color: #444444;\r\n    color: #cacaca;\r\n    font-family: 'Poppins', sans-serif;\r\n}\r\n\r\nbutton.menubarButtons:hover {\r\n    background-color: #aaabaa;\r\n}\r\n\r\ndiv#DefName {\r\n    width: 100%;\r\n    height: 32px;\r\n    padding: 0px 0px;\r\n    background: #2b3d50;\r\n    border-bottom: 1px solid #434343;\r\n}\r\n\r\ndiv#BottomPropertiesBar {\r\n    position: fixed;\r\n    bottom: 0px;\r\n    height: 20px;\r\n    left: 0px;\r\n    border-top: 1px solid #757575;\r\n    box-shadow: 0px -1px 0px #313131;\r\n    background-color: #525252;\r\n    background: linear-gradient(180deg, rgba(96, 96, 96, 1) 0%, rgba(82, 82, 82, 1) 100%);\r\n    width: 100%;\r\n}\r\n\r\na#changeTitleName {\r\n    color: #cfd8dc;\r\n    text-decoration: none;\r\n}\r\n\r\n.ccbody {\r\n    width: 100%;\r\n}\r\n\r\n.ccatheader {\r\n    padding: 0px 3px;\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    /* border: 1px solid #2c67a5; */\r\n    color: #e7e7e7;\r\n    padding: 4px;\r\n    cursor: pointer;\r\n    overflow: hidden;\r\n}\r\n\r\nbutton.standardcat.button {\r\n    vertical-align: middle;\r\n    border: 1px solid #444444;\r\n    width: 32px;\r\n    height: 32px;\r\n    margin: 1px;\r\n    background: none;\r\n    background: -moz-linear-gradient(top, #d6d4d4 0%, #adadad 100%);\r\n    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#d6d4d4', endColorstr='#adadad', GradientType=0);\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: x-small;\r\n    color: #ffffff;\r\n    cursor: pointer;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#topLeftLogo {\r\n    width: 27px;\r\n    height: 32px;\r\n    float: left;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70302709-af822a80-1838-11ea-913b-5f935ea282ed.png);\r\n    background-repeat: no-repeat;\r\n    background-size: 26px;\r\n    background-position: center;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#settingsIcon {\r\n    float: right;\r\n    position: fixed;\r\n    top: 0px;\r\n    color: #c5c5c5;\r\n    right: 0px;\r\n    text-align: center;\r\n    padding: 11px;\r\n}\r\n\r\nbutton.standardcat.button:hover {\r\n    background: #c1c1c1;\r\n}\r\n\r\ndiv#Addedmessage {\r\n    font-family: monospace;\r\n    color: white;\r\n    padding: 2px;\r\n}\r\n\r\n#minimizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #2b3d50;\r\n    position: absolute;\r\n    top: 0px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #c5c5c5;\r\n    cursor: pointer;\r\n    border-left: 1px solid #464646;\r\n    border-bottom: 1px solid #464646;\r\n    margin-top: -4px;\r\n}\r\n\r\ndiv#maximizeUpperBar {\r\n    width: 36px;\r\n    text-align: center;\r\n    background-color: #5d5d5d;\r\n    position: absolute;\r\n    top: 38px;\r\n    right: 0px;\r\n    height: 16px;\r\n    border-radius: 0px 0px 2px 2px;\r\n    color: #ababab;\r\n    cursor: pointer;\r\n    margin-top: -4px;\r\n    text-shadow: 1px 1px 1px #4b4b4b;\r\n}\r\n\r\n.propertiesbar.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbarheader.title {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    margin: 0px;\r\n    padding: 3px;\r\n}\r\n\r\n.propertiesbar.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    width: 98%;\r\n    color: #2f2f2f;\r\n    padding: 3px 10px;\r\n    background-color: gray;\r\n    border-bottom: 1px solid #909090;\r\n    border-radius: 6px 6px 0px 0px;\r\n    text-shadow: 1px 1px 0px #a5a5a5;\r\n}\r\n\r\ntextarea.textarea.optionlistProperties {\r\n    width: 98%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    height: 150px;\r\n    border-radius: 0px 0px 6px 6px;\r\n    border: 1px solid gray;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntextarea.textarea.stringProperties {\r\n    resize: none;\r\n    width: 100%;\r\n    padding: 0px;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    min-height: 10vh;\r\n    border: none;\r\n    border-radius: 3px;\r\n    background-color: #ffffffc7;\r\n}\r\n\r\n.propertiesbarheader.label {\r\n    font-family: 'Ubuntu', sans-serif;\r\n    font-size: small;\r\n    font-weight: bold;\r\n    width: 100%;\r\n    color: #bcbcbc;\r\n    padding: 3px;\r\n}\r\n\r\nselect#propertisBarSelecId {\r\n    width: 99%;\r\n    padding: 1px 2px;\r\n    background-color: gainsboro;\r\n    border-radius: 0px 0px 6px 6px;\r\n}\r\n\r\ndiv#propertiesBarLog {\r\n    width: 100%;\r\n    font-family: 'Ubuntu Mono', monospace;\r\n    font-size: small;\r\n    padding: 2px;\r\n}\r\n\r\nrect.optionListoption {\r\n    cursor: pointer;\r\n}\r\n\r\nrect.optionListoption:hover {\r\n    fill: #d9e3e6;\r\n    stroke: #989898;\r\n}\r\n\r\ndiv#error {\r\n    color: #c0392b;\r\n    padding: 8px;\r\n}\r\n\r\nforeignObject.textbody {\r\n    font-family: 'ubuntu mono', monospace;\r\n    font-size: x-small;\r\n    color: #4e4e4e;\r\n    overflow: auto;\r\n}\r\n\r\ndiv#catHead {\r\n    font-family: 'ubuntu';\r\n    font-size: small;\r\n    width: fit-content;\r\n    padding: 2px 6px;\r\n    color: white;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-left: 3px;\r\n}\r\n\r\ndiv#catbody {\r\n    margin: 0px;\r\n    border-bottom: none;\r\n    border-right: none;\r\n}\r\n\r\ndiv#catcard {\r\n    margin-bottom: 4px;\r\n    padding: 0px;\r\n}\r\n\r\nrect.xAnchor {\r\n    cursor: ew-resize;\r\n}\r\n\r\nrect.yAnchor {\r\n    cursor: ns-resize;\r\n}\r\n\r\nrect.xyAnchor {\r\n    cursor: nwse-resize;\r\n}\r\n\r\n/* ::-webkit-scrollbar {\r\n    width: 6px;\r\n    height: 10px;\r\n} */\r\n\r\n/* Track */\r\n\r\n/* ::-webkit-scrollbar-track {\r\n    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\r\n    -webkit-border-radius: 4px;\r\n    border-radius: 4px;\r\n    touch-action: manipulation;\r\n} */\r\n\r\n/* Handle */\r\n\r\n/* ::-webkit-scrollbar-thumb {\r\n    -webkit-border-radius: 4px;\r\n    background: rgb(0, 0, 0);\r\n}\r\n\r\n::-webkit-scrollbar-thumb:window-inactive {\r\n    background: rgba(255, 0, 0, 0.4);\r\n} */\r\n\r\npath.play {\r\n    cursor: pointer;\r\n}\r\n\r\npath.play:hover {\r\n    fill: gray;\r\n}\r\n\r\nth {\r\n    border: none;\r\n    background-color: gainsboro;\r\n}\r\n\r\ntd {\r\n    border: none;\r\n    background-color: whitesmoke;\r\n    overflow: hidden;\r\n}\r\n\r\ntbody {\r\n    font-family: ubuntu;\r\n    font-size: small;\r\n}\r\n\r\nth {\r\n    font-family: ubuntu;\r\n    text-align: left;\r\n    font-size: small;\r\n}\r\n\r\ndiv#propertiesBarContents {\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n    font-weight: normal;\r\n    color: #ffffff;\r\n    margin: 2px 0px 10px 0px;\r\n}\r\n\r\nforeignObject.panel_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ntbody {\r\n    border: none;\r\n}\r\n\r\ntable.dataframe {\r\n    border: none;\r\n}\r\n\r\nrect {\r\n    cursor: move;\r\n}\r\n\r\ninput.stringPnanel.Name {\r\n    width: 98%;\r\n    border: none;\r\n    font-size: small;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\nforeignObject.panel_edit_mode a {\r\n    font-size: x-small;\r\n    color: #bdbdbd;\r\n    font-family: 'ubuntu mono';\r\n    position: relative;\r\n    text-decoration: none;\r\n    top: -8px;\r\n}\r\n\r\ndiv#numerical_slider_container {\r\n    padding: 7px;\r\n    font-family: 'ubuntu';\r\n}\r\n\r\ndiv#help_t3 {\r\n    line-height: 1em;\r\n    color: #ec5f66;\r\n    margin-top: 5px;\r\n    margin-bottom: 3px;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_t4 {\r\n    color: #009688;\r\n    margin-left: 18px;\r\n    font-weight: bold;\r\n    margin-top: 5px;\r\n    margin-bottom: 5px;\r\n}\r\n\r\ndiv#help_p {\r\n    margin-left: 36px;\r\n    margin-right: 8px;\r\n    text-align: justify;\r\n}\r\n\r\nspan#code {\r\n    color: #c23d51;\r\n    border-radius: 2px;\r\n    font-family: Courier;\r\n    font-size: xx-small;\r\n    vertical-align: middle;\r\n    padding: 1px 4px;\r\n    background-color: #32c8ac2e;\r\n}\r\n\r\ntable.dataframe {\r\n    font-size: x-small;\r\n}\r\n\r\nthead {\r\n    font-size: x-small;\r\n}\r\n\r\nth {\r\n    font-size: x-small;\r\n}\r\n\r\ntd {\r\n    font-size: x-small;\r\n}\r\n\r\nspan#errorTitle {\r\n    color: #e91e63;\r\n    font-weight: bold;\r\n    background-color: #f4433638;\r\n    border-radius: 3px;\r\n}\r\n\r\na.menubarButtons {\r\n    text-decoration: unset;\r\n    color: #000000;\r\n    text-shadow: 1px 1px 4px #4b4b4b;\r\n    font-size: small;\r\n    padding: 0px 6px;\r\n    margin: 1px 1px;\r\n    float: left;\r\n}\r\n\r\ndiv#buttonClickedname {\r\n    color: white;\r\n    font-size: small;\r\n    padding: 0px 8px;\r\n    margin: 0px;\r\n    float: left;\r\n    position: absolute;\r\n    bottom: 25px;\r\n    left: 224px;\r\n    background-color: #3d3d3d;\r\n}\r\n\r\npre {\r\n    margin: 0px;\r\n}\r\n\r\ninput.inputFileUpload {\r\n    border: none;\r\n    border-radius: 4px;\r\n    margin: 2px 2px;\r\n    background: #2b3d50;\r\n    height: 20px;\r\n    font-family: 'ubuntu mono';\r\n    color: white;\r\n}\r\n\r\ninput.submitFileUpload {\r\n    border-radius: 4px;\r\n    float: right;\r\n    margin: 3px;\r\n}\r\n\r\nforeignObject.fileUpload_status {\r\n    font-family: 'ubuntu mono';\r\n    font-size: x-small;\r\n    color: #afefff;\r\n    text-shadow: 1px 1px 1px #3d3d3d73;\r\n}\r\n\r\ninput#fileUploadFormToTheCloud {\r\n    border-radius: 1px;\r\n    margin-left: 1px;\r\n    /* height: 20px; */\r\n}\r\n\r\na.open_uploadedFile_link {\r\n    text-decoration: none;\r\n    color: black;\r\n    padding: 0px 6px;\r\n    position: relative;\r\n    top: 1px;\r\n    border-radius: 2px;\r\n    margin-left: 3px;\r\n    background-color: #e8e8e8;\r\n}\r\n\r\ndiv#TheContainedFile {\r\n    color: white;\r\n    padding: 2px 5px;\r\n    font-family: 'ubuntu';\r\n    display: inline;\r\n    font-size: small;\r\n    border-right: 1px solid gray;\r\n}\r\n\r\ndiv#PleaseWaitOverLay {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: #ffffff8a;\r\n    color: black;\r\n    text-align: center;\r\n    margin: auto;\r\n    line-height: 100vh;\r\n}\r\n\r\nselect.listView {\r\n    width: 198px;\r\n    height: 179px;\r\n    background-color: #f0f0f0;\r\n    border: 1px solid gray;\r\n    border-radius: 3px;\r\n    font-family: 'ubuntu mono';\r\n    font-size: small;\r\n}\r\n\r\noption#someSelection {\r\n    background-color: #e0e0e0;\r\n    box-shadow: 0px 1px 0px white;\r\n    margin-bottom: 1px;\r\n}\r\n\r\ntext.statusTextClass {\r\n    font-size: x-small;\r\n}\r\n\r\n.subcatheader {\r\n    padding-left: 1em;\r\n    color: #ffca28;\r\n    font-size: small;\r\n    font-weight: bold;\r\n}\r\n\r\ndiv#help_quote {\r\n    border: 1px solid #cfcfcf;\r\n    padding: 2px;\r\n    border-radius: 3px;\r\n    background-color: #f4f4f4;\r\n    font-family: courier new;\r\n    font-size: xx-small;\r\n}\r\n\r\nforeignObject#halign_box {\r\n    font-size: 20px;\r\n    color: white;\r\n    text-decoration: none;\r\n    text-align: center;\r\n}\r\n\r\nforeignObject#halign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    margin: 0px 4px;\r\n}\r\n\r\nforeignObject#halign_box a:hover {\r\n    text-decoration: none;\r\n    color: #ffc107;\r\n}\r\n\r\ni.fa.fa-pause {\r\n    margin-left: -1px;\r\n    padding: 0px;\r\n}\r\n\r\nforeignObject#valign_box {\r\n    font-size: 20px;\r\n    text-align: center;\r\n    vertical-align: middle;\r\n    padding: 4px 2px;\r\n}\r\n\r\nforeignObject#valign_box a {\r\n    text-decoration: none;\r\n    color: #b7b7b7;\r\n    font-size: 20px;\r\n    display: inline-grid;\r\n}\r\n\r\nforeignObject#valign_box a:hover {\r\n    color: #ffc107;\r\n}\r\n\r\na#valign_icon {\r\n    float: left;\r\n    margin: 5px 4px;\r\n}\r\n\r\na.standardcat.button {\r\n    width: 32px;\r\n    height: 32px;\r\n    border: 1px solid black;\r\n    display: inline-grid;\r\n}\r\n\r\ndiv#leftbarcontainer {\r\n    width: 225px;\r\n    min-height: 250px;\r\n    float: left;\r\n    margin-top: 2.5px;\r\n}\r\n\r\n.toolbarTopToggleItem {\r\n    height: 25px;\r\n    display: block;\r\n    line-height: 25px;\r\n    color: #1c1c1c;\r\n    font-size: small;\r\n    float: left;\r\n}\r\n\r\n.toolbarTopToggleContainer {\r\n    width: 225px;\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n    text-align: center;\r\n    float: left;\r\n}\r\n\r\ndiv#toolbar_container_1_1_2 {\r\n    width: 25px;\r\n    float: left;\r\n    background-color: red;\r\n    height: 25px;\r\n    text-align: center;\r\n}\r\n\r\ndiv#toolbar_container_1_2 {\r\n    background-color: #2d2d2d;\r\n    width: 225px;\r\n    height: 250px;\r\n}\r\n\r\ndiv#toolbar_container_1_2_1 {\r\n    box-sizing: border-box;\r\n    width: 200px;\r\n    background-color: #e6e6e6;\r\n    min-height: 200px;\r\n    float: left;\r\n    border: 1px solid #cfcfcf;\r\n}\r\n\r\n.mainButtonItem {\r\n    box-sizing: border-box;\r\n    width: 49.5px;\r\n    height: 49.5px;\r\n    float: left;\r\n    background-color: #6060601f;\r\n    display: inline-block;\r\n    vertical-align: middle;\r\n    background-image: url(https://user-images.githubusercontent.com/6969514/70328473-107b2400-1874-11ea-88ff-dcca67fd98a9.png);\r\n    line-height: 50px;\r\n    text-align: center;\r\n    border: 1px solid #252525;\r\n    color: #ffffffed;\r\n    background-size: 36px;\r\n    font-size: x-small;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    overflow: hidden;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    overflow: visible;\r\n}\r\n\r\ndiv#toolbar_container_1_2_2 {\r\n    width: 25px;\r\n    float: left;\r\n    height: 200px;\r\n    background-color: #c1c1c1;\r\n    box-sizing: border-box;\r\n    border-right: 1px solid #373737;\r\n}\r\n\r\n.rightToggleButton {\r\n    background-image: url(https://www.corasupport.org/wp-content/uploads/2015/11/placeholder-icon-300x300-v1b.png);\r\n    background-size: 20px;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    cursor: pointer;\r\n    font-size: small;\r\n    background-color: #a3a3a3;\r\n    width: 23px;\r\n    height: 23px;\r\n    text-align: center;\r\n    line-height: 25px;\r\n    border: 1px solid #2d2d2d;\r\n    border-bottom: 1px solid #565656;\r\n}\r\n\r\ndiv#toolbar_container_1_2_0 {\r\n    background-color: #707070;\r\n    font-size: small;\r\n    color: white;\r\n    line-height: 25px;\r\n    font-size: xx-small;\r\n}\r\n\r\n.mainButtonItem:hover {\r\n    background-color: #252525;\r\n    transition: 0.2s;\r\n    cursor: pointer;\r\n    border: 1px solid #818181;\r\n}\r\n\r\n.toptoggleitem {\r\n    background-color: #d1d1d1;\r\n    margin: 3px 4px 0px 0px;\r\n    height: 20px;\r\n    padding: 0px 5px;\r\n    line-height: 20px;\r\n    border: 1px solid #aaaaaa;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    background-color: #2b3d50;\r\n    border-color: #2b3d50;\r\n    color: #cfd8dc;\r\n}\r\n\r\n.rightToggleButton:hover {\r\n    background-color: #565656;\r\n    transition: 0.5s;\r\n    color: #ffffff;\r\n    border: 1px solid #cecece;\r\n}\r\n\r\n.rightToggleButton:focus {\r\n    background-color: #ffc107;\r\n    color: black;\r\n    text-shadow: 0px 0px 4px black;\r\n}\r\n\r\n.toptoggleitem:hover {\r\n    border-color: #ffc107;\r\n    cursor: pointer;\r\n}\r\n\r\ndiv#NoneTabbedToolBoxText {\r\n    position: relative;\r\n    top: 50%;\r\n    transform: rotate(-90deg);\r\n    font-size: small;\r\n    line-height: 25px;\r\n    text-shadow: 0px 0px 4px #000000;\r\n}\r\n\r\ndiv.rightToggleButton span#hint {\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n    display: none;\r\n    background-color: #00000066;\r\n    border: 1px solid #565656;\r\n    opacity: 0;\r\n}\r\n\r\n.tooltip {\r\n    position: relative;\r\n    display: inline-block;\r\n    /* border-bottom: 1px dotted black; */\r\n  }\r\n  \r\nspan.tooltiptext {\r\n    visibility: hidden;\r\n    text-align: center;\r\n    border-radius: 6px;\r\n    padding: 0px 4px;\r\n    /* Position the tooltip */\r\n    position: absolute;\r\n    display: block;\r\n    color: black;\r\n    background-color: white;\r\n    line-height: normal;\r\n    width: fit-content;\r\n    top: 3px;\r\n    left: 25px;  \r\n    z-index: 1;\r\n}\r\n\r\n.tooltip:hover .tooltiptext {\r\n    visibility: visible;\r\n}\r\n\r\np.iconText {\r\n    display: block;\r\n    text-overflow: ellipsis;\r\n    width: 40px;\r\n    overflow: hidden;\r\n    white-space: nowrap;\r\n    padding: 5px;\r\n    line-height: normal;\r\n}\r\n  \r\ndiv.mainButtonItem span#hint {\r\n    position: relative;\r\n    width: fit-content;\r\n    display: none;\r\n    opacity: 0;\r\n    background-color: #ffffff;\r\n    color: #000000;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    overflow: visible;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n    position: relative;\r\n    left: 30px;\r\n    padding: 0px 4px;\r\n    border-radius: 5px;\r\n    width: fit-content;\r\n}\r\n\r\ndiv.rightToggleButton:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\n.canvas_container {\r\n    position: fixed;\r\n    top: 30px;\r\n    left: 225px;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.canvas_container_inner {\r\n    margin: 3px;\r\n}\r\n\r\n.canvas_tab_container {\r\n    background-color: #aaaaaa;\r\n    height: 25px;\r\n}\r\n\r\nh1 {\r\n    margin: 0px;\r\n}\r\n\r\ndiv#somethingLater {\r\n    width: 100%;\r\n    height: 1000px;\r\n    background-color: #666666;\r\n    overflow: scroll;\r\n}\r\n\r\ndiv.mainButtonItem:hover span#hint {\r\n    opacity: 1;\r\n    display: block;\r\n}\r\n\r\ntextarea#script_body_editor {\r\n    height: 100vh;\r\n}\r\n\r\ndiv#codeBody {\r\n    height: 100vh;\r\n}\r\n\r\n.toptoggleitem.selected {\r\n    transition: 2s;\r\n}\r\n\r\n.toptoggleitem.selected:hover {\r\n    transition: 2s;\r\n    min-height: 36%;\r\n}\r\n\r\n/* Copy from jsonview.css */\r\n/*\r\nbody {\r\n    font-family: 'Open Sans';\r\n    font-size: 16px;\r\n    background-color: #252525;\r\n    color: #808080;\r\n    box-sizing: border-box;\r\n}\r\n\r\n.line {\r\n    margin: 4px 0;\r\n    display: flex;\r\n    justify-content: flex-start;\r\n}\r\n\r\n.caret-icon {\r\n    width: 18px;\r\n    text-align: center;\r\n    cursor: pointer;\r\n}\r\n\r\n.empty-icon {\r\n    width: 18px;\r\n}\r\n\r\n.json-type {\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n.json-key {\r\n    color: #444;\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n.json-index {\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n\r\n.json-value {\r\n    margin-left: 8px;\r\n}\r\n\r\n.json-number {\r\n    color: #f9ae58;\r\n}\r\n\r\n.json-boolean {\r\n    color: #ec5f66;\r\n}\r\n\r\n.json-string {\r\n    color: #86b25c;\r\n}\r\n\r\n.json-size {\r\n    margin-right: 4px;\r\n    margin-left: 4px;\r\n}\r\n\r\n.hide {\r\n    display: none;\r\n}\r\n\r\n*/";
 styleInject(css_248z);
 
 var Canvas = /*#__PURE__*/function (_React$Component) {
@@ -7384,7 +7350,6 @@ var Canvas = /*#__PURE__*/function (_React$Component) {
     _this.handleDoubleClick = handleDoubleClick.bind(_assertThisInitialized(_this));
     _this.handleEdgeInitialization = handleEdgeInitialization.bind(_assertThisInitialized(_this));
     _this.handleTheClickOnAllComponents = handleTheClickOnAllComponents.bind(_assertThisInitialized(_this));
-    _this.handleFileUpload = handleFileUpload.bind(_assertThisInitialized(_this));
     _this.manageCanvas = manageCanvas.bind(_assertThisInitialized(_this));
     _this.manageGrid = manageGrid.bind(_assertThisInitialized(_this));
     _this.dummyToSetState = dummyToSetState.bind(_assertThisInitialized(_this));
@@ -7418,7 +7383,7 @@ var Canvas = /*#__PURE__*/function (_React$Component) {
           width: '100vw',
           height: '100vh'
         }
-      }, /*#__PURE__*/React.createElement(ScriptTag, null, this.dummyToSetState()), /*#__PURE__*/React.createElement(ScriptTag, null, this.manageGrid()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleComponentSelection()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleDoubleClick()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleEdgeInitialization()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleTheClickOnAllComponents()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleFileUpload()), /*#__PURE__*/React.createElement(Grid, null), /*#__PURE__*/React.createElement(TopBar, {
+      }, /*#__PURE__*/React.createElement(ScriptTag, null, this.dummyToSetState()), /*#__PURE__*/React.createElement(ScriptTag, null, this.manageGrid()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleComponentSelection()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleDoubleClick()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleEdgeInitialization()), /*#__PURE__*/React.createElement(ScriptTag, null, this.handleTheClickOnAllComponents()), /*#__PURE__*/React.createElement(Grid, null), /*#__PURE__*/React.createElement(TopBar, {
         saveData: this.saveData,
         downloadData: this.downloadData
       }), /*#__PURE__*/React.createElement(LeftContainer, {
