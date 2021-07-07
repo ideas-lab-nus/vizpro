@@ -444,7 +444,6 @@ function showDropDownList(hh) {
  * @param {String} parentComp the id of parent component
  */
 function redrawDependents(parentComp) {
-    console.log('redrawing dependents');
     let parent = selectComp(parentComp);
 
     if (parent_child_matrix[parentComp].length === 0) {
@@ -483,7 +482,6 @@ function redrawDependents(parentComp) {
             redrawDependents(ch.GUID);
         });
     } else if (parent.dftype === 'dp') {
-        console.log('Cloud comp' + parent.type);
         parent.state = 'unbound';
         parent_child_matrix[parentComp].forEach(function (element, i) {
             //iterate through all those childs.
@@ -634,13 +632,11 @@ function highlightSpatialZone(id) {
     var selected_zone = document.getElementById('spatial_zone_selection_list_' + id).value;
 
     var a = document.getElementById('floor_plan_display' + id);
-    console.log(a);
     // Get the SVG document inside the Object tag
     var svgDoc = a.contentDocument;
 
     // Get one of the SVG items by ID;
     var svgItem = a.getElementById('fpp_' + selected_zone);
-    console.log(svgItem);
     // Set the colour to something else
     svgItem.setAttribute('fill', 'green');
 } // End of highlightSpatialZone
@@ -982,7 +978,6 @@ function objToHtmlTable(object) {
 } // End of objToHtmlTable
 
 function deleteComponent(component_to_be_deleted) {
-    console.log('deleting component now');
     var component_to_be_reset = selectComp(component_to_be_deleted);
     if (component_to_be_reset.type === 'optionList') {
         reactContext.setState({
@@ -1072,10 +1067,9 @@ function deleteComponent(component_to_be_deleted) {
 } // End of deleteComponent
 
 function deleteEdge(edge_to_be_deleted) {
-    console.log('deleteEdge');
     var components_of_the_edge = edge_comp_matrix[edge_to_be_deleted];
-    var fromComp = selectComp(components_of_the_edge['from']); //.outputs[components_of_the_edge["from_index"]])
-    var toComp = selectComp(components_of_the_edge['to']); //.inputs[components_of_the_edge["to_index"]].value = null;
+    var fromComp = selectComp(components_of_the_edge['from']);
+    var toComp = selectComp(components_of_the_edge['to']);
     toComp.inputs[components_of_the_edge['to_index']].value = null;
     toComp.value = null;
     comp_input_edges[toComp.GUID][components_of_the_edge['to_index']] = undefined;

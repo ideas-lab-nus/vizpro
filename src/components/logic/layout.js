@@ -140,48 +140,6 @@ function manageCanvas() {
 
     svgContainer.on('dblclick.zoom', null);
 
-    $('div#definedComp').html(function () {
-        var somearr = reactContext.state.udo_names;
-        var text = '';
-        for (const cat in reactContext.state.cats) {
-            if (reactContext.state.cats.hasOwnProperty(cat)) {
-                text += '<div id="catcard">';
-                text +=
-                    '<div id="catHead" style="background-color:' +
-                    reactContext.state.cats[cat] +
-                    '">' +
-                    cat +
-                    '</div>';
-                text += '<div id="catbody">';
-                // eslint-disable-next-line no-loop-func
-                somearr.forEach(function (element, i) {
-                    if (reactContext.state.udo_cats[i] === cat) {
-                        text +=
-                            '<button id="addComp" name="' +
-                            element +
-                            '" shName="' +
-                            reactContext.state.udo_shortNames[i] +
-                            '" desc=\'' +
-                            reactContext.state.udo_desc[i] +
-                            '\' type="' +
-                            reactContext.state.udo_types[i] +
-                            '" dftype="' +
-                            reactContext.state.udo_dftypes[i] +
-                            '" class="standardcat button" ><span style="background-color:' +
-                            reactContext.state.udo_fill[i] +
-                            ';color:' +
-                            reactContext.state.udo_fill[i] +
-                            ';border-radius:3px;">||</span> ' +
-                            element +
-                            '</button>';
-                    }
-                });
-                text += '</div></div>';
-            }
-        }
-        return text;
-    });
-
     d3.select('div#LeftPropertiesBar')
         .style('width', () => {
             return currentLeftColWidth + 'px';

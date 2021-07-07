@@ -183,15 +183,11 @@ function CreateNewToggle(reactContext, FromExisting = null) {
         .attr('height', newcomp.height)
         .attr('fill', newcomp.fill)
         .attr('fill-opacity', '0.01')
-        // .attr("filter", "url('#svgshadow')")
         .on('mousemove', function (event) {
-            // newcomp.rect = this;
             d3.select(event.currentTarget)
-                // .attr("fill", "#303952")
                 .attr('cursor', 'pointer');
         })
         .on('mouseout', function (event) {
-            // newcomp.rect = this;
             d3.select(event.currentTarget).attr('fill', newcomp.fill);
         });
 
@@ -199,7 +195,6 @@ function CreateNewToggle(reactContext, FromExisting = null) {
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log('Adding a toggle' + newcomp);
         current_all_comp.push(newcomp);
         reactContext.setState({
             allComp: current_all_comp

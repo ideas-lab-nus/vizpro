@@ -428,7 +428,8 @@ function handleDoubleClick() {
                         <div class="propertiesbarheader label">Log</div>
                         <div id="propertiesBarLog" class="log"></div>
                         <button id="stringEditButton">Apply</button>
-                        <button id="cancelStringEdit">Cancel</button>`);
+                        <button id="cancelStringEdit">Cancel</button>`
+                    );
 
                     element.outputs[0].value = element.value;
 
@@ -438,7 +439,6 @@ function handleDoubleClick() {
                     $('input.stringPnanel.Name').on('change keyup paste', function () {
                         newName = $('input.stringPnanel.Name').val();
                         d3.select('text#nodeTitle' + StringComp.GUID).text(newName);
-                        // StringComp.Name = newName;
                         d3.select('rect#' + StringComp.GUID).attr('width', 10 + newName.length * 6);
                     });
 

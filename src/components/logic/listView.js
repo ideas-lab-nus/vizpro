@@ -234,7 +234,6 @@ function CreateNewListView(reactContext, FromExisting = null, optionlist_predefi
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log('Adding a list view' + newcomp);
         current_all_comp.push(newcomp);
         reactContext.setState({
             allComp: current_all_comp

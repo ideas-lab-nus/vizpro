@@ -41,7 +41,7 @@ Besides using pre-defined components in the package, users can define their own 
 
 `func` must return a dictionary of the form: 
 
-```
+```js
 {
   type:  [],
   value: []

@@ -41,10 +41,6 @@ export default class Canvas extends React.Component {
         addRightToggleButton();
     }
 
-    print() {
-        console.log(this.state);
-    }
-
     render() {
         return (
             <div style={{
@@ -53,7 +49,6 @@ export default class Canvas extends React.Component {
                 height: '100vh',
               }}>
 
-                {/* <ScriptTag>{this.print()}</ScriptTag> */}
                 <ScriptTag>{this.dummyToSetState()}</ScriptTag>
                 <ScriptTag>{this.manageGrid()}</ScriptTag>
                 <ScriptTag>{this.handleComponentSelection()}</ScriptTag>
