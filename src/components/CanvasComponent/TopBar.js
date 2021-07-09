@@ -12,17 +12,17 @@ export default class TopBar extends Component {
     render() {
         return (
             <div id="TopPropertiesBar">
-                <a id="fileTheDef" className="menubarButtons">File</a>
-                <a id="fileTheDef" className="menubarButtons">Edit</a>
-                <a id="fileTheDef" className="menubarButtons">Help</a>
-                <a id="saveTheDef" className="menubarButtons" onClick={() => this.saveData()}>Save</a>
-                <a id="fileTheDef" className="menubarButtons" onClick={() => clearData()}>Clear</a>
-                <a id="saveTheDef" className="menubarButtons" onClick={() => this.downloadData()}>Download</a>
+                <a data-testid='fileTheDef' id="fileTheDef" className="menubarButtons">File</a>
+                <a data-testid='fileTheDef' id="fileTheDef" className="menubarButtons">Edit</a>
+                <a data-testid='fileTheDef' id="fileTheDef" className="menubarButtons">Help</a>
+                <a data-testid='fileTheDef' id="saveTheDef" className="menubarButtons" onClick={() => this.saveData()}>Save</a>
+                <a data-testid='fileTheDef' id="fileTheDef" className="menubarButtons" onClick={() => clearData()}>Clear</a>
+                <a data-testid='fileTheDef' id="saveTheDef" className="menubarButtons" onClick={() => this.downloadData()}>Download</a>
 
-                <div id="minimizeUpperBar" style={{display: "block"}} onClick={() => onMinimizeClick()}>
+                <div data-testid="minimize" id="minimizeUpperBar" style={{display: "block"}} onClick={() => onMinimizeClick()}>
                     <i id="tominimize" className="fa fa-caret-up" aria-hidden="true"></i>
                 </div>
-                <div id="maximizeUpperBar" style={{display: "none"}} onClick={() => onMaximizeClick()}>
+                <div data-testid='maximize' id="maximizeUpperBar" style={{display: "none"}} onClick={() => onMaximizeClick()}>
                     <i id="tomaximize" className="fa fa-caret-up" aria-hidden="true" style={{transform: [{ rotate: '180deg'}]}}></i>
                 </div>
             </div>
