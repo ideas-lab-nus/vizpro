@@ -91,7 +91,7 @@ function onMaximizeClick() {
 function manageCanvas() {
     const reactContext = this;
     var svgContainer = d3.select('svg');
-    var allContents = svgContainer.append('g').attr('id', 'allCanvasContents');
+    var allContents = svgContainer.append('g').attr('id', 'allCanvasContents').attr('data-testid', 'allContents');
 
     var currentLeftColWidth = reactContext.state.currentLeftColWidth;
     var currentTopBarHeight = reactContext.state.currentTopBarHeight;

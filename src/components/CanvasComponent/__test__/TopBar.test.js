@@ -26,9 +26,13 @@ test('Clear data when clear button is pressed', () => {
 
 });
 
-test('Menu bar disappear when minimize button clicked', () => {
+test('Menu bar disappear when minimize button clicked and appear when maximize button clicked', () => {
     const component = render(<TopBar />);
     const minimizeElement = component.getByTestId("minimize");
-    screen.debug(minimizeElement);
+    const maxmizeElement = component.getByTestId("maximize");
     fireEvent.click(minimizeElement);
+    expect(minimizeElement.style.display).toBe('none');
+    console.log(maxmizeElement.style.display);
+    fireEvent.click(maxmizeElement);
+    expect(minimizeElement.style.display).toBe('block');
 })
