@@ -14,7 +14,33 @@ import { handleComponentSelection,
 import { addGenericComponentIcon, addRightToggleButton } from './logic/leftPropertyBar.js';
 import { saveData, loadData, downloadData } from './logic/saveAndLoadData.js';
 import {addAllUdo} from './logic/userDefinedObject.js';
+import { spawn } from 'child_process';
 import './App.css';
+
+// function runpy() {
+//     // var spawn = require('child_process').spawn;
+//     console.log(spawn)
+//     var ls    = spawn('cmd.exe', ['/c', '"C:/Users/vimut/Desktop/trial.bat"']);
+
+//     ls.stdout.on('data', function (data) {
+//     console.log('stdout: ' + data);
+//     });
+
+//     ls.stderr.on('data', function (data) {
+//     console.log('stderr: ' + data);
+//     });
+
+//     ls.on('exit', function (code) {
+//     console.log('child process exited with code ' + code);
+//     });
+//     // var process = spawn('python3', ["./example.py"]);
+//     // console.log("here")
+//     // console.log(process)
+//     // process.stdout.on('data', function(data) {
+//     //     // res.send(data.toString());
+//     //     console.log(data);
+//     // } )
+// }
 
 export default class Canvas extends React.Component {
     constructor(props) {
@@ -39,6 +65,7 @@ export default class Canvas extends React.Component {
         this.loadData();
         this.addGenericComponentIcon();
         addRightToggleButton();
+        // runpy();
     }
 
     print() {
