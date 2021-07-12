@@ -1,24 +1,5 @@
 import React from 'react';
 import { Canvas } from 'viz-vimuth';
-import { spawn } from 'child_process'
-// const {spawn} = require('child_process');
-
-var dataToSend;
-const process = spawn('python', ['C:/Users/vimut/RASE/xyz/xyz-npm/example.py'] )
-
-process.stdout.on('data', function (data) {
-    dataToSend = data.toString('utf8', 0, data.length);
-    console.log(dataToSend)
-    process.stdin.end();
-    process.stdout.destroy();
-    process.stderr.destroy();
-});
-
-// in close event we are sure that stream from child process is closed
-process.on('close', (code) => {
-    console.log(`child process close all stdio with code ${code}`);
-    console.log(dataToSend)
-});
 
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
@@ -76,6 +57,24 @@ const newComps = [
         backgroundImage: '',
         url: 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute'
     },    
+    {
+        name: 'Local .py',
+        shname: 'loc',
+        type: 'component',
+        dftype: 'dp',
+        category: 'Basic',
+        subcategory: 'Math',
+        inputList: [
+            { name: 'input', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+        ],
+        outputList: [
+            { name: 'output_', shortName: 'out_', desc: 'product' },
+            { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
+        ],
+        color: '#10C1D7',
+        backgroundImage: '',
+        func: exponential,
+    },
 ];
 
 const App = ()  => {

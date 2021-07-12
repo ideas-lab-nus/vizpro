@@ -4,18 +4,18 @@ const path = require('path');
 const app = express();
 const {spawn, exec} = require('child_process');
 
-app.use(express.static(path.join(__dirname, 'build')));
+// app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/ping', function (req, res) {
  return res.send('pong');
 });
 
-app.get('/', function (req, res) {
+app.get('/woop', function (req, res) {
     var dataToSend;
     // spawn new child process to call the python script
     // const process = spawn('"C:/Users/vimut/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/System Tools/Command Prompt.lnk"', ['./trial.bat']);
     // const process = spawn('cmd', ['trial.bat']);
-    const process = spawn('python', ['C:/Users/vimut/RASE/xyz/xyz-npm/example.py'] )
+    const process = spawn('python', ['C:/Users/vimut/RASE/xyz/xyz-npm/playground/example.py'] )
     // exec('start C:/Users/vimut/RASE/xyz/xyz-npm/trial.bat', (error, stdout, stderr) => {
     //     if (error) {
     //       console.error(`exec error: ${error}`);
@@ -52,4 +52,4 @@ app.get('/', function (req, res) {
     // res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(process.env.PORT || 8080);
+app.listen(8080);

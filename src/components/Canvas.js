@@ -14,33 +14,8 @@ import { handleComponentSelection,
 import { addGenericComponentIcon, addRightToggleButton } from './logic/leftPropertyBar.js';
 import { saveData, loadData, downloadData } from './logic/saveAndLoadData.js';
 import {addAllUdo} from './logic/userDefinedObject.js';
-import { spawn } from 'child_process';
 import './App.css';
-
-// function runpy() {
-//     // var spawn = require('child_process').spawn;
-//     console.log(spawn)
-//     var ls    = spawn('cmd.exe', ['/c', '"C:/Users/vimut/Desktop/trial.bat"']);
-
-//     ls.stdout.on('data', function (data) {
-//     console.log('stdout: ' + data);
-//     });
-
-//     ls.stderr.on('data', function (data) {
-//     console.log('stderr: ' + data);
-//     });
-
-//     ls.on('exit', function (code) {
-//     console.log('child process exited with code ' + code);
-//     });
-//     // var process = spawn('python3', ["./example.py"]);
-//     // console.log("here")
-//     // console.log(process)
-//     // process.stdout.on('data', function(data) {
-//     //     // res.send(data.toString());
-//     //     console.log(data);
-//     // } )
-// }
+import { Helmet } from 'react-helmet';
 
 export default class Canvas extends React.Component {
     constructor(props) {
@@ -73,6 +48,14 @@ export default class Canvas extends React.Component {
     }
 
     render() {
+
+        this.dummyToSetState();
+        this.manageGrid();
+        this.handleComponentSelection();
+        this.handleDoubleClick();
+        this.handleEdgeInitialization();
+        this.handleTheClickOnAllComponents();
+                
         return (
             <div style={{
                 backgroundColor: '#2b3d50',
@@ -81,13 +64,44 @@ export default class Canvas extends React.Component {
               }}>
 
                 {/* <ScriptTag>{this.print()}</ScriptTag> */}
-                <ScriptTag>{this.dummyToSetState()}</ScriptTag>
+                {/* <Helmet>
+                <script type="text/javascript">
+                    {`${this.dummyToSetState()};`}
+                </script>
+                </Helmet>
+                <Helmet>
+                <script type="text/javascript">
+                    {`${this.manageGrid()}`}
+                </script>
+                </Helmet>
+                <Helmet>
+                <script type="text/javascript">
+                    {`${this.handleComponentSelection()};`}
+                </script>
+                </Helmet>
+                <Helmet>
+                <script type="text/javascript">
+                    {`${this.handleDoubleClick()};`}
+                </script>
+                </Helmet>
+                <Helmet>
+                <script type="text/javascript">
+                    {`${this.handleEdgeInitialization()};`}
+                </script>
+                </Helmet>
+                <Helmet>
+                <script type="text/javascript">
+                    {`${this.handleTheClickOnAllComponents()};`}
+                </script>
+                </Helmet> */}
+                {/* <ScriptTag>{this.dummyToSetState()}</ScriptTag>
                 <ScriptTag>{this.manageGrid()}</ScriptTag>
                 <ScriptTag>{this.handleComponentSelection()}</ScriptTag>
                 <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
                 <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
-                <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>                
+                <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>                 */}
                 
+
                 <Grid />   
 
                 <TopBar saveData={this.saveData} downloadData={this.downloadData}/>

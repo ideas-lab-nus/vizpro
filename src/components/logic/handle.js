@@ -267,6 +267,11 @@ function handleEdgeInitialization() {
                 ...reactContext.state.parent_child_matrix_fast_check
             ];
             var selectedcircleId = reactContext.state.selectedcircleId;
+            console.log(edgeStarted ,
+                targetcircleIN ,
+                this !== fromCircle.element ,
+                comp_input_edges[this.classList[1]][this.classList[2]] === undefined ,
+                    comp_input_edges[this.classList[1]][this.classList[2]] === null)
             if (
                 edgeStarted &&
                 targetcircleIN &&

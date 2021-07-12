@@ -19,7 +19,7 @@ function calculateCloud(compId) {
             console.log(result);
         });
 
-        d3.select('div#PleaseWaitOverLay').style('display', 'none');
+        d3.select('div#PleaseWaitOverLay').style('display', 'block');
     } catch (error) {
         console.log(error);
         alert(error);
