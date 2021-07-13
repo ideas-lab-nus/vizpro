@@ -94,6 +94,7 @@ function addAllUdo(list) {
                 addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color, backgroundImage, calledFunc, url);
             } catch (e) {
                 console.error(e.message);
+                alert(e.message)
             }
         }
     }

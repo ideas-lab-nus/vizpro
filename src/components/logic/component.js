@@ -406,13 +406,13 @@ function CreateNewComponent(
         .append('foreignObject')
         .attr('width', 18)
         .attr('height', 18)
-        .attr('style', () => {
-            return (
-                `background-image:url(src/img/` +
-                newcomp.Name +
-                `.png);background-size: 15px;background-repeat: no-repeat;background-position: center;`
-            );
-        });
+        // .attr('style', () => {
+        //     return (
+        //         `background-image:url(src/img/` +
+        //         newcomp.Name +
+        //         `.png);background-size: 15px;background-repeat: no-repeat;background-position: center;`
+        //     );
+        // });
 
     if (newcomp.dftype === 'dp') {
         var playrect2 = node

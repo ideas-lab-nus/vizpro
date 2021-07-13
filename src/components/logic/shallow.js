@@ -926,7 +926,7 @@ function plot_panel_comp(args) {
  * This is the core function that runs all the calculations and return the outputs to the components.
  * @param    {string} compId The component GUID.
  */
-function calculateShallow(compId) {
+async function calculateShallow(compId) {
     var thisComp = selectComp(compId); // selects the component that is under test.
     var inputGroup = []; // reads the inputs from the component and put them in a list to be mapped to the corresponding shallow function.
     thisComp.inputs.forEach(input => {
@@ -938,9 +938,8 @@ function calculateShallow(compId) {
         }
     });
 
-    var d = shallow_functions[thisComp.Name](inputGroup);
+    var d = await shallow_functions[thisComp.Name](inputGroup);
     console.log(d);
-    console.log(d.length);
 
     if (d.type.length !== thisComp.outputs.length || d.value.length !== thisComp.outputs.length) {
         alert("The number of outputs does not match the number of values in the return function. Please check again");

@@ -1,6 +1,29 @@
 import React from 'react';
 import { Canvas } from 'viz-vimuth';
 
+
+async function callBackendPy(args) {
+    return await fetch('/woop')
+        .then(res => res.text())
+        .then(
+            (result) => {
+                console.log(result)
+                return {
+                        type: ['text', 'text'],
+                        value: [result, "Success"]
+                }
+            },
+            (error) => {
+                console.log(error)
+                alert(error)
+                return {
+                    type: ['text', 'text'],
+                    value: [null, "Ran into an issue :("]
+                };
+            }            
+        )
+}
+
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
@@ -61,7 +84,7 @@ const newComps = [
         name: 'Local .py',
         shname: 'loc',
         type: 'component',
-        dftype: 'dp',
+        dftype: 'shlow',
         category: 'Basic',
         subcategory: 'Math',
         inputList: [
@@ -73,15 +96,37 @@ const newComps = [
         ],
         color: '#10C1D7',
         backgroundImage: '',
-        func: exponential,
+        func: callBackendPy,
     },
 ];
 
-const App = ()  => {
+// var res = async callBackendPy();
+// console.log(await callBackendPy());
+// console.log(
+//     "here"
+// )
+// callBackendPy()
+// console.log("done")
 
-    return (
-        <Canvas udo={newComps}/>
-    );
+
+// const App = ()  => {    
+//     return (
+//         <Canvas udo={newComps}/>
+//     );
+// }
+
+class App extends React.Component {
+
+    async componentDidMount() {
+        var res = await callBackendPy([]);
+        console.log(res)
+    }
+
+    render() {
+        return (
+            <Canvas udo={newComps}/>
+        );
+    }
 }
 
 export default App;
