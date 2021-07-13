@@ -146,6 +146,7 @@ function handleTheClickOnAllComponents() {
             'rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody, rect.CompCBody'
         )
         .on('mousedown', function (event) {
+            console.log('in mouse down');
             var coordinates = d3.pointer(event);
 
             var pos = $('g#comp-' + this.id.replace('overlaySelector', ''))
@@ -490,7 +491,7 @@ function handleDoubleClick() {
                         doubleClicked: true
                     });
                     $('div#propertiesBarContents').append(`
-                        <div class="propertiesbar title">Option list properties.</div>
+                        <div class="propertiesbar title">Option list properties</div>
                         <div class="propertiesbar label">options (as dictionary)</div>
                         <textarea class="textarea optionlistProperties"></textarea>
                         <hr>

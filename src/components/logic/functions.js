@@ -370,6 +370,7 @@ function addOptionDropdownList(compId) {
                         ' ' +
                         option
                 )
+                .attr('data-testid', 'optionText')
                 .attr('value', option)
                 .attr('key', optionListComp.optionListValues[option])
                 .attr('width', '180')
@@ -397,6 +398,7 @@ function addOptionDropdownList(compId) {
                 .attr('value', option)
                 .attr('key', optionListComp.optionListValues[option])
                 .attr('id', 'optionListoption')
+                .attr('data-testid', 'optionRect')
                 .attr('width', '180')
                 .attr('height', '20')
                 .attr('y', 20 * n)

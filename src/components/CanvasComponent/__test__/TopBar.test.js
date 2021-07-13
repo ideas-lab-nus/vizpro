@@ -32,7 +32,6 @@ test('Menu bar disappear when minimize button clicked and appear when maximize b
     const maxmizeElement = component.getByTestId("maximize");
     fireEvent.click(minimizeElement);
     expect(minimizeElement.style.display).toBe('none');
-    console.log(maxmizeElement.style.display);
     fireEvent.click(maxmizeElement);
     expect(minimizeElement.style.display).toBe('block');
 })

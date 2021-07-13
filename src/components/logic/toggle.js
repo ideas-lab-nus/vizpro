@@ -220,6 +220,7 @@ function CreateNewToggle(reactContext, FromExisting = null) {
     reactContext.setState({
         components_selection_data: current_components_selection
     });
+    //console.log('add a new toggle');
 }
 
 export { CreateNewToggle };

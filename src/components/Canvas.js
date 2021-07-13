@@ -1,5 +1,6 @@
 import React from 'react';
-import ScriptTag from 'react-script-tag';
+// import ScriptTag from 'react-script-tag';
+// import {Helmet} from "react-helmet";
 import { globalVars } from './logic/constants.js';
 import { manageCanvas } from './logic/layout.js'; 
 import { manageGrid } from './logic/mainGrid.js';
@@ -42,20 +43,18 @@ export default class Canvas extends React.Component {
     }
 
     render() {
+        this.dummyToSetState();
+        this.manageGrid();
+        this.handleComponentSelection();
+        this.handleDoubleClick();
+        this.handleEdgeInitialization();
+        this.handleTheClickOnAllComponents();
         return (
             <div style={{
                 backgroundColor: '#2b3d50',
                 width: '100vw',
                 height: '100vh',
-              }}>
-
-                <ScriptTag>{this.dummyToSetState()}</ScriptTag>
-                <ScriptTag>{this.manageGrid()}</ScriptTag>
-                <ScriptTag>{this.handleComponentSelection()}</ScriptTag>
-                <ScriptTag>{this.handleDoubleClick()}</ScriptTag>
-                <ScriptTag>{this.handleEdgeInitialization()}</ScriptTag>
-                <ScriptTag>{this.handleTheClickOnAllComponents()}</ScriptTag>                
-                
+              }}>    
                 <Grid />   
 
                 <TopBar saveData={this.saveData} downloadData={this.downloadData}/>
