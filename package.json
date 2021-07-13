@@ -16,11 +16,7 @@
         "d3-selection": "^2.0.0",
         "express": "^4.17.1",
         "jquery": "^3.6.0",
-        "plotly": "^1.0.6",
-        "plotly.js-dist": "^2.2.1",
         "postcss": "^8.3.5",
-        "react-helmet": "^6.1.0",
-        "react-script-tag": "^1.1.2",
         "react-scripts": "4.0.3",
         "web-vitals": "^1.1.2"
     },

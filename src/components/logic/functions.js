@@ -28,9 +28,7 @@
 import { jsonView } from './jsonview.js';
 import { calculateShallow } from './shallow.js';
 import { calculateCloud } from './cloud.js';
-// import Plotly from 'plotly';
-// import Plotly from 'plotly.js-dist';
-// import Plotly from 'plotly.js-dist';
+
 import $ from 'jquery';
 
 var d3 = require('d3');
@@ -670,54 +668,70 @@ function drawPlotComponent(data, comp) {
             { title: 'Dummy plot' },
             { responsive: true }
         );
-        return;
+    } else {
+        if (Array.isArray(data)) {
+            data = data[0]
+        }
+    
+        if (data.type === 'scatter') {
+            if ('layout' in data) {
+                Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
+                    responsive: true
+                });
+            } else {
+                Plotly.newPlot('plot_area' + comp.GUID, data.data, {
+                    responsive: true
+                });
+            }
+        } else if (data.type === 'bar') {
+            data.data.forEach(dataElement => {
+                var maxValue = Math.max(...dataElement.y);
+                dataElement['marker'] = {
+                    color: []
+                };
+                dataElement.y.forEach(dataValue => {
+                    dataElement.marker.color.push(d3.interpolateGnBu(dataValue / maxValue));
+                });
+            });
+            if ('layout' in data) {
+                Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
+                    responsive: true
+                });
+            } else {
+                Plotly.newPlot('plot_area' + comp.GUID, data.data, {
+                    responsive: true
+                });
+            }
+        } else {
+            if ('layout' in data) {
+                Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
+                    responsive: true
+                });
+            } else {
+                Plotly.newPlot('plot_area' + comp.GUID, data.data, {
+                    responsive: true
+                });
+            }
+        }
     }
 
-    if (Array.isArray(data)) {
-        data = data[0]
-    }
-    
-    if (data.type === 'scatter') {
-        if ('layout' in data) {
-            Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
-                responsive: true
-            });
-        } else {
-            Plotly.newPlot('plot_area' + comp.GUID, data.data, {
-                responsive: true
-            });
-        }
-    } else if (data.type === 'bar') {
-        data.data.forEach(dataElement => {
-            var maxValue = Math.max(...dataElement.y);
-            dataElement['marker'] = {
-                color: []
-            };
-            dataElement.y.forEach(dataValue => {
-                dataElement.marker.color.push(d3.interpolateGnBu(dataValue / maxValue));
-            });
-        });
-        if ('layout' in data) {
-            Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
-                responsive: true
-            });
-        } else {
-            Plotly.newPlot('plot_area' + comp.GUID, data.data, {
-                responsive: true
-            });
-        }
-    } else {
-        if ('layout' in data) {
-            Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
-                responsive: true
-            });
-        } else {
-            Plotly.newPlot('plot_area' + comp.GUID, data.data, {
-                responsive: true
-            });
-        }
-    }
+    // Allow plotly controls to render
+    edit_move_mode(comp.GUID, 0)
+    edit_move_mode(comp.GUID, 0)
 } // End of drawPlotComponent
+
+function edit_move_mode(compId, mode) {
+    const EDIT_MODE = 0;
+    const DRAG_MODE = 1;
+    var disp = $('rect#overlaySelector' + compId).attr('style');
+    if (disp === 'display: block;') {
+        d3.select('rect#overlaySelector' + compId).style('display', 'none');
+        d3.select('h5#changeEditMoveMode_' + compId).text('Edit Mode');
+    } else {
+        d3.select('rect#overlaySelector' + compId).style('display', 'block');
+        d3.select('h5#changeEditMoveMode_' + compId).text('Drag Mode');
+    }
+}
 
 function updateListViewDrawing(comp) {
     d3.select('foreignObject#listView-' + comp.GUID).html(() => {
@@ -1170,5 +1184,6 @@ export {
     componentStatus,
     moveComponent,
     runDeepFunction,
-    addEdgeCircle
+    addEdgeCircle,
+    edit_move_mode
 };

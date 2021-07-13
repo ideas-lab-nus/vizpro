@@ -30,7 +30,8 @@ import {
     selectComp,
     visualizeSpatialComponent,
     drawPlotComponent,
-    redrawDependents
+    redrawDependents,
+    edit_move_mode
 } from './functions.js';
 import { jsonView } from './jsonview.js';
 import $ from 'jquery';
@@ -470,19 +471,6 @@ function submitPanelEdit(compKey) {
 
 function cancelPanelEdit() {
     $('div#propertiesBarContents').html('');
-}
-
-function edit_move_mode(compId, mode) {
-    const EDIT_MODE = 0;
-    const DRAG_MODE = 1;
-    var disp = $('rect#overlaySelector' + compId).attr('style');
-    if (disp === 'display: block;') {
-        d3.select('rect#overlaySelector' + compId).style('display', 'none');
-        d3.select('h5#changeEditMoveMode_' + compId).text('Edit Mode');
-    } else {
-        d3.select('rect#overlaySelector' + compId).style('display', 'block');
-        d3.select('h5#changeEditMoveMode_' + compId).text('Drag Mode');
-    }
 }
 
 export { CreateNewPanel, submitPanelEdit, cancelPanelEdit };
