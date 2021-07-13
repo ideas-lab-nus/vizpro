@@ -100,15 +100,6 @@ const newComps = [
     },
 ];
 
-// var res = async callBackendPy();
-// console.log(await callBackendPy());
-// console.log(
-//     "here"
-// )
-// callBackendPy()
-// console.log("done")
-
-
 // const App = ()  => {    
 //     return (
 //         <Canvas udo={newComps}/>
@@ -116,12 +107,6 @@ const newComps = [
 // }
 
 class App extends React.Component {
-
-    async componentDidMount() {
-        var res = await callBackendPy([]);
-        console.log(res)
-    }
-
     render() {
         return (
             <Canvas udo={newComps}/>

@@ -304,6 +304,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
             var anchorMouseXpos = reactContext.state.anchorMouseXpos;
             var StringAnchorId = reactContext.state.StringAnchorId;
             var newHeight = event.y - anchorMouseYpos;
+
             if (newHeight <= 50) {
                 newHeight = 52;
             }
@@ -361,6 +362,16 @@ function CreateNewPanel(reactContext, FromExisting = null) {
                 .attr('cx', thisComp.width);
 
             d3.select('circle#inputCir' + StringAnchorId + '_0').attr('cy', thisComp.height / 2);
+
+            for (const [comp, child] of Object.entries(reactContext.state.parent_child_matrix)) {
+                if (child[0] === undefined) continue
+                if (child[0][1] === StringAnchorId) {
+                    redrawDependents(comp);
+                    return;
+                }
+            }
+            
+            console.log("Couldn't locate panel parent to redraw")
         });
 
     var rectanchorXY = node

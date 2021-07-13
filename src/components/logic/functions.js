@@ -28,7 +28,9 @@
 import { jsonView } from './jsonview.js';
 import { calculateShallow } from './shallow.js';
 import { calculateCloud } from './cloud.js';
-import Plotly from 'plotly';
+// import Plotly from 'plotly';
+// import Plotly from 'plotly.js-dist';
+// import Plotly from 'plotly.js-dist';
 import $ from 'jquery';
 
 var d3 = require('d3');
@@ -445,6 +447,8 @@ function showDropDownList(hh) {
  */
 function redrawDependents(parentComp) {
     console.log('redrawing dependents');
+    console.log(parent_child_matrix)
+    console.log("i am" + parentComp)
     let parent = selectComp(parentComp);
 
     if (parent_child_matrix[parentComp].length === 0) {
@@ -645,109 +649,73 @@ function highlightSpatialZone(id) {
     svgItem.setAttribute('fill', 'green');
 } // End of highlightSpatialZone
 
-function drawPlotComponent(data, comp) {
+function drawPlotComponent(data, comp) {    
+    var Plotly = window.Plotly
     $('foreignObject#textbody_' + comp.GUID).html(
         '<div id="plot_area' + comp.GUID + '" style="width:100%; height:100%;"></div>'
     );
-    if (data != null && Array.isArray(data)) {
-        if (data[0].type === 'scatter') {
-            if ('layout' in data[0]) {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, data[0].layout, {
-                    responsive: true
-                });
-            } else {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, {
-                    responsive: true
-                });
-            }
-        } else if (data[0].type === 'bar') {
-            data[0].data.forEach(dataElement => {
-                var maxValue = Math.max(...dataElement.y);
-                dataElement['marker'] = {
-                    color: []
-                };
-                dataElement.y.forEach(dataValue => {
-                    dataElement.marker.color.push(d3.interpolateGnBu(dataValue / maxValue));
-                });
-            });
-            if ('layout' in data[0]) {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, data[0].layout, {
-                    responsive: true
-                });
-            } else {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, {
-                    responsive: true
-                });
-            }
-        } else {
-            if ('layout' in data[0]) {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, data.layout, {
-                    responsive: true
-                });
-            } else {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, {
-                    responsive: true
-                });
-            }
-        }
-    } else if (data != null) {
-        if (data.type === 'scatter') {
-            if ('layout' in data) {
-                Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
-                    responsive: true
-                });
-            } else {
-                Plotly.newPlot('plot_area' + comp.GUID, data.data, {
-                    responsive: true
-                });
-            }
-        } else if (data.type === 'bar') {
-            data.data.forEach(dataElement => {
-                var maxValue = Math.max(...dataElement.y);
-                dataElement['marker'] = {
-                    color: []
-                };
-                dataElement.y.forEach(dataValue => {
-                    dataElement.marker.color.push(d3.interpolateGnBu(dataValue / maxValue));
-                });
-            });
-            if ('layout' in data) {
-                Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
-                    responsive: true
-                });
-            } else {
-                Plotly.newPlot('plot_area' + comp.GUID, data.data, {
-                    responsive: true
-                });
-            }
-        } else {
-            if ('layout' in data) {
-                Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
-                    responsive: true
-                });
-            } else {
-                Plotly.newPlot('plot_area' + comp.GUID, data.data, {
-                    responsive: true
-                });
-            }
-        }
-    } else {
+    
+    if (Plotly === undefined) {
+        // alert("Plotly not defined")
+        $("div#plot_area" + comp.GUID).text("Plotly is undefined :(")
+        return;
+    }
+
+    if (data === null) {
         Plotly.newPlot(
             'plot_area' + comp.GUID,
-            [
-                {
-                    x: ['1', '2', '3'],
-                    y: [1.0, 2.0, 3.0],
-                    type: 'bar'
-                }
-            ],
-            {
-                title: 'Dummy plot'
-            },
-            {
-                responsive: true
-            }
+            [{ x: ['1', '2', '3'],
+               y: [1.0, 2.0, 3.0],
+               type: 'bar' }],
+            { title: 'Dummy plot' },
+            { responsive: true }
         );
+        return;
+    }
+
+    if (Array.isArray(data)) {
+        data = data[0]
+    }
+    
+    if (data.type === 'scatter') {
+        if ('layout' in data) {
+            Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
+                responsive: true
+            });
+        } else {
+            Plotly.newPlot('plot_area' + comp.GUID, data.data, {
+                responsive: true
+            });
+        }
+    } else if (data.type === 'bar') {
+        data.data.forEach(dataElement => {
+            var maxValue = Math.max(...dataElement.y);
+            dataElement['marker'] = {
+                color: []
+            };
+            dataElement.y.forEach(dataValue => {
+                dataElement.marker.color.push(d3.interpolateGnBu(dataValue / maxValue));
+            });
+        });
+        if ('layout' in data) {
+            Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
+                responsive: true
+            });
+        } else {
+            Plotly.newPlot('plot_area' + comp.GUID, data.data, {
+                responsive: true
+            });
+        }
+    } else {
+        if ('layout' in data) {
+            Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
+                responsive: true
+            });
+        } else {
+            Plotly.newPlot('plot_area' + comp.GUID, data.data, {
+                responsive: true
+            });
+        }
     }
 } // End of drawPlotComponent
 
