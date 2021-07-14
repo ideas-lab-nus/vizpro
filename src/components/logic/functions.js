@@ -445,8 +445,6 @@ function showDropDownList(hh) {
  */
 function redrawDependents(parentComp) {
     console.log('redrawing dependents');
-    console.log(parent_child_matrix)
-    console.log("i am" + parentComp)
     let parent = selectComp(parentComp);
 
     if (parent_child_matrix[parentComp].length === 0) {
@@ -497,8 +495,10 @@ function redrawDependents(parentComp) {
                 if (parent.state === 'unbound') {
                     //Previously calculate deep
                     console.log("calculating cloud")
-                    calculateCloud(parent.GUID);
+                    calculateCloud(parent, ch, element);
                     parent.state = 'active';
+                    //Remaining 5 lines of code is executed in the async function
+                    return;
                 }
             }
             ch.inputs[element[2]].value = parent.outputs[element[0]].value;

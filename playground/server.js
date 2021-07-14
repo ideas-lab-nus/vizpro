@@ -6,16 +6,23 @@ const {spawn, exec} = require('child_process');
 
 // app.use(express.static(path.join(__dirname, 'build')));
 
+app.use((req, res, next) => {    
+    console.log("wah")
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+})
+
 app.get('/ping', function (req, res) {
  return res.send('pong');
 });
 
 app.get('/woop', function (req, res) {
     var dataToSend;
+    console.log("here")
     // spawn new child process to call the python script
     // const process = spawn('"C:/Users/vimut/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/System Tools/Command Prompt.lnk"', ['./trial.bat']);
     // const process = spawn('cmd', ['trial.bat']);
-    const process = spawn('python', ['C:/Users/vimut/RASE/xyz/xyz-npm/playground/example.py'] )
+    const process = spawn('python', ['C:/Users/vimut/RASE/xyz/xyz-npm/playground/example.py', req.query.p1] )
     // exec('start C:/Users/vimut/RASE/xyz/xyz-npm/trial.bat', (error, stdout, stderr) => {
     //     if (error) {
     //       console.error(`exec error: ${error}`);

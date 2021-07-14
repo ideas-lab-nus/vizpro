@@ -3,7 +3,13 @@ import { Canvas } from 'viz-vimuth';
 
 
 async function callBackendPy(args) {
-    return await fetch('/woop')
+    var queryStr = '';
+    for (let i = 1; i <= args.length; i++) {
+        queryStr += '&p' + i + '=' + args[i - 1];
+    }
+    //Replace first  & with  ?
+    var urlCall = '/woop' + queryStr.replace('&', '?');
+    return await fetch(urlCall)
         .then(res => res.text())
         .then(
             (result) => {
@@ -83,8 +89,8 @@ const newComps = [
     {
         name: 'Local .py',
         shname: 'loc',
-        type: 'component',
-        dftype: 'shlow',
+        type: 'cloud',
+        dftype: 'dp',
         category: 'Basic',
         subcategory: 'Math',
         inputList: [
@@ -96,7 +102,7 @@ const newComps = [
         ],
         color: '#10C1D7',
         backgroundImage: '',
-        func: callBackendPy,
+        url: 'http://localhost:8080/woop'
     },
 ];
 

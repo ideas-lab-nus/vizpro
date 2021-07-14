@@ -214,7 +214,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
             return (
                 '<h5 id="changeEditMoveMode_' +
                 newcomp.GUID +
-                '" style="color:white; margin-top:1px" ">Edit</h5>'
+                '" style="color:white; margin-top:1px" ">Drag</h5>'
             );
         })
         .attr('x', newcomp.width - 30)
