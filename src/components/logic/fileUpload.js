@@ -166,6 +166,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
             if (newcomp.outputs[0].value == null || newcomp.outputs[0].value === undefined) {
                 return 'File Size : None';
             } else {
+                console.log(newcomp.outputs[0]);
                 return (
                     'File Size : ' +
                     (newcomp.outputs[0].Description.size / (1024 * 1024)).toString() +
@@ -247,13 +248,11 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
                             newcomp.outputs[0].Description.Name : 
                             newcomp.outputs[0].Description.Name.substring(0, 25) + '...';
                 return (
-                    `
-                        <div id="TheContainedFile">` +
-                            displayedName +
-                            `</div>
-                        <div id="TheContainedFile">Size :` +
-                            (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() +
-                            ` MB</div>
+                     `
+                        <div id="TheContainedFile">` + displayedName + `</div>
+                        <div id="TheContainedFile">Size :` 
+                        + (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() 
+                        + ` MB</div>
                     `
                 );
             }
@@ -322,10 +321,10 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
         d3.select('#fileUpload_status_' + thisFormId).html(
             'File Size : ' +
             (selectedFile.size / (1024 * 1024)).toString() +
-            " MB"
+            " MB" + "<a class='open_uploadedFile_link' href='" + URL.createObjectURL(selectedFile) + "' target='blank'>open</a>"
         );
         d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
-            let displayedName = fileName.length < 25 ? fileName.Name : fileName.substring(0, 25) + '...';
+            let displayedName = fileName.length < 25 ? fileName : fileName.substring(0, 25) + '...';
             return (
                 `
                 <div id="TheContainedFile">` +

@@ -484,8 +484,10 @@ function CreateNewCloud(
     });
 }
 
-function submitCloudEdit(compKey) {
-    try {
+function submitCloudEdit(reactContext, compKey) {
+    const guidList = [];
+    reactContext.state.allComp.forEach(e => guidList.push(e.GUID));
+    if (guidList.includes(compKey)) {
         var cloudComp = selectComp(compKey);
 
         var name = $('input.cloudProp.Name').val();
@@ -513,11 +515,8 @@ function submitCloudEdit(compKey) {
         $('foreignObject#node_title' + cloudComp.GUID).text(name);
 
         redrawDependents(compKey);
-        $('div#propertiesBarContents').html('');
-    } catch (error) {
-        console.log(error);
-        alert("Ran into an issue :(");
     }
+    $('div#propertiesBarContents').html('');
 }
 
 function cancelCloudEdit() {

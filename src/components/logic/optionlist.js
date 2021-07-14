@@ -257,11 +257,10 @@ function submitOptionListEdit(compKey) {
             '<div id="success">Success:<br>' + forTheHTMLpreview + '</div>'
         );
         $('select#propertisBarSelecId').html(optionListOptionsfromTextarea);
-
         return JSON.stringify(optionListComp['optionListValues']);
     });
 
-    $('textarea.textarea.optionlistProperties').on('focusout', function (e) {
+    $('textarea.textarea.optionlistProperties').on('change', function (e) {
         try {
             let thedict = JSON.parse($(this).val());
             OptionListValues = thedict;
@@ -288,10 +287,14 @@ function submitOptionListEdit(compKey) {
     });
 }
 
-function readyToGoSubmit(compKey) {
-    optionListComp['optionListValues'] = OptionListValues;
+function readyToGoSubmit(reactContext, compKey) {
+    const guidList = [];
+    reactContext.state.allComp.forEach(e => guidList.push(e.GUID));
+    if (guidList.includes(compKey)) {
+        optionListComp['optionListValues'] = OptionListValues;
+        addOptionDropdownList(compKey);
+    }
     $('div#propertiesBarContents').html('');
-    addOptionDropdownList(compKey);
 }
 
 export { CreateNewOptionList, submitOptionListEdit, readyToGoSubmit };

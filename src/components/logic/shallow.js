@@ -856,6 +856,7 @@ function imDisplay(args) {
             value: [image_]
         };
     } else {
+        console.log(_url);
         if (typeof _url === 'string') {
             image_ = `<img src="` + _url + `" style="width:100%; height:100%">`;
         } else {

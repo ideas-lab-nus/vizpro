@@ -828,7 +828,7 @@ div#toolbar_container_1_2_1 {
     box-sizing: border-box;
     width: 49.5px;
     height: 49.5px;
-    float: left;
+    /*float: left; */
     background-color: #6060601f;
     display: inline-block;
     vertical-align: middle;

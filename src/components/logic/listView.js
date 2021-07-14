@@ -168,7 +168,7 @@ function CreateNewListView(reactContext, FromExisting = null, optionlist_predefi
     node.append('text')
         .attr('x', 5)
         .attr('y', 15)
-        .text('listItems')
+        .text('List Items')
         .attr('fill', 'black')
         .style('font-family', 'Ubuntu Mono');
 

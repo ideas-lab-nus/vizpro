@@ -462,7 +462,7 @@ function handleDoubleClick() {
                     $('input.stringPnanel.Name').val(StringComp.Name);
 
                     $('button#stringEditButton').on('click', function () {
-                        submitPanelEdit(element.GUID);
+                        submitPanelEdit(reactContext, element.GUID);
                         reactContext.setState({
                             doubleClicked: false
                         });
@@ -513,7 +513,7 @@ function handleDoubleClick() {
                     submitOptionListEdit(compKey);
 
                     $('button#applyChangeButton').on('click', function (e) {
-                        readyToGoSubmit(compKey);
+                        readyToGoSubmit(reactContext, compKey);
                         reactContext.setState({
                             doubleClicked: false
                         });
@@ -543,7 +543,7 @@ function handleDoubleClick() {
 
                     //On save, set double clicked to false
                     $('button#sliderEditButton').on('click', function (e) {
-                        submitSliderEdit(element.GUID);
+                        submitSliderEdit(reactContext, element.GUID);
                         reactContext.setState({
                             doubleClicked: false
                         });
@@ -615,7 +615,7 @@ function handleDoubleClick() {
                     $('input.cloudProp.url').val(cloudComp.url);
 
                     $('button#cloudEditButton').on('click', function () {
-                        submitCloudEdit(element.GUID);
+                        submitCloudEdit(reactContext, element.GUID);
                         reactContext.setState({
                             doubleClicked: false
                         });
