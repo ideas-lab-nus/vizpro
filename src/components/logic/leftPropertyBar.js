@@ -1,7 +1,6 @@
 import $ from 'jquery';
-import { CreateNewComponent } from './component.js';
+import { CreateNewComponent, CreateNewOptionList } from './mainComponents/mainComponents.js';
 import { details, tabIdMapping, toggleButtonInfo } from './componentDetail.js';
-import { CreateNewOptionList } from './optionlist.js';
 
 function addGenericComponentIcon() {
     for (let index = 0; index < details.length; index++) {

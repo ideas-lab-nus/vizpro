@@ -1,10 +1,10 @@
 import { 
+    uuidv4,
     selectComp, 
     addcomponent, 
     runDeepFunction, 
     redrawDependents 
-} from './functions.js';
-import { uuidv4 } from './functions.js';
+} from '../functions.js';
 import $ from 'jquery';
 
 var d3 = require('d3');
@@ -456,10 +456,6 @@ function submitDeepEdit(compKey) {
     }
 }
 
-function cancelDeepEdit() {
-    $('div#propertiesBarContents').html('');
-}
-
 function resize(newcomp) {
     var one_character_width = 8;
     var padding = 20;
@@ -606,4 +602,4 @@ function createInputDict(inputsIn) {
     return inputs;
 }
 
-export { CreateNewDeep, cancelDeepEdit, submitDeepEdit };
+export { CreateNewDeep, submitDeepEdit };

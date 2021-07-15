@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { CreateNewSlider } from '../logic/slider.js';
-import { CreateNewOptionList } from '../logic/optionlist.js';
-import { CreateNewPanel } from '../logic/panel.js';
-import { CreateNewToggle } from '../logic/toggle.js';
-import { CreateNewFileUpload } from '../logic/fileUpload.js';
-import { CreateNewListView } from '../logic/listView.js';
-import { CreateNewDeep } from '../logic/dynamicDeep.js'
+import {
+    CreateNewOptionList,
+    CreateNewSlider,
+    CreateNewPanel,
+    CreateNewToggle,
+    CreateNewFileUpload,
+    CreateNewListView,
+    CreateNewDeep
+} from '../logic/mainComponents/mainComponents.js'
 
 export default class ComponentTab extends Component {
     render() {

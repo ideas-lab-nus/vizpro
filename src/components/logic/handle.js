@@ -6,10 +6,14 @@ import {
     showDropDownList,
     redrawDependents
 } from './functions.js';
-import { submitOptionListEdit, readyToGoSubmit } from './optionlist.js';
-import { cancelSliderEdit, submitSliderEdit } from './slider.js';
-import { cancelPanelEdit, submitPanelEdit } from './panel.js';
-import { cancelDeepEdit, submitDeepEdit } from './dynamicDeep.js';
+import { 
+    handleOptionListEdit,
+    submitOptionListEdit,
+    submitSliderEdit,
+    submitPanelEdit,
+    submitDeepEdit,
+    cancelEdit
+} from './mainComponents/mainComponents.js';
 
 import $ from 'jquery';
 var d3 = require('d3');
@@ -433,8 +437,8 @@ function handleDoubleClick() {
                         <hr>
                         <div class="propertiesbarheader label">Log</div>
                         <div id="propertiesBarLog" class="log"></div>
-                        <button id="stringEditButton">Apply</button>
-                        <button id="cancelStringEdit">Cancel</button>`
+                        <button id="panelEditButton">Apply</button>
+                        <button id="cancelPanelEdit">Cancel</button>`
                     );
 
                     element.outputs[0].value = element.value;
@@ -466,14 +470,14 @@ function handleDoubleClick() {
 
                     $('input.stringPnanel.Name').val(StringComp.Name);
 
-                    $('button#stringEditButton').on('click', function () {
+                    $('button#panelEditButton').on('click', function () {
                         submitPanelEdit(element.GUID);
                         reactContext.setState({
                             doubleClicked: false
                         });
                     });
-                    $('button#cancelStringEdit').on('click', function () {
-                        cancelPanelEdit();
+                    $('button#cancelPanelEdit').on('click', function () {
+                        cancelEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });
@@ -511,14 +515,19 @@ function handleDoubleClick() {
                             Log
                         </div>
                         <div id="propertiesBarLog" class="log"></div>
-                        <button id="applyChangeButton">Apply</button>
-                        `);
+                        <button id="optionListEditButton">Apply</button>
+                        <button id="cancelOptionListEdit">Cancel</button>`);
 
-                    let compKey = element.GUID;
-                    submitOptionListEdit(compKey);
+                    handleOptionListEdit(element.GUID);
 
-                    $('button#applyChangeButton').on('click', function (e) {
-                        readyToGoSubmit(compKey);
+                    $('button#optionListEditButton').on('click', function () {
+                        submitOptionListEdit(element.GUID);
+                        reactContext.setState({
+                            doubleClicked: false
+                        });
+                    });
+                    $('button#cancelOptionListEdit').on('click', function () {
+                        cancelEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });
@@ -546,7 +555,6 @@ function handleDoubleClick() {
                     $('input#new_slider_step_value').val(element.step);
                     $('input#new_slider_current_value').val(element.value);
 
-                    //On save, set double clicked to false
                     $('button#sliderEditButton').on('click', function (e) {
                         submitSliderEdit(element.GUID);
                         reactContext.setState({
@@ -554,7 +562,7 @@ function handleDoubleClick() {
                         });
                     });
                     $('button#cancelSliderEdit').on('click', function (e) {
-                        cancelSliderEdit();
+                        cancelEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });
@@ -623,7 +631,7 @@ function handleDoubleClick() {
                         });
                     });
                     $('button#cancelDeepEdit').on('click', function () {
-                        cancelDeepEdit();
+                        cancelEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });

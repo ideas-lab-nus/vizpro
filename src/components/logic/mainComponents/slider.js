@@ -1,30 +1,8 @@
-/*
-───────────────────────────────────────────────────────────────────────────────────────────
-─██████████████─██████─────────██████████─████████████───██████████████─████████████████───
-─██░░░░░░░░░░██─██░░██─────────██░░░░░░██─██░░░░░░░░████─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
-─██░░██████████─██░░██─────────████░░████─██░░████░░░░██─██░░██████████─██░░████████░░██───
-─██░░██─────────██░░██───────────██░░██───██░░██──██░░██─██░░██─────────██░░██────██░░██───
-─██░░██████████─██░░██───────────██░░██───██░░██──██░░██─██░░██████████─██░░████████░░██───
-─██░░░░░░░░░░██─██░░██───────────██░░██───██░░██──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
-─██████████░░██─██░░██───────────██░░██───██░░██──██░░██─██░░██████████─██░░██████░░████───
-─────────██░░██─██░░██───────────██░░██───██░░██──██░░██─██░░██─────────██░░██──██░░██─────
-─██████████░░██─██░░██████████─████░░████─██░░████░░░░██─██░░██████████─██░░██──██░░██████─
-─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░████─██░░░░░░░░░░██─██░░██──██░░░░░░██─
-─██████████████─██████████████─██████████─████████████───██████████████─██████──██████████─
-*/
-
-/**
- * Summary. (use period)
- *
- * Description. (use period)
- *
- * @link   URL
- * @file   This files defines the MainGrid operations.
- * @author Mahmoud AbdelRahman
- * @since  x.x.x
- */
-
-import { uuidv4, redrawDependents, selectComp } from './functions.js';
+import { 
+    uuidv4, 
+    redrawDependents, 
+    selectComp 
+} from '../functions.js';
 import $ from 'jquery';
 var d3 = require('d3');
 
@@ -380,12 +358,4 @@ function submitSliderEdit(compKey) {
     $('div#propertiesBarContents').html('');
 }
 
-/**
- * Double click the slider => the property bar appears
- * Handles the event when the Cancel button on the property bar is clicked
- */
-function cancelSliderEdit() {
-    $('div#propertiesBarContents').html('');
-}
-
-export { CreateNewSlider, submitSliderEdit, cancelSliderEdit };
+export { CreateNewSlider, submitSliderEdit };

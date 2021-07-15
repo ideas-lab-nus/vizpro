@@ -1,13 +1,15 @@
 import $ from 'jquery';
 import { addEdgeCircle } from './functions.js';
-import { CreateNewComponent } from './component.js';
-import { CreateNewOptionList } from './optionlist.js';
-import { CreateNewSlider } from './slider.js';
-import { CreateNewPanel } from './panel.js';
-import { CreateNewToggle } from './toggle.js';
-import { CreateNewFileUpload } from './fileUpload.js';
-import { CreateNewListView } from './listView.js';
-import { CreateNewDeep } from './dynamicDeep.js';
+import {
+    CreateNewComponent,
+    CreateNewOptionList,
+    CreateNewSlider,
+    CreateNewPanel,
+    CreateNewToggle,
+    CreateNewFileUpload,
+    CreateNewListView,
+    CreateNewDeep
+} from './mainComponents/mainComponents.js'
 var d3 = require('d3');
 
 function getCurrentData(reactContext) {
