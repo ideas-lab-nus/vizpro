@@ -27,7 +27,7 @@
 
 import { jsonView } from './jsonview.js';
 import { calculateShallow } from './shallow.js';
-import { calculateCloud } from './cloud.js';
+import { calculateDeep } from './deep.js';
 
 import $ from 'jquery';
 
@@ -465,7 +465,7 @@ function redrawDependents(parentComp) {
                 ch.inputs[element[2]].type = 'json';
             } else if (parent.type === 'toggle' || parent.type === 'optionList') {
                 ch.inputs[element[2]].value = parent.value;
-            } else if (parent.type === 'component' || parent.type === 'cloud') {
+            } else if (parent.type === 'component') {
                 try {
                     calculateShallow(parent.GUID);
                     ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -483,19 +483,17 @@ function redrawDependents(parentComp) {
             redrawDependents(ch.GUID);
         });
     } else if (parent.dftype === 'dp') {
-        console.log('Cloud comp' + parent.type);
+        console.log('Deep comp' + parent.type);
         parent.state = 'unbound';
         parent_child_matrix[parentComp].forEach(function (element, i) {
             //iterate through all those childs.
             let ch = selectComp(element[1]);
-            if ((parent.type === 'cloud' || parent.isUDOCloud) && runDeep === true) {
+            if ((parent.type === 'deep' || parent.isUDODeep) && runDeep === true) {
                 reactContext.setState({
                     runDeep: false
                 });
                 if (parent.state === 'unbound') {
-                    //Previously calculate deep
-                    console.log("calculating cloud")
-                    calculateCloud(parent, ch, element);
+                    calculateDeep(parent, ch, element);
                     parent.state = 'active';
                     //Remaining 5 lines of code is executed in the async function
                     return;
@@ -508,8 +506,6 @@ function redrawDependents(parentComp) {
             updatShallowCompRender(ch);
             redrawDependents(ch.GUID);
         });
-    } else if (parent.dftype === 'cloud') {
-        //TODO if deep and cloud functions remain separate
     }
 } // End of redrawDependents
 
@@ -804,7 +800,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                     var padding = 20;
                     var titleMargin = 30;
                     var thenewEdge = d3.select('#' + inputElement).attr('d', function () {
-                        if (element.type === 'component' || element.type === 'cloud') {
+                        if (element.type === 'component' || element.type === 'deep') {
                             var itisthelocation = returnCurveString(
                                 xy2[0],
                                 xy2[1],
@@ -869,7 +865,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                     var padding = 20;
                     var titleMargin = 30;
                     var thenewEdge = d3.select('#' + outputElement).attr('d', function () {
-                        if (element.type === 'component' || element.type === 'cloud') {
+                        if (element.type === 'component' || element.type === 'deep') {
                             var itisthelocation = returnCurveString(
                                 rectpos[0] + parseFloat(rectwidth),
                                 rectpos[1] + (circleindex * padding + titleMargin),

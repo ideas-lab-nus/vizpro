@@ -5,7 +5,7 @@ import { CreateNewPanel } from '../logic/panel.js';
 import { CreateNewToggle } from '../logic/toggle.js';
 import { CreateNewFileUpload } from '../logic/fileUpload.js';
 import { CreateNewListView } from '../logic/listView.js';
-import { CreateNewCloud } from '../logic/cloudComp.js'
+import { CreateNewDeep } from '../logic/dynamicDeep.js'
 
 export default class ComponentTab extends Component {
     render() {
@@ -35,8 +35,8 @@ export default class ComponentTab extends Component {
                         <span className="tooltiptext" id="hintx">List view</span></div>
                     <div id="addFile" onClick={() => CreateNewFileUpload(this.props.context)} className="mainButtonItem 1 1 tooltip" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"}}>
                         <span className="tooltiptext" id="hintx">File upload</span></div>
-                    <div id="addCloud" onClick={() => CreateNewCloud(this.props.context)} className="mainButtonItem 1 1 tooltip" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1935/1935089.png)"}}>
-                        <span className="tooltiptext" id="hintx">Cloud</span></div>
+                    <div id="addDeep" onClick={() => CreateNewDeep(this.props.context)} className="mainButtonItem 1 1 tooltip" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1935/1935089.png)"}}>
+                        <span className="tooltiptext" id="hintx">Deep</span></div>
                 </div>           
                 <div id="toolbar_container_1_2_2" className="toolbarRightToggleNavigator 1" />
             </div>

@@ -7,7 +7,6 @@ const {spawn, exec} = require('child_process');
 // app.use(express.static(path.join(__dirname, 'build')));
 
 app.use((req, res, next) => {    
-    console.log("wah")
     res.header("Access-Control-Allow-Origin", "*");
     next();
 })
@@ -18,11 +17,10 @@ app.get('/ping', function (req, res) {
 
 app.get('/woop', function (req, res) {
     var dataToSend;
-    console.log("here")
-    // spawn new child process to call the python script
-    // const process = spawn('"C:/Users/vimut/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/System Tools/Command Prompt.lnk"', ['./trial.bat']);
-    // const process = spawn('cmd', ['trial.bat']);
-    const process = spawn('python', ['C:/Users/vimut/RASE/xyz/xyz-npm/playground/example.py', req.query.p1] )
+
+    // const process = spawn('C:/Users/vimut/RASE/xyz/xyz-npm/playground/trial.bat')
+    const process = spawn('python', Object.keys(req.query).map(key => req.query[key]))
+
     // exec('start C:/Users/vimut/RASE/xyz/xyz-npm/trial.bat', (error, stdout, stderr) => {
     //     if (error) {
     //       console.error(`exec error: ${error}`);
@@ -34,12 +32,7 @@ app.get('/woop', function (req, res) {
     //   });
 
     // const process = exec('start C:/Users/vimut/RASE/xyz/xyz-npm/trial.bat')
-
-    // process.stdout.on('data', function(data) {
-    //   console.log(data)
-    // })
       
-    // collect data from script
     process.stdout.on('data', function (data) {
         dataToSend = data.toString('utf8', 0, data.length);
         console.log(dataToSend)
@@ -48,11 +41,8 @@ app.get('/woop', function (req, res) {
         process.stderr.destroy();
     });
     
-    // in close event we are sure that stream from child process is closed
     process.on('close', (code) => {
         console.log(`child process close all stdio with code ${code}`);
-        // return dataToSend
-        // send data to browser
         res.send(dataToSend)
     });
 

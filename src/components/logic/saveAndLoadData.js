@@ -7,7 +7,7 @@ import { CreateNewPanel } from './panel.js';
 import { CreateNewToggle } from './toggle.js';
 import { CreateNewFileUpload } from './fileUpload.js';
 import { CreateNewListView } from './listView.js';
-import { CreateNewCloud } from './cloudComp.js';
+import { CreateNewDeep } from './dynamicDeep.js';
 var d3 = require('d3');
 
 function getCurrentData(reactContext) {
@@ -85,7 +85,7 @@ function loadData() {
                 else if (element.type === 'optionList') CreateNewOptionList(this, element);
                 else if (element.type === 'fileUpload') CreateNewFileUpload(this, element);
                 else if (element.type === 'listView') CreateNewListView(this, element);
-                else if (element.type === 'cloud') CreateNewCloud(this, element);
+                else if (element.type === 'deep') CreateNewDeep(this, element);
             });
         }
         if (allData.edges !== undefined && allData.edges !== null) {

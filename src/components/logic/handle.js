@@ -1,6 +1,5 @@
 import {
     uuidv4,
-    addCircle,
     selectComp,
     updateAll,
     ViewListRedrawing,
@@ -10,8 +9,9 @@ import {
 import { submitOptionListEdit, readyToGoSubmit } from './optionlist.js';
 import { cancelSliderEdit, submitSliderEdit } from './slider.js';
 import { cancelPanelEdit, submitPanelEdit } from './panel.js';
+import { cancelDeepEdit, submitDeepEdit } from './dynamicDeep.js';
+
 import $ from 'jquery';
-import { cancelCloudEdit, submitCloudEdit } from './cloudComp.js';
 var d3 = require('d3');
 
 function GetURLParameter(sParam) {
@@ -49,7 +49,7 @@ function handleComponentSelection() {
             element.type === 'toggle' ||
             element.type === 'fileUpload' ||
             element.type === 'listView' || 
-            element.type === 'cloud'
+            element.type === 'deep'
         ) {
             d3.select('g#comp-' + element.GUID).on('click', function () {
                 d3.select('rect#' + element.GUID)
@@ -587,45 +587,42 @@ function handleDoubleClick() {
                     });
                 redrawDependents(currentToggle.GUID);
             });
-        } else if (element.type === 'cloud') {
+        } else if (element.type === 'deep') {
             d3.select('g#comp-' + element.GUID).on('dblclick', function () {
                 if (!reactContext.state.doubleClicked) {
                     reactContext.setState({
                         doubleClicked: true
                     });
                     $('div#propertiesBarContents').append(`
-                        <div class="propertiesbarheader title">Cloud Function Properties</div>
+                        <div class="propertiesbarheader title">Deep Function Properties</div>
                         <div class="propertiesbarheader label">Function Name</div>
-                        <input class="cloudProp Name"></textarea>
+                        <input class="deepProp Name"></textarea>
                         <hr>
                         <div class="propertiesbarheader label">Input List</div>
-                        <textarea class="cloudProp textarea stringProperties Val"></textarea>
+                        <textarea class="deepProp textarea stringProperties Val"></textarea>
                         <hr>
-                        <div class="propertiesbarheader label">Cloud function URL</div>
-                        <input class="cloudProp url"></textarea>
+                        <div class="propertiesbarheader label">Deep function URL</div>
+                        <input class="deepProp url"></textarea>
                         <div></div>
                         <div class="propertiesbarheader label">Log</div>
                         <div id="propertiesBarLog" class="log"></div>
-                        <button id="cloudEditButton">Apply</button>
-                        <button id="cancelCloudEdit">Cancel</button>`);
+                        <button id="deepEditButton">Apply</button>
+                        <button id="cancelDeepEdit">Cancel</button>`);
                 
-                    var cloudComp = selectComp(element.GUID);
+                    var deepComp = selectComp(element.GUID);
 
-                    $('input.cloudProp.Name').val(cloudComp.Name);
+                    $('input.deepProp.Name').val(deepComp.Name);
+                    $('textarea.deepProp.Val').val(deepComp.inputNames);
+                    $('input.deepProp.url').val(deepComp.url);
 
-                    // var inputString = JSON.stringify(cloudComp.inputs);
-                    // $('textarea.cloudProp.Val').val(inputString.substring(1, inputString.length-1));
-                    $('textarea.cloudProp.Val').val(cloudComp.inputNames);
-                    $('input.cloudProp.url').val(cloudComp.url);
-
-                    $('button#cloudEditButton').on('click', function () {
-                        submitCloudEdit(element.GUID);
+                    $('button#deepEditButton').on('click', function () {
+                        submitDeepEdit(element.GUID);
                         reactContext.setState({
                             doubleClicked: false
                         });
                     });
-                    $('button#cancelCloudEdit').on('click', function () {
-                        cancelCloudEdit();
+                    $('button#cancelDeepEdit').on('click', function () {
+                        cancelDeepEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });

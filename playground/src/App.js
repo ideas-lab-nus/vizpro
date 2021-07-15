@@ -1,35 +1,6 @@
 import React from 'react';
 import { Canvas } from 'viz-vimuth';
 
-
-async function callBackendPy(args) {
-    var queryStr = '';
-    for (let i = 1; i <= args.length; i++) {
-        queryStr += '&p' + i + '=' + args[i - 1];
-    }
-    //Replace first  & with  ?
-    var urlCall = '/woop' + queryStr.replace('&', '?');
-    return await fetch(urlCall)
-        .then(res => res.text())
-        .then(
-            (result) => {
-                console.log(result)
-                return {
-                        type: ['text', 'text'],
-                        value: [result, "Success"]
-                }
-            },
-            (error) => {
-                console.log(error)
-                alert(error)
-                return {
-                    type: ['text', 'text'],
-                    value: [null, "Ran into an issue :("]
-                };
-            }            
-        )
-}
-
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
@@ -72,7 +43,7 @@ const newComps = [
     {
         name: 'Cloud - Abs',
         shname: 'abs',
-        type: 'cloud',
+        type: 'deep',
         dftype: 'dp',
         category: 'Basic',
         subcategory: 'Math',
@@ -89,12 +60,13 @@ const newComps = [
     {
         name: 'Local .py',
         shname: 'loc',
-        type: 'cloud',
+        type: 'deep',
         dftype: 'dp',
         category: 'Basic',
         subcategory: 'Math',
         inputList: [
             { name: 'py filepath', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+            { name: 'n', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
         ],
         outputList: [
             { name: 'output_', shortName: 'out_', desc: 'product' },

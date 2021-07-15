@@ -16,7 +16,7 @@ import { shallow_functions } from './shallow.js';
  * @param {String} backgroundImage the URL of the component's icon in the left property bar. This field is optional.
  * @param {Function} calledFunc the corresponding function for that component.
  */
-var typeList = ['component', 'optionList', 'string', 'cloud'];
+var typeList = ['component', 'optionList', 'string', 'deep'];
 var dftypeList = ['shlow', 'dp'];
 var categoryList = ['Basic', 'BuildSimHub', 'OsiSoft', 'Pandas', 'String Operations'];
 
@@ -65,7 +65,7 @@ function addNewUdo(name, shname, desc, type, dftype, category, inputList, output
         if (url !== undefined) {
             
         } else {
-            throw new Error('Cloud functions require a url');
+            throw new Error('Deep functions require a url');
         }
     }
 }

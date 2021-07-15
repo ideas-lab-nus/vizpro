@@ -66,7 +66,7 @@ function addNewComponentIcon(
         '</div>';
     var newComp = $(newCompString);
     newComp.on('click', () => {
-        if (type === 'component' || type === 'cloud') {
+        if (type === 'component' || type === 'deep') {
             let kwargs = { shortName: shname, dfType: dftype };
             CreateNewComponent(reactContext, null, name, kwargs, inputList, outputList, color, url);
         } else if (type === 'optionList') {

@@ -87,12 +87,11 @@ function CreateNewComponent(
             ThisComponentName = type;
             newcomp.dftype = kwargs.dfType;
             newcomp.ShortName = kwargs.shortName;
-            popupMessage(ThisComponentName + ' Component added');
         }
 
         newcomp.fill = color;
         if (url !== undefined) {
-            newcomp.isUDOCloud = true;
+            newcomp.isUDODeep = true;
             newcomp.url = url;
         }
         newcomp.Name = ThisComponentName;
@@ -397,22 +396,6 @@ function CreateNewComponent(
                 rectType: 'component'
             });
         });
-
-    var icon = node
-        .append('g')
-        .attr('transform', 'translate(' + (newcomp.width - 20).toString() + ',1)');
-
-    var icon_foreing = icon
-        .append('foreignObject')
-        .attr('width', 18)
-        .attr('height', 18)
-        // .attr('style', () => {
-        //     return (
-        //         `background-image:url(src/img/` +
-        //         newcomp.Name +
-        //         `.png);background-size: 15px;background-repeat: no-repeat;background-position: center;`
-        //     );
-        // });
 
     if (newcomp.dftype === 'dp') {
         var playrect2 = node
