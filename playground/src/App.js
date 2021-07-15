@@ -27,7 +27,7 @@ const newComps = [
         desc: 'e raise to the power x',
         type: 'component',
         dftype: 'shlow',
-        category: 'Basic',
+        category: 'User Definitions',
         subcategory: 'Math',
         inputList: [
             { name: 'input', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
@@ -45,7 +45,7 @@ const newComps = [
         shname: 'abs',
         type: 'deep',
         dftype: 'dp',
-        category: 'Basic',
+        category: 'User Definitions',
         subcategory: 'Math',
         inputList: [
             { name: 'num', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
@@ -62,7 +62,7 @@ const newComps = [
         shname: 'loc',
         type: 'deep',
         dftype: 'dp',
-        category: 'Basic',
+        category: 'User Definitions',
         subcategory: 'Math',
         inputList: [
             { name: 'py filepath', shortName: 'in_01', desc: 'first input', default_value: '10.0' },

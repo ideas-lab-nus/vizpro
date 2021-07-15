@@ -7,7 +7,7 @@ import { shallow_functions } from './shallow.js';
  * @param {String} desc the component's description
  * @param {String} type the component's type (must be Component/OptionList/String)
  * @param {String} dftype the component's depth type (must be shlow or dp)
- * @param {String} category the component's category (must be either Basic/BuildSimHub/OsiSoft/Pandas/String Operations)
+ * @param {String} category the component's category (must be either Basic/BuildSimHub/String Operations)
  * @param {List} inputList the component's input list. It is a list of dictionary. "name" attribute is compulsory, 
  * other attributes such as short name, description, input type and default value are optional
  * @param {List} outputList the component's output list. It is a list of dictionary. "name" attribute is compulsory, 
@@ -18,7 +18,7 @@ import { shallow_functions } from './shallow.js';
  */
 var typeList = ['component', 'optionList', 'string', 'deep'];
 var dftypeList = ['shlow', 'dp'];
-var categoryList = ['Basic', 'BuildSimHub', 'OsiSoft', 'Pandas', 'String Operations'];
+var categoryList = ['Basic', 'User Definitions', 'String Operations'];
 
 function addNewUdo(name, shname, desc, type, dftype, category, inputList, outputList, color = "#F23322", backgroundImage = "", calledFunc = undefined, url) {
     //check requirements

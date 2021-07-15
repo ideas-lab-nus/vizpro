@@ -3,7 +3,6 @@ import {
     uuidv4, 
     addCircle 
 } from '../functions.js';
-import '@fontsource/ubuntu-mono';
 var d3 = require('d3');
 
 function CreateNewListView(reactContext, FromExisting = null, optionlist_predefined_items = null) {
