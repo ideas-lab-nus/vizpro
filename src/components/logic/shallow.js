@@ -548,7 +548,6 @@ function max(args) {
         if (typeof args[0] === 'string' || args[0] instanceof String) {
             args[0] = JSON.parse(args[0]);
         }
-        console.log(args[0]);
         output = Math.max(...args[0]);
     } catch (error) {
         log = error;
@@ -566,7 +565,6 @@ function max(args) {
  * @return {float} the average of all numbers in an array.
  */
 function min(args) {
-    console.log(args);
     // initialize variables
     var log = 'Success!';
     var output;
@@ -575,7 +573,6 @@ function min(args) {
         if (typeof args[0] === 'string' || args[0] instanceof String) {
             args[0] = JSON.parse(args[0]);
         }
-        console.log(args[0]);
         output = Math.min(...args[0]);
     } catch (error) {
         log = error;
@@ -733,6 +730,9 @@ function jsonNavigator(args) {
  */
 function draw3dObject(args) {
     var input_url = args[0];
+    if (typeof input_url !== 'string') {
+        input_url = URL.createObjectURL(input_url);
+    }
     var outpur_iframe = '<iframe src="' + input_url + '"></iframe>';
 
     return {
@@ -846,8 +846,6 @@ function imDisplay(args) {
      */
 
     var _url = args[0];
-    // console.log(_url);
-    // console.log(typeof _url);
 
     var image_ = null;
 
@@ -877,7 +875,6 @@ function youTubeDisplay(args) {
      * @param {array} args
      * @return {html}
      */
-    console.log('You are on this function youTubeDisplay');
     var _url = args[0];
 
     var youTube_ = null;
@@ -939,7 +936,6 @@ function calculateShallow(compId) {
     });
 
     var d = shallow_functions[thisComp.Name](inputGroup);
-    console.log(d);
 
     if (d.type.length !== thisComp.outputs.length || d.value.length !== thisComp.outputs.length) {
         alert("The number of outputs does not match the number of values in the return function. Please check again");

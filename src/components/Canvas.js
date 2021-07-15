@@ -20,7 +20,7 @@ var loadScript = function(src) {
     tag.async = false;
     tag.src = src;
     document.body.appendChild(tag);
-  }
+}
 
 var loadSVG = function(src) {
     var tag = document.createElement('div');
@@ -62,12 +62,8 @@ export default class Canvas extends React.Component {
         loadScript("https://cdn.plot.ly/plotly-latest.min.js"); 
     }
 
-    print() {
-        console.log(this.state);
-    }
-
     render() {
-
+        
         this.dummyToSetState();
         this.manageGrid();
         this.handleComponentSelection();

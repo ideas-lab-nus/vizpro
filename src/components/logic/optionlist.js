@@ -208,7 +208,6 @@ function CreateNewOptionList(
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log('Adding an option list' + newcomp);
         current_all_comp.push(newcomp);
         reactContext.setState({
             allComp: current_all_comp

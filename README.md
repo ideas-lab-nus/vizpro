@@ -41,7 +41,7 @@ Besides using pre-defined components in the package, users can define their own 
 
 `func` must return a dictionary of the form: 
 
-```
+```js
 {
   type:  [],
   value: []
@@ -179,6 +179,7 @@ Run at root:
 1. `npm update && npm run build`
 2. `npm run i-all` (This runs `npm install` for both the base and playground)
 3. `npm run dev` (This builds the library to `dist` folder and starts the playground)
+4. `npm run test` to run all the test cases
 
 ## Issues to address:
 

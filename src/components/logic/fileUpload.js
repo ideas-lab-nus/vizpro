@@ -243,10 +243,13 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
                     `;
                 return form;
             } else {
+                let displayedName = newcomp.outputs[0].Description.Name.length < 25 ? 
+                            newcomp.outputs[0].Description.Name : 
+                            newcomp.outputs[0].Description.Name.substring(0, 25) + '...';
                 return (
                     `
                         <div id="TheContainedFile">` +
-                            newcomp.outputs[0].Description.Name +
+                            displayedName +
                             `</div>
                         <div id="TheContainedFile">Size :` +
                             (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() +
@@ -278,7 +281,6 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log('Adding a fileUpload' + newcomp);
         current_all_comp.push(newcomp);
         reactContext.setState({
             allComp: current_all_comp
@@ -323,10 +325,11 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
             " MB"
         );
         d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
+            let displayedName = fileName.length < 25 ? fileName.Name : fileName.substring(0, 25) + '...';
             return (
                 `
                 <div id="TheContainedFile">` +
-                    fileName +
+                    displayedName +
                     `</div>
                 <div id="TheContainedFile">Size :` +
                     (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +

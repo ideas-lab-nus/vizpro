@@ -30,9 +30,9 @@ export default class ComponentTab extends Component {
                     <div id="addToggle" onClick={() => CreateNewToggle(this.props.context)} className="mainButtonItem 1 1 tooltip" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1465/1465907.png)"}}>
                         <span className="tooltiptext" id="hintx">Toggle</span></div>
                     <div id="addOptionList" onClick={() => CreateNewOptionList(this.props.context)} className="mainButtonItem 1 1 tooltip" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1085/1085805.png)"}}>
-                        <span className="tooltiptext" id="hintx">Option list</span></div>
+                        <span className="tooltiptext" id="hintx">Option List</span></div>
                     <div id="addListView" onClick={() => CreateNewListView(this.props.context)} className="mainButtonItem 1 1 tooltip" style={{backgroundImage: "url(https://storage.googleapis.com/ghostbucket111/icons/main_icons/checklist.png)"}}>
-                        <span className="tooltiptext" id="hintx">List view</span></div>
+                        <span className="tooltiptext" id="hintx">List View</span></div>
                     <div id="addFile" onClick={() => CreateNewFileUpload(this.props.context)} className="mainButtonItem 1 1 tooltip" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"}}>
                         <span className="tooltiptext" id="hintx">File upload</span></div>
                     <div id="addDeep" onClick={() => CreateNewDeep(this.props.context)} className="mainButtonItem 1 1 tooltip" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1935/1935089.png)"}}>

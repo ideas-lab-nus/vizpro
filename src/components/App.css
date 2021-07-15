@@ -330,7 +330,7 @@ div#maximizeUpperBar {
 .propertiesbar.label {
     font-family: 'Ubuntu', sans-serif;
     font-size: small;
-    width: 98%;
+    width: 90%;
     color: #2f2f2f;
     padding: 3px 10px;
     background-color: gray;
@@ -340,7 +340,8 @@ div#maximizeUpperBar {
 }
 
 textarea.textarea.optionlistProperties {
-    width: 98%;
+    resize: none;
+    width: 96.5%;
     font-family: 'Ubuntu Mono', monospace;
     height: 150px;
     border-radius: 0px 0px 6px 6px;
@@ -389,6 +390,10 @@ rect.optionListoption {
 rect.optionListoption:hover {
     fill: #d9e3e6;
     stroke: #989898;
+}
+
+#string_input_label {
+    font-family: 'Ubuntu Mono', monospace;
 }
 
 div#error {

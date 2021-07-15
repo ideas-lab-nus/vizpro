@@ -58,7 +58,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
         newcomp.value = newcomp.outputs[0].value;
     }
 
-    newcomp.fill = 'white'; //"#fbedcc";
+    newcomp.fill = 'white';
     newcomp.type = 'string';
     newcomp.dftype = 'shlow';
 
@@ -127,7 +127,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
             .lower()
             .attr('cx', '0')
             .attr('cy', newcomp.height / 2)
-            .attr('fill', 'gray') //newcomp.fill)
+            .attr('fill', 'gray')
             .attr('r', '5')
             .attr('stroke', 'black')
             .attr('stroke-width', '2')
@@ -404,7 +404,6 @@ function CreateNewPanel(reactContext, FromExisting = null) {
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log('Adding a panel' + newcomp);
         current_all_comp.push(newcomp);
         reactContext.setState({
             allComp: current_all_comp

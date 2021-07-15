@@ -7,7 +7,6 @@ function getGeometryData(project_api_key, tracking) {
             '&tracking=' +
             tracking
     );
-    // console.log(socket)
     socket.onmessage = function (event) {
         var data = JSON.parse(event.data);
         switch (data['status']) {
