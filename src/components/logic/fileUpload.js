@@ -166,13 +166,10 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
             if (newcomp.outputs[0].value == null || newcomp.outputs[0].value === undefined) {
                 return 'File Size : None';
             } else {
-                console.log(newcomp.outputs[0]);
                 return (
                     'File Size : ' +
                     (newcomp.outputs[0].Description.size / (1024 * 1024)).toString() +
-                    " MB <a class='open_uploadedFile_link' href='" +
-                    newcomp.outputs[0].Description.url +
-                    "' target='blank'>open</a>"
+                    " MB " 
                 );
             }
         })
@@ -317,26 +314,30 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
             Name: fileName,
             size: fileSize,
         };
-        theCurrentComp.outputs[0].value = selectedFile;
-        d3.select('#fileUpload_status_' + thisFormId).html(
-            'File Size : ' +
-            (selectedFile.size / (1024 * 1024)).toString() +
-            " MB" + "<a class='open_uploadedFile_link' href='" + URL.createObjectURL(selectedFile) + "' target='blank'>open</a>"
-        );
-        d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
-            let displayedName = fileName.length < 25 ? fileName : fileName.substring(0, 25) + '...';
-            return (
-                `
-                <div id="TheContainedFile">` +
-                    displayedName +
-                    `</div>
-                <div id="TheContainedFile">Size :` +
-                    (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
-                    ` MB</div>
-                `
+        const reader = new FileReader();
+        reader.onload = function() {
+            theCurrentComp.outputs[0].value = reader.result;
+            d3.select('#fileUpload_status_' + thisFormId).html(
+                'File Size : ' +
+                (selectedFile.size / (1024 * 1024)).toString() +
+                " MB"
             );
-        });
-        redrawDependents(thisFormId);
+            d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
+                let displayedName = fileName.length < 25 ? fileName : fileName.substring(0, 25) + '...';
+                return (
+                    `
+                    <div id="TheContainedFile">` +
+                        displayedName +
+                        `</div>
+                    <div id="TheContainedFile">Size :` +
+                        (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
+                        ` MB</div>
+                    `
+                );
+            });
+            redrawDependents(thisFormId);
+        }
+        reader.readAsDataURL(selectedFile);
     })
 }
 

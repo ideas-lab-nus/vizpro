@@ -213,7 +213,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
             return (
                 '<h5 id="changeEditMoveMode_' +
                 newcomp.GUID +
-                '" style="color:white; margin-top:1px" ">Edit</h5>'
+                '" style="color:white; margin-top:1px" ">Drag</h5>'
             );
         })
         .attr('x', newcomp.width - 30)
@@ -244,6 +244,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
     var Title = Titlegroup.append('text')
         .attr('class', 'nodetitle node_title' + newcomp.GUID)
         .attr('id', 'nodeTitle' + newcomp.GUID)
+        .attr('data-testid', 'node-title')
         .text(newcomp.Name)
         .attr('fill', 'white')
         .attr('x', 5)
@@ -291,6 +292,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
         .attr('height', newcomp.height - 5)
         .attr('fill', 'white') //"#ffeec7")
         .attr('fill-opacity', '0.15')
+        .style('display', 'block')
         .on('mousemove', function (event) {
             d3.select(event.currentTarget).attr('cursor', 'pointer');
         });
@@ -453,7 +455,7 @@ function submitPanelEdit(reactContext, compKey) {
         StringComp.outputs[0].value = textVal;
         StringComp.inputs[0].value = textVal;
         StringComp.value = textVal;
-        StringComp.Name = $('input.stringPnanel.Name').val();
+        StringComp.Name = $('input.stringPanel.Name').val();
 
         redrawDependents(compKey);
     }

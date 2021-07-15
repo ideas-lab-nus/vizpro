@@ -412,18 +412,18 @@ function handleDoubleClick() {
                     $('div#propertiesBarContents').append(`
                         <div class="propertiesbarheader title">String Panel Properties</div>
                         <div class="propertiesbarheader label">Name</div>
-                        <input class="stringPnanel Name"></textarea>
+                        <input class="stringPanel Name"></textarea>
                         <hr>
                         <div class="propertiesbarheader label">Value</div>
                         <textarea class="textarea stringProperties"></textarea>
                         <hr>
                         <div class="propertiesbarheader label">Panel Type</div>
                         <form>
-                            <input type="radio" name="type" id="string_radio_text" value="text"> text<br>
-                            <input type="radio" name="type" id="string_radio_html" value="html"> html<br>
-                            <input type="radio" name="type" id="string_radio_json" value="json"> json<br>
-                            <input type="radio" name="type" id="string_radio_lsit" value="lsit"> list<br>
-                            <input type="radio" name="type" id="string_radio_plot" value="plot"> plot <br>
+                            <input type="radio" name="type" id="string_radio_text" value="text" data-testid="text"> text<br>
+                            <input type="radio" name="type" id="string_radio_html" value="html" data-testid="html"> html<br>
+                            <input type="radio" name="type" id="string_radio_json" value="json" data-testid="json"> json<br>
+                            <input type="radio" name="type" id="string_radio_list" value="list" data-testid="list"> list<br>
+                            <input type="radio" name="type" id="string_radio_plot" value="plot" data-testid="plot"> plot <br>
                         </form>
                         <hr>
                         <div class="propertiesbarheader label">Log</div>
@@ -437,8 +437,8 @@ function handleDoubleClick() {
                     var StringComp = selectComp(element.GUID);
                     $('input#string_radio_' + StringComp.inputs[0].type).prop('checked', true);
                     var newName;
-                    $('input.stringPnanel.Name').on('change keyup paste', function () {
-                        newName = $('input.stringPnanel.Name').val();
+                    $('input.stringPanel.Name').on('change keyup paste', function () {
+                        newName = $('input.stringPanel.Name').val();
                         d3.select('text#nodeTitle' + StringComp.GUID).text(newName);
                         d3.select('rect#' + StringComp.GUID).attr('width', 10 + newName.length * 6);
                     });
@@ -459,7 +459,7 @@ function handleDoubleClick() {
                         });
                     }
 
-                    $('input.stringPnanel.Name').val(StringComp.Name);
+                    $('input.stringPanel.Name').val(StringComp.Name);
 
                     $('button#stringEditButton').on('click', function () {
                         submitPanelEdit(reactContext, element.GUID);
@@ -529,16 +529,24 @@ function handleDoubleClick() {
 
                     $('div#propertiesBarContents').append(`
                         <div class="propertiesbarheader label">Slider</div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Min-value : </div><input type="number" id="new_slider_min_value"></div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Max-value: </div><input type="number" id="new_slider_max_value"></div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Step: </div><input type="number" id="new_slider_step_value"></div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Current-value: </div><input type="number" id="new_slider_current_value"></div>
-                        <button id="sliderEditButton">Save</button>
-                        <button id="cancelSliderEdit">Cancel</button>
-                        `);
+                        <div id="numerical_slider_container">
+                            <div id="string_input_label">Min value </div>
+                            <input type="number" id="new_slider_min_value" data-testid="min-input">
+                        </div>
+                        <div id="numerical_slider_container">
+                            <div id="string_input_label">Max value </div>
+                            <input type="number" id="new_slider_max_value" data-testid="max-input">
+                        </div>
+                        <div id="numerical_slider_container" data-testid="curr-val-container">
+                            <div id="string_input_label">Current value </div>
+                            <input type="number" id="new_slider_current_value" data-testid="curr-val-input">
+                        </div>
+                        <button id="sliderEditButton" style='margin-left: 10px; margin-top: 5px;' data-testid="save-changes">Save</button>
+                        <button id="cancelSliderEdit" style='margin-top: 5px;' data-testid="cancel-changes">Cancel</button>
+                        <div id="propertiesBarLog" class="log"></div>
+                    `);
                     $('input#new_slider_min_value').val(element.min);
                     $('input#new_slider_max_value').val(element.max);
-                    $('input#new_slider_step_value').val(element.step);
                     $('input#new_slider_current_value').val(element.value);
 
                     //On save, set double clicked to false

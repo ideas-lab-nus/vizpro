@@ -524,7 +524,7 @@ rect {
     cursor: move;
 }
 
-input.stringPnanel.Name {
+input.stringPanel.Name {
     width: 98%;
     border: none;
     font-size: small;

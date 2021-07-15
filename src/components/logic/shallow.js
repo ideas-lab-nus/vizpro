@@ -838,35 +838,30 @@ function osiExtractTimeSeriesData(args) {
     }
 }
 
+/**
+* This function draws iframe
+* @param {array} args
+* @return {html}
+*/
 function imDisplay(args) {
-    /**
-     * This function draws iframe
-     * @param {array} args
-     * @return {html}
-     */
 
-    var _url = args[0];
+     var _url = args[0];
 
-    var image_ = null;
-
-    if (_url == null) {
-        image_ = `<img src="https://user-images.githubusercontent.com/6969514/60951247-4bac1200-a32b-11e9-8b66-02bc19953461.png" style="width:100%; height:100%">`;
-        return {
-            type: ['html'],
-            value: [image_]
-        };
-    } else {
-        console.log(_url);
-        if (typeof _url === 'string') {
-            image_ = `<img src="` + _url + `" style="width:100%; height:100%">`;
-        } else {
-            image_ = `<img src="` + URL.createObjectURL(_url) + `" style="width:100%; height:100%">`;
-        }
-        return {
-            type: ['html'],
-            value: [image_]
-        };
-    }
+     var image_ = null;
+ 
+     if (_url == null) {
+         image_ = `<img src="https://user-images.githubusercontent.com/6969514/60951247-4bac1200-a32b-11e9-8b66-02bc19953461.png" style="width:100%; height:100%">`;
+         return {
+             type: ['html'],
+             value: [image_]
+         };
+     } else {
+         image_ = `<img src="` + _url + `" style="width:100%; height:100%">`;
+         return {
+             type: ['html'],
+             value: [image_]
+         };
+     }
 }
 
 //<iframe width="560" height="315" src="https://www.youtube.com/embed/05d6yEsfuNw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -924,7 +919,7 @@ function plot_panel_comp(args) {
  * This is the core function that runs all the calculations and return the outputs to the components.
  * @param    {string} compId The component GUID.
  */
-function calculateShallow(compId) {
+ function calculateShallow(compId) {
     var thisComp = selectComp(compId); // selects the component that is under test.
     var inputGroup = []; // reads the inputs from the component and put them in a list to be mapped to the corresponding shallow function.
     thisComp.inputs.forEach(input => {

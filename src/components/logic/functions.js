@@ -477,9 +477,7 @@ function redrawDependents(parentComp) {
                     componentStatus(parent.GUID, ERROR_COLOR);
                 }
             } else if (parent.type === 'fileUpload') {
-                console.log(parent);
-                console.log(parent.outputs[element[0]]);
-                ch.inputs[element[2]].value = parent.outputs[element[0]].value === null ? null : parent.outputs[element[0]].value;
+                ch.inputs[element[2]].value = parent.outputs[element[0]].value === null ? null : parent.outputs[element[0]].Name;
                 ch.inputs[element[2]].file = parent.outputs[element[0]].value;
             }
             updatShallowCompRender(ch);

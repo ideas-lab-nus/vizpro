@@ -11,7 +11,6 @@ import { CreateNewCloud } from './cloudComp.js';
 var d3 = require('d3');
 
 function getCurrentData(reactContext) {
-    console.log(reactContext.state);
     var allContents = d3.select('#allCanvasContents');
     var svgContainer = d3.select('svg');
     reactContext.state.allEdges.forEach(element => {
@@ -19,16 +18,6 @@ function getCurrentData(reactContext) {
         element['circleX'] = $('rect#pathCircle' + element.path_id).attr('x');
         element['circleY'] = $('rect#pathCircle' + element.path_id).attr('y');
     });
-
-    var fileMapping = {};
-    reactContext.state.allComp.forEach(e => {
-        console.log(e);
-        console.log(e.type);
-        if (e.type === 'fileUpload') {
-            fileMapping[e.GUID] = e.outputs[0].value;
-            window.localStorage.setItem(e.GUID, e.outputs[0].value);
-        }
-    })
 
     var data = {
         components: reactContext.state.allComp,
@@ -44,17 +33,13 @@ function getCurrentData(reactContext) {
             kXY: svgContainer._groups[0][0].__zoom
         },
         currentRightColWidth: parseFloat(d3.select('div#PropertiesBar').style('width')),
-        currentLeftColWidth: parseFloat(d3.select('div#LeftPropertiesBar').style('width')),
-        mapping: fileMapping
+        currentLeftColWidth: parseFloat(d3.select('div#LeftPropertiesBar').style('width'))
     };
-    console.log(fileMapping);
-    console.log(data.components);
     const fileData = JSON.stringify(data);
     return fileData;
 }
 function saveData() {
     const fileData = getCurrentData(this);
-    console.log(fileData);
     var storage = window.localStorage;
     storage.setItem('data', fileData);
     alert('Successfully save data');
@@ -82,7 +67,6 @@ function loadData() {
     var svgContainer = d3.select('svg');
     if (allData !== null) {
         if (allData.canvas_transform !== undefined && allData.canvas_transform !== null) {
-            console.log(allData.components);
             allContents.attr('transform', allData.canvas_transform.transform);
             svgContainer._groups[0][0].__zoom.k = allData.canvas_transform.kXY.k;
             svgContainer._groups[0][0].__zoom.x = allData.canvas_transform.kXY.x;
@@ -94,13 +78,12 @@ function loadData() {
                 allComp: allComponents
             });
             allComponents.forEach(element => {
-                console.log(element);
                 if (element.type === 'component') CreateNewComponent(this, element);
                 else if (element.type === 'slider') CreateNewSlider(this, element);
                 else if (element.type === 'string') CreateNewPanel(this, element);
                 else if (element.type === 'toggle') CreateNewToggle(this, element);
                 else if (element.type === 'optionList') CreateNewOptionList(this, element);
-                else if (element.type === 'fileUpload') CreateNewFileUpload(this, element);
+                else if (element.type === 'fileUpload')  CreateNewFileUpload(this, element);
                 else if (element.type === 'listView') CreateNewListView(this, element);
                 else if (element.type === 'cloud') CreateNewCloud(this, element);
             });
