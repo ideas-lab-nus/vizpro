@@ -486,7 +486,6 @@ function handleDoubleClick() {
             });
         } else if (element.type === 'optionList') {
             d3.select('g#comp-' + element.GUID).on('dblclick', function () {
-                console.log('option list double click');
                 d3.select('rect#' + element.GUID)
                     .attr('stroke-width', '1')
                     .attr('stroke', 'black');
@@ -495,8 +494,6 @@ function handleDoubleClick() {
                     optionListStarted: true,
                     optionlistRectid: element.GUID
                 });
-
-                console.log(reactContext.state);
 
                 if (!reactContext.state.doubleClicked) {
                     reactContext.setState({

@@ -22,12 +22,6 @@ var loadScript = function(src) {
     document.body.appendChild(tag);
 }
 
-var loadSVG = function(src) {
-    var tag = document.createElement('div');
-    tag.innerHTML = src        
-    document.body.appendChild(tag);
-}
-
 export default class Canvas extends React.Component {
     constructor(props) {
         super(props);
@@ -51,14 +45,6 @@ export default class Canvas extends React.Component {
         this.loadData();
         this.addGenericComponentIcon();
         addRightToggleButton();         
-        loadSVG(`<svg id="js-plotly-tester" 
-                xmlns="http://www.w3.org/2000/svg" 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
-                style="position: absolute; left: -10000px; 
-                top: -10000px; width: 9000px; 
-                height: 9000px; z-index: 1;">
-                <path class="js-reference-point" d="M0,0H1V1H0Z" 
-                style="stroke-width: 0; fill: black;"></path></svg>`);
         loadScript("https://cdn.plot.ly/plotly-latest.min.js"); 
     }
 
