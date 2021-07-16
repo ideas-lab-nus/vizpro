@@ -212,7 +212,6 @@ function CreateNewOptionList(
 
 function handleOptionListEdit(compKey) {
     optionListComp = selectComp(compKey);
-    console.log(optionListComp);
     OptionListValues = optionListComp['optionListValues'];
     $('textarea.textarea.optionlistProperties').text(function () {
         let optionListOptionsfromTextarea = '';

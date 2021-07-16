@@ -470,7 +470,7 @@ function handleDoubleClick() {
 
                     $('input.stringPanel.Name').val(StringComp.Name);
 
-                    $('button#stringEditButton').on('click', function () {
+                    $('button#panelEditButton').on('click', function () {
                         submitPanelEdit(reactContext, element.GUID);
                         reactContext.setState({
                             doubleClicked: false
