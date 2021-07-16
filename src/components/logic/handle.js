@@ -150,7 +150,6 @@ function handleTheClickOnAllComponents() {
             'rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody, rect.CompCBody'
         )
         .on('mousedown', function (event) {
-            console.log('in mouse down');
             var coordinates = d3.pointer(event);
 
             var pos = $('g#comp-' + this.id.replace('overlaySelector', ''))
@@ -266,11 +265,10 @@ function handleEdgeInitialization() {
             var comp_input_edges = { ...reactContext.state.comp_input_edges };
             var comp_output_edges = { ...reactContext.state.comp_output_edges };
             var root_components = reactContext.state.root_components;
-            //What.
             var parent_child_matrix = reactContext.state.parent_child_matrix;
-            var parent_child_matrix_fast_check = [
-                ...reactContext.state.parent_child_matrix_fast_check
-            ];
+            var parent_child_matrix_fast_check = 
+            reactContext.state.parent_child_matrix_fast_check
+            ;
             var selectedcircleId = reactContext.state.selectedcircleId;
             if (
                 edgeStarted &&
@@ -286,6 +284,14 @@ function handleEdgeInitialization() {
                 toComponent = selectComp(toCircle.element.classList[1]);
                 fromComponent = selectComp(fromCircle.element.classList[1]);
 
+                console.log(parent_child_matrix_fast_check)
+                console.log(fromCircle.element.classList[2] +
+                    ' ' +
+                    fromCircle.element.classList[1] +
+                    ' ' +
+                    toCircle.element.classList[2] +
+                    ' ' +
+                    toCircle.element.classList[1])
                 if (
                     !parent_child_matrix_fast_check.includes(
                         fromCircle.element.classList[2] +
@@ -546,6 +552,10 @@ function handleDoubleClick() {
                             <div id="string_input_label">Max value </div>
                             <input type="number" id="new_slider_max_value" data-testid="max-input">
                         </div>
+                        <div id="numerical_slider_container">
+                            <div id="string_input_label">Step: </div>
+                            <input type="number" id="new_slider_step_value" data-testid="step-input">
+                        </div>
                         <div id="numerical_slider_container" data-testid="curr-val-container">
                             <div id="string_input_label">Current value </div>
                             <input type="number" id="new_slider_current_value" data-testid="curr-val-input">
@@ -554,8 +564,10 @@ function handleDoubleClick() {
                         <button id="cancelSliderEdit" style='margin-top: 5px;' data-testid="cancel-changes">Cancel</button>
                         <div id="propertiesBarLog" class="log"></div>
                     `);
+
                     $('input#new_slider_min_value').val(element.min);
                     $('input#new_slider_max_value').val(element.max);
+                    $('input#new_slider_step_value').val(element.step);
                     $('input#new_slider_current_value').val(element.value);
 
                     $('button#sliderEditButton').on('click', function (e) {

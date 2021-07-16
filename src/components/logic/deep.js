@@ -58,7 +58,6 @@ function handleRequest(args, url) {
                     deepComp.outputs.forEach(function (output, i) {
                         output.type = result['type'][i];
                         output.value = result['value'][i];
-                        console.log(result);
                     });
                 } catch (error) {
                     console.log(error);

@@ -472,7 +472,6 @@ function resize(newcomp) {
     var longestOutput = newcomp.outputs.reduce(
         (a, b) => a.Name.length > b.Name.length ? a : b , {Name: ''}).Name;
     
-    console.log(longestInput, longestOutput)
     newcomp.height = Math.max(80,
         titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding);
     newcomp.width = Math.max(100,
