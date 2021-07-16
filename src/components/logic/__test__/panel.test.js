@@ -66,9 +66,17 @@ test('Panel content successfully updates when change is made', () => {
 
 test('Panel content updates with html content when panel type is html', () => {
     fireEvent.dblClick(addedPanel.childNodes[0]);
+    const inputTextArea = screen.queryByTestId('textarea-string-properties');
+    fireEvent.change(inputTextArea, {
+        target: {
+            value: "<h1>Hello there</h1>",
+        }
+    });
     const htmlRadioBtn = screen.queryByTestId('html');
     fireEvent.click(htmlRadioBtn);
     const applyBtn = screen.queryByText('Apply');
     fireEvent.click(applyBtn);
     expect(screen.queryByText('Type : html')).toBeInTheDocument();
-})
+    const panelContent = screen.queryByTestId('textbody');
+    expect(panelContent.childNodes[0].textContent).toBe('Hello there');
+});
