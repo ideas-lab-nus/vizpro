@@ -85,7 +85,7 @@ function loadData() {
                 else if (element.type === 'string') CreateNewPanel(this, element);
                 else if (element.type === 'toggle') CreateNewToggle(this, element);
                 else if (element.type === 'optionList') CreateNewOptionList(this, element);
-                else if (element.type === 'fileUpload') CreateNewFileUpload(this, element);
+                else if (element.type === 'fileUpload')  CreateNewFileUpload(this, element);
                 else if (element.type === 'listView') CreateNewListView(this, element);
                 else if (element.type === 'deep') CreateNewDeep(this, element);
             });

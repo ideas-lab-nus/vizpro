@@ -421,8 +421,10 @@ function CreateNewDeep(reactContext, FromExisting = null,) {
     });
 }
 
-function submitDeepEdit(compKey) {
-    try {
+function submitDeepEdit(reactContext, compKey) {
+    const guidList = [];
+    reactContext.state.allComp.forEach(e => guidList.push(e.GUID));
+    if (guidList.includes(compKey)) {
         var deepComp = selectComp(compKey);
 
         var name = $('input.deepProp.Name').val();
@@ -449,11 +451,8 @@ function submitDeepEdit(compKey) {
         $('foreignObject#node_title' + deepComp.GUID).text(name);
 
         redrawDependents(compKey);
-        $('div#propertiesBarContents').html('');
-    } catch (error) {
-        console.log(error);
-        alert("Ran into an issue :(");
     }
+    $('div#propertiesBarContents').html('');
 }
 
 function resize(newcomp) {
