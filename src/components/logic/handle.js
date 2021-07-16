@@ -557,6 +557,10 @@ function handleDoubleClick() {
                             <div id="string_input_label">Max value </div>
                             <input type="number" id="new_slider_max_value" data-testid="max-input">
                         </div>
+                        <div id="numerical_slider_container">
+                            <div id="string_input_label">Step: </div>
+                            <input type="number" id="new_slider_step_value" data-testid="step-input">
+                        </div>
                         <div id="numerical_slider_container" data-testid="curr-val-container">
                             <div id="string_input_label">Current value </div>
                             <input type="number" id="new_slider_current_value" data-testid="curr-val-input">
@@ -565,8 +569,10 @@ function handleDoubleClick() {
                         <button id="cancelSliderEdit" style='margin-top: 5px;' data-testid="cancel-changes">Cancel</button>
                         <div id="propertiesBarLog" class="log"></div>
                     `);
+
                     $('input#new_slider_min_value').val(element.min);
                     $('input#new_slider_max_value').val(element.max);
+                    $('input#new_slider_step_value').val(element.step);
                     $('input#new_slider_current_value').val(element.value);
 
                     $('button#sliderEditButton').on('click', function (e) {
