@@ -697,7 +697,18 @@ function drawPlotComponent(data, comp) {
                     responsive: true
                 });
             }
-        } else {
+        } 
+        else if (data.type === undefined) {
+            $('div#propertiesBarLog').html(
+                '<div id="error">Incorrect format for plot panel. Check Help for more details</div>'
+            );
+        } 
+        else {
+            if (typeof data !== 'object') {
+                $('div#propertiesBarLog').html(
+                    '<div id="error">Incorrect format for plot panel. Check Help for more details</div>'
+                );
+            }
             if ('layout' in data) {
                 Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
                     responsive: true
