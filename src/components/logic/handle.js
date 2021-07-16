@@ -415,7 +415,7 @@ function handleDoubleClick() {
                         <input class="stringPanel Name"></textarea>
                         <hr>
                         <div class="propertiesbarheader label">Value</div>
-                        <textarea class="textarea stringProperties"></textarea>
+                        <textarea class="textarea stringProperties" data-testid="textarea-string-properties"></textarea>
                         <hr>
                         <div class="propertiesbarheader label">Panel Type</div>
                         <form>

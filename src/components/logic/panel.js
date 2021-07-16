@@ -253,6 +253,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
     var textbody = node
         .append('foreignObject')
         .attr('id', 'textbody_' + newcomp.GUID)
+        .attr('data-testid', 'textbody')
         .attr('class', 'textbody ' + newcomp.GUID)
         .attr('height', newcomp.height - ANCHOR_WIDTH - 5)
         .html(function () {

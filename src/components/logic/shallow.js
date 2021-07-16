@@ -51,7 +51,7 @@ var shallow_functions = {
     Replace: replace,
     'String to Json': str2Json,
     // List
-    String_to_List: str2lst,
+    'String To List': str2lst,
     Max: max,
     Min: min,
     // Json objects
