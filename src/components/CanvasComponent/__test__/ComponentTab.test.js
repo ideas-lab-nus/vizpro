@@ -17,7 +17,7 @@ test('Top toolbar successfully render initially', () => {
 })
 
 test('Top toolbar successfully render after right toggle button clicked', () => {
-    const rightToggleBtn = ['Basic', 'BuildSimHub', 'OsiSoft', 'Pandas', 'String Operations', 'Main Inputs'];
+    const rightToggleBtn = ['Basic', 'User Definitions', 'String Operations', 'Main Inputs'];
     rightToggleBtn.forEach(currentBtn => {
         const btn = screen.getAllByText(currentBtn);
         fireEvent.click(btn[0]);
@@ -39,62 +39,6 @@ test('Toolbar container successfully render when Basic button is clicked', () =>
     fireEvent.click(basicNode);
     const components = ['Average', 'Add', 'Max', 'Min', 'Difference 2', 'Json Navigator', '3dVisualizer',
                     'Image Display', 'YouTube Display', 'Plot Panel'];
-    components.forEach(element => {
-        const nodes = screen.getAllByText(element);
-        if (nodes.length === 1) {
-            expect(nodes[0]).toBeInTheDocument();
-            expect(nodes[0].className).toBe('tooltiptext');
-        } else {
-            expect(nodes[0]).toBeInTheDocument();
-            expect(nodes[0].className).toBe('iconText');
-            expect(nodes[1]).toBeInTheDocument();
-            expect(nodes[1].className).toBe('tooltiptext');
-        }
-    })
-})
-
-test('Toolbar container successfully render when BuildSimHub button is clicked', () => {
-    const bshNode = screen.getByText('BuildSimHub');
-    fireEvent.click(bshNode);
-    const components = ['BuildingSimulationModel', 'HVAC', 'BSH Project Model List', 'BSH Model Commits', 'BSH Run',
-                    'BSH 3D Viewer', 'Draw 3d Model', 'BSH Get Model Details', 'BSH Parametric Study', 'BSH Spatial Representation'];
-    components.forEach(element => {
-        const nodes = screen.getAllByText(element);
-        if (nodes.length === 1) {
-            expect(nodes[0]).toBeInTheDocument();
-            expect(nodes[0].className).toBe('tooltiptext');
-        } else {
-            expect(nodes[0]).toBeInTheDocument();
-            expect(nodes[0].className).toBe('iconText');
-            expect(nodes[1]).toBeInTheDocument();
-            expect(nodes[1].className).toBe('tooltiptext');
-        }
-    })
-})
-
-test('Toolbar container successfully render when OsiSoft button is clicked', () => {
-    const osisoftNode = screen.getByText('OsiSoft');
-    fireEvent.click(osisoftNode);
-    const components = ['get OsiSoft', 'Get Data Tree', 'OSI Get Data List', 'OSI Get Attribute', 'OSI Start Time',
-                    'OSI End Time', 'OSI Extract TimeSeries Data'];
-    components.forEach(element => {
-        const nodes = screen.getAllByText(element);
-        if (nodes.length === 1) {
-            expect(nodes[0]).toBeInTheDocument();
-            expect(nodes[0].className).toBe('tooltiptext');
-        } else {
-            expect(nodes[0]).toBeInTheDocument();
-            expect(nodes[0].className).toBe('iconText');
-            expect(nodes[1]).toBeInTheDocument();
-            expect(nodes[1].className).toBe('tooltiptext');
-        }
-    })
-})
-
-test('Toolbar container successfully render when Pandas button is clicked', () => {
-    const pandasNode = screen.getByText('Pandas');
-    fireEvent.click(pandasNode);
-    const components = ['PANDAS DataFrame'];
     components.forEach(element => {
         const nodes = screen.getAllByText(element);
         if (nodes.length === 1) {

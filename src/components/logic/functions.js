@@ -27,8 +27,8 @@
 
 import { jsonView } from './jsonview.js';
 import { calculateShallow } from './shallow.js';
-import { calculateCloud } from './cloud.js';
-import Plotly from 'plotly';
+import { calculateDeep } from './deep.js';
+
 import $ from 'jquery';
 
 var d3 = require('d3');
@@ -466,7 +466,7 @@ function redrawDependents(parentComp) {
                 ch.inputs[element[2]].type = 'json';
             } else if (parent.type === 'toggle' || parent.type === 'optionList') {
                 ch.inputs[element[2]].value = parent.value;
-            } else if (parent.type === 'component' || parent.type === 'cloud') {
+            } else if (parent.type === 'component') {
                 try {
                     calculateShallow(parent.GUID);
                     ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -484,19 +484,20 @@ function redrawDependents(parentComp) {
             redrawDependents(ch.GUID);
         });
     } else if (parent.dftype === 'dp') {
+        console.log('Deep comp' + parent.type);
         parent.state = 'unbound';
         parent_child_matrix[parentComp].forEach(function (element, i) {
             //iterate through all those childs.
             let ch = selectComp(element[1]);
-            if ((parent.type === 'cloud' || parent.isUDOCloud) && runDeep === true) {
+            if ((parent.type === 'deep' || parent.isUDODeep) && runDeep === true) {
                 reactContext.setState({
                     runDeep: false
                 });
                 if (parent.state === 'unbound') {
-                    //Previously calculate deep
-                    console.log("calculating cloud")
-                    calculateCloud(parent.GUID);
+                    calculateDeep(parent, ch, element);
                     parent.state = 'active';
+                    //Remaining 5 lines of code is executed in the async function
+                    return;
                 }
             }
             ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -506,8 +507,6 @@ function redrawDependents(parentComp) {
             updatShallowCompRender(ch);
             redrawDependents(ch.GUID);
         });
-    } else if (parent.dftype === 'cloud') {
-        //TODO if deep and cloud functions remain separate
     }
 } // End of redrawDependents
 
@@ -643,52 +642,32 @@ function highlightSpatialZone(id) {
     svgItem.setAttribute('fill', 'green');
 } // End of highlightSpatialZone
 
-function drawPlotComponent(data, comp) {
+function drawPlotComponent(data, comp) {    
+    var Plotly = window.Plotly
     $('foreignObject#textbody_' + comp.GUID).html(
         '<div id="plot_area' + comp.GUID + '" style="width:100%; height:100%;"></div>'
     );
-    if (data != null && Array.isArray(data)) {
-        if (data[0].type === 'scatter') {
-            if ('layout' in data[0]) {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, data[0].layout, {
-                    responsive: true
-                });
-            } else {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, {
-                    responsive: true
-                });
-            }
-        } else if (data[0].type === 'bar') {
-            data[0].data.forEach(dataElement => {
-                var maxValue = Math.max(...dataElement.y);
-                dataElement['marker'] = {
-                    color: []
-                };
-                dataElement.y.forEach(dataValue => {
-                    dataElement.marker.color.push(d3.interpolateGnBu(dataValue / maxValue));
-                });
-            });
-            if ('layout' in data[0]) {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, data[0].layout, {
-                    responsive: true
-                });
-            } else {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, {
-                    responsive: true
-                });
-            }
-        } else {
-            if ('layout' in data[0]) {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, data.layout, {
-                    responsive: true
-                });
-            } else {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, {
-                    responsive: true
-                });
-            }
+    
+    if (Plotly === undefined) {
+        // alert("Plotly not defined")
+        $("div#plot_area" + comp.GUID).text("Plotly is undefined :(")
+        return;
+    }
+
+    if (data === null) {
+        Plotly.newPlot(
+            'plot_area' + comp.GUID,
+            [{ x: ['1', '2', '3'],
+               y: [1.0, 2.0, 3.0],
+               type: 'bar' }],
+            { title: 'Dummy plot' },
+            { responsive: true }
+        );
+    } else {
+        if (Array.isArray(data)) {
+            data = data[0]
         }
-    } else if (data != null) {
+    
         if (data.type === 'scatter') {
             if ('layout' in data) {
                 Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
@@ -729,25 +708,25 @@ function drawPlotComponent(data, comp) {
                 });
             }
         }
-    } else {
-        Plotly.newPlot(
-            'plot_area' + comp.GUID,
-            [
-                {
-                    x: ['1', '2', '3'],
-                    y: [1.0, 2.0, 3.0],
-                    type: 'bar'
-                }
-            ],
-            {
-                title: 'Dummy plot'
-            },
-            {
-                responsive: true
-            }
-        );
     }
+
+    // Allow plotly controls to render
+    edit_move_mode(comp.GUID, 0)
+    edit_move_mode(comp.GUID, 0)
 } // End of drawPlotComponent
+
+function edit_move_mode(compId, mode) {
+    const EDIT_MODE = 0;
+    const DRAG_MODE = 1;
+    var disp = $('rect#overlaySelector' + compId).attr('style');
+    if (disp === 'display: block;') {
+        d3.select('rect#overlaySelector' + compId).style('display', 'none');
+        d3.select('h5#changeEditMoveMode_' + compId).text('Edit Mode');
+    } else {
+        d3.select('rect#overlaySelector' + compId).style('display', 'block');
+        d3.select('h5#changeEditMoveMode_' + compId).text('Drag Mode');
+    }
+}
 
 function updateListViewDrawing(comp) {
     d3.select('foreignObject#listView-' + comp.GUID).html(() => {
@@ -820,7 +799,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                     var padding = 20;
                     var titleMargin = 30;
                     var thenewEdge = d3.select('#' + inputElement).attr('d', function () {
-                        if (element.type === 'component' || element.type === 'cloud') {
+                        if (element.type === 'component' || element.type === 'deep') {
                             var itisthelocation = returnCurveString(
                                 xy2[0],
                                 xy2[1],
@@ -885,7 +864,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                     var padding = 20;
                     var titleMargin = 30;
                     var thenewEdge = d3.select('#' + outputElement).attr('d', function () {
-                        if (element.type === 'component' || element.type === 'cloud') {
+                        if (element.type === 'component' || element.type === 'deep') {
                             var itisthelocation = returnCurveString(
                                 rectpos[0] + parseFloat(rectwidth),
                                 rectpos[1] + (circleindex * padding + titleMargin),
@@ -1198,5 +1177,6 @@ export {
     componentStatus,
     moveComponent,
     runDeepFunction,
-    addEdgeCircle
+    addEdgeCircle,
+    edit_move_mode
 };

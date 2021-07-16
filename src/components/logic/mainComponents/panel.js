@@ -1,38 +1,13 @@
-/*
-───────────────────────────────────────────────────────────────────────────────────────────────────
-─██████████████─██████████████─████████████████───██████████─██████──────────██████─██████████████─
-─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───██░░░░░░██─██░░██████████──██░░██─██░░░░░░░░░░██─
-─██░░██████████─██████░░██████─██░░████████░░██───████░░████─██░░░░░░░░░░██──██░░██─██░░██████████─
-─██░░██─────────────██░░██─────██░░██────██░░██─────██░░██───██░░██████░░██──██░░██─██░░██─────────
-─██░░██████████─────██░░██─────██░░████████░░██─────██░░██───██░░██──██░░██──██░░██─██░░██─────────
-─██░░░░░░░░░░██─────██░░██─────██░░░░░░░░░░░░██─────██░░██───██░░██──██░░██──██░░██─██░░██──██████─
-─██████████░░██─────██░░██─────██░░██████░░████─────██░░██───██░░██──██░░██──██░░██─██░░██──██░░██─
-─────────██░░██─────██░░██─────██░░██──██░░██───────██░░██───██░░██──██░░██████░░██─██░░██──██░░██─
-─██████████░░██─────██░░██─────██░░██──██░░██████─████░░████─██░░██──██░░░░░░░░░░██─██░░██████░░██─
-─██░░░░░░░░░░██─────██░░██─────██░░██──██░░░░░░██─██░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─
-─██████████████─────██████─────██████──██████████─██████████─██████──────────██████─██████████████─
-*/
-
-/**
- * Summary. (use period)
- *
- * Description. (use period)
- *
- * @link   URL
- * @file   This files defines the MainGrid operations.
- * @author Mahmoud AbdelRahman
- * @since  x.x.x
- */
-
 import {
     uuidv4,
     addcomponent,
     selectComp,
     visualizeSpatialComponent,
     drawPlotComponent,
-    redrawDependents
-} from './functions.js';
-import { jsonView } from './jsonview.js';
+    redrawDependents,
+    edit_move_mode
+} from '../functions.js';
+import { jsonView } from '../jsonview.js';
 import $ from 'jquery';
 var d3 = require('d3');
 
@@ -307,6 +282,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
             var anchorMouseXpos = reactContext.state.anchorMouseXpos;
             var StringAnchorId = reactContext.state.StringAnchorId;
             var newHeight = event.y - anchorMouseYpos;
+
             if (newHeight <= 50) {
                 newHeight = 52;
             }
@@ -364,6 +340,16 @@ function CreateNewPanel(reactContext, FromExisting = null) {
                 .attr('cx', thisComp.width);
 
             d3.select('circle#inputCir' + StringAnchorId + '_0').attr('cy', thisComp.height / 2);
+
+            for (const [comp, child] of Object.entries(reactContext.state.parent_child_matrix)) {
+                if (child[0] === undefined) continue
+                if (child[0][1] === StringAnchorId) {
+                    redrawDependents(comp);
+                    return;
+                }
+            }
+            
+            console.log("Couldn't locate panel parent to redraw")
         });
 
     var rectanchorXY = node
@@ -463,21 +449,4 @@ function submitPanelEdit(reactContext, compKey) {
     $('div#propertiesBarContents').html('');
 }
 
-function cancelPanelEdit() {
-    $('div#propertiesBarContents').html('');
-}
-
-function edit_move_mode(compId, mode) {
-    const EDIT_MODE = 0;
-    const DRAG_MODE = 1;
-    var disp = $('rect#overlaySelector' + compId).attr('style');
-    if (disp === 'display: block;') {
-        d3.select('rect#overlaySelector' + compId).style('display', 'none');
-        d3.select('h5#changeEditMoveMode_' + compId).text('Edit Mode');
-    } else {
-        d3.select('rect#overlaySelector' + compId).style('display', 'block');
-        d3.select('h5#changeEditMoveMode_' + compId).text('Drag Mode');
-    }
-}
-
-export { CreateNewPanel, submitPanelEdit, cancelPanelEdit };
+export { CreateNewPanel, submitPanelEdit };

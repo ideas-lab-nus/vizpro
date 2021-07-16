@@ -1,17 +1,21 @@
 import {
     uuidv4,
-    addCircle,
     selectComp,
     updateAll,
     ViewListRedrawing,
     showDropDownList,
     redrawDependents
 } from './functions.js';
-import { submitOptionListEdit, readyToGoSubmit } from './optionlist.js';
-import { cancelSliderEdit, submitSliderEdit } from './slider.js';
-import { cancelPanelEdit, submitPanelEdit } from './panel.js';
+import { 
+    handleOptionListEdit,
+    submitOptionListEdit,
+    submitSliderEdit,
+    submitPanelEdit,
+    submitDeepEdit,
+    cancelEdit
+} from './mainComponents/mainComponents.js';
+
 import $ from 'jquery';
-import { cancelCloudEdit, submitCloudEdit } from './cloudComp.js';
 var d3 = require('d3');
 
 function GetURLParameter(sParam) {
@@ -49,7 +53,7 @@ function handleComponentSelection() {
             element.type === 'toggle' ||
             element.type === 'fileUpload' ||
             element.type === 'listView' || 
-            element.type === 'cloud'
+            element.type === 'deep'
         ) {
             d3.select('g#comp-' + element.GUID).on('click', function () {
                 d3.select('rect#' + element.GUID)
@@ -268,6 +272,11 @@ function handleEdgeInitialization() {
                 ...reactContext.state.parent_child_matrix_fast_check
             ];
             var selectedcircleId = reactContext.state.selectedcircleId;
+            console.log(edgeStarted ,
+                targetcircleIN ,
+                this !== fromCircle.element ,
+                comp_input_edges[this.classList[1]][this.classList[2]] === undefined ,
+                    comp_input_edges[this.classList[1]][this.classList[2]] === null)
             if (
                 edgeStarted &&
                 targetcircleIN &&
@@ -428,8 +437,8 @@ function handleDoubleClick() {
                         <hr>
                         <div class="propertiesbarheader label">Log</div>
                         <div id="propertiesBarLog" class="log"></div>
-                        <button id="stringEditButton">Apply</button>
-                        <button id="cancelStringEdit">Cancel</button>`
+                        <button id="panelEditButton">Apply</button>
+                        <button id="cancelPanelEdit">Cancel</button>`
                     );
 
                     element.outputs[0].value = element.value;
@@ -467,8 +476,8 @@ function handleDoubleClick() {
                             doubleClicked: false
                         });
                     });
-                    $('button#cancelStringEdit').on('click', function () {
-                        cancelPanelEdit();
+                    $('button#cancelPanelEdit').on('click', function () {
+                        cancelEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });
@@ -477,6 +486,7 @@ function handleDoubleClick() {
             });
         } else if (element.type === 'optionList') {
             d3.select('g#comp-' + element.GUID).on('dblclick', function () {
+                console.log('option list double click');
                 d3.select('rect#' + element.GUID)
                     .attr('stroke-width', '1')
                     .attr('stroke', 'black');
@@ -485,6 +495,8 @@ function handleDoubleClick() {
                     optionListStarted: true,
                     optionlistRectid: element.GUID
                 });
+
+                console.log(reactContext.state);
 
                 if (!reactContext.state.doubleClicked) {
                     reactContext.setState({
@@ -506,14 +518,19 @@ function handleDoubleClick() {
                             Log
                         </div>
                         <div id="propertiesBarLog" class="log"></div>
-                        <button id="applyChangeButton">Apply</button>
-                        `);
+                        <button id="optionListEditButton">Apply</button>
+                        <button id="cancelOptionListEdit">Cancel</button>`);
 
-                    let compKey = element.GUID;
-                    submitOptionListEdit(compKey);
+                    handleOptionListEdit(element.GUID);
 
-                    $('button#applyChangeButton').on('click', function (e) {
-                        readyToGoSubmit(reactContext, compKey);
+                    $('button#optionListEditButton').on('click', function () {
+                        submitOptionListEdit(reactContext, element.GUID);
+                        reactContext.setState({
+                            doubleClicked: false
+                        });
+                    });
+                    $('button#cancelOptionListEdit').on('click', function () {
+                        cancelEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });
@@ -549,7 +566,6 @@ function handleDoubleClick() {
                     $('input#new_slider_max_value').val(element.max);
                     $('input#new_slider_current_value').val(element.value);
 
-                    //On save, set double clicked to false
                     $('button#sliderEditButton').on('click', function (e) {
                         submitSliderEdit(reactContext, element.GUID);
                         reactContext.setState({
@@ -557,7 +573,7 @@ function handleDoubleClick() {
                         });
                     });
                     $('button#cancelSliderEdit').on('click', function (e) {
-                        cancelSliderEdit();
+                        cancelEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });
@@ -591,45 +607,42 @@ function handleDoubleClick() {
                     });
                 redrawDependents(currentToggle.GUID);
             });
-        } else if (element.type === 'cloud') {
+        } else if (element.type === 'deep') {
             d3.select('g#comp-' + element.GUID).on('dblclick', function () {
                 if (!reactContext.state.doubleClicked) {
                     reactContext.setState({
                         doubleClicked: true
                     });
                     $('div#propertiesBarContents').append(`
-                        <div class="propertiesbarheader title">Cloud Function Properties</div>
+                        <div class="propertiesbarheader title">Deep Function Properties</div>
                         <div class="propertiesbarheader label">Function Name</div>
-                        <input class="cloudProp Name"></textarea>
+                        <input class="deepProp Name"></textarea>
                         <hr>
                         <div class="propertiesbarheader label">Input List</div>
-                        <textarea class="cloudProp textarea stringProperties Val"></textarea>
+                        <textarea class="deepProp textarea stringProperties Val"></textarea>
                         <hr>
-                        <div class="propertiesbarheader label">Cloud function URL</div>
-                        <input class="cloudProp url"></textarea>
+                        <div class="propertiesbarheader label">Deep function URL</div>
+                        <input class="deepProp url"></textarea>
                         <div></div>
                         <div class="propertiesbarheader label">Log</div>
                         <div id="propertiesBarLog" class="log"></div>
-                        <button id="cloudEditButton">Apply</button>
-                        <button id="cancelCloudEdit">Cancel</button>`);
+                        <button id="deepEditButton">Apply</button>
+                        <button id="cancelDeepEdit">Cancel</button>`);
                 
-                    var cloudComp = selectComp(element.GUID);
+                    var deepComp = selectComp(element.GUID);
 
-                    $('input.cloudProp.Name').val(cloudComp.Name);
+                    $('input.deepProp.Name').val(deepComp.Name);
+                    $('textarea.deepProp.Val').val(deepComp.inputNames);
+                    $('input.deepProp.url').val(deepComp.url);
 
-                    // var inputString = JSON.stringify(cloudComp.inputs);
-                    // $('textarea.cloudProp.Val').val(inputString.substring(1, inputString.length-1));
-                    $('textarea.cloudProp.Val').val(cloudComp.inputNames);
-                    $('input.cloudProp.url').val(cloudComp.url);
-
-                    $('button#cloudEditButton').on('click', function () {
-                        submitCloudEdit(reactContext, element.GUID);
+                    $('button#deepEditButton').on('click', function () {
+                        submitDeepEdit(element.GUID);
                         reactContext.setState({
                             doubleClicked: false
                         });
                     });
-                    $('button#cancelCloudEdit').on('click', function () {
-                        cancelCloudEdit();
+                    $('button#cancelDeepEdit').on('click', function () {
+                        cancelEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });
