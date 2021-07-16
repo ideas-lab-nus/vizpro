@@ -349,6 +349,12 @@ function CreateNewPanel(reactContext, FromExisting = null) {
                 }
             }
             
+            if (thisComp.inputs[0].type === 'plot') {
+                var data = JSON.parse(thisComp.inputs[0].value);
+                drawPlotComponent(data, thisComp);
+                return;
+            }
+            
             console.log("Couldn't locate panel parent to redraw")
         });
 
