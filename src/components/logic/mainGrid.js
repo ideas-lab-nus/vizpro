@@ -87,7 +87,6 @@ function manageGrid() {
             }
         })
         .on('keydown', function (event) {
-            console.log('deleting');
             if (event.keyCode === 46) {
                 //delete
                 if (reactContext.state.selected_components.length > 1) {
@@ -250,7 +249,6 @@ function manageGrid() {
             handleEdgeMovement(reactContext.state.StringAnchorId);
         })
         .on('mouseup', function () {
-            console.log('in mouse up');
             if (reactContext.state.startDrag) {
                 try {
                     //This needs to move to a separate function .
@@ -409,7 +407,6 @@ function highlightSelection(components_list, temp_selected_xs, temp_selected_ys)
                 reactContext.setState({
                     selection_groud_selected: true
                 });
-                console.log('you are in now .... ... ');
             });
         horizontal_alignment_box = showHorizontalAlignment(selection_rectangle_group);
         vertical_alignment_box = showVerticalAlignment(selection_rectangle_group);

@@ -1051,19 +1051,33 @@ function deleteEdge(edge_to_be_deleted) {
     var components_of_the_edge = edge_comp_matrix[edge_to_be_deleted];
     var fromComp = selectComp(components_of_the_edge['from']);
     var toComp = selectComp(components_of_the_edge['to']);
+
     toComp.inputs[components_of_the_edge['to_index']].value = null;
     toComp.value = null;
-    comp_input_edges[toComp.GUID][components_of_the_edge['to_index']] = undefined;
-    comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']] = comp_output_edges[
-        fromComp.GUID
-    ][components_of_the_edge['from_index']].filter(pathId => pathId !== edge_to_be_deleted);
 
+    // An input can only have one edge
+    comp_input_edges[toComp.GUID][components_of_the_edge['to_index']] = undefined;
+
+    // An output can have multiple edges
+    var prevLength = comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']].length;
+    
+    comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']] =
+        comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']]
+            .filter(pathId => pathId !== edge_to_be_deleted);
+    
+    var newLength = comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']].length;
+    
+    var flagPCM = false;    
     for (let i = 0; i < parent_child_matrix[fromComp.GUID].length; i++) {
+        console.log(parent_child_matrix[fromComp.GUID][i])
         if (
-            parent_child_matrix[fromComp.GUID][i][2] === components_of_the_edge['to_index'] &&
-            parent_child_matrix[fromComp.GUID][i][1] === toComp.GUID
+            parent_child_matrix[fromComp.GUID][i][0] === components_of_the_edge['from_index'] &&
+            parent_child_matrix[fromComp.GUID][i][1] === toComp.GUID &&
+            parent_child_matrix[fromComp.GUID][i][2] === components_of_the_edge['to_index']    
         ) {
             parent_child_matrix[fromComp.GUID].splice(i, 1);
+            flagPCM = true;
+            break;
         }
     }
 
@@ -1073,14 +1087,18 @@ function deleteEdge(edge_to_be_deleted) {
 
     allEdges = allEdges.filter(edge => edge['path_id'] !== edge_to_be_deleted);
 
+    var flagPCMFC = false;
     for (let i = 0; i < parent_child_matrix_fast_check.length; i++) {
         var parent_child_info = parent_child_matrix_fast_check[i].split(' ');
         if (
             parent_child_info[0] === components_of_the_edge['from_index'] &&
-            parent_child_info[1] === fromComp.GUID
+            parent_child_info[1] === fromComp.GUID && 
+            parent_child_info[2] === components_of_the_edge['to_index'] &&
+            parent_child_info[3] === toComp.GUID
         ) {
-            // && parent_child_info[3] === toComp.GUID
             parent_child_matrix_fast_check.splice(i, 1);
+            flagPCMFC = true;
+            break;
         }
     }
 
@@ -1095,6 +1113,11 @@ function deleteEdge(edge_to_be_deleted) {
         allEdges: allEdges,
         parent_child_matrix_fast_check: parent_child_matrix_fast_check
     });
+
+    if (prevLength - newLength !== 1 || !flagPCM || !flagPCMFC) {
+        console.log(prevLength, newLength, flagPCM, flagPCMFC)
+        alert("Edge not deleted correctly :(")
+    }
 } // End of deleteEdge
 
 function popupMessage(message) {

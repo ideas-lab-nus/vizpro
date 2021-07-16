@@ -150,7 +150,6 @@ function handleTheClickOnAllComponents() {
             'rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody, rect.CompCBody'
         )
         .on('mousedown', function (event) {
-            console.log('in mouse down');
             var coordinates = d3.pointer(event);
 
             var pos = $('g#comp-' + this.id.replace('overlaySelector', ''))
@@ -266,11 +265,10 @@ function handleEdgeInitialization() {
             var comp_input_edges = { ...reactContext.state.comp_input_edges };
             var comp_output_edges = { ...reactContext.state.comp_output_edges };
             var root_components = reactContext.state.root_components;
-            //What.
             var parent_child_matrix = reactContext.state.parent_child_matrix;
-            var parent_child_matrix_fast_check = [
-                ...reactContext.state.parent_child_matrix_fast_check
-            ];
+            var parent_child_matrix_fast_check = 
+            reactContext.state.parent_child_matrix_fast_check
+            ;
             var selectedcircleId = reactContext.state.selectedcircleId;
             console.log(edgeStarted ,
                 targetcircleIN ,
@@ -291,6 +289,14 @@ function handleEdgeInitialization() {
                 toComponent = selectComp(toCircle.element.classList[1]);
                 fromComponent = selectComp(fromCircle.element.classList[1]);
 
+                console.log(parent_child_matrix_fast_check)
+                console.log(fromCircle.element.classList[2] +
+                    ' ' +
+                    fromCircle.element.classList[1] +
+                    ' ' +
+                    toCircle.element.classList[2] +
+                    ' ' +
+                    toCircle.element.classList[1])
                 if (
                     !parent_child_matrix_fast_check.includes(
                         fromCircle.element.classList[2] +
