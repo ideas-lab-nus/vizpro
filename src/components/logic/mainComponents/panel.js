@@ -425,7 +425,7 @@ function submitPanelEdit(compKey) {
             .html(textVal)
             .attr('fill', 'black');
     } else if (StringComp.inputs[0].type === 'plot') {
-        var data = JSON.parse(JSON.stringify(textVal));
+        var data = JSON.parse(textVal);
         drawPlotComponent(data, StringComp);
     } else {
         d3.select('foreignObject#textbody_' + compKey)

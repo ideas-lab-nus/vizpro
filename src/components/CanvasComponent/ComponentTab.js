@@ -36,7 +36,7 @@ export default class ComponentTab extends Component {
                     <div id="addFile" onClick={() => CreateNewFileUpload(this.props.context)} className="mainButtonItem 1 1 tooltip" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/2329/2329379.png)"}}>
                         <span className="tooltiptext" id="hintx">File Upload</span></div>
                     <div id="addDeep" onClick={() => CreateNewDeep(this.props.context)} className="mainButtonItem 1 1 tooltip" style={{backgroundImage: "url(https://image.flaticon.com/icons/png/512/1935/1935089.png)"}}>
-                        <span className="tooltiptext" id="hintx">Cloud</span></div>
+                        <span className="tooltiptext" id="hintx">Deep</span></div>
                 </div>      
                 <div id="toolbar_container_1_2_2" className="toolbarRightToggleNavigator 1" />     
             </div>
