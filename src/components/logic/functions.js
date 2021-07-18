@@ -1,31 +1,6 @@
-/*
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-─██████████████─██████──██████─██████──────────██████─██████████████─██████████████─██████████─██████████████─██████──────────██████─██████████████─
-─██░░░░░░░░░░██─██░░██──██░░██─██░░██████████──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─██░░██████████──██░░██─██░░░░░░░░░░██─
-─██░░██████████─██░░██──██░░██─██░░░░░░░░░░██──██░░██─██░░██████████─██████░░██████─████░░████─██░░██████░░██─██░░░░░░░░░░██──██░░██─██░░██████████─
-─██░░██─────────██░░██──██░░██─██░░██████░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██████░░██──██░░██─██░░██─────────
-─██░░██████████─██░░██──██░░██─██░░██──██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██─██░░██████████─
-─██░░░░░░░░░░██─██░░██──██░░██─██░░██──██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██─██░░░░░░░░░░██─
-─██░░██████████─██░░██──██░░██─██░░██──██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██─██████████░░██─
-─██░░██─────────██░░██──██░░██─██░░██──██░░██████░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██████░░██─────────██░░██─
-─██░░██─────────██░░██████░░██─██░░██──██░░░░░░░░░░██─██░░██████████─────██░░██─────████░░████─██░░██████░░██─██░░██──██░░░░░░░░░░██─██████████░░██─
-─██░░██─────────██░░░░░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─────██░░██─────██░░░░░░██─██░░░░░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─
-─██████─────────██████████████─██████──────────██████─██████████████─────██████─────██████████─██████████████─██████──────────██████─██████████████─
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-*/
-
-/**
- * Summary. (use period)
- *
- * Description. (use period)
- *
- * @link   URL
- * @file   This files defines the MainGrid operations.
- * @author Mahmoud AbdelRahman
- * @since  x.x.x
- */
-
-import { jsonView } from './jsonview.js';
+import React from 'react';
+import ReactJson from 'react-json-view';
+import ReactDOM from 'react-dom';
 import { calculateShallow } from './shallow.js';
 import { calculateDeep } from './deep.js';
 
@@ -515,10 +490,19 @@ function updatShallowCompRender(ch) {
         if (ch.inputs[0].type === 'html') {
             $('foreignObject#textbody_' + ch.GUID).html(ch.inputs[0].value);
         } else if (ch.inputs[0].type === 'json') {
-            $('foreignObject#textbody_' + ch.GUID).html(
-                '<div id="jsonTreeViewer' + ch.GUID + '"></div>'
-            );
-            jsonView.format(ch.inputs[0].value, 'div#jsonTreeViewer' + ch.GUID);
+            var compKey = ch.GUID;
+            try {
+                $('foreignObject#textbody_' + compKey).html(
+                    '<div id="jsonTreeViewer' + compKey + '"></div>'
+                );
+                var jsonStruct = JSON.parse(ch.inputs[0].value);
+                ReactDOM.render(<ReactJson src={jsonStruct} />, 
+                    document.getElementById('jsonTreeViewer' + compKey))
+            } catch (e) {
+                d3.select('foreignObject#textbody_' + compKey)
+                    .text(e)
+                    .attr('style', 'color: red');
+            }
         } else if (ch.inputs[0].type === 'text') {
             $('foreignObject#textbody_' + ch.GUID).html('<pre>' + ch.inputs[0].value + '</pre>');
         } else if (ch.inputs[0].type === 'htmlLoad') {
@@ -541,6 +525,7 @@ function updatShallowCompRender(ch) {
         ch.optionListValues = JSON.parse(ch.inputs[0].value);
     } else if (ch.type === 'listView') {
         var newValues = [];
+        console.log(ch.inputs[0].value)
         for (let i = 0; i < JSON.parse(ch.inputs[0].value).length; i++) {
             const element = JSON.parse(ch.inputs[0].value)[i];
             newValues.push([element, 0]);
@@ -1092,7 +1077,9 @@ function deleteEdge(edge_to_be_deleted) {
         }
     }
 
+    console.log("updating to comp")
     updatShallowCompRender(toComp);
+    console.log("updating from comp")
     updatShallowCompRender(fromComp);
     redrawDependents(components_of_the_edge['to']);
 

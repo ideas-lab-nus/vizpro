@@ -7,7 +7,10 @@ import {
     redrawDependents,
     edit_move_mode
 } from '../functions.js';
-import { jsonView } from '../jsonview.js';
+import React from 'react';
+import ReactJson from 'react-json-view';
+import ReactDOM from 'react-dom';
+
 import $ from 'jquery';
 var d3 = require('d3');
 
@@ -243,10 +246,19 @@ function CreateNewPanel(reactContext, FromExisting = null) {
 
     var data2;
     if (newcomp.inputs[0].type === 'json') {
-        $('foreignObject#textbody_' + newcomp.GUID).html(
-            '<div id="jsonTreeViewer' + newcomp.GUID + '"></div>'
-        );
-        jsonView.format(newcomp.inputs[0].value, 'div#jsonTreeViewer' + newcomp.GUID);
+        var compKey = newcomp.GUID;
+        try {
+            $('foreignObject#textbody_' + compKey).html(
+                '<div id="jsonTreeViewer' + compKey + '"></div>'
+            );
+            var jsonStruct = JSON.parse(newcomp.inputs[0].value);
+            ReactDOM.render(<ReactJson src={jsonStruct} />, 
+                document.getElementById('jsonTreeViewer' + compKey))
+        } catch (e) {
+            d3.select('foreignObject#textbody_' + compKey)
+                .text(e)
+                .attr('style', 'color: red');
+        } 
     } else if (newcomp.inputs[0].type === 'plot') {
         data2 = JSON.parse(newcomp.inputs[0].value);
         drawPlotComponent(data2, newcomp);
@@ -421,15 +433,20 @@ function submitPanelEdit(reactContext, compKey) {
         var StringComp = selectComp(compKey);
         var textVal = $('textarea.textarea.stringProperties').val();
         StringComp.inputs[0].type = $("input[name='type']:checked").val();
-        $('foreignObject#panel_status_' + StringComp.GUID).text('Type : ' + StringComp.inputs[0].type);
-        if (StringComp.inputs[0].type === 'json') {
-            $('foreignObject#textbody_' + StringComp.GUID).html(
-                '<div id="jsonTreeViewer' + StringComp.GUID + '"></div>'
-            );
-            jsonView.format(
-                JSON.stringify(StringComp.inputs[0].value),
-                'div#jsonTreeViewer' + StringComp.GUID
-            );
+        $('foreignObject#panel_status_' + compKey).text('Type : ' + StringComp.inputs[0].type);
+        if (StringComp.inputs[0].type === 'json') { 
+            try {
+                $('foreignObject#textbody_' + compKey).html(
+                    '<div id="jsonTreeViewer' + compKey + '"></div>'
+                );
+                var jsonStruct = JSON.parse(textVal);
+                ReactDOM.render(<ReactJson src={jsonStruct} />, 
+                    document.getElementById('jsonTreeViewer' + compKey))
+            } catch (e) {
+                d3.select('foreignObject#textbody_' + compKey)
+                    .text(e)
+                    .attr('style', 'color: red');
+            }   
         } else if (StringComp.inputs[0].type === 'html') {
             d3.select('foreignObject#textbody_' + compKey)
                 .html(textVal)
