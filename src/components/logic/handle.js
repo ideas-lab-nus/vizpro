@@ -626,8 +626,9 @@ function handleDoubleClick() {
                         <textarea class="deepProp textarea stringProperties Val" data-testid="input-list-deep"></textarea>
                         <hr>
                         <div class="propertiesbarheader label">Deep function URL</div>
-                        <input class="deepProp url"></textarea>
+                        <input class="deepProp url" data-testid="deep-url"></textarea>
                         <div></div>
+                        <hr>
                         <div class="propertiesbarheader label">Log</div>
                         <div id="propertiesBarLog" class="log"></div>
                         <button id="deepEditButton">Apply</button>

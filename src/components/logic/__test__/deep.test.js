@@ -45,13 +45,20 @@ test('Property bar appear when the component is double clicked', () => {
     expect(screen.queryByText('Cancel')).toBeInTheDocument();
 })
 
-test('Deep component updates when input list is changed', () => {
+test('Deep component successfully updates when input list and URL is changed', () => {
     fireEvent.dblClick(addedDeep.childNodes[0]);
     const title = screen.queryByTestId('title-deep');
-    userEvent.type(title, 'Random Deep Component')
+    fireEvent.change(title, {
+        target: {
+            value: 'Random Deep Component',
+        }
+    });
     const inputTextArea = screen.queryByTestId('input-list-deep');
     userEvent.type(inputTextArea, "input_1{enter}input_2{enter}input_3");
+    const url = screen.queryByTestId('deep-url');
+    userEvent.type(url, 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute');
     fireEvent.click(screen.queryByText('Apply'));
+    expect(screen.queryByText('Random Deep Component')).toBeInTheDocument();
     expect(screen.queryByText('input_1')).toBeInTheDocument();
     expect(screen.queryByText('input_1')).toHaveClass('inputTxt');
     expect(screen.queryByText('input_2')).toBeInTheDocument();
@@ -60,4 +67,24 @@ test('Deep component updates when input list is changed', () => {
     expect(screen.queryByText('input_3')).toHaveClass('inputTxt');
     expect(screen.queryByText('out')).toBeInTheDocument();
     expect(screen.queryByText('out')).toHaveClass('outputTxt');
+})
+
+test('Error reports when no URL is provided', () => {
+    fireEvent.dblClick(addedDeep.childNodes[0]);
+    const inputTextArea = screen.queryByTestId('input-list-deep');
+    userEvent.type(inputTextArea, "input_1");
+    fireEvent.click(screen.queryByText('Apply'));
+    expect(screen.queryByText('Please provide a valid URL')).toBeInTheDocument();
+    expect(screen.queryByText('Please provide a valid URL').id).toBe('error');
+});
+
+test('Error reports when input list is empty', () => {
+    fireEvent.dblClick(addedDeep.childNodes[0]);
+    const inputTextArea = screen.queryByTestId('input-list-deep');
+    userEvent.type(inputTextArea, "{enter}{enter}");
+    const url = screen.queryByTestId('deep-url');
+    userEvent.type(url, 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute');
+    fireEvent.click(screen.queryByText('Apply'));
+    expect(screen.queryByText('The input list must not be empty')).toBeInTheDocument();
+    expect(screen.queryByText('The input list must not be empty').id).toBe('error');
 })
