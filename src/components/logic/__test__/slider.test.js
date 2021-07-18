@@ -8,12 +8,11 @@ beforeEach(() => {
     render(<Canvas />);
     const sliderIcon = screen.getByText('Slider');
     fireEvent.click(sliderIcon);
-    const mainGrid = screen.getAllByTestId('allContents')[0];
+    const mainGrid = screen.getByTestId('allContents');
     addedSlider = mainGrid.childNodes[2];
 });
 
 afterEach(cleanup);
-afterAll(cleanup);
 
 test('Slider appears on the grid when the icon is clicked', () => {
     expect(addedSlider).toHaveClass('slider'); 

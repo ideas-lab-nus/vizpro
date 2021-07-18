@@ -620,10 +620,10 @@ function handleDoubleClick() {
                     $('div#propertiesBarContents').append(`
                         <div class="propertiesbarheader title">Deep Function Properties</div>
                         <div class="propertiesbarheader label">Function Name</div>
-                        <input class="deepProp Name"></textarea>
+                        <input class="deepProp Name" data-testid="title-deep"></textarea>
                         <hr>
                         <div class="propertiesbarheader label">Input List</div>
-                        <textarea class="deepProp textarea stringProperties Val"></textarea>
+                        <textarea class="deepProp textarea stringProperties Val" data-testid="input-list-deep"></textarea>
                         <hr>
                         <div class="propertiesbarheader label">Deep function URL</div>
                         <input class="deepProp url"></textarea>
