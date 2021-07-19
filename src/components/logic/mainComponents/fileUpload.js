@@ -202,7 +202,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
                             `">
                     <input id="fileUploadFormToTheCloud" class="` +
                             newcomp.GUID +
-                            `" type="file" name="myFile" data-testid='fileUploadForm'>
+                            `" type="file" name="myFile" data-testid="fileUploadForm">
                     </form>
                     `;
                 return form;

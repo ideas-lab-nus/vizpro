@@ -305,6 +305,7 @@ function CreateNewDeep(reactContext, FromExisting = null,) {
     var Title = Titlegroup.append('foreignObject')
         .attr('class', 'nodetitle node_title' + newcomp.GUID)
         .attr('id', 'node_title' + newcomp.GUID)
+        .attr('data-testid', 'node_title')
         .attr('x', 0)
         .attr('y', -10)
         .attr('width', newcomp.width)
@@ -358,6 +359,7 @@ function CreateNewDeep(reactContext, FromExisting = null,) {
         .append('svg')
         .attr('role', 'img')
         .attr('class', 'removableSVG' + newcomp.GUID)
+        .attr('data-testid', 'play_btn')
         .attr('xmlns', 'http://www.w3.org/2000/svg')
         .attr('width', 20)
         .attr('height', 20)
@@ -430,29 +432,43 @@ function submitDeepEdit(reactContext, compKey) {
         var name = $('input.deepProp.Name').val();
         var inputs = $('textarea.deepProp.Val').val();
         var url = $('input.deepProp.url').val();
+        var inputDict = createInputDict(inputs.split('\n'));
 
-        deepComp.inputNames = inputs;
-        deepComp.inputs = createInputDict(inputs.split('\n'));
-        deepComp.outputs = createOutputDict(["out", "log"]);
-        deepComp.url = url;
-        deepComp.Name = name;
-    
-        d3.selectAll('circle.inputCirVisual.' + deepComp.GUID).remove();
-        d3.selectAll('circle.inputCir.' + deepComp.GUID).remove();
-        d3.selectAll('text.inputTxt.' + deepComp.GUID).remove();
-        d3.selectAll('circle.outputCirVisual.' + deepComp.GUID).remove();
-        d3.selectAll('circle.outputCir.' + deepComp.GUID).remove();
-        d3.selectAll('text.outputTxt.' + deepComp.GUID).remove();
+        if (url === '') {
+            $('div#propertiesBarLog').html(
+                '<div id="error">Please provide a valid URL</div>'
+            );
+        // // Empty inpuy list check (confirm requirement)
+        // } else if (inputDict.length === 0) {
+        //     $('div#propertiesBarLog').html(
+        //         '<div id="error">The input list must not be empty</div>'
+        //     );
+        } else {
+            deepComp.inputNames = inputs;
+            deepComp.inputs = inputDict;
+            deepComp.outputs = createOutputDict(["out"]);
+            deepComp.url = url;
+            deepComp.Name = name;
         
-        resize(deepComp);
-        addInputCirclesFunc(deepComp);
-        addOutputCirclesFunc(deepComp);
+            d3.selectAll('circle.inputCirVisual.' + deepComp.GUID).remove();
+            d3.selectAll('circle.inputCir.' + deepComp.GUID).remove();
+            d3.selectAll('text.inputTxt.' + deepComp.GUID).remove();
+            d3.selectAll('circle.outputCirVisual.' + deepComp.GUID).remove();
+            d3.selectAll('circle.outputCir.' + deepComp.GUID).remove();
+            d3.selectAll('text.outputTxt.' + deepComp.GUID).remove();
+            
+            resize(deepComp);
+            addInputCirclesFunc(deepComp);
+            addOutputCirclesFunc(deepComp);
 
-        $('foreignObject#node_title' + deepComp.GUID).text(name);
+            $('foreignObject#node_title' + deepComp.GUID).text(name);
 
-        redrawDependents(compKey);
+            redrawDependents(compKey);
+            $('div#propertiesBarContents').html('');
+        }
+    } else {
+        $('div#propertiesBarContents').html('');
     }
-    $('div#propertiesBarContents').html('');
 }
 
 function resize(newcomp) {
@@ -569,6 +585,8 @@ function createOutputDict(outputsIn) {
 function createInputDict(inputsIn) {
     var inputs = [];
     for (let index = 0; index < inputsIn.length; index++) {
+        if (inputsIn[index] === '') 
+            continue;
         try {
             inputs.push({
                 id: index,
