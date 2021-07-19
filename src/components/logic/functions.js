@@ -527,15 +527,14 @@ function updatShallowCompRender(ch) {
     } else if (ch.type === 'optionList') {
         ch.optionListValues = JSON.parse(ch.inputs[0].value);
     } else if (ch.type === 'listView') {
-        console.log(ch.value)
-        console.log(ch.inputs[0].value)
-        var oldValues = checkJSONValidity(ch.inputs[0].value)
-        // var oldValues = typeof(ch.inputs[0].value) === 'string'
-        //                     ? JSON.parse(ch.inputs[0].value)
-        //                     : ch.inputs[0].value;
-        var newValues = oldValues.map(val => [val, 0]);
-        console.log(oldValues)
-        console.log(newValues)
+        var newValues;
+        try {
+            var oldValues = checkJSONValidity(ch.inputs[0].value)
+            newValues = oldValues.map(val => [val[0], 0]);
+        } catch (e) {
+            newValues = [[e, 1]];
+        }
+        
         ch.value = newValues;
         ch.inputs[0].value = newValues;
         ch.outputs[0].value = newValues;
@@ -755,6 +754,7 @@ function updateListViewDrawing(comp) {
         var ListItemsvalueReturn =
             `<select id="listviewSelect" class="listView ` + comp.GUID + `" size="5"  multiple>`;
         comp.value.forEach(option => {
+            console.log("updating list drawing" + option);
             if (option[1] === 0) {
                 ListItemsvalueReturn +=
                     `<option id="someSelection" class="listViewOption ` +
