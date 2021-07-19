@@ -36,8 +36,6 @@ function dummyToSetState() {
     runDeep = reactContext.state.runDeep;
 }
 
-
-
 function uuidv4(ini) {
     return (
         ini +
@@ -495,7 +493,12 @@ function updatShallowCompRender(ch) {
                 $('foreignObject#textbody_' + compKey).html(
                     '<div id="jsonTreeViewer' + compKey + '"></div>'
                 );
-                var jsonStruct = JSON.parse(ch.inputs[0].value);
+                var jsonStruct = checkJSONValidity(ch.inputs[0].value);
+                // console.log(typeof(ch.inputs[0].value))
+                // var jsonStruct = typeof(ch.inputs[0].value) === 'string'
+                //                     ? JSON.parse(ch.inputs[0].value)
+                //                     : ch.inputs[0].value;
+                // var jsonStruct = JSON.parse(ch.inputs[0].value);
                 ReactDOM.render(<ReactJson src={jsonStruct} />, 
                     document.getElementById('jsonTreeViewer' + compKey))
             } catch (e) {
@@ -524,12 +527,15 @@ function updatShallowCompRender(ch) {
     } else if (ch.type === 'optionList') {
         ch.optionListValues = JSON.parse(ch.inputs[0].value);
     } else if (ch.type === 'listView') {
-        var newValues = [];
+        console.log(ch.value)
         console.log(ch.inputs[0].value)
-        for (let i = 0; i < JSON.parse(ch.inputs[0].value).length; i++) {
-            const element = JSON.parse(ch.inputs[0].value)[i];
-            newValues.push([element, 0]);
-        }
+        var oldValues = checkJSONValidity(ch.inputs[0].value)
+        // var oldValues = typeof(ch.inputs[0].value) === 'string'
+        //                     ? JSON.parse(ch.inputs[0].value)
+        //                     : ch.inputs[0].value;
+        var newValues = oldValues.map(val => [val, 0]);
+        console.log(oldValues)
+        console.log(newValues)
         ch.value = newValues;
         ch.inputs[0].value = newValues;
         ch.outputs[0].value = newValues;
@@ -537,6 +543,25 @@ function updatShallowCompRender(ch) {
         updateListViewDrawing(ch);
     }
 } // End of updatShallowCompRender
+
+// To be used inside a try catch block
+function checkJSONValidity(item) {
+    item = typeof item !== "string"
+        ? JSON.stringify(item)
+        : item;
+
+    try {
+        item = JSON.parse(item);
+    } catch (e) {
+        throw new Error(e); 
+    }
+
+    if (typeof item === "object" && item !== null) {
+        return item;
+    }
+
+    throw new Error('Invalid JSON input');
+} // End of checkJSONValidity
 
 function visualizeSpatialComponent(data, unparseData, comp) {
     $('foreignObject#textbody_' + comp.GUID).html(
@@ -1199,5 +1224,6 @@ export {
     moveComponent,
     runDeepFunction,
     addEdgeCircle,
-    edit_move_mode
+    edit_move_mode,
+    checkJSONValidity
 };

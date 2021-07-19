@@ -31,7 +31,7 @@ function CreateNewListView(reactContext, FromExisting = null, optionlist_predefi
             [2235, 0],
             ['shouldBeSelected', 1]
         ];
-
+        newcomp.inputs[0].value = newcomp.value;
         if (optionlist_predefined_items != null) {
             newcomp.optionListValues = JSON.parse(optionlist_predefined_items);
         }
