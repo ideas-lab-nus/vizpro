@@ -36,9 +36,6 @@ import {
 
 var d3 = require('d3');
 
-var selection_box_x = 0;
-var selection_box_y = 0;
-
 var temp_selected_xs = [];
 var temp_selected_ys = [];
 
@@ -56,9 +53,6 @@ var vertical_alignment_box = null;
 
 const horizontal_align_box = { W: 150.0, H: 30.0, color: '#373f46', opacity: 0.8, radius: 5.0 };
 const vertical_align_box = { W: 30.0, H: 150.0, color: '#373f46', opacity: 0.8, radius: 5.0 };
-
-var selection_box_started = false;
-var selection_box = null;
 
 var reactContext;
 
@@ -87,7 +81,6 @@ function manageGrid() {
             }
         })
         .on('keydown', function (event) {
-            console.log('deleting');
             if (event.keyCode === 46) {
                 //delete
                 if (reactContext.state.selected_components.length > 1) {
@@ -127,15 +120,6 @@ function manageGrid() {
             });
             d3.select('body').append('option');
         })
-        .on('contextmenu', function (event) {
-            //context menu event raised on right click
-            event.preventDefault();
-            popupMessage('RMB');
-            selection_box_started = true;
-            selection_box_x = d3.pointer(event, allContents.node())[0];
-            selection_box_y = d3.pointer(event, allContents.node())[1];
-            selection_box = allContents.append('polyline');
-        })
         .on('mousemove', function (event) {
             var mousex = d3.pointer(event, allContents.node())[0];
             var mousey = d3.pointer(event, allContents.node())[1];
@@ -144,8 +128,6 @@ function manageGrid() {
                 mousey: mousey
             });
             if (reactContext.state.startDrag) {
-                console.log('move comp');
-                console.log(reactContext.state.clickedId);
                 var x = mousex - reactContext.state.componentClickX;
                 var y = mousey - reactContext.state.componentClickY;
                 moveComponent(reactContext.state.clickedId, x, y);
@@ -169,6 +151,7 @@ function manageGrid() {
             var optionlistRectid = reactContext.state.optionlistRectid;
 
             if (reactContext.state.textareaStarted) {
+                console.log('in here');
                 var selectedRect = getlocationFromTransform(
                     d3.select('g#comp-' + textAreaRectId).attr('transform')
                 );
@@ -201,58 +184,9 @@ function manageGrid() {
                     .style('left', selectedRect[0] + 20 + 'px')
                     .style('top', selectedRect[1] + 1 + 'px');
             }
-            if (selection_box_started) {
-                var x1 = selection_box_x;
-                var y1 = selection_box_y;
-
-                var x2 = d3.pointer(event, allContents.node())[0];
-                var y2 = selection_box_y;
-
-                var x3 = d3.pointer(event, allContents.node())[0];
-                var y3 = d3.pointer(event, allContents.node())[1];
-
-                var x4 = selection_box_x;
-                var y4 = d3.pointer(event, allContents.node())[1];
-
-                selection_box
-                    .attr('x', selection_box_x)
-                    .attr('points', () => {
-                        return (
-                            x1 +
-                            ',' +
-                            y1 +
-                            ' ' +
-                            x2 +
-                            ',' +
-                            y2 +
-                            ' ' +
-                            x3 +
-                            ',' +
-                            y3 +
-                            ' ' +
-                            x4 +
-                            ',' +
-                            y4 +
-                            ' ' +
-                            x1 +
-                            ',' +
-                            y1 +
-                            ' '
-                        );
-                    })
-                    .attr('fill', () => {
-                        if (x1 > x2) return '#2a2a48';
-                        else return '#a95b54';
-                    })
-                    .attr('stroke', 'black')
-                    .attr('stroke-dasharray', '4 4')
-                    .attr('stroke-width', 1)
-                    .attr('fill-opacity', 0.1);
-            }
             handleEdgeMovement(reactContext.state.StringAnchorId);
         })
         .on('mouseup', function () {
-            console.log('in mouse up');
             if (reactContext.state.startDrag) {
                 try {
                     //This needs to move to a separate function .
@@ -303,45 +237,6 @@ function manageGrid() {
                 reactContext.setState({
                     SliderAnchorclicked: false
                 });
-            }
-            if (selection_box_started) {
-                selection_box.remove();
-                reactContext.setState({
-                    selected_components: []
-                });
-
-                temp_selected_xs = [];
-                temp_selected_ys = [];
-
-                min_selected_x = 0;
-                min_selected_y = 0;
-
-                max_selected_x = 0;
-                max_selected_y = 0;
-
-                var components_selection_data = { ...reactContext.state.components_selection_data };
-                var current_selected_comps = reactContext.state.selected_components;
-
-                for (const key in components_selection_data) {
-                    if (components_selection_data.hasOwnProperty(key)) {
-                        if (
-                            components_selection_data[key].x0 > selection_box_x &&
-                            components_selection_data[key].y0 > selection_box_y &&
-                            components_selection_data[key].x1 < d3.pointer(allContents.node())[0] &&
-                            components_selection_data[key].y1 < d3.pointer(allContents.node())[1]
-                        ) {
-                            temp_selected_xs.push(components_selection_data[key].x0);
-                            temp_selected_xs.push(components_selection_data[key].x1);
-                            temp_selected_ys.push(components_selection_data[key].y0);
-                            temp_selected_ys.push(components_selection_data[key].y1);
-                            reactContext.setState({
-                                selected_components: current_selected_comps.push(key)
-                            });
-                        }
-                    }
-                }
-                highlightSelection(current_selected_comps, temp_selected_xs, temp_selected_ys);
-                selection_box_started = false;
             }
 
             if (reactContext.state.selection_groud_selected) {
@@ -411,7 +306,6 @@ function highlightSelection(components_list, temp_selected_xs, temp_selected_ys)
                 reactContext.setState({
                     selection_groud_selected: true
                 });
-                console.log('you are in now .... ... ');
             });
         horizontal_alignment_box = showHorizontalAlignment(selection_rectangle_group);
         vertical_alignment_box = showVerticalAlignment(selection_rectangle_group);

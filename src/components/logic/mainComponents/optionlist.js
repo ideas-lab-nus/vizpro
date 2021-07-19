@@ -1,35 +1,10 @@
-/*
-──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-─██████████████─██████████████─██████████████─██████████─██████████████─██████──────────██████────██████─────────██████████─██████████████─██████████████─
-─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─██░░██████████──██░░██────██░░██─────────██░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
-─██░░██████░░██─██░░██████░░██─██████░░██████─████░░████─██░░██████░░██─██░░░░░░░░░░██──██░░██────██░░██─────────████░░████─██░░██████████─██████░░██████─
-─██░░██──██░░██─██░░██──██░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██████░░██──██░░██────██░░██───────────██░░██───██░░██─────────────██░░██─────
-─██░░██──██░░██─██░░██████░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██░░██████████─────██░░██─────
-─██░░██──██░░██─██░░░░░░░░░░██─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██░░░░░░░░░░██─────██░░██─────
-─██░░██──██░░██─██░░██████████─────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██────██░░██───────────██░░██───██████████░░██─────██░░██─────
-─██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██████░░██────██░░██───────────██░░██───────────██░░██─────██░░██─────
-─██░░██████░░██─██░░██─────────────██░░██─────████░░████─██░░██████░░██─██░░██──██░░░░░░░░░░██────██░░██████████─████░░████─██████████░░██─────██░░██─────
-─██░░░░░░░░░░██─██░░██─────────────██░░██─────██░░░░░░██─██░░░░░░░░░░██─██░░██──██████████░░██────██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─────██░░██─────
-─██████████████─██████─────────────██████─────██████████─██████████████─██████──────────██████────██████████████─██████████─██████████████─────██████─────
-──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-*/
-/**
- * Summary. (use period)
- *
- * Description. (use period)
- *
- * @link   URL
- * @file   This files defines the MainGrid operations.
- * @author Mahmoud AbdelRahman
- * @since  x.x.x
- */
-
 import { 
     uuidv4, 
     addCircle, 
     addcomponent, 
     selectComp, 
-    addOptionDropdownList } from './functions.js';
+    addOptionDropdownList 
+} from '../functions.js';
 import $ from 'jquery';
 var d3 = require('d3');
 var optionListComp;
@@ -235,7 +210,7 @@ function CreateNewOptionList(
     });
 }
 
-function submitOptionListEdit(compKey) {
+function handleOptionListEdit(compKey) {
     optionListComp = selectComp(compKey);
     OptionListValues = optionListComp['optionListValues'];
     $('textarea.textarea.optionlistProperties').text(function () {
@@ -257,11 +232,10 @@ function submitOptionListEdit(compKey) {
             '<div id="success">Success:<br>' + forTheHTMLpreview + '</div>'
         );
         $('select#propertisBarSelecId').html(optionListOptionsfromTextarea);
-
         return JSON.stringify(optionListComp['optionListValues']);
     });
 
-    $('textarea.textarea.optionlistProperties').on('focusout', function (e) {
+    $('textarea.textarea.optionlistProperties').on('change', function (e) {
         try {
             let thedict = JSON.parse($(this).val());
             OptionListValues = thedict;
@@ -288,10 +262,14 @@ function submitOptionListEdit(compKey) {
     });
 }
 
-function readyToGoSubmit(compKey) {
-    optionListComp['optionListValues'] = OptionListValues;
+function submitOptionListEdit(reactContext, compKey) {
+    const guidList = [];
+    reactContext.state.allComp.forEach(e => guidList.push(e.GUID));
+    if (guidList.includes(compKey)) {
+        optionListComp['optionListValues'] = OptionListValues;
+        addOptionDropdownList(compKey);
+    }
     $('div#propertiesBarContents').html('');
-    addOptionDropdownList(compKey);
 }
 
-export { CreateNewOptionList, submitOptionListEdit, readyToGoSubmit };
+export { CreateNewOptionList, handleOptionListEdit, submitOptionListEdit };

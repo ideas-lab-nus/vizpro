@@ -398,7 +398,7 @@ rect.optionListoption:hover {
 
 div#error {
     color: #c0392b;
-    padding: 8px;
+    padding: 5px;
 }
 
 foreignObject.textbody {
@@ -524,11 +524,29 @@ rect {
     cursor: move;
 }
 
-input.stringPnanel.Name {
+input.stringPanel.Name {
     width: 98%;
     border: none;
-    font-size: small;
-    font-family: 'ubuntu';
+    font-size: medium;
+    font-family: 'ubuntu mono';
+}
+
+input.deepProp.url {
+    width: 95%;
+    border: none;
+    font-size: medium;
+    font-family: 'ubuntu mono';
+    padding: 2px;
+    margin-left: 1px;
+}
+
+input.deepProp.Name {
+    width: 95%;
+    border: none;
+    font-size: medium;
+    font-family: 'ubuntu mono';
+    padding: 2px;
+    margin-left: 1px;
 }
 
 foreignObject.panel_edit_mode a {
@@ -828,7 +846,7 @@ div#toolbar_container_1_2_1 {
     box-sizing: border-box;
     width: 49.5px;
     height: 49.5px;
-    float: left;
+    /*float: left; */
     background-color: #6060601f;
     display: inline-block;
     vertical-align: middle;
@@ -1065,6 +1083,7 @@ body {
     color: #808080;
     box-sizing: border-box;
 }
+*/
 
 .line {
     margin: 4px 0;
@@ -1123,5 +1142,3 @@ body {
 .hide {
     display: none;
 }
-
-*/

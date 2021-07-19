@@ -1,79 +1,36 @@
 import { 
+    uuidv4,
     selectComp, 
     addcomponent, 
-    popupMessage, 
     runDeepFunction, 
     redrawDependents 
-} from './functions.js';
-import { uuidv4 } from './functions.js';
+} from '../functions.js';
 import $ from 'jquery';
 
 var d3 = require('d3');
 var addInputCirclesFunc;
 var addOutputCirclesFunc;
-var statusBar;
-var Dummyrect;
-var cirGroup;
-var resize1;
-var rect;
-var playrect2;
-var node;
 
-function CreateNewCloud(
-    reactContext,
-    FromExisting = null,
-    type = "cloud",
-    kwargs = {shortName: "cloud", dfType: "dp"},
-    inputList = [],
-    outputList = [],
-    color = '#0031E7'
-) {
+function CreateNewDeep(reactContext, FromExisting = null,) {
     var IDLE_COLOR = reactContext.state.IDLE_COLOR;
     var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
 
-    var one_character_width = 8;
     var padding = 20;
     var titleMargin = 30;
-    var titleMarginLeft = 30;
     var newcomp;
 
     if (FromExisting != null) {
         newcomp = FromExisting;
     } else {
-        var longestInput = '';
-        for (let index = 0; index < inputList.length; index++) {
-            const curr = inputList[index].name;
-            if (curr.length > longestInput.length) {
-                longestInput = curr;
-            }
-        }
-
-        var longestOutput = outputList.reduce(function (a, b) {
-            return a.length > b.length ? a : b;
-        }, '');
-
-        var ThisComponentName = type;
-
-        let n_inputs = inputList.length;
-        let n_outputs = outputList.length;
-
-        newcomp = addcomponent(uuidv4('C'), n_inputs, n_outputs, inputList, outputList);
-        if (type == null) {
-            ThisComponentName = $('div#addComp').attr('type');
-        } else {
-            ThisComponentName = type;
-            newcomp.dftype = kwargs.dfType;
-            newcomp.ShortName = kwargs.shortName;
-            popupMessage(ThisComponentName + ' Component added');
-        }
-
-        newcomp.fill = color;
-        newcomp.type = "cloud";
-        newcomp.Name = "Cloud";
-        newcomp.height = Math.max(80,
-            titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding);
-        newcomp.width = Math.max(100,
-            (longestInput.length + longestOutput.length) * one_character_width + titleMarginLeft);
+        newcomp = addcomponent(uuidv4('C'), 0, 0, [], []);
+        
+        newcomp.dftype = "dp";
+        newcomp.ShortName = "deep";      
+        newcomp.fill = '#0031E7';
+        newcomp.type = "deep";
+        newcomp.Name = "Deep";
+        newcomp.height = 80;
+        newcomp.width = 100;
 
         // initiate the parent_children_matrix
         var guid = newcomp.GUID;
@@ -91,7 +48,7 @@ function CreateNewCloud(
     var genX;
     var genY;
 
-    node = cont
+    var node = cont
         .append('g')
         .attr(
             'class',
@@ -108,27 +65,21 @@ function CreateNewCloud(
         .attr('id', 'comp-' + newcomp.GUID)
         .attr('transform', () => {
             if (FromExisting == null) {
-                if (kwargs.X !== undefined && kwargs.Y !== undefined) {
-                    newcomp.X = kwargs.X;
-                    newcomp.Y = kwargs.Y;
-                } else {
-                    genX = Math.random() * 500 + 200;
-                    genY = Math.random() * 500 + 200;
-                    newcomp.X = genX;
-                    newcomp.Y = genY;
-                }
+                genX = Math.random() * 500 + 200;
+                genY = Math.random() * 500 + 200;
+                newcomp.X = genX;
+                newcomp.Y = genY;
                 return 'translate(' + newcomp.X + ', ' + newcomp.Y + ')';
             } else {
                 return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
             }
         });
 
-    statusBar = node
+    var statusBar = node
         .append('g')
-        // .attr('id', "cloudResizeHeight")
         .attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
 
-    statusBar
+    var statusbar2 = statusBar
         .append('rect')
         .attr('id', 'statusRect' + newcomp.GUID)
         .attr('width', newcomp.width + 2)
@@ -296,7 +247,7 @@ function CreateNewCloud(
 
     addOutputCirclesFunc = addOutputCircles;    
 
-    Dummyrect = node
+    var Dummyrect = node
         .append('rect')
         .attr('class', 'CompCBodyDummy ' + newcomp.GUID)
         .attr('id', 'dummyRect_' + newcomp.GUID)
@@ -313,7 +264,7 @@ function CreateNewCloud(
             });
         });
 
-    cirGroup = node.append('g')
+    var cirGroup = node.append('g')
         .attr('transform', () => {
             var x = newcomp.width;
             var y = newcomp.height;
@@ -325,7 +276,7 @@ function CreateNewCloud(
     });
 
     //Title rectangle
-    Titlegroup.append('rect')
+    var Titlegroup2 = Titlegroup.append('rect')
         .attr('width', newcomp.width - 2)
         .attr('height', 20)
         .attr('fill', newcomp.fill)
@@ -334,14 +285,14 @@ function CreateNewCloud(
         .attr('rx', COMPONENT_RADIUS)
         .attr('ry', COMPONENT_RADIUS);
 
-    Titlegroup.append('rect')
+    var Titlegroup3 = Titlegroup.append('rect')
         .attr('width', newcomp.width - 2)
         .attr('height', 8)
         .attr('fill', newcomp.fill)
         .attr('x', 1.0)
         .attr('y', -2);
 
-    resize1 = node.append('rect')
+    var resize1 = node.append('rect')
         .attr('width', newcomp.width - 2)
         .attr('height', newcomp.height - 2)
         .attr('x', 1.0)
@@ -354,13 +305,14 @@ function CreateNewCloud(
     var Title = Titlegroup.append('foreignObject')
         .attr('class', 'nodetitle node_title' + newcomp.GUID)
         .attr('id', 'node_title' + newcomp.GUID)
+        .attr('data-testid', 'node_title')
         .attr('x', 0)
         .attr('y', -10)
         .attr('width', newcomp.width)
         .attr('height', '20')
         .text(newcomp.Name);
 
-    rect = node
+    var rect = node
         .append('rect')
         .attr('class', 'CompCBody ' + newcomp.GUID)
         .attr('id', newcomp.GUID)
@@ -384,23 +336,7 @@ function CreateNewCloud(
             });
         });
 
-    var icon = node
-        .append('g')
-        .attr('transform', 'translate(' + (newcomp.width - 20).toString() + ',1)');
-
-    var icon_foreing = icon
-        .append('foreignObject')
-        .attr('width', 18)
-        .attr('height', 18)
-        .attr('style', () => {
-            return (
-                `background-image:url(src/img/` +
-                newcomp.Name +
-                `.png);background-size: 15px;background-repeat: no-repeat;background-position: center;`
-            );
-        });
-
-    playrect2 = node
+    var playrect2 = node
         .append('rect')
         .attr('class', 'play ' + newcomp.GUID)
         .attr('id', 'play_' + newcomp.GUID)
@@ -423,6 +359,7 @@ function CreateNewCloud(
         .append('svg')
         .attr('role', 'img')
         .attr('class', 'removableSVG' + newcomp.GUID)
+        .attr('data-testid', 'play_btn')
         .attr('xmlns', 'http://www.w3.org/2000/svg')
         .attr('width', 20)
         .attr('height', 20)
@@ -441,8 +378,6 @@ function CreateNewCloud(
             runDeepFunction(newcomp.GUID);
         });            
 
-    newcomp.addInputCirclesFunc = addInputCirclesFunc;
-    newcomp.addOutputCirclesFunc = addOutputCirclesFunc;
     newcomp.statusBar = statusBar;
     newcomp.Dummyrect = Dummyrect;
     newcomp.cirGroup = cirGroup;
@@ -450,13 +385,17 @@ function CreateNewCloud(
     newcomp.rect = rect;
     newcomp.playrect2 = playrect2;
     newcomp.node = node;
+    newcomp.statusbar2 = statusbar2;
+    newcomp.Titlegroup2 = Titlegroup2;
+    newcomp.Titlegroup3 = Titlegroup3;
+    newcomp.Title = Title;
     
     addInputCirclesFunc(newcomp);
     addOutputCirclesFunc(newcomp);
 
     if (FromExisting == null) {
         var current_all_comp = reactContext.state.allComp.slice();
-        console.log('Adding a Cloud comp' + newcomp);
+        console.log('Adding a Deep comp' + newcomp);
         current_all_comp.push(newcomp);
         reactContext.setState({
             allComp: current_all_comp
@@ -484,56 +423,81 @@ function CreateNewCloud(
     });
 }
 
-function submitCloudEdit(compKey) {
-    try {
-        var cloudComp = selectComp(compKey);
+function submitDeepEdit(reactContext, compKey) {
+    const guidList = [];
+    reactContext.state.allComp.forEach(e => guidList.push(e.GUID));
+    if (guidList.includes(compKey)) {
+        var deepComp = selectComp(compKey);
 
-        var name = $('input.cloudProp.Name').val();
-        var inputs = $('textarea.cloudProp.Val').val();
-        var url = $('input.cloudProp.url').val();
+        var name = $('input.deepProp.Name').val();
+        var inputs = $('textarea.deepProp.Val').val();
+        var url = $('input.deepProp.url').val();
+        var inputDict = createInputDict(inputs.split('\n'));
 
-        cloudComp.inputNames = inputs;
-        cloudComp.inputs = createInputDict(inputs.split('\n'));
-        cloudComp.outputs = createOutputDict(["out"]);
-        cloudComp.url = url;
-        cloudComp.Name = name;
-    
-        d3.selectAll('circle.inputCirVisual.' + cloudComp.GUID).remove();
-        d3.selectAll('circle.inputCir.' + cloudComp.GUID).remove();
-        d3.selectAll('text.inputTxt.' + cloudComp.GUID).remove();
-        d3.selectAll('circle.outputCirVisual.' + cloudComp.GUID).remove();
-        d3.selectAll('circle.outputCir.' + cloudComp.GUID).remove();
-        d3.selectAll('text.outputTxt.' + cloudComp.GUID).remove();
+        if (url === '') {
+            $('div#propertiesBarLog').html(
+                '<div id="error">Please provide a valid URL</div>'
+            );
+        // // Empty inpuy list check (confirm requirement)
+        // } else if (inputDict.length === 0) {
+        //     $('div#propertiesBarLog').html(
+        //         '<div id="error">The input list must not be empty</div>'
+        //     );
+        } else {
+            deepComp.inputNames = inputs;
+            deepComp.inputs = inputDict;
+            deepComp.outputs = createOutputDict(["out"]);
+            deepComp.url = url;
+            deepComp.Name = name;
+        
+            d3.selectAll('circle.inputCirVisual.' + deepComp.GUID).remove();
+            d3.selectAll('circle.inputCir.' + deepComp.GUID).remove();
+            d3.selectAll('text.inputTxt.' + deepComp.GUID).remove();
+            d3.selectAll('circle.outputCirVisual.' + deepComp.GUID).remove();
+            d3.selectAll('circle.outputCir.' + deepComp.GUID).remove();
+            d3.selectAll('text.outputTxt.' + deepComp.GUID).remove();
+            
+            resize(deepComp);
+            addInputCirclesFunc(deepComp);
+            addOutputCirclesFunc(deepComp);
 
-        addInputCirclesFunc(cloudComp);
-        addOutputCirclesFunc(cloudComp);
+            $('foreignObject#node_title' + deepComp.GUID).text(name);
 
-        resize(cloudComp);
-
-        $('foreignObject#node_title' + cloudComp.GUID).text(name);
-
-        redrawDependents(compKey);
+            redrawDependents(compKey);
+            $('div#propertiesBarContents').html('');
+        }
+    } else {
         $('div#propertiesBarContents').html('');
-    } catch (error) {
-        console.log(error);
-        alert("Ran into an issue :(");
     }
 }
 
-function cancelCloudEdit() {
-    $('div#propertiesBarContents').html('');
-}
-
 function resize(newcomp) {
+    var one_character_width = 8;
     var padding = 20;
     var titleMargin = 30;
+    var titleMarginLeft = 30;
+
+    var longestInput = '';
+    for (let index = 0; index < newcomp.inputs.length; index++) {
+        const curr = newcomp.inputs[index].Name;
+        if (curr.length > longestInput.length) {
+            longestInput = curr;
+        }
+    }
+
+    var longestOutput = newcomp.outputs.reduce(
+        (a, b) => a.Name.length > b.Name.length ? a : b , {Name: ''}).Name;
+    
     newcomp.height = Math.max(80,
         titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding);
+    newcomp.width = Math.max(100,
+        (longestInput.length + longestOutput.length) * one_character_width + titleMarginLeft);
 
     newcomp.statusBar
         .attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
     newcomp.Dummyrect
-        .attr('height', newcomp.height);
+        .attr('height', newcomp.height)
+        .attr('width', newcomp.width);
     newcomp.cirGroup
         .attr('transform', () => {
             var x = newcomp.width;
@@ -541,11 +505,22 @@ function resize(newcomp) {
             return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
         });
     newcomp.resize1
-        .attr('height', newcomp.height - 2);
+        .attr('height', newcomp.height - 2)
+        .attr('width', newcomp.width - 2);
     newcomp.rect
-        .attr('height', newcomp.height);
+        .attr('height', newcomp.height)
+        .attr('width', newcomp.width);
     newcomp.playrect2
-        .attr('y', newcomp.height - 10);
+        .attr('y', newcomp.height - 10)
+        .attr('x', newcomp.width / 2.0 - 10);
+    newcomp.statusbar2
+        .attr('width', newcomp.width + 2)
+    newcomp.Titlegroup2
+        .attr('width', newcomp.width - 2) 
+    newcomp.Titlegroup3
+        .attr('width', newcomp.width - 2)
+    newcomp.Title
+        .attr('width', newcomp.width)
 
     d3.select('svg.removableSVG' + newcomp.GUID).remove();
 
@@ -610,6 +585,8 @@ function createOutputDict(outputsIn) {
 function createInputDict(inputsIn) {
     var inputs = [];
     for (let index = 0; index < inputsIn.length; index++) {
+        if (inputsIn[index] === '') 
+            continue;
         try {
             inputs.push({
                 id: index,
@@ -641,4 +618,4 @@ function createInputDict(inputsIn) {
     return inputs;
 }
 
-export { CreateNewCloud, cancelCloudEdit, submitCloudEdit };
+export { CreateNewDeep, submitDeepEdit };

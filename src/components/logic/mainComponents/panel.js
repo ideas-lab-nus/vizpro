@@ -1,38 +1,17 @@
-/*
-───────────────────────────────────────────────────────────────────────────────────────────────────
-─██████████████─██████████████─████████████████───██████████─██████──────────██████─██████████████─
-─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───██░░░░░░██─██░░██████████──██░░██─██░░░░░░░░░░██─
-─██░░██████████─██████░░██████─██░░████████░░██───████░░████─██░░░░░░░░░░██──██░░██─██░░██████████─
-─██░░██─────────────██░░██─────██░░██────██░░██─────██░░██───██░░██████░░██──██░░██─██░░██─────────
-─██░░██████████─────██░░██─────██░░████████░░██─────██░░██───██░░██──██░░██──██░░██─██░░██─────────
-─██░░░░░░░░░░██─────██░░██─────██░░░░░░░░░░░░██─────██░░██───██░░██──██░░██──██░░██─██░░██──██████─
-─██████████░░██─────██░░██─────██░░██████░░████─────██░░██───██░░██──██░░██──██░░██─██░░██──██░░██─
-─────────██░░██─────██░░██─────██░░██──██░░██───────██░░██───██░░██──██░░██████░░██─██░░██──██░░██─
-─██████████░░██─────██░░██─────██░░██──██░░██████─████░░████─██░░██──██░░░░░░░░░░██─██░░██████░░██─
-─██░░░░░░░░░░██─────██░░██─────██░░██──██░░░░░░██─██░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─
-─██████████████─────██████─────██████──██████████─██████████─██████──────────██████─██████████████─
-*/
-
-/**
- * Summary. (use period)
- *
- * Description. (use period)
- *
- * @link   URL
- * @file   This files defines the MainGrid operations.
- * @author Mahmoud AbdelRahman
- * @since  x.x.x
- */
-
 import {
     uuidv4,
     addcomponent,
     selectComp,
     visualizeSpatialComponent,
     drawPlotComponent,
-    redrawDependents
-} from './functions.js';
-import { jsonView } from './jsonview.js';
+    redrawDependents,
+    edit_move_mode,
+    checkJSONValidity
+} from '../functions.js';
+import React from 'react';
+import ReactJson from 'react-json-view';
+import ReactDOM from 'react-dom';
+
 import $ from 'jquery';
 var d3 = require('d3');
 
@@ -213,7 +192,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
             return (
                 '<h5 id="changeEditMoveMode_' +
                 newcomp.GUID +
-                '" style="color:white; margin-top:1px" ">Edit</h5>'
+                '" style="color:white; margin-top:1px" ">Drag</h5>'
             );
         })
         .attr('x', newcomp.width - 30)
@@ -244,6 +223,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
     var Title = Titlegroup.append('text')
         .attr('class', 'nodetitle node_title' + newcomp.GUID)
         .attr('id', 'nodeTitle' + newcomp.GUID)
+        .attr('data-testid', 'node-title')
         .text(newcomp.Name)
         .attr('fill', 'white')
         .attr('x', 5)
@@ -252,6 +232,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
     var textbody = node
         .append('foreignObject')
         .attr('id', 'textbody_' + newcomp.GUID)
+        .attr('data-testid', 'textbody')
         .attr('class', 'textbody ' + newcomp.GUID)
         .attr('height', newcomp.height - ANCHOR_WIDTH - 5)
         .html(function () {
@@ -266,10 +247,22 @@ function CreateNewPanel(reactContext, FromExisting = null) {
 
     var data2;
     if (newcomp.inputs[0].type === 'json') {
-        $('foreignObject#textbody_' + newcomp.GUID).html(
-            '<div id="jsonTreeViewer' + newcomp.GUID + '"></div>'
-        );
-        jsonView.format(newcomp.inputs[0].value, 'div#jsonTreeViewer' + newcomp.GUID);
+        var compKey = newcomp.GUID;
+        try {
+            $('foreignObject#textbody_' + compKey).html(
+                '<div id="jsonTreeViewer' + compKey + '"></div>'
+            );
+            var jsonStruct = typeof(newcomp.inputs[0].value) === 'string'
+                                    ? JSON.parse(newcomp.inputs[0].value)
+                                    : newcomp.inputs[0].value;
+            // var jsonStruct = JSON.parse(newcomp.inputs[0].value);
+            ReactDOM.render(<ReactJson src={jsonStruct} />, 
+                document.getElementById('jsonTreeViewer' + compKey))
+        } catch (e) {
+            d3.select('foreignObject#textbody_' + compKey)
+                .text(e)
+                .attr('style', 'color: red');
+        } 
     } else if (newcomp.inputs[0].type === 'plot') {
         data2 = JSON.parse(newcomp.inputs[0].value);
         drawPlotComponent(data2, newcomp);
@@ -291,6 +284,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
         .attr('height', newcomp.height - 5)
         .attr('fill', 'white') //"#ffeec7")
         .attr('fill-opacity', '0.15')
+        .style('display', 'block')
         .on('mousemove', function (event) {
             d3.select(event.currentTarget).attr('cursor', 'pointer');
         });
@@ -304,6 +298,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
             var anchorMouseXpos = reactContext.state.anchorMouseXpos;
             var StringAnchorId = reactContext.state.StringAnchorId;
             var newHeight = event.y - anchorMouseYpos;
+
             if (newHeight <= 50) {
                 newHeight = 52;
             }
@@ -361,6 +356,22 @@ function CreateNewPanel(reactContext, FromExisting = null) {
                 .attr('cx', thisComp.width);
 
             d3.select('circle#inputCir' + StringAnchorId + '_0').attr('cy', thisComp.height / 2);
+
+            for (const [comp, child] of Object.entries(reactContext.state.parent_child_matrix)) {
+                if (child[0] === undefined) continue
+                if (child[0][1] === StringAnchorId) {
+                    redrawDependents(comp);
+                    return;
+                }
+            }
+            
+            if (thisComp.inputs[0].type === 'plot') {
+                var data = JSON.parse(thisComp.inputs[0].value);
+                drawPlotComponent(data, thisComp);
+                return;
+            }
+            
+            console.log("Couldn't locate panel parent to redraw")
         });
 
     var rectanchorXY = node
@@ -419,58 +430,48 @@ function CreateNewPanel(reactContext, FromExisting = null) {
     });
 }
 
-//Need to save the new information?
-//Plot errors. in operator not recognized -> not json
-function submitPanelEdit(compKey) {
-    var StringComp = selectComp(compKey);
-    var textVal = $('textarea.textarea.stringProperties').val();
-    StringComp.inputs[0].type = $("input[name='type']:checked").val();
-    $('foreignObject#panel_status_' + StringComp.GUID).text('Type : ' + StringComp.inputs[0].type);
-    if (StringComp.inputs[0].type === 'json') {
-        $('foreignObject#textbody_' + StringComp.GUID).html(
-            '<div id="jsonTreeViewer' + StringComp.GUID + '"></div>'
-        );
-        jsonView.format(
-            JSON.stringify(StringComp.inputs[0].value),
-            'div#jsonTreeViewer' + StringComp.GUID
-        );
-    } else if (StringComp.inputs[0].type === 'html') {
-        d3.select('foreignObject#textbody_' + compKey)
-            .html(textVal)
-            .attr('fill', 'black');
-    } else if (StringComp.inputs[0].type === 'plot') {
-        var data = JSON.parse(JSON.stringify(textVal));
-        drawPlotComponent(data, StringComp);
-    } else {
-        d3.select('foreignObject#textbody_' + compKey)
-            .text(textVal)
-            .attr('fill', 'black');
+function submitPanelEdit(reactContext, compKey) {
+    const guidList = [];
+    reactContext.state.allComp.forEach(e => guidList.push(e.GUID));
+    if (guidList.includes(compKey)) {
+        var StringComp = selectComp(compKey);
+        var textVal = $('textarea.textarea.stringProperties').val();
+        StringComp.inputs[0].type = $("input[name='type']:checked").val();
+        $('foreignObject#panel_status_' + compKey).text('Type : ' + StringComp.inputs[0].type);
+        if (StringComp.inputs[0].type === 'json') { 
+            try {
+                $('foreignObject#textbody_' + compKey).html(
+                    '<div id="jsonTreeViewer' + compKey + '"></div>'
+                );
+                var jsonStruct = checkJSONValidity(textVal);
+                ReactDOM.render(<ReactJson src={jsonStruct} />, 
+                    document.getElementById('jsonTreeViewer' + compKey))
+            } catch (e) {
+                d3.select('foreignObject#textbody_' + compKey)
+                    .text(e)
+                    .attr('style', 'color: red');
+            }   
+        } else if (StringComp.inputs[0].type === 'html') {
+            d3.select('foreignObject#textbody_' + compKey)
+                .html(textVal)
+                .attr('fill', 'black');
+        } else if (StringComp.inputs[0].type === 'plot') {
+            var data = JSON.parse(textVal);
+            drawPlotComponent(data, StringComp);
+        } else {
+            d3.select('foreignObject#textbody_' + compKey)
+                .text(textVal)
+                .attr('fill', 'black');
+        }
+
+        StringComp.outputs[0].value = textVal;
+        StringComp.inputs[0].value = textVal;
+        StringComp.value = textVal;
+        StringComp.Name = $('input.stringPanel.Name').val();
+
+        redrawDependents(compKey);
     }
-
-    StringComp.outputs[0].value = textVal;
-    StringComp.inputs[0].value = textVal;
-    StringComp.value = textVal;
-    StringComp.Name = $('input.stringPnanel.Name').val();
-
-    redrawDependents(compKey);
     $('div#propertiesBarContents').html('');
 }
 
-function cancelPanelEdit() {
-    $('div#propertiesBarContents').html('');
-}
-
-function edit_move_mode(compId, mode) {
-    const EDIT_MODE = 0;
-    const DRAG_MODE = 1;
-    var disp = $('rect#overlaySelector' + compId).attr('style');
-    if (disp === 'display: block;') {
-        d3.select('rect#overlaySelector' + compId).style('display', 'none');
-        d3.select('h5#changeEditMoveMode_' + compId).text('Edit Mode');
-    } else {
-        d3.select('rect#overlaySelector' + compId).style('display', 'block');
-        d3.select('h5#changeEditMoveMode_' + compId).text('Drag Mode');
-    }
-}
-
-export { CreateNewPanel, submitPanelEdit, cancelPanelEdit };
+export { CreateNewPanel, submitPanelEdit };

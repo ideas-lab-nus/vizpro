@@ -1,14 +1,13 @@
 import React from "react"; 
 import TopBar from '../TopBar.js';
+import Canvas from '../../Canvas.js';
 import { render, cleanup, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
-beforeAll(() => {
-    render(<TopBar />)
-})
 afterEach(cleanup);
 
 test('Top Bar successfully render', () => {
+    render(<TopBar />);
     const element = screen.getAllByTestId('fileTheDef');
     var expectedArray = ['File', 'Edit', 'Help', 'Save', 'Clear', 'Download'];
     expect(element.length).toBe(expectedArray.length);
@@ -16,14 +15,6 @@ test('Top Bar successfully render', () => {
         expect(element[index].textContent).toBe(expectedArray[index]);
         expect(element[index].className).toBe('menubarButtons');
     }
-});
-
-test('Save data when save button is clicked', () => {
-
-});
-
-test('Clear data when clear button is pressed', () => {
-
 });
 
 test('Menu bar disappear when minimize button clicked and appear when maximize button clicked', () => {

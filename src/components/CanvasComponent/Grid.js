@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import grid2 from '../img/grid2.png';
+import grid from '../images/grid.png';
 
 export default class Grid extends Component {
     render() {
@@ -9,7 +9,7 @@ export default class Grid extends Component {
                     <svg height="10000" width="10000" >
                         <defs>
                                 <pattern id="img122" patternUnits="userSpaceOnUse" width="500" height="500">
-                                    <image className='rep' xlinkHref={grid2} x="0" y="0" width="500" height="500"/>
+                                    <image className='rep' xlinkHref={grid} x="0" y="0" width="500" height="500"/>
                                 </pattern>
                                 <filter id={this.props.filter_id} x="-40" y="-40" width="150%" height="150%" filterUnits="userSpaceOnUse">
                                     <feOffset result="offOut" in="SourceGraphics" dx="0" dy="0" />

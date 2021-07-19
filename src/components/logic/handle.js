@@ -1,17 +1,21 @@
 import {
     uuidv4,
-    addCircle,
     selectComp,
     updateAll,
     ViewListRedrawing,
     showDropDownList,
     redrawDependents
 } from './functions.js';
-import { submitOptionListEdit, readyToGoSubmit } from './optionlist.js';
-import { cancelSliderEdit, submitSliderEdit } from './slider.js';
-import { cancelPanelEdit, submitPanelEdit } from './panel.js';
+import { 
+    handleOptionListEdit,
+    submitOptionListEdit,
+    submitSliderEdit,
+    submitPanelEdit,
+    submitDeepEdit,
+    cancelEdit
+} from './mainComponents/mainComponents.js';
+
 import $ from 'jquery';
-import { cancelCloudEdit, submitCloudEdit } from './cloudComp.js';
 var d3 = require('d3');
 
 function GetURLParameter(sParam) {
@@ -49,7 +53,7 @@ function handleComponentSelection() {
             element.type === 'toggle' ||
             element.type === 'fileUpload' ||
             element.type === 'listView' || 
-            element.type === 'cloud'
+            element.type === 'deep'
         ) {
             d3.select('g#comp-' + element.GUID).on('click', function () {
                 d3.select('rect#' + element.GUID)
@@ -146,7 +150,6 @@ function handleTheClickOnAllComponents() {
             'rect.CompPBody, rect.CompSBody, rect.CompTBody, rect.CompOBody, rect.CompLBody, rect.CompFBody, rect.CompCBody'
         )
         .on('mousedown', function (event) {
-            console.log('in mouse down');
             var coordinates = d3.pointer(event);
 
             var pos = $('g#comp-' + this.id.replace('overlaySelector', ''))
@@ -262,11 +265,10 @@ function handleEdgeInitialization() {
             var comp_input_edges = { ...reactContext.state.comp_input_edges };
             var comp_output_edges = { ...reactContext.state.comp_output_edges };
             var root_components = reactContext.state.root_components;
-            //What.
             var parent_child_matrix = reactContext.state.parent_child_matrix;
-            var parent_child_matrix_fast_check = [
-                ...reactContext.state.parent_child_matrix_fast_check
-            ];
+            var parent_child_matrix_fast_check = 
+            reactContext.state.parent_child_matrix_fast_check
+            ;
             var selectedcircleId = reactContext.state.selectedcircleId;
             if (
                 edgeStarted &&
@@ -282,6 +284,14 @@ function handleEdgeInitialization() {
                 toComponent = selectComp(toCircle.element.classList[1]);
                 fromComponent = selectComp(fromCircle.element.classList[1]);
 
+                console.log(parent_child_matrix_fast_check)
+                console.log(fromCircle.element.classList[2] +
+                    ' ' +
+                    fromCircle.element.classList[1] +
+                    ' ' +
+                    toCircle.element.classList[2] +
+                    ' ' +
+                    toCircle.element.classList[1])
                 if (
                     !parent_child_matrix_fast_check.includes(
                         fromCircle.element.classList[2] +
@@ -412,63 +422,62 @@ function handleDoubleClick() {
                     $('div#propertiesBarContents').append(`
                         <div class="propertiesbarheader title">String Panel Properties</div>
                         <div class="propertiesbarheader label">Name</div>
-                        <input class="stringPnanel Name"></textarea>
+                        <input class="stringPanel Name"></textarea>
                         <hr>
                         <div class="propertiesbarheader label">Value</div>
-                        <textarea class="textarea stringProperties"></textarea>
+                        <textarea class="textarea stringProperties" data-testid="textarea-string-properties"></textarea>
                         <hr>
                         <div class="propertiesbarheader label">Panel Type</div>
                         <form>
-                            <input type="radio" name="type" id="string_radio_text" value="text"> text<br>
-                            <input type="radio" name="type" id="string_radio_html" value="html"> html<br>
-                            <input type="radio" name="type" id="string_radio_json" value="json"> json<br>
-                            <input type="radio" name="type" id="string_radio_lsit" value="lsit"> list<br>
-                            <input type="radio" name="type" id="string_radio_plot" value="plot"> plot <br>
+                            <input type="radio" name="type" id="string_radio_text" value="text" data-testid="text"> text<br>
+                            <input type="radio" name="type" id="string_radio_html" value="html" data-testid="html"> html<br>
+                            <input type="radio" name="type" id="string_radio_json" value="json" data-testid="json"> json<br>
+                            <input type="radio" name="type" id="string_radio_list" value="list" data-testid="list"> list<br>
+                            <input type="radio" name="type" id="string_radio_plot" value="plot" data-testid="plot"> plot <br>
                         </form>
                         <hr>
                         <div class="propertiesbarheader label">Log</div>
                         <div id="propertiesBarLog" class="log"></div>
-                        <button id="stringEditButton">Apply</button>
-                        <button id="cancelStringEdit">Cancel</button>`
+                        <button id="panelEditButton">Apply</button>
+                        <button id="cancelPanelEdit">Cancel</button>`
                     );
 
                     element.outputs[0].value = element.value;
 
-                    var StringComp = selectComp(element.GUID);
-                    $('input#string_radio_' + StringComp.inputs[0].type).prop('checked', true);
+                    var panelComp = selectComp(element.GUID);
+                    $('input#string_radio_' + panelComp.inputs[0].type).prop('checked', true);
                     var newName;
-                    $('input.stringPnanel.Name').on('change keyup paste', function () {
-                        newName = $('input.stringPnanel.Name').val();
-                        d3.select('text#nodeTitle' + StringComp.GUID).text(newName);
-                        d3.select('rect#' + StringComp.GUID).attr('width', 10 + newName.length * 6);
+                    $('input.stringPanel.Name').on('change keyup paste', function () {
+                        newName = $('input.stringPanel.Name').val();
+                        d3.select('text#nodeTitle' + panelComp.GUID).text(newName);
+                        d3.select('rect#' + panelComp.GUID).attr('width', 10 + newName.length * 6);
                     });
 
-                    if (StringComp.child) {
-                        $('textarea.textarea.stringProperties').prop('disabled', true);
+                    $('textarea.textarea.stringProperties').prop('disabled', panelComp.child);
+                    
+                    // Resets value if parent is updated while property bar is open
+                    // A narrower trigger event can be found
+                    $('body').on('click', () => {
                         $('textarea.stringProperties').text(() => {
-                            return StringComp.inputs[0].value;
+                            var possiblyUpdatedPanelComp = selectComp(element.GUID);
+                            return possiblyUpdatedPanelComp.inputs[0].value;
                         });
-                        $('body').on('mousemove', () => {
-                            $('textarea.stringProperties').text(() => {
-                                return StringComp.inputs[0].value;
-                            });
-                        });
-                    } else {
-                        $('textarea.stringProperties').text(() => {
-                            return StringComp.inputs[0].value;
-                        });
-                    }
+                    });
 
-                    $('input.stringPnanel.Name').val(StringComp.Name);
+                    $('textarea.stringProperties').text(() => {
+                        return panelComp.inputs[0].value;
+                    });
 
-                    $('button#stringEditButton').on('click', function () {
-                        submitPanelEdit(element.GUID);
+                    $('input.stringPanel.Name').val(panelComp.Name);
+
+                    $('button#panelEditButton').on('click', function () {
+                        submitPanelEdit(reactContext, element.GUID);
                         reactContext.setState({
                             doubleClicked: false
                         });
                     });
-                    $('button#cancelStringEdit').on('click', function () {
-                        cancelPanelEdit();
+                    $('button#cancelPanelEdit').on('click', function () {
+                        cancelEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });
@@ -506,14 +515,19 @@ function handleDoubleClick() {
                             Log
                         </div>
                         <div id="propertiesBarLog" class="log"></div>
-                        <button id="applyChangeButton">Apply</button>
-                        `);
+                        <button id="optionListEditButton">Apply</button>
+                        <button id="cancelOptionListEdit">Cancel</button>`);
 
-                    let compKey = element.GUID;
-                    submitOptionListEdit(compKey);
+                    handleOptionListEdit(element.GUID);
 
-                    $('button#applyChangeButton').on('click', function (e) {
-                        readyToGoSubmit(compKey);
+                    $('button#optionListEditButton').on('click', function () {
+                        submitOptionListEdit(reactContext, element.GUID);
+                        reactContext.setState({
+                            doubleClicked: false
+                        });
+                    });
+                    $('button#cancelOptionListEdit').on('click', function () {
+                        cancelEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });
@@ -529,27 +543,40 @@ function handleDoubleClick() {
 
                     $('div#propertiesBarContents').append(`
                         <div class="propertiesbarheader label">Slider</div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Min-value : </div><input type="number" id="new_slider_min_value"></div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Max-value: </div><input type="number" id="new_slider_max_value"></div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Step: </div><input type="number" id="new_slider_step_value"></div>
-                        <div id="numerical_slider_container"><div id="string_input_label">Current-value: </div><input type="number" id="new_slider_current_value"></div>
-                        <button id="sliderEditButton">Save</button>
-                        <button id="cancelSliderEdit">Cancel</button>
-                        `);
+                        <div id="numerical_slider_container">
+                            <div id="string_input_label">Min value </div>
+                            <input type="number" id="new_slider_min_value" data-testid="min-input">
+                        </div>
+                        <div id="numerical_slider_container">
+                            <div id="string_input_label">Max value </div>
+                            <input type="number" id="new_slider_max_value" data-testid="max-input">
+                        </div>
+                        <div id="numerical_slider_container">
+                            <div id="string_input_label">Step: </div>
+                            <input type="number" id="new_slider_step_value" data-testid="step-input">
+                        </div>
+                        <div id="numerical_slider_container" data-testid="curr-val-container">
+                            <div id="string_input_label">Current value </div>
+                            <input type="number" id="new_slider_current_value" data-testid="curr-val-input">
+                        </div>
+                        <button id="sliderEditButton" style='margin-left: 10px; margin-top: 5px;' data-testid="save-changes">Save</button>
+                        <button id="cancelSliderEdit" style='margin-top: 5px;' data-testid="cancel-changes">Cancel</button>
+                        <div id="propertiesBarLog" class="log"></div>
+                    `);
+
                     $('input#new_slider_min_value').val(element.min);
                     $('input#new_slider_max_value').val(element.max);
                     $('input#new_slider_step_value').val(element.step);
                     $('input#new_slider_current_value').val(element.value);
 
-                    //On save, set double clicked to false
                     $('button#sliderEditButton').on('click', function (e) {
-                        submitSliderEdit(element.GUID);
+                        submitSliderEdit(reactContext, element.GUID);
                         reactContext.setState({
                             doubleClicked: false
                         });
                     });
                     $('button#cancelSliderEdit').on('click', function (e) {
-                        cancelSliderEdit();
+                        cancelEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });
@@ -583,45 +610,43 @@ function handleDoubleClick() {
                     });
                 redrawDependents(currentToggle.GUID);
             });
-        } else if (element.type === 'cloud') {
+        } else if (element.type === 'deep') {
             d3.select('g#comp-' + element.GUID).on('dblclick', function () {
                 if (!reactContext.state.doubleClicked) {
                     reactContext.setState({
                         doubleClicked: true
                     });
                     $('div#propertiesBarContents').append(`
-                        <div class="propertiesbarheader title">Cloud Function Properties</div>
+                        <div class="propertiesbarheader title">Deep Function Properties</div>
                         <div class="propertiesbarheader label">Function Name</div>
-                        <input class="cloudProp Name"></textarea>
+                        <input class="deepProp Name" data-testid="title-deep"></textarea>
                         <hr>
                         <div class="propertiesbarheader label">Input List</div>
-                        <textarea class="cloudProp textarea stringProperties Val"></textarea>
+                        <textarea class="deepProp textarea stringProperties Val" data-testid="input-list-deep"></textarea>
                         <hr>
-                        <div class="propertiesbarheader label">Cloud function URL</div>
-                        <input class="cloudProp url"></textarea>
+                        <div class="propertiesbarheader label">Deep function URL</div>
+                        <input class="deepProp url" data-testid="deep-url"></textarea>
                         <div></div>
+                        <hr>
                         <div class="propertiesbarheader label">Log</div>
                         <div id="propertiesBarLog" class="log"></div>
-                        <button id="cloudEditButton">Apply</button>
-                        <button id="cancelCloudEdit">Cancel</button>`);
+                        <button id="deepEditButton">Apply</button>
+                        <button id="cancelDeepEdit">Cancel</button>`);
                 
-                    var cloudComp = selectComp(element.GUID);
+                    var deepComp = selectComp(element.GUID);
 
-                    $('input.cloudProp.Name').val(cloudComp.Name);
+                    $('input.deepProp.Name').val(deepComp.Name);
+                    $('textarea.deepProp.Val').val(deepComp.inputNames);
+                    $('input.deepProp.url').val(deepComp.url);
 
-                    // var inputString = JSON.stringify(cloudComp.inputs);
-                    // $('textarea.cloudProp.Val').val(inputString.substring(1, inputString.length-1));
-                    $('textarea.cloudProp.Val').val(cloudComp.inputNames);
-                    $('input.cloudProp.url').val(cloudComp.url);
-
-                    $('button#cloudEditButton').on('click', function () {
-                        submitCloudEdit(element.GUID);
+                    $('button#deepEditButton').on('click', function () {
+                        submitDeepEdit(reactContext, element.GUID);
                         reactContext.setState({
                             doubleClicked: false
                         });
                     });
-                    $('button#cancelCloudEdit').on('click', function () {
-                        cancelCloudEdit();
+                    $('button#cancelDeepEdit').on('click', function () {
+                        cancelEdit();
                         reactContext.setState({
                             doubleClicked: false
                         });

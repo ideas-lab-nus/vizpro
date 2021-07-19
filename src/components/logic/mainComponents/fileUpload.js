@@ -1,43 +1,9 @@
-/*
-──────────────────────────────────────────────────────────────────────────────────────────
-─────────────██████████████─██████████─██████─────────██████████████──────────────────────
-─────────────██░░░░░░░░░░██─██░░░░░░██─██░░██─────────██░░░░░░░░░░██──────────────────────
-─────────────██░░██████████─████░░████─██░░██─────────██░░██████████──────────────────────
-─────────────██░░██───────────██░░██───██░░██─────────██░░██──────────────────────────────
-─────────────██░░██████████───██░░██───██░░██─────────██░░██████████──────────────────────
-─────────────██░░░░░░░░░░██───██░░██───██░░██─────────██░░░░░░░░░░██──────────────────────
-─────────────██░░██████████───██░░██───██░░██─────────██░░██████████──────────────────────
-─────────────██░░██───────────██░░██───██░░██─────────██░░██──────────────────────────────
-─────────────██░░██─────────████░░████─██░░██████████─██░░██████████──────────────────────
-─────────────██░░██─────────██░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██──────────────────────
-─────────────██████─────────██████████─██████████████─██████████████──────────────────────
-──────────────────────────────────────────────────────────────────────────────────────────
-───────────────────────────────────────────────────────────────────────────────────────────
-─██████──██████─██████████████─██████─────────██████████████─██████████████─████████████───
-─██░░██──██░░██─██░░░░░░░░░░██─██░░██─────────██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░████─
-─██░░██──██░░██─██░░██████░░██─██░░██─────────██░░██████░░██─██░░██████░░██─██░░████░░░░██─
-─██░░██──██░░██─██░░██──██░░██─██░░██─────────██░░██──██░░██─██░░██──██░░██─██░░██──██░░██─
-─██░░██──██░░██─██░░██████░░██─██░░██─────────██░░██──██░░██─██░░██████░░██─██░░██──██░░██─
-─██░░██──██░░██─██░░░░░░░░░░██─██░░██─────────██░░██──██░░██─██░░░░░░░░░░██─██░░██──██░░██─
-─██░░██──██░░██─██░░██████████─██░░██─────────██░░██──██░░██─██░░██████░░██─██░░██──██░░██─
-─██░░██──██░░██─██░░██─────────██░░██─────────██░░██──██░░██─██░░██──██░░██─██░░██──██░░██─
-─██░░██████░░██─██░░██─────────██░░██████████─██░░██████░░██─██░░██──██░░██─██░░████░░░░██─
-─██░░░░░░░░░░██─██░░██─────────██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░████─
-─██████████████─██████─────────██████████████─██████████████─██████──██████─████████████───
-───────────────────────────────────────────────────────────────────────────────────────────
-
-*/
-/**
- * Summary. (use period)
- *
- * Description. (use period)
- *
- * @link   URL
- * @file   This files defines the MainGrid operations.
- * @author Mahmoud AbdelRahman
- * @since  x.x.x
- */
-import { addcomponent, redrawDependents, selectComp, uuidv4 } from './functions.js';
+import { 
+    addcomponent, 
+    redrawDependents, 
+    selectComp, 
+    uuidv4 
+} from '../functions.js';
 import $ from 'jquery';
 var d3 = require('d3');
 
@@ -169,9 +135,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
                 return (
                     'File Size : ' +
                     (newcomp.outputs[0].Description.size / (1024 * 1024)).toString() +
-                    " MB <a class='open_uploadedFile_link' href='" +
-                    newcomp.outputs[0].Description.url +
-                    "' target='blank'>open</a>"
+                    " MB " 
                 );
             }
         })
@@ -238,7 +202,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
                             `">
                     <input id="fileUploadFormToTheCloud" class="` +
                             newcomp.GUID +
-                            `" type="file" name="myFile">
+                            `" type="file" name="myFile" data-testid="fileUploadForm">
                     </form>
                     `;
                 return form;
@@ -247,13 +211,11 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
                             newcomp.outputs[0].Description.Name : 
                             newcomp.outputs[0].Description.Name.substring(0, 25) + '...';
                 return (
-                    `
-                        <div id="TheContainedFile">` +
-                            displayedName +
-                            `</div>
-                        <div id="TheContainedFile">Size :` +
-                            (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() +
-                            ` MB</div>
+                     `
+                        <div id="TheContainedFile">` + displayedName + `</div>
+                        <div id="TheContainedFile">Size :` 
+                        + (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() 
+                        + ` MB</div>
                     `
                 );
             }
@@ -318,26 +280,30 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
             Name: fileName,
             size: fileSize,
         };
-        theCurrentComp.outputs[0].value = selectedFile;
-        d3.select('#fileUpload_status_' + thisFormId).html(
-            'File Size : ' +
-            (selectedFile.size / (1024 * 1024)).toString() +
-            " MB"
-        );
-        d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
-            let displayedName = fileName.length < 25 ? fileName.Name : fileName.substring(0, 25) + '...';
-            return (
-                `
-                <div id="TheContainedFile">` +
-                    displayedName +
-                    `</div>
-                <div id="TheContainedFile">Size :` +
-                    (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
-                    ` MB</div>
-                `
+        const reader = new FileReader();
+        reader.onload = function() {
+            theCurrentComp.outputs[0].value = reader.result;
+            d3.select('#fileUpload_status_' + thisFormId).html(
+                'File Size : ' +
+                (selectedFile.size / (1024 * 1024)).toString() +
+                " MB"
             );
-        });
-        redrawDependents(thisFormId);
+            d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
+                let displayedName = fileName.length < 25 ? fileName : fileName.substring(0, 25) + '...';
+                return (
+                    `
+                    <div id="TheContainedFile">` +
+                        displayedName +
+                        `</div>
+                    <div id="TheContainedFile">Size :` +
+                        (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
+                        ` MB</div>
+                    `
+                );
+            });
+            redrawDependents(thisFormId);
+        }
+        reader.readAsDataURL(selectedFile);
     })
 }
 

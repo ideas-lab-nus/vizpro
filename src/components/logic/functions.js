@@ -1,34 +1,9 @@
-/*
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-─██████████████─██████──██████─██████──────────██████─██████████████─██████████████─██████████─██████████████─██████──────────██████─██████████████─
-─██░░░░░░░░░░██─██░░██──██░░██─██░░██████████──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░░░██─██░░██████████──██░░██─██░░░░░░░░░░██─
-─██░░██████████─██░░██──██░░██─██░░░░░░░░░░██──██░░██─██░░██████████─██████░░██████─████░░████─██░░██████░░██─██░░░░░░░░░░██──██░░██─██░░██████████─
-─██░░██─────────██░░██──██░░██─██░░██████░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██████░░██──██░░██─██░░██─────────
-─██░░██████████─██░░██──██░░██─██░░██──██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██─██░░██████████─
-─██░░░░░░░░░░██─██░░██──██░░██─██░░██──██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██─██░░░░░░░░░░██─
-─██░░██████████─██░░██──██░░██─██░░██──██░░██──██░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██──██░░██─██████████░░██─
-─██░░██─────────██░░██──██░░██─██░░██──██░░██████░░██─██░░██─────────────██░░██───────██░░██───██░░██──██░░██─██░░██──██░░██████░░██─────────██░░██─
-─██░░██─────────██░░██████░░██─██░░██──██░░░░░░░░░░██─██░░██████████─────██░░██─────████░░████─██░░██████░░██─██░░██──██░░░░░░░░░░██─██████████░░██─
-─██░░██─────────██░░░░░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─────██░░██─────██░░░░░░██─██░░░░░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─
-─██████─────────██████████████─██████──────────██████─██████████████─────██████─────██████████─██████████████─██████──────────██████─██████████████─
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-*/
-
-/**
- * Summary. (use period)
- *
- * Description. (use period)
- *
- * @link   URL
- * @file   This files defines the MainGrid operations.
- * @author Mahmoud AbdelRahman
- * @since  x.x.x
- */
-
-import { jsonView } from './jsonview.js';
+import React from 'react';
+import ReactJson from 'react-json-view';
+import ReactDOM from 'react-dom';
 import { calculateShallow } from './shallow.js';
-import { calculateCloud } from './cloud.js';
-import Plotly from 'plotly';
+import { calculateDeep } from './deep.js';
+
 import $ from 'jquery';
 
 var d3 = require('d3');
@@ -60,8 +35,6 @@ function dummyToSetState() {
     components_selection_data = reactContext.state.components_selection_data;
     runDeep = reactContext.state.runDeep;
 }
-
-
 
 function uuidv4(ini) {
     return (
@@ -466,7 +439,7 @@ function redrawDependents(parentComp) {
                 ch.inputs[element[2]].type = 'json';
             } else if (parent.type === 'toggle' || parent.type === 'optionList') {
                 ch.inputs[element[2]].value = parent.value;
-            } else if (parent.type === 'component' || parent.type === 'cloud') {
+            } else if (parent.type === 'component') {
                 try {
                     calculateShallow(parent.GUID);
                     ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -477,26 +450,27 @@ function redrawDependents(parentComp) {
                     componentStatus(parent.GUID, ERROR_COLOR);
                 }
             } else if (parent.type === 'fileUpload') {
-                ch.inputs[element[2]].value = parent.outputs[element[0]].value === null ? null : parent.outputs[element[0]].Description.Name;
+                ch.inputs[element[2]].value = parent.outputs[element[0]].value === null ? null : parent.outputs[element[0]].Name;
                 ch.inputs[element[2]].file = parent.outputs[element[0]].value;
             }
             updatShallowCompRender(ch);
             redrawDependents(ch.GUID);
         });
     } else if (parent.dftype === 'dp') {
+        console.log('Deep comp' + parent.type);
         parent.state = 'unbound';
         parent_child_matrix[parentComp].forEach(function (element, i) {
             //iterate through all those childs.
             let ch = selectComp(element[1]);
-            if ((parent.type === 'cloud' || parent.isUDOCloud) && runDeep === true) {
+            if ((parent.type === 'deep' || parent.isUDODeep) && runDeep === true) {
                 reactContext.setState({
                     runDeep: false
                 });
                 if (parent.state === 'unbound') {
-                    //Previously calculate deep
-                    console.log("calculating cloud")
-                    calculateCloud(parent.GUID);
+                    calculateDeep(parent, ch, element);
                     parent.state = 'active';
+                    //Remaining 5 lines of code is executed in the async function
+                    return;
                 }
             }
             ch.inputs[element[2]].value = parent.outputs[element[0]].value;
@@ -506,8 +480,6 @@ function redrawDependents(parentComp) {
             updatShallowCompRender(ch);
             redrawDependents(ch.GUID);
         });
-    } else if (parent.dftype === 'cloud') {
-        //TODO if deep and cloud functions remain separate
     }
 } // End of redrawDependents
 
@@ -516,10 +488,19 @@ function updatShallowCompRender(ch) {
         if (ch.inputs[0].type === 'html') {
             $('foreignObject#textbody_' + ch.GUID).html(ch.inputs[0].value);
         } else if (ch.inputs[0].type === 'json') {
-            $('foreignObject#textbody_' + ch.GUID).html(
-                '<div id="jsonTreeViewer' + ch.GUID + '"></div>'
-            );
-            jsonView.format(ch.inputs[0].value, 'div#jsonTreeViewer' + ch.GUID);
+            var compKey = ch.GUID;
+            try {
+                $('foreignObject#textbody_' + compKey).html(
+                    '<div id="jsonTreeViewer' + compKey + '"></div>'
+                );
+                var jsonStruct = checkJSONValidity(ch.inputs[0].value);
+                ReactDOM.render(<ReactJson src={jsonStruct} />, 
+                    document.getElementById('jsonTreeViewer' + compKey))
+            } catch (e) {
+                d3.select('foreignObject#textbody_' + compKey)
+                    .text(e)
+                    .attr('style', 'color: red');
+            }
         } else if (ch.inputs[0].type === 'text') {
             $('foreignObject#textbody_' + ch.GUID).html('<pre>' + ch.inputs[0].value + '</pre>');
         } else if (ch.inputs[0].type === 'htmlLoad') {
@@ -541,11 +522,14 @@ function updatShallowCompRender(ch) {
     } else if (ch.type === 'optionList') {
         ch.optionListValues = JSON.parse(ch.inputs[0].value);
     } else if (ch.type === 'listView') {
-        var newValues = [];
-        for (let i = 0; i < JSON.parse(ch.inputs[0].value).length; i++) {
-            const element = JSON.parse(ch.inputs[0].value)[i];
-            newValues.push([element, 0]);
+        var newValues;
+        try {
+            var oldValues = checkJSONValidity(ch.inputs[0].value)
+            newValues = oldValues.map(val => [val[0], 0]);
+        } catch (e) {
+            newValues = [[e, 1]];
         }
+        
         ch.value = newValues;
         ch.inputs[0].value = newValues;
         ch.outputs[0].value = newValues;
@@ -553,6 +537,25 @@ function updatShallowCompRender(ch) {
         updateListViewDrawing(ch);
     }
 } // End of updatShallowCompRender
+
+// To be used inside a try catch block
+function checkJSONValidity(item) {
+    item = typeof item !== "string"
+        ? JSON.stringify(item)
+        : item;
+
+    try {
+        item = JSON.parse(item);
+    } catch (e) {
+        throw new Error(e); 
+    }
+
+    if (typeof item === "object" && item !== null) {
+        return item;
+    }
+
+    throw new Error('Invalid JSON input');
+} // End of checkJSONValidity
 
 function visualizeSpatialComponent(data, unparseData, comp) {
     $('foreignObject#textbody_' + comp.GUID).html(
@@ -643,52 +646,32 @@ function highlightSpatialZone(id) {
     svgItem.setAttribute('fill', 'green');
 } // End of highlightSpatialZone
 
-function drawPlotComponent(data, comp) {
+function drawPlotComponent(data, comp) {    
+    var Plotly = window.Plotly
     $('foreignObject#textbody_' + comp.GUID).html(
         '<div id="plot_area' + comp.GUID + '" style="width:100%; height:100%;"></div>'
     );
-    if (data != null && Array.isArray(data)) {
-        if (data[0].type === 'scatter') {
-            if ('layout' in data[0]) {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, data[0].layout, {
-                    responsive: true
-                });
-            } else {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, {
-                    responsive: true
-                });
-            }
-        } else if (data[0].type === 'bar') {
-            data[0].data.forEach(dataElement => {
-                var maxValue = Math.max(...dataElement.y);
-                dataElement['marker'] = {
-                    color: []
-                };
-                dataElement.y.forEach(dataValue => {
-                    dataElement.marker.color.push(d3.interpolateGnBu(dataValue / maxValue));
-                });
-            });
-            if ('layout' in data[0]) {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, data[0].layout, {
-                    responsive: true
-                });
-            } else {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, {
-                    responsive: true
-                });
-            }
-        } else {
-            if ('layout' in data[0]) {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, data.layout, {
-                    responsive: true
-                });
-            } else {
-                Plotly.newPlot('plot_area' + comp.GUID, data[0].data, {
-                    responsive: true
-                });
-            }
+    
+    if (Plotly === undefined) {
+        // alert("Plotly not defined")
+        $("div#plot_area" + comp.GUID).text("Plotly is undefined :(")
+        return;
+    }
+
+    if (data === null) {
+        Plotly.newPlot(
+            'plot_area' + comp.GUID,
+            [{ x: ['1', '2', '3'],
+               y: [1.0, 2.0, 3.0],
+               type: 'bar' }],
+            { title: 'Dummy plot' },
+            { responsive: true }
+        );
+    } else {
+        if (Array.isArray(data)) {
+            data = data[0]
         }
-    } else if (data != null) {
+    
         if (data.type === 'scatter') {
             if ('layout' in data) {
                 Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
@@ -718,7 +701,18 @@ function drawPlotComponent(data, comp) {
                     responsive: true
                 });
             }
-        } else {
+        } 
+        else if (data.type === undefined) {
+            $('div#propertiesBarLog').html(
+                '<div id="error">Incorrect format for plot panel. Check Help for more details</div>'
+            );
+        } 
+        else {
+            if (typeof data !== 'object') {
+                $('div#propertiesBarLog').html(
+                    '<div id="error">Incorrect format for plot panel. Check Help for more details</div>'
+                );
+            }
             if ('layout' in data) {
                 Plotly.newPlot('plot_area' + comp.GUID, data.data, data.layout, {
                     responsive: true
@@ -729,25 +723,25 @@ function drawPlotComponent(data, comp) {
                 });
             }
         }
-    } else {
-        Plotly.newPlot(
-            'plot_area' + comp.GUID,
-            [
-                {
-                    x: ['1', '2', '3'],
-                    y: [1.0, 2.0, 3.0],
-                    type: 'bar'
-                }
-            ],
-            {
-                title: 'Dummy plot'
-            },
-            {
-                responsive: true
-            }
-        );
     }
+
+    // Allow plotly controls to render
+    edit_move_mode(comp.GUID, 0)
+    edit_move_mode(comp.GUID, 0)
 } // End of drawPlotComponent
+
+function edit_move_mode(compId, mode) {
+    const EDIT_MODE = 0;
+    const DRAG_MODE = 1;
+    var disp = $('rect#overlaySelector' + compId).attr('style');
+    if (disp === 'display: block;') {
+        d3.select('rect#overlaySelector' + compId).style('display', 'none');
+        d3.select('h5#changeEditMoveMode_' + compId).text('Edit Mode');
+    } else {
+        d3.select('rect#overlaySelector' + compId).style('display', 'block');
+        d3.select('h5#changeEditMoveMode_' + compId).text('Drag Mode');
+    }
+}
 
 function updateListViewDrawing(comp) {
     d3.select('foreignObject#listView-' + comp.GUID).html(() => {
@@ -755,6 +749,7 @@ function updateListViewDrawing(comp) {
         var ListItemsvalueReturn =
             `<select id="listviewSelect" class="listView ` + comp.GUID + `" size="5"  multiple>`;
         comp.value.forEach(option => {
+            console.log("updating list drawing" + option);
             if (option[1] === 0) {
                 ListItemsvalueReturn +=
                     `<option id="someSelection" class="listViewOption ` +
@@ -820,7 +815,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                     var padding = 20;
                     var titleMargin = 30;
                     var thenewEdge = d3.select('#' + inputElement).attr('d', function () {
-                        if (element.type === 'component' || element.type === 'cloud') {
+                        if (element.type === 'component' || element.type === 'deep') {
                             var itisthelocation = returnCurveString(
                                 xy2[0],
                                 xy2[1],
@@ -885,7 +880,7 @@ function handleEdgeMovement(objID, x = null, y = null) {
                     var padding = 20;
                     var titleMargin = 30;
                     var thenewEdge = d3.select('#' + outputElement).attr('d', function () {
-                        if (element.type === 'component' || element.type === 'cloud') {
+                        if (element.type === 'component' || element.type === 'deep') {
                             var itisthelocation = returnCurveString(
                                 rectpos[0] + parseFloat(rectwidth),
                                 rectpos[1] + (circleindex * padding + titleMargin),
@@ -1072,36 +1067,56 @@ function deleteEdge(edge_to_be_deleted) {
     var components_of_the_edge = edge_comp_matrix[edge_to_be_deleted];
     var fromComp = selectComp(components_of_the_edge['from']);
     var toComp = selectComp(components_of_the_edge['to']);
+
     toComp.inputs[components_of_the_edge['to_index']].value = null;
     toComp.value = null;
-    comp_input_edges[toComp.GUID][components_of_the_edge['to_index']] = undefined;
-    comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']] = comp_output_edges[
-        fromComp.GUID
-    ][components_of_the_edge['from_index']].filter(pathId => pathId !== edge_to_be_deleted);
 
+    // An input can only have one edge
+    comp_input_edges[toComp.GUID][components_of_the_edge['to_index']] = undefined;
+
+    // An output can have multiple edges
+    var prevLength = comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']].length;
+    
+    comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']] =
+        comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']]
+            .filter(pathId => pathId !== edge_to_be_deleted);
+    
+    var newLength = comp_output_edges[fromComp.GUID][components_of_the_edge['from_index']].length;
+    
+    var flagPCM = false;    
     for (let i = 0; i < parent_child_matrix[fromComp.GUID].length; i++) {
+        console.log(parent_child_matrix[fromComp.GUID][i])
         if (
-            parent_child_matrix[fromComp.GUID][i][2] === components_of_the_edge['to_index'] &&
-            parent_child_matrix[fromComp.GUID][i][1] === toComp.GUID
+            parent_child_matrix[fromComp.GUID][i][0] === components_of_the_edge['from_index'] &&
+            parent_child_matrix[fromComp.GUID][i][1] === toComp.GUID &&
+            parent_child_matrix[fromComp.GUID][i][2] === components_of_the_edge['to_index']    
         ) {
             parent_child_matrix[fromComp.GUID].splice(i, 1);
+            flagPCM = true;
+            break;
         }
     }
 
+    console.log("updating to comp")
     updatShallowCompRender(toComp);
+    console.log("updating from comp")
     updatShallowCompRender(fromComp);
     redrawDependents(components_of_the_edge['to']);
 
     allEdges = allEdges.filter(edge => edge['path_id'] !== edge_to_be_deleted);
 
+    var flagPCMFC = false;
     for (let i = 0; i < parent_child_matrix_fast_check.length; i++) {
         var parent_child_info = parent_child_matrix_fast_check[i].split(' ');
         if (
             parent_child_info[0] === components_of_the_edge['from_index'] &&
-            parent_child_info[1] === fromComp.GUID
+            parent_child_info[1] === fromComp.GUID && 
+            parent_child_info[2] === components_of_the_edge['to_index'] &&
+            parent_child_info[3] === toComp.GUID
         ) {
-            // && parent_child_info[3] === toComp.GUID
             parent_child_matrix_fast_check.splice(i, 1);
+            flagPCMFC = true;
+            break;
         }
     }
 
@@ -1116,6 +1131,11 @@ function deleteEdge(edge_to_be_deleted) {
         allEdges: allEdges,
         parent_child_matrix_fast_check: parent_child_matrix_fast_check
     });
+
+    if (prevLength - newLength !== 1 || !flagPCM || !flagPCMFC) {
+        console.log(prevLength, newLength, flagPCM, flagPCMFC)
+        alert("Edge not deleted correctly :(")
+    }
 } // End of deleteEdge
 
 function popupMessage(message) {
@@ -1198,5 +1218,7 @@ export {
     componentStatus,
     moveComponent,
     runDeepFunction,
-    addEdgeCircle
+    addEdgeCircle,
+    edit_move_mode,
+    checkJSONValidity
 };

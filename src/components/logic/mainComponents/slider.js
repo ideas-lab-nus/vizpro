@@ -1,32 +1,23 @@
-/*
-───────────────────────────────────────────────────────────────────────────────────────────
-─██████████████─██████─────────██████████─████████████───██████████████─████████████████───
-─██░░░░░░░░░░██─██░░██─────────██░░░░░░██─██░░░░░░░░████─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
-─██░░██████████─██░░██─────────████░░████─██░░████░░░░██─██░░██████████─██░░████████░░██───
-─██░░██─────────██░░██───────────██░░██───██░░██──██░░██─██░░██─────────██░░██────██░░██───
-─██░░██████████─██░░██───────────██░░██───██░░██──██░░██─██░░██████████─██░░████████░░██───
-─██░░░░░░░░░░██─██░░██───────────██░░██───██░░██──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
-─██████████░░██─██░░██───────────██░░██───██░░██──██░░██─██░░██████████─██░░██████░░████───
-─────────██░░██─██░░██───────────██░░██───██░░██──██░░██─██░░██─────────██░░██──██░░██─────
-─██████████░░██─██░░██████████─████░░████─██░░████░░░░██─██░░██████████─██░░██──██░░██████─
-─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░░░░░░░████─██░░░░░░░░░░██─██░░██──██░░░░░░██─
-─██████████████─██████████████─██████████─████████████───██████████████─██████──██████████─
-*/
-
-/**
- * Summary. (use period)
- *
- * Description. (use period)
- *
- * @link   URL
- * @file   This files defines the MainGrid operations.
- * @author Mahmoud AbdelRahman
- * @since  x.x.x
- */
-
-import { uuidv4, redrawDependents, selectComp } from './functions.js';
+import { 
+    uuidv4, 
+    redrawDependents, 
+    selectComp 
+} from '../functions.js';
 import $ from 'jquery';
 var d3 = require('d3');
+var SLIDER_LENGTH;
+
+const countDecimals = x => {
+    if (Math.floor(x.valueOf()) === x.valueOf()) return 0;
+
+    var str = x.toString();
+    if (str.indexOf(".") !== -1 && str.indexOf("-") !== -1) {
+        return str.split("-")[1] || 0;
+    } else if (str.indexOf(".") !== -1) {
+        return str.split(".")[1].length || 0;
+    }
+    return str.split("-")[1] || 0;
+}
 
 function addSlider(guid, min = 0, max = 100, step = 1.0) {
     var initSlider = {
@@ -58,10 +49,8 @@ function addSlider(guid, min = 0, max = 100, step = 1.0) {
     return initSlider;
 } //End of addSlider
 
-//TODO : save and retrieve the slider values.
 function CreateNewSlider(reactContext, FromExisting = null) {
-    var SLIDER_END_POSITION = reactContext.state.SLIDER_END_POSITION;
-    var SLIDER_START_POSITION = reactContext.state.SLIDER_START_POSITION;
+    SLIDER_LENGTH = reactContext.state.SLIDER_LENGTH;
     var newSlider;
 
     if (FromExisting != null) {
@@ -77,7 +66,7 @@ function CreateNewSlider(reactContext, FromExisting = null) {
         });
         newSlider.Name = 'Numeric';
         newSlider.value = 50.0;
-        newSlider.anchorValue = (SLIDER_END_POSITION - SLIDER_START_POSITION) / 2;
+        newSlider.anchorValue = SLIDER_LENGTH / 2;
     }
 
     newSlider.fill = '#bdc4c8';
@@ -233,32 +222,33 @@ function CreateNewSlider(reactContext, FromExisting = null) {
         .on('drag', (event, d) => {
             var selectedSliderComponent = reactContext.state.selectedSliderComponent;
             var sliderRectId = reactContext.state.sliderRectId;
+            var min = selectedSliderComponent.min;
+            var max = selectedSliderComponent.max;
+            var step = selectedSliderComponent.step;
 
             var slider_anchor_value;
             var slider_value;
 
-            var the_slider_slope =
-                (selectedSliderComponent.max - selectedSliderComponent.min) /
-                (SLIDER_END_POSITION - SLIDER_START_POSITION);
-            var y_intersection =
-                selectedSliderComponent.min - the_slider_slope * SLIDER_START_POSITION;
+            var slope = (max - min) / SLIDER_LENGTH;
 
-            if (event.x <= SLIDER_START_POSITION) {
+            if (event.x <= 0) {
                 slider_anchor_value = 0;
-                slider_value = selectedSliderComponent.min;
-            } else if (event.x >= SLIDER_END_POSITION) {
-                slider_anchor_value = SLIDER_END_POSITION - SLIDER_START_POSITION;
-                slider_value = selectedSliderComponent.max;
+                slider_value = min;
+            } else if (event.x >= SLIDER_LENGTH) {
+                slider_anchor_value = SLIDER_LENGTH;
+                slider_value = max;
             } else {
-                slider_anchor_value = event.x - SLIDER_START_POSITION;
-                slider_value = event.x * the_slider_slope + y_intersection;
+                var scaledValue = event.x * slope;
+                var rounded = Math.round(scaledValue/step) * step;
+                slider_value = rounded + min;
+                slider_anchor_value = slider_value / slope;
             }
 
             selectedSliderComponent.anchorValue = slider_anchor_value;
             d.x = slider_anchor_value;
 
             d3.select('#sliderValueText_' + sliderRectId.replace('SliderAnchor_', '')).text(
-                slider_value.toFixed(6)
+                slider_value.toFixed(countDecimals(step))
             );
 
             selectedSliderComponent.value = slider_value;
@@ -272,6 +262,7 @@ function CreateNewSlider(reactContext, FromExisting = null) {
 
     var slidingAnchor = SlidingGroup.append('rect')
         .attr('id', 'SliderAnchor_' + newSlider.GUID)
+        .attr('data-testid', 'slider-anchor')
         .attr('width', '10')
         .attr('height', '15')
         .attr('rx', '5')
@@ -297,18 +288,17 @@ function CreateNewSlider(reactContext, FromExisting = null) {
         .on('mousedown', function () {
             reactContext.setState({
                 sliderRectId: this.id,
-                // SliderAnchorclicked: true,
                 selectedSliderComponent: newSlider
             });
         })
         .on('mouseup', function () {
             reactContext.setState({
-                // SliderAnchorclicked: false,
                 selectedSliderComponent: null
             });
         })
         .call(anchorDragHandler);
 
+    newSlider.slidingAnchor = slidingAnchor
     //Make a copy of the current states
     var current_comp_out = { ...reactContext.state.comp_output_edges };
     var current_comp_in = { ...reactContext.state.comp_input_edges };
@@ -352,40 +342,65 @@ function CreateNewSlider(reactContext, FromExisting = null) {
  * Handles the event when the Save button on the property bar is clicked
  * @param {String} compKey The ID of the clicked components
  */
-function submitSliderEdit(compKey) {
-    var slider_component = selectComp(compKey);
-    const SLIDER_START_POSITION = 60;
-    const SLIDER_END_POSITION = 238;
-    slider_component.min = parseFloat($('input#new_slider_min_value').val());
-    slider_component.max = parseFloat($('input#new_slider_max_value').val());
-    slider_component.value = parseFloat($('input#new_slider_current_value').val());
+function submitSliderEdit(reactContext, compKey) {
+    const guidList = [];
+    reactContext.state.allComp.forEach(e => guidList.push(e.GUID));
+    if (guidList.includes(compKey)) {
+        var slider_component = selectComp(compKey);
 
-    var slider_anchor_slope =
-        (SLIDER_END_POSITION - SLIDER_START_POSITION) /
-        (slider_component.max - slider_component.min);
-    var slider_anchor_y_intersection =
-        SLIDER_END_POSITION - SLIDER_START_POSITION - slider_anchor_slope * slider_component.max;
-    var slider_anchor_currrent_position =
-        slider_anchor_slope * slider_component.value + slider_anchor_y_intersection;
+        const minInput = parseFloat($('input#new_slider_min_value').val());
+        const maxInput = parseFloat($('input#new_slider_max_value').val());
+        const stepInput = parseFloat($('input#new_slider_step_value').val());
+        const currValInput = parseFloat($('input#new_slider_current_value').val());
 
-    d3.select('rect#SliderAnchor_' + slider_component.GUID).attr('transform', function () {
-        return 'translate(' + slider_anchor_currrent_position.toString() + ',3)';
-    });
+        if (isNaN(minInput) || isNaN(maxInput) || isNaN(currValInput)) {
+            $('div#propertiesBarLog').html(`
+                <div id="error" data-testid="error">Please enter all fields</div>
+            `)
+        } else if (minInput >= maxInput) {
+            $('div#propertiesBarLog').html(`
+                <div id="error" data-testid="error">The min value must be smaller than the max value</div>
+            `)
+        } else if (minInput > currValInput || maxInput < currValInput) {
+            $('div#propertiesBarLog').html(`
+                <div id="error" data-testid="error">The current value must be between the min value and the max value</div>
+            `)
+        } else if (stepInput <= 0) {
+            $('div#propertiesBarLog').html(`
+                <div id="error" data-testid="error">The step value must be a positive value</div>
+            `)
+        } else {
+            slider_component.min = minInput;
+            slider_component.max = maxInput;
+            slider_component.step = stepInput;
+            slider_component.value = currValInput;
 
-    d3.select('#sliderValueText_' + slider_component.GUID.replace('SliderAnchor_', '')).text(
-        slider_component.value.toFixed(6)
-    );
+            var slope = (maxInput - minInput) / SLIDER_LENGTH;
+            var slider_anchor_value = currValInput / slope;
+            slider_component.anchorValue = slider_anchor_value;
 
-    redrawDependents(slider_component.GUID);
-    $('div#propertiesBarContents').html('');
+            slider_component.slidingAnchor
+                .data([
+                    {
+                        x: slider_anchor_value,
+                        y: 3
+                    }
+                ])
+                
+            d3.select('rect#SliderAnchor_' + slider_component.GUID).attr('transform', function () {
+                return 'translate(' + slider_anchor_value.toString() + ',3)';
+            });
+
+            d3.select('#sliderValueText_' + slider_component.GUID.replace('SliderAnchor_', '')).text(
+                slider_component.value.toFixed(countDecimals(currValInput))
+            );
+
+            redrawDependents(slider_component.GUID);
+            $('div#propertiesBarContents').html('');
+        }
+    } else {
+        $('div#propertiesBarContents').html('');
+    }
 }
 
-/**
- * Double click the slider => the property bar appears
- * Handles the event when the Cancel button on the property bar is clicked
- */
-function cancelSliderEdit() {
-    $('div#propertiesBarContents').html('');
-}
-
-export { CreateNewSlider, submitSliderEdit, cancelSliderEdit };
+export { CreateNewSlider, submitSliderEdit };

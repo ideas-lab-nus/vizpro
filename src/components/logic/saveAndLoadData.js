@@ -1,13 +1,15 @@
 import $ from 'jquery';
 import { addEdgeCircle } from './functions.js';
-import { CreateNewComponent } from './component.js';
-import { CreateNewOptionList } from './optionlist.js';
-import { CreateNewSlider } from './slider.js';
-import { CreateNewPanel } from './panel.js';
-import { CreateNewToggle } from './toggle.js';
-import { CreateNewFileUpload } from './fileUpload.js';
-import { CreateNewListView } from './listView.js';
-import { CreateNewCloud } from './cloudComp.js';
+import {
+    CreateNewComponent,
+    CreateNewOptionList,
+    CreateNewSlider,
+    CreateNewPanel,
+    CreateNewToggle,
+    CreateNewFileUpload,
+    CreateNewListView,
+    CreateNewDeep
+} from './mainComponents/mainComponents.js'
 var d3 = require('d3');
 
 function getCurrentData(reactContext) {
@@ -83,9 +85,9 @@ function loadData() {
                 else if (element.type === 'string') CreateNewPanel(this, element);
                 else if (element.type === 'toggle') CreateNewToggle(this, element);
                 else if (element.type === 'optionList') CreateNewOptionList(this, element);
-                else if (element.type === 'fileUpload') CreateNewFileUpload(this, element);
+                else if (element.type === 'fileUpload')  CreateNewFileUpload(this, element);
                 else if (element.type === 'listView') CreateNewListView(this, element);
-                else if (element.type === 'cloud') CreateNewCloud(this, element);
+                else if (element.type === 'deep') CreateNewDeep(this, element);
             });
         }
         if (allData.edges !== undefined && allData.edges !== null) {
