@@ -444,32 +444,31 @@ function handleDoubleClick() {
 
                     element.outputs[0].value = element.value;
 
-                    var StringComp = selectComp(element.GUID);
-                    $('input#string_radio_' + StringComp.inputs[0].type).prop('checked', true);
+                    var panelComp = selectComp(element.GUID);
+                    $('input#string_radio_' + panelComp.inputs[0].type).prop('checked', true);
                     var newName;
                     $('input.stringPanel.Name').on('change keyup paste', function () {
                         newName = $('input.stringPanel.Name').val();
-                        d3.select('text#nodeTitle' + StringComp.GUID).text(newName);
-                        d3.select('rect#' + StringComp.GUID).attr('width', 10 + newName.length * 6);
+                        d3.select('text#nodeTitle' + panelComp.GUID).text(newName);
+                        d3.select('rect#' + panelComp.GUID).attr('width', 10 + newName.length * 6);
                     });
 
-                    if (StringComp.child) {
-                        $('textarea.textarea.stringProperties').prop('disabled', true);
+                    $('textarea.textarea.stringProperties').prop('disabled', panelComp.child);
+                    
+                    // Resets value if parent is updated while property bar is open
+                    // A narrower trigger event can be found
+                    $('body').on('click', () => {
                         $('textarea.stringProperties').text(() => {
-                            return StringComp.inputs[0].value;
+                            var possiblyUpdatedPanelComp = selectComp(element.GUID);
+                            return possiblyUpdatedPanelComp.inputs[0].value;
                         });
-                        $('body').on('mousemove', () => {
-                            $('textarea.stringProperties').text(() => {
-                                return StringComp.inputs[0].value;
-                            });
-                        });
-                    } else {
-                        $('textarea.stringProperties').text(() => {
-                            return StringComp.inputs[0].value;
-                        });
-                    }
+                    });
 
-                    $('input.stringPanel.Name').val(StringComp.Name);
+                    $('textarea.stringProperties').text(() => {
+                        return panelComp.inputs[0].value;
+                    });
+
+                    $('input.stringPanel.Name').val(panelComp.Name);
 
                     $('button#panelEditButton').on('click', function () {
                         submitPanelEdit(reactContext, element.GUID);

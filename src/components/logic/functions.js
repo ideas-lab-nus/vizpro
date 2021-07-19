@@ -494,11 +494,6 @@ function updatShallowCompRender(ch) {
                     '<div id="jsonTreeViewer' + compKey + '"></div>'
                 );
                 var jsonStruct = checkJSONValidity(ch.inputs[0].value);
-                // console.log(typeof(ch.inputs[0].value))
-                // var jsonStruct = typeof(ch.inputs[0].value) === 'string'
-                //                     ? JSON.parse(ch.inputs[0].value)
-                //                     : ch.inputs[0].value;
-                // var jsonStruct = JSON.parse(ch.inputs[0].value);
                 ReactDOM.render(<ReactJson src={jsonStruct} />, 
                     document.getElementById('jsonTreeViewer' + compKey))
             } catch (e) {

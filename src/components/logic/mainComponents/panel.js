@@ -444,7 +444,6 @@ function submitPanelEdit(reactContext, compKey) {
                     '<div id="jsonTreeViewer' + compKey + '"></div>'
                 );
                 var jsonStruct = checkJSONValidity(textVal);
-                // var jsonStruct = JSON.parse(textVal);
                 ReactDOM.render(<ReactJson src={jsonStruct} />, 
                     document.getElementById('jsonTreeViewer' + compKey))
             } catch (e) {
