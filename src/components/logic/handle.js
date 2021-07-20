@@ -134,7 +134,7 @@ function handleComponentSelection() {
             });
         }
     });
-    ViewListRedrawing();
+    // ViewListRedrawing();
 } // End of handleComponentSelection
 
 //Slider component id changed to CompSBody hence will not be picked up

@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { calculateShallow } from './shallow.js';
 import { calculateDeep } from './deep.js';
 
-import $ from 'jquery';
+import $, { isArray } from 'jquery';
 
 var d3 = require('d3');
 
@@ -284,6 +284,7 @@ function getlocationFromTransform(trnsformText) {
 } // End of getlocationFromTransform
 
 function ViewListRedrawing() {
+    console.log("inside view list reddraw")
     d3.selectAll('option#someSelection').on('click', function (e) {
         var id = this.classList[1];
         var selectedItems = [];
@@ -322,7 +323,7 @@ function ViewListRedrawing() {
     });
 } // End of ViewListRedrawing
 
-function addOptionDropdownList(compId) {
+function showDropDownList(compId) {
     var optionListComp = selectComp(compId);
     var n = 0;
     var node = d3.select('g#comp-' + compId);
@@ -392,7 +393,7 @@ function addOptionDropdownList(compId) {
                 });
         }
     }
-} // End of addOptionDropdownList
+} // End of showDropDownList
 
 function changeOptionListFinalValue(el) {
     var thisComp = selectComp(el.classList[1]);
@@ -407,10 +408,6 @@ function changeOptionListFinalValue(el) {
 
     redrawDependents(el.classList[1]);
 } // End of changeOptionListFinalValue
-
-function showDropDownList(hh) {
-    addOptionDropdownList(hh);
-} // End of showDropDownList
 
 /**
  * on a parent changes, only draws all the children tree .
@@ -520,14 +517,15 @@ function updatShallowCompRender(ch) {
         ch.outputs[0].value = ch.inputs[0].value;
         ch.outputs[0].type = ch.inputs[0].type;
     } else if (ch.type === 'optionList') {
-        ch.optionListValues = JSON.parse(ch.inputs[0].value);
+        ch.optionListValues = JSON.parse(ch.inputs[0].value); 
     } else if (ch.type === 'listView') {
         var newValues;
         try {
             var oldValues = checkJSONValidity(ch.inputs[0].value)
-            newValues = oldValues.map(val => [val[0], 0]);
+            newValues = oldValues.map(val => Array.isArray(val) ? val : [val, 1]);
         } catch (e) {
-            newValues = [[e, 1]];
+            console.log("Invalid Json at listView render" + e)
+            newValues = [[e.message, 1]];
         }
         
         ch.value = newValues;
@@ -744,40 +742,59 @@ function edit_move_mode(compId, mode) {
 }
 
 function updateListViewDrawing(comp) {
-    d3.select('foreignObject#listView-' + comp.GUID).html(() => {
-        var selectedOptions = [];
-        var ListItemsvalueReturn =
-            `<select id="listviewSelect" class="listView ` + comp.GUID + `" size="5"  multiple>`;
-        comp.value.forEach(option => {
-            console.log("updating list drawing" + option);
-            if (option[1] === 0) {
-                ListItemsvalueReturn +=
-                    `<option id="someSelection" class="listViewOption ` +
-                    comp.GUID +
-                    `" value="` +
-                    option[0] +
-                    `">` +
-                    option[0] +
-                    `</option>`;
-            } else {
-                ListItemsvalueReturn +=
-                    `<option id="someSelection" class="listViewOption ` +
-                    comp.GUID +
-                    `" value="` +
-                    option[0] +
-                    `" selected>` +
-                    option[0] +
-                    `</option>`;
-                selectedOptions.push(option[0]);
+    console.log("updating list view drawing")
+    d3.select('foreignObject#listView-' + comp.GUID)
+        .html(() => setListViewHTML(comp))
+
+    d3.select('select#listviewSelect' + comp.GUID)
+        .on('click', function(e) {
+            try {
+                var el = e.path[0].classList[2];
+                comp.value[el][1] = comp.value[el][1] === 0 ? 1 : 0;
+                setListViewHTML(comp);
+                redrawDependents(comp.GUID);
+            } catch (e) {
+                console.log("Selected point is not an option")
+                return;
             }
         });
-        comp.outputs[0].value = JSON.stringify(selectedOptions);
-        ListItemsvalueReturn += `</select>`;
-        return ListItemsvalueReturn;
-    });
-
-    ViewListRedrawing();
+    // ViewListRedrawing();
 } // End of updateListViewDrawing
+
+function setListViewHTML(comp) {
+    var selectedOptions = [];
+    var ListItemsvalueReturn =
+        `<select id="listviewSelect` + comp.GUID + `" class="listView ` +
+        comp.GUID +
+        `" size="5"  multiple>`;
+    comp.value.forEach((option, index) => {
+        if (option[1] === 0) {
+            ListItemsvalueReturn +=
+                `<option id="someSelection" class="listViewOption ` +
+                comp.GUID + " " + index + 
+                `" value="` +
+                option[0] +
+                `">` +
+                option[0] +
+                `</option>`;
+        } else {
+            ListItemsvalueReturn +=
+                `<option id="someSelection" class="listViewOption ` +
+                comp.GUID + " " + index +
+                `" value="` +
+                option[0] +
+                `" selected>` +
+                option[0] +
+                `</option>`;
+            selectedOptions.push(option[0]);
+        }
+        return option;
+    });
+    
+    comp.outputs[0].value = JSON.stringify(selectedOptions);
+    ListItemsvalueReturn += `</select>`;
+    return ListItemsvalueReturn;
+} // End of setListViewHTML
 
 function handleEdgeMovement(objID, x = null, y = null) {
     var element = selectComp(objID);
@@ -1201,7 +1218,6 @@ export {
     returnCurveString,
     getlocationFromTransform,
     ViewListRedrawing,
-    addOptionDropdownList,
     changeOptionListFinalValue,
     showDropDownList,
     redrawDependents,
@@ -1220,5 +1236,6 @@ export {
     runDeepFunction,
     addEdgeCircle,
     edit_move_mode,
-    checkJSONValidity
+    checkJSONValidity,
+    setListViewHTML
 };
