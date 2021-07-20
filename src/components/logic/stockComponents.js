@@ -5,7 +5,7 @@ const stockComponentDetails = [
         desc: "Integrate cloud simulation into BuildSim's automated workflow",
         type: 'component',
         dftype: 'dp',
-        category: 'BuildSimHub',
+        category: 'Basic',
         subcategory: '',
         inputList: [
             {
@@ -39,7 +39,7 @@ const stockComponentDetails = [
         desc: 'Heating, ventilation, and air conditioning (HVAC) is the technology of indoor and vehicular environmental comfort.',
         type: 'component',
         dftype: 'dp',
-        category: 'BuildSimHub',
+        category: 'Basic',
         subcategory: 'Models',
         inputList: [
             { name: '_System', shortName: '_sys', desc: 'HVAC system', default_value: '' },
@@ -75,7 +75,7 @@ const stockComponentDetails = [
         desc: 'Get list of models under a project',
         type: 'component',
         dftype: 'dp',
-        category: 'BuildSimHub',
+        category: 'Basic',
         subcategory: '',
         inputList: [
             {
@@ -115,7 +115,7 @@ const stockComponentDetails = [
         desc: 'Access a model commit',
         type: 'component',
         dftype: 'dp',
-        category: 'BuildSimHub',
+        category: 'Basic',
         subcategory: '',
         inputList: [
             {
@@ -144,7 +144,7 @@ const stockComponentDetails = [
         desc: 'Run simulation job',
         type: 'component',
         dftype: 'dp',
-        category: 'BuildSimHub',
+        category: 'Basic',
         subcategory: '',
         inputList: [
             { name: 'project_api_key', shortName: 'api_key', desc: '', default_value: 'null' },
@@ -188,7 +188,7 @@ const stockComponentDetails = [
         desc: 'track_token',
         type: 'component',
         dftype: 'dp',
-        category: 'BuildSimHub',
+        category: 'Basic',
         subcategory: '',
         inputList: [
             {
@@ -229,7 +229,7 @@ const stockComponentDetails = [
         desc: '',
         type: 'component',
         dftype: 'shlow',
-        category: 'BuildSimHub',
+        category: 'Basic',
         subcategory: '',
         inputList: [
             { name: 'tracking', shortName: 'tracking', desc: 'tracking', default_value: 'null' }
@@ -247,7 +247,7 @@ const stockComponentDetails = [
         desc: 'Retrieves model info and simulation results.',
         type: 'component',
         dftype: 'dp',
-        category: 'BuildSimHub',
+        category: 'Basic',
         subcategory: '',
         inputList: [
             {
@@ -306,7 +306,7 @@ const stockComponentDetails = [
         desc: '',
         type: 'component',
         dftype: 'dp',
-        category: 'BuildSimHub',
+        category: 'Basic',
         subcategory: '',
         inputList: [
             {
@@ -490,7 +490,7 @@ const stockComponentDetails = [
         desc: '',
         type: 'component',
         dftype: 'dp',
-        category: 'BuildSimHub',
+        category: 'Basic',
         subcategory: '',
         inputList: [
             { name: 'file_dir', shortName: 'file_dir', desc: 'file_dir', default_value: 'null' }

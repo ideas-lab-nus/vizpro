@@ -149,27 +149,32 @@ function accumulator(args, operator) {
     var n;
     var i;
 
-    for (i = 0; i < InputList.length; i++) {
-        console.log(InputList[i]);
-        n = parseFloat(InputList[i]); // convert string to float
-        if (!isNumeric(n)) {
-            log = n + ' is not numeric';
-            return {
-                type: ['text', 'text'],
-                value: [null, log]
-            };
+    if (InputList === null || InputList === undefined) {
+        return {
+            type: ['text', 'text'],
+            value: [null, 'Unable to convert input to a list of numbers']
+        };
+    } else {
+        for (i = 0; i < InputList.length; i++) {
+            n = parseFloat(InputList[i]); // convert string to float
+            if (!isNumeric(n)) {
+                log = n + ' is not numeric';
+                return {
+                    type: ['text', 'text'],
+                    value: [null, log]
+                };
+            }
+            if (i > 0) {
+                output = operator(output, n);
+            } else {
+                output = n;
+            }
         }
-        if (i > 0) {
-            output = operator(output, n);
-            console.log(output);
-        } else {
-            output = n;
-        }
-    }
-    return {
-        type: ['text', 'text'],
-        value: [output, log]
-    };
+        return {
+            type: ['text', 'text'],
+            value: [output, log]
+        };
+    }    
 }
 
 /**
@@ -279,7 +284,7 @@ function sum(inputList) {
 function average(args) {
     var inputList = args[0];
     var average_output = null;
-    var log_output = 'Success';
+    var log_output = 'Success!';
     try {
         //Validation:
         inputList = parseString(inputList);
@@ -884,7 +889,6 @@ function youTubeDisplay(args) {
     } else {
         try {
             var videoId = _url.split('watch?v=')[1].split('&')[0];
-            console.log(videoId);
             youTube_ =
                 `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/` +
                 videoId +
@@ -923,7 +927,7 @@ function plot_panel_comp(args) {
     var thisComp = selectComp(compId); // selects the component that is under test.
     var inputGroup = []; // reads the inputs from the component and put them in a list to be mapped to the corresponding shallow function.
     thisComp.inputs.forEach(input => {
-        console.log(input);
+        //console.log(input);
         if (typeof input !== 'string' && input.file !== undefined) {
             inputGroup.push(input.file);
         } else {
@@ -940,6 +944,7 @@ function plot_panel_comp(args) {
             output.value = d['value'][i];
             output.type = d['type'][i];
         });
+        return d;
     }
 }
 

@@ -16,7 +16,7 @@ const details = [
             { name: 'InputList', shortName: 'in_01', desc: 'first input', default_value: '1.0' }
         ],
         outputList: [
-            { name: 'average', shortName: 'avg', desc: 'the average between input1 and input 2' },
+            { name: 'average', shortName: 'avg', desc: 'the average between input 1 and input 2' },
             { name: 'log_', shortName: 'log', desc: 'debugging logger' }
         ],
         color: '#F23322',
@@ -259,7 +259,7 @@ const details = [
 ];
 
 const tabIdMapping = {
-    Basic: 'div.toolbarbuttonsContainer.Basic',
+    'Basic': 'div.toolbarbuttonsContainer.Basic',
     'User Definitions': 'div.toolbarbuttonsContainer.User',
     'String Operations': 'div.toolbarbuttonsContainer.StringOps'
 };

@@ -288,6 +288,7 @@ function CreateNewComponent(
     var Title = Titlegroup.append('foreignObject')
         .attr('class', 'nodetitle node_title' + newcomp.GUID)
         .attr('id', 'node_title' + newcomp.GUID)
+        .attr('data-testid', 'node-title-' + newcomp.Name)
         .attr('x', 0)
         .attr('y', -10)
         .attr('width', newcomp.width)
@@ -300,6 +301,7 @@ function CreateNewComponent(
         var inptext = InputGroupText.append('text')
             .attr('id', 'input-' + newcomp.GUID + '_' + index)
             .attr('class', 'inputTxt ' + newcomp.GUID + ' ' + index)
+            .attr('data-testid', 'inputTxt-' + newcomp.Name)
             .attr(
                 'transform',
                 'translate(' + 10 + ' , ' + (index * padding + titleMargin + 5).toString() + ')'
@@ -321,6 +323,7 @@ function CreateNewComponent(
         var outtext = OutputGroupText.append('text')
             .attr('id', 'output-' + newcomp.GUID + '_' + index)
             .attr('class', 'outputTxt ' + newcomp.GUID + ' ' + index)
+            .attr('data-testid', 'outputTxt-' + newcomp.Name)
             .attr(
                 'transform',
                 'translate(' +

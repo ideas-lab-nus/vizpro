@@ -838,8 +838,10 @@ div#toolbar_container_1_2_1 {
     width: 200px;
     background-color: #e6e6e6;
     min-height: 200px;
+    max-height: 200px;
     float: left;
     border: 1px solid #cfcfcf;
+    overflow: auto;
 }
 
 .mainButtonItem {

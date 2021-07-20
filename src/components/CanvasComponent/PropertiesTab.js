@@ -6,7 +6,7 @@ export default class PropertiesTab extends Component {
             <div id="PropertiesBar" data-testid="PropertiesBar">
                 <div className="ccatheader"></div>
                 <div data-testid='propertiesBarContents'
-                className="ccbody" id="propertiesBarContents" style={{"width":"100%"}}></div>
+                className="ccbody" id="propertiesBarContents" style={{"width":"100%","overflow": "hidden"}}></div>
             </div>
         )
     }
