@@ -283,46 +283,6 @@ function getlocationFromTransform(trnsformText) {
         });
 } // End of getlocationFromTransform
 
-function ViewListRedrawing() {
-    console.log("inside view list reddraw")
-    d3.selectAll('option#someSelection').on('click', function (e) {
-        var id = this.classList[1];
-        var selectedItems = [];
-        var componentValue = [];
-        var selectedOptions = $('option.listViewOption.' + id);
-        for (let i = 0; i < selectedOptions.length; i++) {
-            var currentValue = selectedOptions[i].value;
-            var parsedcurrentValue;
-            if (selectedOptions[i].selected) {
-                if (isNaN(currentValue)) {
-                    parsedcurrentValue = currentValue;
-                } else if (currentValue.indexOf('.') === -1) {
-                    parsedcurrentValue = parseInt(currentValue);
-                } else {
-                    parsedcurrentValue = parseFloat(currentValue);
-                }
-
-                componentValue.push([parsedcurrentValue, 1]);
-                selectedItems.push(parsedcurrentValue);
-            } else {
-                if (isNaN(currentValue)) {
-                    parsedcurrentValue = currentValue;
-                } else if (currentValue.indexOf('.') === -1) {
-                    parsedcurrentValue = parseInt(currentValue);
-                } else {
-                    parsedcurrentValue = parseFloat(currentValue);
-                }
-                componentValue.push([parsedcurrentValue, 0]);
-            }
-        }
-        var the_selected_optionList_component = selectComp(id);
-        the_selected_optionList_component.outputs[0].value = JSON.stringify(selectedItems);
-        the_selected_optionList_component.value = componentValue;
-
-        redrawDependents(id);
-    });
-} // End of ViewListRedrawing
-
 function showDropDownList(compId) {
     var optionListComp = selectComp(compId);
     var n = 0;
@@ -758,7 +718,6 @@ function updateListViewDrawing(comp) {
                 return;
             }
         });
-    // ViewListRedrawing();
 } // End of updateListViewDrawing
 
 function setListViewHTML(comp) {
@@ -1217,7 +1176,6 @@ export {
     updateAll,
     returnCurveString,
     getlocationFromTransform,
-    ViewListRedrawing,
     changeOptionListFinalValue,
     showDropDownList,
     redrawDependents,
