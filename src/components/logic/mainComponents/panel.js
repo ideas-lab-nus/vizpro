@@ -5,7 +5,8 @@ import {
     visualizeSpatialComponent,
     drawPlotComponent,
     redrawDependents,
-    edit_move_mode
+    edit_move_mode,
+    checkJSONValidity
 } from '../functions.js';
 import React from 'react';
 import ReactJson from 'react-json-view';
@@ -251,7 +252,10 @@ function CreateNewPanel(reactContext, FromExisting = null) {
             $('foreignObject#textbody_' + compKey).html(
                 '<div id="jsonTreeViewer' + compKey + '"></div>'
             );
-            var jsonStruct = JSON.parse(newcomp.inputs[0].value);
+            var jsonStruct = typeof(newcomp.inputs[0].value) === 'string'
+                                    ? JSON.parse(newcomp.inputs[0].value)
+                                    : newcomp.inputs[0].value;
+            // var jsonStruct = JSON.parse(newcomp.inputs[0].value);
             ReactDOM.render(<ReactJson src={jsonStruct} />, 
                 document.getElementById('jsonTreeViewer' + compKey))
         } catch (e) {
@@ -439,7 +443,7 @@ function submitPanelEdit(reactContext, compKey) {
                 $('foreignObject#textbody_' + compKey).html(
                     '<div id="jsonTreeViewer' + compKey + '"></div>'
                 );
-                var jsonStruct = JSON.parse(textVal);
+                var jsonStruct = checkJSONValidity(textVal);
                 ReactDOM.render(<ReactJson src={jsonStruct} />, 
                     document.getElementById('jsonTreeViewer' + compKey))
             } catch (e) {

@@ -437,10 +437,11 @@ function submitDeepEdit(reactContext, compKey) {
             $('div#propertiesBarLog').html(
                 '<div id="error">Please provide a valid URL</div>'
             );
-        } else if (inputDict.length === 0) {
-            $('div#propertiesBarLog').html(
-                '<div id="error">The input list must not be empty</div>'
-            );
+        // // Empty input list check (confirm requirement)
+        // } else if (inputDict.length === 0) {
+        //     $('div#propertiesBarLog').html(
+        //         '<div id="error">The input list must not be empty</div>'
+        //     );
         } else {
             deepComp.inputNames = inputs;
             deepComp.inputs = inputDict;

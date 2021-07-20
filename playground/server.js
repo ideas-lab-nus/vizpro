@@ -12,7 +12,7 @@ app.use((req, res, next) => {
 })
 
 app.get('/ping', function (req, res) {
- return res.send('pong');
+    return res.send('pong');
 });
 
 app.get('/woop', function (req, res) {

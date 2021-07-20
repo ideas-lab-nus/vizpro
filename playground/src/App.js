@@ -1,5 +1,5 @@
 import React from 'react';
-import { Canvas } from 'viz-vimuth';
+import Canvas from 'viz-vimuth';
 
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);

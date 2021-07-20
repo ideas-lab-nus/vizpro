@@ -722,6 +722,14 @@ option#someSelection {
     margin-bottom: 1px;
 }
 
+select option:checked {
+    background-color: #CECECE;
+}
+
+select option:not(:checked) {
+    background-color: #E0E0E0;
+}
+
 text.statusTextClass {
     font-size: x-small;
 }

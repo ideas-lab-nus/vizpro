@@ -48,31 +48,31 @@ function handleRequest(args, url) {
                 alert(error)
                 return {
                     type: ['text', 'text'],
-                    value: [null, "Ran into an issue :("]
+                    value: [null, error]
                 };
             }            
         )
-        .then(
-            (result) => {
-                try {
-                    deepComp.outputs.forEach(function (output, i) {
-                        output.type = result['type'][i];
-                        output.value = result['value'][i];
-                    });
-                } catch (error) {
-                    console.log(error);
-                    alert(error);
-                }
-
-                ch.inputs[element[2]].value = deepComp.outputs[element[0]].value;
-                ch.inputs[element[2]].type = deepComp.outputs[element[0]].type;
-
-                componentStatus(deepComp.GUID, 'green');
-                updatShallowCompRender(ch);
-                redrawDependents(ch.GUID);
-            }
-        )
+        .then(result => setOutputs(result))
     return result
+}
+
+function setOutputs(result) {
+    try {
+        deepComp.outputs.forEach(function (output, i) {
+            output.type = result['type'][i];
+            output.value = result['value'][i];
+        });
+    } catch (error) {
+        console.log(error);
+        alert(error);
+    }
+
+    ch.inputs[element[2]].value = deepComp.outputs[element[0]].value;
+    ch.inputs[element[2]].type = deepComp.outputs[element[0]].type;
+
+    componentStatus(deepComp.GUID, 'green');
+    updatShallowCompRender(ch);
+    redrawDependents(ch.GUID);
 }
 
 export { calculateDeep };

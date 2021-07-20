@@ -3,7 +3,7 @@ import {
     addCircle, 
     addcomponent, 
     selectComp, 
-    addOptionDropdownList 
+    showDropDownList
 } from '../functions.js';
 import $ from 'jquery';
 var d3 = require('d3');
@@ -267,7 +267,7 @@ function submitOptionListEdit(reactContext, compKey) {
     reactContext.state.allComp.forEach(e => guidList.push(e.GUID));
     if (guidList.includes(compKey)) {
         optionListComp['optionListValues'] = OptionListValues;
-        addOptionDropdownList(compKey);
+        showDropDownList(compKey);
     }
     $('div#propertiesBarContents').html('');
 }
