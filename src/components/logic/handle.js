@@ -2,7 +2,6 @@ import {
     uuidv4,
     selectComp,
     updateAll,
-    ViewListRedrawing,
     showDropDownList,
     redrawDependents
 } from './functions.js';
@@ -134,7 +133,6 @@ function handleComponentSelection() {
             });
         }
     });
-    ViewListRedrawing();
 } // End of handleComponentSelection
 
 //Slider component id changed to CompSBody hence will not be picked up

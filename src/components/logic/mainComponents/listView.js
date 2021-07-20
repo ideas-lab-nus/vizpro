@@ -1,7 +1,9 @@
 import { 
     addcomponent, 
     uuidv4, 
-    addCircle 
+    addCircle,
+    setListViewHTML,
+    redrawDependents
 } from '../functions.js';
 var d3 = require('d3');
 
@@ -158,37 +160,19 @@ function CreateNewListView(reactContext, FromExisting = null, optionlist_predefi
         .attr('x', 1)
         .attr('width', newcomp.width - 2)
         .attr('height', newcomp.height - 20)
-        .html(() => {
-            var selectedOptions = [];
-            var ListItemsvalueReturn =
-                `<select id="listviewSelect" class="listView ` +
-                newcomp.GUID +
-                `" size="5"  multiple>`;
-            newcomp.value.forEach(option => {
-                if (option[1] === 0) {
-                    ListItemsvalueReturn +=
-                        `<option id="someSelection" class="listViewOption ` +
-                        newcomp.GUID +
-                        `" value="` +
-                        option[0] +
-                        `">` +
-                        option[0] +
-                        `</option>`;
-                } else {
-                    ListItemsvalueReturn +=
-                        `<option id="someSelection" class="listViewOption ` +
-                        newcomp.GUID +
-                        `" value="` +
-                        option[0] +
-                        `" selected>` +
-                        option[0] +
-                        `</option>`;
-                    selectedOptions.push(option[0]);
-                }
-            });
-            newcomp.outputs[0].value = JSON.stringify(selectedOptions);
-            ListItemsvalueReturn += `</select>`;
-            return ListItemsvalueReturn;
+        .html(() => setListViewHTML(newcomp));
+
+    d3.select('select#listviewSelect' + newcomp.GUID)
+        .on('click', function(e) {
+            try {
+                var el = e.path[0].classList[2];
+                newcomp.value[el][1] = newcomp.value[el][1] === 0 ? 1 : 0;
+                setListViewHTML(newcomp);
+                redrawDependents(newcomp.GUID);
+            } catch (e) {
+                console.log("Selected point is not an option")
+                return;
+            }
         });
 
     var rect = node
