@@ -843,13 +843,27 @@ div#toolbar_container_1_2 {
 
 div#toolbar_container_1_2_1 {
     box-sizing: border-box;
-    width: 200px;
+    width: 225px;
     background-color: #e6e6e6;
     min-height: 200px;
     max-height: 200px;
     float: left;
     border: 1px solid #cfcfcf;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: visible;
+    padding-right: 25px;
+    margin-right: -25px;
+    position: relative
+}
+
+div#toolbar_container_1_2_1 {
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    scrollbar-width: none; /* for Firefox */
+    overflow-y: scroll; 
+}
+
+div#toolbar_container_1_2_1::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
 }
 
 .mainButtonItem {
@@ -883,6 +897,8 @@ div#toolbar_container_1_2_2 {
     background-color: #c1c1c1;
     box-sizing: border-box;
     border-right: 1px solid #373737;
+    position: relative;
+    z-index: 1;
 }
 
 .rightToggleButton {
@@ -990,7 +1006,7 @@ span.tooltiptext {
     width: fit-content;
     top: 3px;
     left: 25px;  
-    z-index: 1;
+    z-index: 2;
 }
 
 .tooltip:hover .tooltiptext {
