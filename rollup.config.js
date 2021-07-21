@@ -24,5 +24,5 @@ export default {
           }),
         image()
     ],
-    external: [...Object.keys(pkg.peerDependencies || {}), 'react-script-tag', 'jquery', 'plotly', '@fontsource/ubuntu-mono'],
+    external: [...Object.keys(pkg.peerDependencies || {}), 'jquery', 'react-json-view', '@fontsource/ubuntu-mono'],
 };

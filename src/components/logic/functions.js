@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { calculateShallow } from './shallow.js';
 import { calculateDeep } from './deep.js';
 
-import $, { isArray } from 'jquery';
+import $ from 'jquery';
 
 var d3 = require('d3');
 

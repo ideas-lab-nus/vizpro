@@ -1,2 +1,1 @@
-import Canvas from './components/Canvas';
-export default Canvas;
+export { default as Canvas } from './components/Canvas';
