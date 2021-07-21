@@ -9,7 +9,7 @@ afterEach(cleanup);
 test('Top Bar successfully render', () => {
     render(<TopBar />);
     const element = screen.getAllByTestId('fileTheDef');
-    var expectedArray = ['File', 'Edit', 'Help', 'Save', 'Clear', 'Download'];
+    var expectedArray = ['Help', 'Save', 'Clear', 'Download', 'Upload'];
     expect(element.length).toBe(expectedArray.length);
     for (let index = 0; index < element.length; index++) {
         expect(element[index].textContent).toBe(expectedArray[index]);

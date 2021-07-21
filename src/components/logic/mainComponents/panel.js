@@ -433,6 +433,7 @@ function CreateNewPanel(reactContext, FromExisting = null) {
 function submitPanelEdit(reactContext, compKey) {
     const guidList = [];
     reactContext.state.allComp.forEach(e => guidList.push(e.GUID));
+    var plotError = false;
     if (guidList.includes(compKey)) {
         var StringComp = selectComp(compKey);
         var textVal = $('textarea.textarea.stringProperties').val();
@@ -456,8 +457,12 @@ function submitPanelEdit(reactContext, compKey) {
                 .html(textVal)
                 .attr('fill', 'black');
         } else if (StringComp.inputs[0].type === 'plot') {
-            var data = JSON.parse(textVal);
-            drawPlotComponent(data, StringComp);
+            try {
+                var data = JSON.parse(textVal);
+                drawPlotComponent(data, StringComp);
+            } catch (e) {
+                plotError = true;
+            }
         } else {
             d3.select('foreignObject#textbody_' + compKey)
                 .text(textVal)
@@ -471,7 +476,13 @@ function submitPanelEdit(reactContext, compKey) {
 
         redrawDependents(compKey);
     }
-    $('div#propertiesBarContents').html('');
+    if (plotError) {
+        $('div#propertiesBarLog').html(
+            '<div id="error" data-testid="error">Incorrect format for plot panel. Check Help for more details</div>'
+        );
+    } else {
+        $('div#propertiesBarContents').html('');
+    }
 }
 
 export { CreateNewPanel, submitPanelEdit };

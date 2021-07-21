@@ -114,20 +114,19 @@ function loadData() {
 }
 
 function uploadSavedData() {
-    console.log('upload file button clicked');
-    console.log(this.state);
+    var reactContext = this;
     $('input#actual-btn').on('change', function(e) {
-        console.log('A file is uploaded');
-        console.log(this.state);
         const uploaded = e.target.files[0];
-        console.log(uploaded);
-        const reader = new FileReader();
-        reader.onload = function() {
-            const data = reader.result;
-            console.log(data);
-            console.log(typeof data);
+        if (uploaded.type === 'application/json') {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const data = reader.result;
+                recreateSavedData(reactContext, data);
+            }
+            reader.readAsText(uploaded);
+        } else {
+            alert('The upload file must be a JSON file');
         }
-        reader.readAsText(uploaded);
     })
 }
 

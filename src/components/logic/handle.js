@@ -281,15 +281,6 @@ function handleEdgeInitialization() {
                 });
                 toComponent = selectComp(toCircle.element.classList[1]);
                 fromComponent = selectComp(fromCircle.element.classList[1]);
-
-                console.log(parent_child_matrix_fast_check)
-                console.log(fromCircle.element.classList[2] +
-                    ' ' +
-                    fromCircle.element.classList[1] +
-                    ' ' +
-                    toCircle.element.classList[2] +
-                    ' ' +
-                    toCircle.element.classList[1])
                 if (
                     !parent_child_matrix_fast_check.includes(
                         fromCircle.element.classList[2] +

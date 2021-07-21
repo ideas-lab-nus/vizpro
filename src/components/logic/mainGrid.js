@@ -151,7 +151,6 @@ function manageGrid() {
             var optionlistRectid = reactContext.state.optionlistRectid;
 
             if (reactContext.state.textareaStarted) {
-                console.log('in here');
                 var selectedRect = getlocationFromTransform(
                     d3.select('g#comp-' + textAreaRectId).attr('transform')
                 );

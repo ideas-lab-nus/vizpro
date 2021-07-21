@@ -13,15 +13,15 @@ export default class TopBar extends Component {
     render() {
         return (
             <div id="TopPropertiesBar">
-                <a data-testid='fileTheDef' id="fileTheDef" className="menubarButtons">File</a>
-                <a data-testid='fileTheDef' id="fileTheDef" className="menubarButtons">Edit</a>
-                <a data-testid='fileTheDef' id="fileTheDef" className="menubarButtons">Help</a>
-                <a data-testid='fileTheDef' id="saveTheDef" className="menubarButtons" onClick={() => this.saveData()}>Save</a>
-                <a data-testid='fileTheDef' id="fileTheDef" className="menubarButtons" onClick={() => clearData()}>Clear</a>
-                <a data-testid='fileTheDef' id="saveTheDef" className="menubarButtons" onClick={() => this.downloadData()}>Download</a>
+                <label data-testid='fileTheDef' id="fileTheDef" className="menubarButtons">Help</label>
+                <label data-testid='fileTheDef' id="saveTheDef" className="menubarButtons" onClick={() => this.saveData()}>Save</label>
+                <label data-testid='fileTheDef' id="fileTheDef" className="menubarButtons" onClick={() => clearData()}>Clear</label>
+                <label data-testid='fileTheDef' id="saveTheDef" className="menubarButtons" onClick={() => this.downloadData()}>Download</label>
                 <div>
                     <input type="file" id="actual-btn" hidden/>
-                    <label for="actual-btn" data-testid='fileTheDef' id="fileTheDef" className="menubarButtons" onClick={() => this.uploadSavedData()}>
+                    <label htmlFor="actual-btn"
+                    data-testid='fileTheDef' id="fileTheDef" className="menubarButtons" 
+                    onClick={() => this.uploadSavedData()}>
                         Upload
                     </label>
                 </div>

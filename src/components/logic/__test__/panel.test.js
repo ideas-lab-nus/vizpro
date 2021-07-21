@@ -62,6 +62,7 @@ test('Panel content successfully updates when change is made', () => {
     const panelContent = screen.queryByTestId('textbody');
     expect(panelContent.textContent).toBe('Hello World');
     expect(panelContent.nodeName).toBe('foreignObject');
+    expect(screen.queryByTestId('propertiesBarContents').childNodes.length).toBe(0);
 });
 
 test('Panel content updates with html content when panel type is html', () => {
@@ -79,4 +80,71 @@ test('Panel content updates with html content when panel type is html', () => {
     expect(screen.queryByText('Type : html')).toBeInTheDocument();
     const panelContent = screen.queryByTestId('textbody');
     expect(panelContent.childNodes[0].textContent).toBe('Hello there');
+    expect(screen.queryByTestId('propertiesBarContents').childNodes.length).toBe(0);
+});
+
+test('Panel content updates with json content when panel type is json and the input text is a list', () => {
+    fireEvent.dblClick(addedPanel.childNodes[0]);
+    const inputTextArea = screen.queryByTestId('textarea-string-properties');
+    fireEvent.change(inputTextArea, {
+        target: {
+            value: '[1,2,3, "Hello"]',
+        }
+    });
+    const htmlRadioBtn = screen.queryByTestId('json');
+    fireEvent.click(htmlRadioBtn);
+    const applyBtn = screen.queryByText('Apply');
+    fireEvent.click(applyBtn);
+    expect(screen.queryByText('Type : json')).toBeInTheDocument();
+    expect(screen.queryByText('4 items')).toBeInTheDocument();
+    expect(screen.queryByTestId('propertiesBarContents').childNodes.length).toBe(0);
+});
+
+test('Panel content reports error when panel type is json and the input text is not a list', () => {
+    fireEvent.dblClick(addedPanel.childNodes[0]);
+    const inputTextArea = screen.queryByTestId('textarea-string-properties');
+    fireEvent.change(inputTextArea, {
+        target: {
+            value: '1',
+        }
+    });
+    const htmlRadioBtn = screen.queryByTestId('json');
+    fireEvent.click(htmlRadioBtn);
+    const applyBtn = screen.queryByText('Apply');
+    fireEvent.click(applyBtn);
+    expect(screen.queryByText('Type : json')).toBeInTheDocument();
+    expect(screen.queryByText('Error: Invalid JSON input')).toBeInTheDocument();
+    expect(screen.queryByText('Error: Invalid JSON input').style._values.color).toBe("red"); //error color
+});
+
+test('Panel content updates with plot panel content when panel type is plot and the input is valid', () => {
+    fireEvent.dblClick(addedPanel.childNodes[0]);
+    const inputTextArea = screen.queryByTestId('textarea-string-properties');
+    fireEvent.change(inputTextArea, {
+        target: {
+            value: '{"type":"pie","data":[{"values":[19,26,55],"labels":["Residential","Non-Residential","Utility"],"type":"pie"}]}',
+        }
+    });
+    const htmlRadioBtn = screen.queryByTestId('plot');
+    fireEvent.click(htmlRadioBtn);
+    const applyBtn = screen.queryByText('Apply');
+    fireEvent.click(applyBtn);
+    expect(screen.queryByText('Type : plot')).toBeInTheDocument();
+    expect(screen.queryByTestId('propertiesBarContents').childNodes.length).toBe(0);
+});
+
+test('Property bar reports error when panel type is plot and the input is invalid', () => {
+    fireEvent.dblClick(addedPanel.childNodes[0]);
+    const inputTextArea = screen.queryByTestId('textarea-string-properties');
+    fireEvent.change(inputTextArea, {
+        target: {
+            value: '{"type":"pie","data":[{"values":[19,26,55],"labels":["Residential","Non-Residential","Utility"],"type":"pie"}',
+        }
+    });
+    const htmlRadioBtn = screen.queryByTestId('plot');
+    fireEvent.click(htmlRadioBtn);
+    const applyBtn = screen.queryByText('Apply');
+    fireEvent.click(applyBtn);
+    expect(screen.queryByTestId('propertiesBarContents').childNodes.length).not.toBe(0);
+    expect(screen.queryByTestId('error').textContent).toBe('Incorrect format for plot panel. Check Help for more details');
 });

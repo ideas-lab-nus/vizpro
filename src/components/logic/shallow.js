@@ -826,7 +826,6 @@ function osiExtractTimeSeriesData(args) {
             uniquePlotId +
             `', data, {responsive: true});`;
 
-        console.log(plot_);
         return {
             type: ['html', 'html', 'html', 'json', 'json', 'json', 'text'],
             value: [help_, plot_, to_html, to_dict, time_stamps, data, log_]
@@ -927,7 +926,6 @@ function plot_panel_comp(args) {
     var thisComp = selectComp(compId); // selects the component that is under test.
     var inputGroup = []; // reads the inputs from the component and put them in a list to be mapped to the corresponding shallow function.
     thisComp.inputs.forEach(input => {
-        //console.log(input);
         if (typeof input !== 'string' && input.file !== undefined) {
             inputGroup.push(input.file);
         } else {
