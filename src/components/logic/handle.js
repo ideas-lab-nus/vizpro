@@ -455,16 +455,17 @@ function handleDoubleClick() {
                     
                     // Resets value if parent is updated while property bar is open
                     // A narrower trigger event can be found
-                    $('body').on('click', () => {
+                    var updateText = (comp) => {
                         $('textarea.stringProperties').text(() => {
-                            var possiblyUpdatedPanelComp = selectComp(element.GUID);
-                            return possiblyUpdatedPanelComp.inputs[0].value;
+                            return comp.inputs[0].value;
                         });
-                    });
+                    }
+                    
+                    $('body').on('click', () => updateText(panelComp));
 
-                    $('textarea.stringProperties').text(() => {
-                        return panelComp.inputs[0].value;
-                    });
+                    $('textarea.stringProperties').text(() =>
+                        panelComp.inputs[0].value
+                    );
 
                     $('input.stringPanel.Name').val(panelComp.Name);
 

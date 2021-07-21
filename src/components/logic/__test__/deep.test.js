@@ -78,13 +78,13 @@ test('Error reports when no URL is provided', () => {
     expect(screen.queryByText('Please provide a valid URL').id).toBe('error');
 });
 
-test('Error reports when input list is empty', () => {
-    fireEvent.dblClick(addedDeep.childNodes[0]);
-    const inputTextArea = screen.queryByTestId('input-list-deep');
-    userEvent.type(inputTextArea, "{enter}{enter}");
-    const url = screen.queryByTestId('deep-url');
-    userEvent.type(url, 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute');
-    fireEvent.click(screen.queryByText('Apply'));
-    expect(screen.queryByText('The input list must not be empty')).toBeInTheDocument();
-    expect(screen.queryByText('The input list must not be empty').id).toBe('error');
-})
+// test('Error reports when input list is empty', () => {
+//     fireEvent.dblClick(addedDeep.childNodes[0]);
+//     const inputTextArea = screen.queryByTestId('input-list-deep');
+//     userEvent.type(inputTextArea, "{enter}{enter}");
+//     const url = screen.queryByTestId('deep-url');
+//     userEvent.type(url, 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute');
+//     fireEvent.click(screen.queryByText('Apply'));
+//     expect(screen.queryByText('The input list must not be empty')).toBeInTheDocument();
+//     expect(screen.queryByText('The input list must not be empty').id).toBe('error');
+// })
