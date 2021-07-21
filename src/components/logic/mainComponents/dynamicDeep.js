@@ -445,7 +445,7 @@ function submitDeepEdit(reactContext, compKey) {
         } else {
             deepComp.inputNames = inputs;
             deepComp.inputs = inputDict;
-            deepComp.outputs = createOutputDict(["out"]);
+            deepComp.outputs = createOutputDict(["out", "log"]);
             deepComp.url = url;
             deepComp.Name = name;
         
