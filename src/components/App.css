@@ -628,6 +628,16 @@ a.menubarButtons {
     float: left;
 }
 
+label.menubarButtons {
+    text-decoration: unset;
+    color: #000000;
+    text-shadow: 1px 1px 4px #4b4b4b;
+    font-size: small;
+    padding: 0px 6px;
+    margin: 1px 1px;
+    float: left;
+}
+
 div#buttonClickedname {
     color: white;
     font-size: small;

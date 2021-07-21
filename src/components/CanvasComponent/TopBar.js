@@ -7,6 +7,7 @@ export default class TopBar extends Component {
         super(props);
         this.saveData = this.props.saveData;
         this.downloadData = this.props.downloadData;
+        this.uploadSavedData = this.props.uploadSavedData;
     }
 
     render() {
@@ -18,6 +19,12 @@ export default class TopBar extends Component {
                 <a data-testid='fileTheDef' id="saveTheDef" className="menubarButtons" onClick={() => this.saveData()}>Save</a>
                 <a data-testid='fileTheDef' id="fileTheDef" className="menubarButtons" onClick={() => clearData()}>Clear</a>
                 <a data-testid='fileTheDef' id="saveTheDef" className="menubarButtons" onClick={() => this.downloadData()}>Download</a>
+                <div>
+                    <input type="file" id="actual-btn" hidden/>
+                    <label for="actual-btn" data-testid='fileTheDef' id="fileTheDef" className="menubarButtons" onClick={() => this.uploadSavedData()}>
+                        Upload
+                    </label>
+                </div>
 
                 <div data-testid="minimize" id="minimizeUpperBar" style={{display: "block"}} onClick={() => onMinimizeClick()}>
                     <i id="tominimize" className="fa fa-caret-up" aria-hidden="true"></i>

@@ -63,8 +63,8 @@ function downloadData() {
     link.click();
 }
 
-function loadData() {
-    var allData = JSON.parse(window.localStorage.getItem('data'));
+function recreateSavedData(reactContext, data) {
+    var allData = JSON.parse(data);
     var allContents = d3.select('#allCanvasContents');
     var svgContainer = d3.select('svg');
     if (allData !== null) {
@@ -76,23 +76,23 @@ function loadData() {
         }
         if (allData.components !== undefined && allData.components !== null) {
             var allComponents = allData.components;
-            this.setState({
+            reactContext.setState({
                 allComp: allComponents
             });
             allComponents.forEach(element => {
-                if (element.type === 'component') CreateNewComponent(this, element);
-                else if (element.type === 'slider') CreateNewSlider(this, element);
-                else if (element.type === 'string') CreateNewPanel(this, element);
-                else if (element.type === 'toggle') CreateNewToggle(this, element);
-                else if (element.type === 'optionList') CreateNewOptionList(this, element);
-                else if (element.type === 'fileUpload')  CreateNewFileUpload(this, element);
-                else if (element.type === 'listView') CreateNewListView(this, element);
-                else if (element.type === 'deep') CreateNewDeep(this, element);
+                if (element.type === 'component') CreateNewComponent(reactContext, element);
+                else if (element.type === 'slider') CreateNewSlider(reactContext, element);
+                else if (element.type === 'string') CreateNewPanel(reactContext, element);
+                else if (element.type === 'toggle') CreateNewToggle(reactContext, element);
+                else if (element.type === 'optionList') CreateNewOptionList(reactContext, element);
+                else if (element.type === 'fileUpload')  CreateNewFileUpload(reactContext, element);
+                else if (element.type === 'listView') CreateNewListView(reactContext, element);
+                else if (element.type === 'deep') CreateNewDeep(reactContext, element);
             });
         }
         if (allData.edges !== undefined && allData.edges !== null) {
             var allEdges = allData.edges;
-            this.setState({
+            reactContext.setState({
                 allEdges: allData.edges,
                 comp_input_edges: allData.comp_input_edges,
                 comp_output_edges: allData.comp_output_edges,
@@ -106,6 +106,29 @@ function loadData() {
             });
         }
     }
+}
+
+function loadData() {
+    const data = window.localStorage.getItem('data');
+    recreateSavedData(this, data);
+}
+
+function uploadSavedData() {
+    console.log('upload file button clicked');
+    console.log(this.state);
+    $('input#actual-btn').on('change', function(e) {
+        console.log('A file is uploaded');
+        console.log(this.state);
+        const uploaded = e.target.files[0];
+        console.log(uploaded);
+        const reader = new FileReader();
+        reader.onload = function() {
+            const data = reader.result;
+            console.log(data);
+            console.log(typeof data);
+        }
+        reader.readAsText(uploaded);
+    })
 }
 
 function CreatePaths(theEdge) {
@@ -129,4 +152,4 @@ function CreatePaths(theEdge) {
         .attr('style', 'display:block');
 } //End of CreatePaths
 
-export { saveData, loadData, clearData, downloadData };
+export { saveData, loadData, clearData, downloadData, uploadSavedData };

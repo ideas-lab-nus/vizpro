@@ -11,7 +11,7 @@ import { handleComponentSelection,
          handleEdgeInitialization, 
          handleDoubleClick } from './logic/handle.js';
 import { addGenericComponentIcon, addRightToggleButton } from './logic/leftPropertyBar.js';
-import { saveData, loadData, downloadData } from './logic/saveAndLoadData.js';
+import { saveData, loadData, downloadData, uploadSavedData } from './logic/saveAndLoadData.js';
 import { addAllUdo } from './logic/userDefinedObject.js';
 import './App.css';
 
@@ -37,6 +37,7 @@ export default class Canvas extends React.Component {
         this.saveData = saveData.bind(this);
         this.loadData = loadData.bind(this);
         this.downloadData = downloadData.bind(this);
+        this.uploadSavedData = uploadSavedData.bind(this);
     }
 
     componentDidMount() {
@@ -66,7 +67,7 @@ export default class Canvas extends React.Component {
 
                 <Grid />   
 
-                <TopBar saveData={this.saveData} downloadData={this.downloadData}/>
+                <TopBar saveData={this.saveData} downloadData={this.downloadData} uploadSavedData={this.uploadSavedData}/>
 
                 <LeftContainer context={this}/>  
             </div>
