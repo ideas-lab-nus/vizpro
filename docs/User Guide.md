@@ -30,6 +30,7 @@ It can additionally be customized to a certain degree with user-defined function
     * [Deep components input/output schema](#deep-component-inputoutput-schema)
     * [Connecting to the cloud](#connecting-to-the-cloud)
     * [Connecting to local files](#connecting-to-local-files)
+* [Create your components](#create-your-components)
 
 --------------------------------------------------------
 
@@ -75,7 +76,7 @@ function App() {
   );
 }
 ```
- - The localhost will automatically render the component on saving
+ - The localhost will automatically render the component on saving.
 
 
 ## Definitions
@@ -86,16 +87,16 @@ function App() {
  - Simply rendering the component gives you the ability to work on the canvas as you require. Jump to [General Usage](#general-usage) to learn how to use this tool
 
 ### Saving a definition
- - Using the `save` button in the top bar, you can save your current definition in your browser's local storage. This saved definition will be accessible on refresh and even on emptied cache and hard reload
+ - Using the `Save` button in the Top Bar, you can save your current definition in your browser's local storage. This saved definition will be accessible on refresh and even on emptied cache and hard reload.
 
 ### Clearing a definition
- - Using the `clear` button in the top bar, any saved definition in local storage will be permanently removed
+ - Using the `Clear` button in the Top Bar, any saved definition in local storage will be permanently removed.
 
 ### Downloading a definition
- - Using the `download` button in the top bar, the current definition can downloaded to your local computer as a `json` file
+ - Using the `Download` button in the Top Bar, the current definition can downloaded to your local computer as a `json` file.
 
 ### Opening a downloaded definition
- - By passing in a downloaded project `json` as `props` to the ToolName, the definition can re-instated and work continued
+ - Using the `Upload` button in the Top Bar, the definition can re-instated. The uploaded file must be a JSON file.
 
 ## General Usage
 
@@ -106,7 +107,7 @@ function App() {
  - The `Canvas` is where your components will be added and input/output modified as required
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/62249192/126499994-a29bf917-c9ca-4c4a-b72f-e017bfe3425d.png" alt="drawing" height="600" width="700"/>
+<img src="./images/blankCanvas.png" alt="drawing" height="400" width="900"/>
 </p>
 
 <p style="text-align: center;">
@@ -116,23 +117,24 @@ A look at the rendered tool
 ### Creating a new component
 
 A new component can be added onto the canvas by simply clicking on the relevant icon in the `Components Tab`. 
- - Hovering above component icons will identify each component with it's name.
- - Double cliicking select components, will open the `Properties Tab`
+ - Hovering above component icons will identify each component with its name.
+ - Double click selected components will open the `Properties Tab`. <br>
+Note: Only `Slider`, `Panel`, `Option List` and `Deep` have the `Properties Tab`.
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/62249192/126466397-e8150b06-facb-4bb2-8456-1a104c2e9e96.png" alt="drawing" height="700" width="700"/>
+<img src="./images/addedPanelAndDoubleClick.png" alt="drawing" height="450" width="700"/>
 </p>
 
 <p style="text-align: center;">
-Canvas state after adding a Panel and double clicking it
+Canvas state after adding a Panel and double click it
 </p>
 
 ### Setting inputs and outputs
 
- - Flow of data from component to component can be set by connecting them with edges
- - Half circles on the right of a component represent output and left, input
- - An edge can be created by connecting these half circles
- - Edges can be deleted by selecting the red circle at the middle of a drawn edge
+ - Flow of data from component to component can be set by connecting them with edges.
+ - Half circles on the left of a component represent the input and on the right represent the output 
+ - An edge can be created by connecting these half circles.
+ - Edges can be deleted by clicking the red circle at the middle of a drawn edge.
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/62249192/126503384-f5365f1e-85c4-4b7f-9ca4-94ff21b2062b.png" alt="drawing" height="200" width="700"/>
@@ -144,7 +146,7 @@ Slider output connected to a panel as input
 
 ## The Main Inputs
 
-These are integral components that help with the input, selection and flow of data. They don't process input data according to a preset function like Shallow or Deep components.
+These are integral components that help with the input, selection and flow of data. They don't process input data according to a preset function like `Shallow` or `Deep` components.
 
 ### Panel
 
@@ -165,8 +167,9 @@ The Panel Component and its Properties Tab
 
 ### Slider
 
- - The `slider` allows a sliding numerical input useful for simulation purposes
- - The `min`, `max`, `step` and `current value` can be set through the Properties Tab
+ - The `slider` allows a sliding numerical input useful for simulation purposes.
+ - The `min`, `max`, `step` and `current value` can be set through the Properties Tab.
+ - The `current value` of the slider can also be changed by dragging the anchor of the slider.
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/62249192/126518189-c62a9134-c067-4928-a862-e9e18e16224d.png" alt="drawing" height="290" width="600"/>
@@ -193,8 +196,8 @@ The Deep Component and its Properties Tab
 
 ### File Upload
 
- - The `file upload` component allows local files to be uploaded
- - Uploaded files will saved in local storage until the project definition is cleared
+ - The `File Upload` component allows local files to be uploaded.
+ - Uploaded files will saved in local storage until the project definition is cleared.
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/62249192/126522037-c2454712-979e-40de-9464-f15c01c1be19.png" alt="drawing" height="300" width="500"/>
@@ -206,8 +209,8 @@ The File Upload Component
 
 ### Toggle
 
- - The `toggle` provides a basic true/false input when connected
- - The boolean toggles on double click
+ - The `toggle` provides a basic true/false input when connected.
+ - The boolean toggles on double click.
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/62249192/126522335-51829418-c7a6-4d43-af15-ad754bcaf35d.png" alt="drawing" height="300" width="500"/>
@@ -219,8 +222,8 @@ The Toggle Component
 
 ### Option List
 
-- The `option list` provides a dropdown of options of which one can be selected
-- The dropdown can specified as a list in a `panel` and connected to the `option list` input
+- The `Option List` provides a dropdown of options of which one can be selected.
+- The dropdown can specified as a list in a `panel` and connected to the `Option List` input.
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/62249192/126523370-cce179af-0f2e-408d-a16b-6d424590c70c.png" alt="drawing" height="300" width="500"/>
@@ -232,7 +235,7 @@ The Option List Component
 
 ### List View
 
-- The `list view` functions similar to the `option list` but it allows multiple option selection and is rendered as a json tree view by default
+- The `List View` functions similar to the `Option List` but it allows multiple option selection and is rendered as a json tree view by default.
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/62249192/126523764-c82cf85b-51e9-42b7-8029-77aafe6eab0a.png" alt="drawing" height="300" width="500"/>
@@ -252,3 +255,127 @@ The List View Component
 ### Deep components input/output schema
 ### Connecting to the cloud
 ### Connecting to local files
+
+## Create your components
+Besides using pre-defefined components, you can add new components to the tool by passing your information of all the components you want to include as an array of JSON object to the `props` of the `Canvas`.
+
+Each JSON object of the new component must have the following information:
+- `name` : Name of the new component
+- `type` : Allowed type values -> [`component`, `optionList`, `string`, `cloud`]
+- `dftype` : Allowed dataflow values -> [`shlow`, `dp`]
+- `inputList` : A list of dictionary for each input, each with attributes `name`, `shortName`, `desc`, `default_value`
+- `outputList` : A list of dictionary for each output, each with attributes `name`, `shortName`, `desc`, `default_value`
+- `name`: Attribute required for each entry in `inputList`, `outputList`
+
+#### Shallow functions (type != `cloud`, dftype = `shlow`)
+
+- `func` : The function that is executed when the component is connected to an input. 
+
+`func` must return a dictionary of the form: 
+
+```js
+{
+  type:  [],
+  value: []
+}
+```
+
+where the length of both lists is the number of outputs in `outputList`. 
+
+The `type` list gives the type of the corresponding entry in the `value` list, and allowed type values are [`text`, `html`, `json`, `list`, `plot`]
+
+#### Cloud functions (type = `cloud`, dftype = `dp`)
+
+- `url` : URL of the cloud function
+
+### Optional
+- `shname` : Short name
+- `desc` : Description
+- `color` : Color (in hex)
+- `backgroundImage` : URL to the image
+
+To use these new components, pass it as a prop to the `Canvas` component
+```jsx
+    <Canvas udo={newComps} />
+```
+
+where `newComps` is the array of JSON objects representing the list of new components.
+
+Check this example for more details:
+In this example, two components called `Exponential` and `Cloud - Absolute` are added to the tool.
+
+In `App.js`:
+```js
+import React from 'react';
+import { Canvas } from 'viz-vimuth';
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function exponential(args) {
+    let input = args[0];
+    if (!isNumeric(input)) {
+        return {
+            type: ['text', 'text'],
+            value: [null, input + " is not a number"]
+        };
+    } else {
+        return {
+            type: ['text', 'text'],
+            value: [Math.E ** parseFloat(input), "Success"]
+        };
+    }
+}
+
+const comps = [
+    {
+        name: 'Exponential',
+        shname: 'exp',
+        desc: 'e raise to the power x',
+        type: 'component',
+        dftype: 'shlow',
+        inputList: [
+            { name: 'input', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+        ],
+        outputList: [
+            { name: 'output_', shortName: 'out_', desc: 'product' },
+            { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
+        ],
+        color: '#F23322',
+        backgroundImage: '',
+        func: exponential,
+    },
+    {
+        name: 'Cloud - Abs',
+        shname: 'abs',
+        type: 'deep',
+        dftype: 'dp',
+        inputList: [
+            { name: 'num', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+        ],
+        outputList: [
+            { name: 'output_', shortName: 'out_', desc: 'product' },
+        ],
+        color: '#F23322',
+        backgroundImage: '',
+        url: 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute'
+    }
+];
+
+const App = ()  => {
+    return (
+        <Canvas udo={comps} />
+    );
+}
+
+export default App;
+
+```
+The new components are located in the `User Definitions` tab of the `Left Container`.
+<p align="center">
+<img src="./images/userDefComps.png" alt="drawing" height="300" width="250"/>
+</p>
+
+<p style="text-align: center;">
+New user-defined components
+</p>

@@ -455,7 +455,8 @@ function submitPanelEdit(reactContext, compKey) {
         } else if (StringComp.inputs[0].type === 'html') {
             d3.select('foreignObject#textbody_' + compKey)
                 .html(textVal)
-                .attr('fill', 'black');
+                .attr('fill', 'black')
+                .attr('style', 'color: black');
         } else if (StringComp.inputs[0].type === 'plot') {
             try {
                 var data = JSON.parse(textVal);
@@ -466,7 +467,8 @@ function submitPanelEdit(reactContext, compKey) {
         } else {
             d3.select('foreignObject#textbody_' + compKey)
                 .text(textVal)
-                .attr('fill', 'black');
+                .attr('fill', 'black')
+                .attr('style', 'color: black');;
         }
 
         StringComp.outputs[0].value = textVal;

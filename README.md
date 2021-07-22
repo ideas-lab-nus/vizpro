@@ -70,7 +70,7 @@ The `type` list gives the type of the corresponding entry in the `value` list, a
     <Canvas  udo={newComps} />
 ```
 
-where `newComps` is the list of components, each its own dictionary.
+where `newComps` is the array of JSON objects representing the list of new components
 
 Check this example for more details:
 In this example, two components called `Exponential` and `Multiply 2` are added to the tool.
@@ -121,8 +121,6 @@ const comps = [
         desc: 'e raise to the power x',
         type: 'component',
         dftype: 'shlow',
-        category: 'Basic',
-        subcategory: 'Math',
         inputList: [
             { name: 'input', shortName: 'in_01', desc: 'first input', default_value: '10.0' }
         ],
@@ -140,8 +138,6 @@ const comps = [
         desc: 'Multiply 2 numbers',
         type: 'component',
         dftype: 'shlow',
-        category: 'Basic',
-        subcategory: 'Math',
         inputList: [
             { name: 'in_01', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
             { name: 'in_02', shortName: 'in_02', desc: 'second input', default_value: '5.0' }

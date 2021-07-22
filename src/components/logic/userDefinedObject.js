@@ -78,16 +78,16 @@ function addAllUdo(list) {
     if (list !== undefined) {
         for (let index = 0; index < list.length; index++) {
             const element = list[index];
-            let name = element.name;
-            let shname = element.shname;
-            let desc = element.desc;
+            let name = element.name.toString();
+            let shname = element.shname === undefined ? '' : element.shname.toString();
+            let desc = element.desc === undefined ? '' : element.desc.toString();
             let type = element.type;
             let dftype = element.dftype;
-            let category = element.category;
+            let category = "User Definitions";
             let inputList = element.inputList;
             let outputList = element.outputList;
-            let color = element.color === undefined ? '#F23322' : element.color;
-            let backgroundImage = element.backgroundImage === undefined ? '' : element.backgroundImage;
+            let color = element.color === undefined ? '#F23322' : element.color.toString();
+            let backgroundImage = element.backgroundImage === undefined ? '' : element.backgroundImage.toString();
             let calledFunc = element.func;
             let url = element.url;
             try {

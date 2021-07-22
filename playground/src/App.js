@@ -27,8 +27,6 @@ const newComps = [
         desc: 'e raise to the power x',
         type: 'component',
         dftype: 'shlow',
-        category: 'User Definitions',
-        subcategory: 'Math',
         inputList: [
             { name: 'input', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
         ],
@@ -45,8 +43,6 @@ const newComps = [
         shname: 'abs',
         type: 'deep',
         dftype: 'dp',
-        category: 'User Definitions',
-        subcategory: 'Math',
         inputList: [
             { name: 'num', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
         ],
@@ -57,25 +53,23 @@ const newComps = [
         backgroundImage: '',
         url: 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute'
     },    
-    {
-        name: 'Local .py',
-        shname: 'loc',
-        type: 'deep',
-        dftype: 'dp',
-        category: 'User Definitions',
-        subcategory: 'Math',
-        inputList: [
-            { name: 'py filepath', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
-            { name: 'n', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
-        ],
-        outputList: [
-            { name: 'output_', shortName: 'out_', desc: 'product' },
-            { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
-        ],
-        color: '#10C1D7',
-        backgroundImage: '',
-        url: 'http://localhost:8080/woop'
-    },
+    // {
+    //     name: 'Local .py',
+    //     shname: 'loc',
+    //     type: 'deep',
+    //     dftype: 'dp',
+    //     inputList: [
+    //         { name: 'py filepath', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+    //         { name: 'n', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+    //     ],
+    //     outputList: [
+    //         { name: 'output_', shortName: 'out_', desc: 'product' },
+    //         { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
+    //     ],
+    //     color: '#10C1D7',
+    //     backgroundImage: '',
+    //     url: 'http://localhost:8080/woop'
+    // },
 ];
 
 // const App = ()  => {    
