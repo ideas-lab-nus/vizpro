@@ -135,7 +135,7 @@ const details = [
         backgroundImage: ''
     },
     {
-        name: '3dVisualizer',
+        name: '3d Visualizer',
         shname: '3dvis',
         desc: '',
         type: 'component',
@@ -143,7 +143,7 @@ const details = [
         category: 'Basic',
         subcategory: '',
         inputList: [{ name: 'url', shortName: 'url', default_value: 'null' }],
-        outputList: [{ type: 'str', name: 'url', shortName: 'url', desc: 'null' }],
+        outputList: [{ type: 'str', name: 'iframe', shortName: 'url', desc: 'null' }],
         color: '#E38A74',
         backgroundImage: ''
     },

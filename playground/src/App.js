@@ -39,7 +39,7 @@ const newComps = [
         func: exponential,
     },
     {
-        name: 'Cloud - Abs',
+        name: 'Cloud - Absolute',
         shname: 'abs',
         type: 'deep',
         dftype: 'dp',
@@ -51,32 +51,26 @@ const newComps = [
         ],
         color: '#F23322',
         backgroundImage: '',
-        url: 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute'
+        url: '{CloudFunctionURL}'
     },    
-    // {
-    //     name: 'Local .py',
-    //     shname: 'loc',
-    //     type: 'deep',
-    //     dftype: 'dp',
-    //     inputList: [
-    //         { name: 'py filepath', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
-    //         { name: 'n', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
-    //     ],
-    //     outputList: [
-    //         { name: 'output_', shortName: 'out_', desc: 'product' },
-    //         { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
-    //     ],
-    //     color: '#10C1D7',
-    //     backgroundImage: '',
-    //     url: 'http://localhost:8080/woop'
-    // },
+    {
+        name: 'Local .py',
+        shname: 'loc',
+        type: 'deep',
+        dftype: 'dp',
+        inputList: [
+            { name: 'py filepath', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+            { name: 'n', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+        ],
+        outputList: [
+            { name: 'output_', shortName: 'out_', desc: 'product' },
+            { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
+        ],
+        color: '#10C1D7',
+        backgroundImage: '',
+        url: 'http://localhost:8080/python'
+    },
 ];
-
-// const App = ()  => {    
-//     return (
-//         <Canvas udo={newComps}/>
-//     );
-// }
 
 class App extends React.Component {
     render() {

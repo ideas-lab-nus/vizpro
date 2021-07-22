@@ -64,7 +64,7 @@ var shallow_functions = {
 
     // OSI Soft
     'OSI Extract TimeSeries Data': osiExtractTimeSeriesData,
-    '3dVisualizer': draw3dObject,
+    '3d Visualizer': draw3dObject,
     'Image Display': imDisplay,
     'YouTube Display': youTubeDisplay
 };
