@@ -1,7 +1,7 @@
 ## Introduction
 
 This is a React Component that serves as a fully fledged visual programming interface, ideal for simulation.
-It can additionally be customized to a certain degree with user-defined functions on top of the host of base components provided for general use-cases.
+It can additionally be customized to a certain degree with user-defined functions on top of the host of base components provided for general use cases.
 
 ---
 
@@ -17,13 +17,13 @@ It can additionally be customized to a certain degree with user-defined function
     * [Creating a new component](#creating-a-new-component)
     * [Setting inputs and outputs](#setting-inputs-and-outputs)
 * [The Main Inputs](#the-main-inputs)
-    * [Panel](#panel)
     * [Slider](#slider)
-    * [Option List](#option-list)
-    * [Deep](#deep)
-    * [File Upload](#file-upload)
+    * [Panel](#panel)
     * [Toggle](#toggle)
+    * [Option List](#option-list)
     * [List View](#list-view)
+    * [File Upload](#file-upload)
+    * [Deep](#deep)
 * [Shallow Components](#shallow-components)
 * [Deep Components](#deep-components)
     * [Setting up a deep component](#setting-up-a-deep-component)
@@ -37,18 +37,18 @@ It can additionally be customized to a certain degree with user-defined function
 
 ### For users with an existing React-based project
 
- - Use npm to install the package to the project ;
+ - Use `npm` to install the package to the project ;
 ```md
 npm install --save {PackageName}
 ```
- - Import ToolName into the relevant file ;
+ - Import `ToolName` into the relevant file ;
 ```md
 import {ToolName} from '{PackageName}';
 ```
 
 ### For users with no existing project
 
- - The simplest and fastest way to get started is to use create-react-app with which you can set up a boilerplate React application.
+ - The simplest and fastest way to get started is to use `create-react-app` with which you can set up a boilerplate React application.
 
  - You’ll need to have [Node >= 10.16 and npm >= 5.6](https://nodejs.org/en/) on your machine. To create a project, run ;
 
@@ -59,7 +59,7 @@ npm start
 ```
  - In case you run into issues at this stage, you can read more about Create React App and React in depth [here](https://reactjs.org/docs/create-a-new-react-app.html).
 
- - Use npm to install the package to the project ;
+ - Use `npm` to install the package to the project ;
 ```
 npm install --save {PackageName}
 ```
@@ -107,10 +107,11 @@ export default App;
 
 #### The tool consists of 4 major sections:
 
- - The `Top Bar` gives you control over your definitions such as saving and clearing.
+ - The `Top Bar` gives you control over your definitions such as saving and clearing. The `Top Bar` can be hidden by clicking the button on the top right corner.
  - The `Components Tab` on the left holds all the in-house components as well as user-defined ones. Components are categorized, and the current category can be toggled through the column at the right edge of this tab.
  - The `Properties Tab` allows you to modify certain properties of select components, which can opened on double click of the specific component.
- - The `Canvas` is where your components will be added and input/output modified as required. Components support drag while the Canvas allows zoom as well. 
+ - The `Canvas` is where your components will be added and input/output modified as required. The `Canvas` can be zoomed to different sizes.
+ - Users can drag components to different positions in the canvas. 
 
 <p align="center">
 <img src="./images/blankCanvas.png" alt="drawing" height="400" width="900"/>
@@ -156,42 +157,60 @@ Slider output connected to a panel as input
 
 These are integral components that help with the input, selection and flow of data. They don't process input data according to a preset function like `Shallow` or `Deep` components.
 
-### Panel
-
- - The `panel` can be used to input a variety of types :
-    - `text` - Accepts free user input as string
-    - `json` - Renders a visual tree view provided a valid object
-    - `html` - Renders the given html provided it is valid
-    - `list` - Accepts a list of values
-    - `plot` - Renders a plot of the given input. Refer the plotly [site](https://plotly.com/javascript/) for formatting
-
-<p align="center">
-<img src="https://user-images.githubusercontent.com/62249192/126517678-908cf801-bb32-4fc9-b267-fa105d1066dc.png" alt="drawing" height="400" width="600"/>
-</p>
-
-<p align="center">
-The Panel Component and its Properties Tab
-</p>
-
 ### Slider
-
- - The `slider` allows a sliding numerical input useful for simulation purposes.
- - The `min`, `max`, `step` and `current value` can be set through the Properties Tab.
- - The `current value` of the slider can also be changed by dragging the anchor of the slider.
-
 <p align="center">
 <img src="https://user-images.githubusercontent.com/62249192/126518189-c62a9134-c067-4928-a862-e9e18e16224d.png" alt="drawing" height="290" width="600"/>
 </p>
 
 <p align="center">
-The Slider Component and its Properties Tab
+Slider Component and its Properties Tab
+</p>
+
+ - The `slider` allows a sliding numerical input useful for simulation purposes.
+ - The `min`, `max`, `step` and `current value` can be set through the Properties Tab.
+ - The `current value` of the slider can also be changed by dragging the anchor of the slider.
+
+### Panel
+<p align="center">
+<img src="https://user-images.githubusercontent.com/62249192/126517678-908cf801-bb32-4fc9-b267-fa105d1066dc.png" alt="drawing" height="400" width="600"/>
+</p>
+
+<p align="center">
+Panel Component and its Properties Tab
+</p>
+
+ - The `panel` can be used to input a variety of types :
+    - `text` - Accepts free user input as string
+    - `html` - Renders the given html provided it is valid
+    - `json` - Renders a visual tree view provided a valid object
+    - `list` - Accepts a list of values
+    - `plot` - Renders a plot of the given input. <br>
+    The input follows this format: 
+    ```js
+    {"type": type, "data": [details]}
+    ```
+    where `type` refer to the type of the plot (bar, pie, scatter, etc) and `details` refers to the actual details of the panel.Refer the [Plotly site](https://plotly.com/javascript/) for formatting the `details` value.
+    Example: 
+    Input | Plot output
+    :-------------------------:|:-------------------------:
+    {"type": "scatter", "data": [{"x":[1, 2, 3, 4], "y":[10, 15, 16, 17], "mode":"markers", "name":"Temperature"}, {"x": [2, 3, 5, 9], "y": [15, 12, 18, 5], "mode":"markers", "name":"humidity"}]} | <img src="./images/scatterPlotEx.png" alt="drawing" height="270" width="1000"/>
+    {"type":"pie","data":[{"values":[19,26,55],"labels":["Residential","Non-Residential","Utility"],"type":"pie"}]} | <img src="./images/piePlotEx.png" alt="drawing" height="350" width="1000"/>
+ - The `panel` can be resized to provide better visibility of the content of the panel to users.
+
+### Toggle
+
+ - The `toggle` provides a basic true/false input when connected.
+ - The boolean value toggles on double clicking.
+
+<p align="center">
+<img src="https://user-images.githubusercontent.com/62249192/126522335-51829418-c7a6-4d43-af15-ad754bcaf35d.png" alt="drawing" height="200" width="300"/>
+</p>
+
+<p align="center">
+The Toggle Component
 </p>
 
 ### Option List
-
-- The `Option List` provides a dropdown of options of which one can be selected.
-- The dropdown can specified as a list in a `panel` and connected to the `Option List` input.
-
 <p align="center">
 <img src="https://user-images.githubusercontent.com/62249192/126605453-850f8743-10bd-40d0-b8b3-0f9e21ddd05d.png" alt="drawing" height="400" width="600"/>
 </p>
@@ -200,51 +219,10 @@ The Slider Component and its Properties Tab
 The Option List Component and its Properties Tab
 </p>
 
-### Deep
-
- - The `deep` component is used when the function that is to be to run is either in the cloud or located as a local file accessible via the project backend. 
-    - `input list` - Takes in the name of each input separated by a newline
-    - `url`        - The url to which the GET request is routed to
- - More about setting up and usage at [Deep Components](#deep-components).
-
-<p align="center">
-<img src="https://user-images.githubusercontent.com/62249192/126520160-5f9202e8-152c-4e5a-ae27-194755752dde.png" alt="drawing" height="400" width="600"/>
-</p>
-
-<p align="center">
-The Deep Component and its Properties Tab
-</p>
-
-### File Upload
-
- - The `File Upload` component allows local files to be uploaded.
- - Uploaded files will saved in local storage until the project definition is cleared.
-
-<p align="center">
-<img src="https://user-images.githubusercontent.com/62249192/126522037-c2454712-979e-40de-9464-f15c01c1be19.png" alt="drawing" height="300" width="500"/>
-</p>
-
-<p align="center">
-The File Upload Component
-</p>
-
-### Toggle
-
- - The `toggle` provides a basic true/false input when connected.
- - The boolean toggles on double click.
-
-<p align="center">
-<img src="https://user-images.githubusercontent.com/62249192/126522335-51829418-c7a6-4d43-af15-ad754bcaf35d.png" alt="drawing" height="300" width="500"/>
-</p>
-
-<p align="center">
-The Toggle Component
-</p>
+- The `Option List` provides a dropdown of options of which one can be selected.
+- The dropdown can be specified as a list in a `panel` and connected to the `Option List` input.
 
 ### List View
-
-- The `List View` functions similar to the `Option List` but it allows multiple option selection and is rendered as a json tree view by default.
-
 <p align="center">
 <img src="https://user-images.githubusercontent.com/62249192/126523764-c82cf85b-51e9-42b7-8029-77aafe6eab0a.png" alt="drawing" height="300" width="500"/>
 </p>
@@ -253,11 +231,39 @@ The Toggle Component
 The List View Component
 </p>
 
+- The `List View` functions similar to the `Option List` but it allows multiple option selection and is rendered as a json tree view by default.
+
+### File Upload
+<p align="center">
+<img src="https://user-images.githubusercontent.com/62249192/126522037-c2454712-979e-40de-9464-f15c01c1be19.png" alt="drawing" height="300" width="600"/>
+</p>
+
+<p align="center">
+The File Upload Component
+</p>
+
+ - The `File Upload` component allows local files to be uploaded.
+ - Uploaded files will saved in local storage until the project definition is cleared.
+
+### Deep
+<p align="center">
+<img src="https://user-images.githubusercontent.com/62249192/126520160-5f9202e8-152c-4e5a-ae27-194755752dde.png" alt="drawing" height="400" width="600"/>
+</p>
+
+<p align="center">
+The Deep Component and its Properties Tab
+</p>
+
+ - The `deep` component is used when the function that is to be to run is either in the cloud or located as a local file accessible via the project backend. 
+    - `input list` - Takes in the name of each input separated by a newline
+    - `url`        - The url to which the GET request is routed to
+ - More about setting up and usage at [Deep Components](#deep-components).
+
 ---
 
 ## Shallow Components
 
-Shallow components refer to functions that will be run in real-time when provided input.
+Shallow components refer to functions that will be run in real-time when inputs are provided.
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/62249192/126620322-d58e2518-a25e-4b56-8390-56d5cd709195.png" alt="drawing" height="250" width="800"/>
@@ -272,18 +278,18 @@ The Average Component in use
 
 Provided component | Usage
 :-------------------------:|:-------------------------:
- Average   |   Calculate average of an input list of numbers
- Add   |   Calculate addition of an input list of numbers
- Min   |   Calculate minimum of an input list of numbers
- Max   |   Calculate maximum of an input list of numbers
- Difference   |   Calculate difference of a 2 numbers
+ Average   |   Calculate the average of an input list of numbers
+ Add   |   Calculate the sum of an input list of numbers
+ Min   |   Calculate the minimum of an input list of numbers
+ Max   |   Calculate the maximum of an input list of numbers
+ Difference 2 |   Calculate the difference between 2 numbers
  JSON Navigator   |   Traverse a JSON according to a given path
  3D Visualizer   |   Visualize a relevant 3D object in iframe given a valid url
  Image Display   |   Visualize an image given a valid link
  YouTube Display   |   Watch an embedded YouTube video given a valid link
  Plot Panel   |   Plot the provided data given valid formatting
  String to List | Converts a string-like list to a list
- Replace | Replaces all occurences of a string in a text with a newer one
+ Replace | Replaces all occurences of a string in a text with a new one
 
 </center>
 
@@ -292,6 +298,7 @@ Provided component | Usage
 ## Deep Components
 
 Deep Components run functions by sending GET requests to the provided url, which in turn would process the given input parameters and return the result. 
+After connecting all the inputs and outputs to a deep component, users need to click the `Play` button to start the asynchronous request and set the value to the output components.
 
 ### Setting up a deep component
 
@@ -299,7 +306,7 @@ Deep Components run functions by sending GET requests to the provided url, which
  - Set the name of each input parameter separated by a newline, and the url.
  - The component will render the input/output circles at this point, along with a run button.
  - Run the function after connecting inputs/outputs
- - The async request will be processed and the result/error set to the output.
+ - The asynchronous request will be processed and the result/error set to the output.
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/62249192/126632022-b5289343-9c61-49b2-a93e-fa3645661363.png" alt="drawing" height="400" width="600"/>
@@ -325,7 +332,7 @@ A Google Cloud Function using node.js runtime
 
 ### Connecting to local files
 
- - This is useful when there are useful scripts in your local machine written in other languages like python.
+ - This is useful when there are scripts in your local machine written in other languages like `python`.
  - A server is required to achieve this, so projects which already have a server/backend can use that, while other projects will need to incorporate one.
  - `express` is relatively easy to set up for a server and we will use the `child_process` node module to spawn new processes to run the external scripts ;
 
@@ -407,7 +414,70 @@ To use these new components, pass it as the `udo` property to the `ToolName` com
     <ToolName udo={newComps} />
 ```
 
-Refer to [App.js](playground\src\App.js) to check out how two components called `Exponential` and `Cloud - Absolute` are added to the tool.
+In this example, two components called `Exponential` and `Cloud - Absolute` are added to the tool.
+
+In `App.js`:
+```js
+import React from 'react';
+import { Canvas } from 'viz-vimuth';
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+function exponential(args) {
+    let input = args[0];
+    if (!isNumeric(input)) {
+        return {
+            type: ['text', 'text'],
+            value: [null, input + " is not a number"]
+        };
+    } else {
+        return {
+            type: ['text', 'text'],
+            value: [Math.E ** parseFloat(input), "Success"]
+        };
+    }
+}
+const comps = [
+    {
+        name: 'Exponential',
+        shname: 'exp',
+        desc: 'e raise to the power x',
+        type: 'component',
+        dftype: 'shlow',
+        inputList: [
+            { name: 'input', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+        ],
+        outputList: [
+            { name: 'output_', shortName: 'out_', desc: 'product' },
+            { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
+        ],
+        color: '#F23322',
+        backgroundImage: '',
+        func: exponential,
+    },
+    {
+        name: 'Cloud - Abs',
+        shname: 'abs',
+        type: 'deep',
+        dftype: 'dp',
+        inputList: [
+            { name: 'num', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+        ],
+        outputList: [
+            { name: 'output_', shortName: 'out_', desc: 'product' },
+        ],
+        color: '#F23322',
+        backgroundImage: '',
+        url: 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute'
+    }
+];
+const App = ()  => {
+    return (
+        <Canvas udo={comps} />
+    );
+}
+export default App;
+```
 
 The new components will be found in the `User Definitions` tab of the `Left Container`.
 <p align="center">
