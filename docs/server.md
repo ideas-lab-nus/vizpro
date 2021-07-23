@@ -1,7 +1,3 @@
-layout: page
-title: "server"
-permalink: /data-viz/server.html/
-
 ```js
 const express = require('express');
 const bodyParser = require('body-parser')

@@ -439,9 +439,9 @@ To use these new components, pass it as the `udo` property to the `Canvas` compo
     <Canvas udo={newComps} />
 ```
 
- - Refer [App.js](./app) to see how two components called `Exponential` and `Cloud - Absolute` are added to the tool.
+ - Refer [App.js](./app.html) to see how two components called `Exponential` and `Cloud - Absolute` are added to the tool.
 
- - Refer [stockComponents](./stockComponents) for details of additional, more specific, components. 
+ - Refer [stockComponents](./stockComponents.html) for details of additional, more specific, components. 
 
  - The new components will be found in the `User Definitions` tab of the `Left Container`.
 

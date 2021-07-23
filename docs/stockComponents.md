@@ -1,7 +1,3 @@
-layout: page
-title: "server"
-permalink: /data-viz/stockComponents/
-
 ```js
 const stockComponentDetails = [
     {
