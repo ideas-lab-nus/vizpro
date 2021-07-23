@@ -3220,6 +3220,11 @@
   "resolved" "https://registry.npmjs.org/check-types/-/check-types-11.1.2.tgz"
   "version" "11.1.2"
 
+"child_process@^1.0.2":
+  "integrity" "sha1-sffn/HPSXn/R1FWtyU4UODAYK1o="
+  "resolved" "https://registry.npmjs.org/child_process/-/child_process-1.0.2.tgz"
+  "version" "1.0.2"
+
 "chokidar@^2.1.8":
   "integrity" "sha512-ZmZUazfOzf0Nve7duiCKD23PFSCs4JPoYyccjUFF3aQkQadqBhfzhjkwBH2mNOG9cTBwhamM37EIsIkZw3nRgg=="
   "resolved" "https://registry.npmjs.org/chokidar/-/chokidar-2.1.8.tgz"
@@ -3970,6 +3975,24 @@
     "abab" "^2.0.3"
     "whatwg-mimetype" "^2.3.0"
     "whatwg-url" "^8.0.0"
+
+"data-viz@file:..":
+  "resolved" "file:.."
+  "version" "0.3.0"
+  dependencies:
+    "@fontsource/ubuntu" "^4.4.5"
+    "@fontsource/ubuntu-mono" "^4.4.5"
+    "@testing-library/jest-dom" "^5.12.0"
+    "@testing-library/user-event" "^12.8.3"
+    "child_process" "^1.0.2"
+    "d3" "^6.7.0"
+    "d3-selection" "^2.0.0"
+    "express" "^4.17.1"
+    "jquery" "^3.6.0"
+    "postcss" "^8.3.5"
+    "react-json-view" "^1.21.3"
+    "react-scripts" "4.0.3"
+    "web-vitals" "^1.1.2"
 
 "debug@^2.2.0":
   "integrity" "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA=="
@@ -11094,24 +11117,6 @@
   "integrity" "sha512-/juG65kTL4Cy2su4P8HjtkTxk6VmJDiOPBufWniqQ6wknac6jNiXS9vU+hO3wgusiyqWlzTbVHi0dyJqRONg3w=="
   "resolved" "https://registry.npmjs.org/vendors/-/vendors-1.0.4.tgz"
   "version" "1.0.4"
-
-"data-viz@file:..":
-  "resolved" "file:.."
-  "version" "0.2.6"
-  dependencies:
-    "@fontsource/ubuntu" "^4.4.5"
-    "@fontsource/ubuntu-mono" "^4.4.5"
-    "@testing-library/jest-dom" "^5.12.0"
-    "@testing-library/react" "^11.2.7"
-    "@testing-library/user-event" "^12.8.3"
-    "d3" "^6.7.0"
-    "d3-selection" "^2.0.0"
-    "jquery" "^3.6.0"
-    "plotly" "^1.0.6"
-    "postcss" "^8.3.5"
-    "react-script-tag" "^1.1.2"
-    "react-scripts" "4.0.3"
-    "web-vitals" "^1.1.2"
 
 "vm-browserify@^1.0.1":
   "integrity" "sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ=="

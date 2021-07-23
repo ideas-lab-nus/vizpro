@@ -1,6 +1,8 @@
+---
 layout: page
-title: "server"
+title: "App example"
 permalink: /data-viz/app/
+---
 
 ```js
 import React from 'react';

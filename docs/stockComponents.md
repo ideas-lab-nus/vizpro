@@ -1,6 +1,8 @@
+---
 layout: page
-title: "server"
+title: "Additional Components"
 permalink: /data-viz/stockComponents/
+---
 
 ```js
 const stockComponentDetails = [
