@@ -1,6 +1,6 @@
 ## Introduction
 
-This is a React Component that serves as a fully fledged visual programming interface, ideal for simulation.
+This is a React Component that serves as a fully fledged visual programming interface, ideal for simulation. <br>
 It can additionally be customized to a certain degree with user-defined functions on top of the host of base components provided for general use cases.
 
 ---
@@ -67,11 +67,11 @@ npm start
 npm install --save data-viz
 ```
  - Render the Canvas in `my-app/src/App.js` as shown
- 
-```jsx
+
+``` jsx
 import React from 'react'
 
-import Canvas from 'data-viz';
+import {Canvas} from 'data-viz';
 
 function App() {
   return (
@@ -114,7 +114,7 @@ export default App;
  - The `Components Tab` on the left holds all the in-house components as well as user-defined ones. Components are categorized, and the current category can be toggled through the column at the right edge of this tab.
  - The `Properties Tab` allows you to modify certain properties of select components, which can opened on double click of the specific component.
  - The `Canvas` is where your components will be added and input/output modified as required. The `Canvas` can be zoomed to different sizes.
- - Users can drag components to different positions in the canvas. 
+ - Users can drag components to different positions in the Canvas. 
 
 <p align="center">
 <img src="./images/blankCanvas.png" alt="drawing" height="400" width="900"/>
@@ -189,15 +189,39 @@ Panel Component and its Properties Tab
     - `list` - Accepts a list of values
     - `plot` - Renders a plot of the given input. <br>
     The input follows this format: 
+
     ```js
     {"type": type, "data": [details]}
     ```
     where `type` refer to the type of the plot (bar, pie, scatter, etc) and `details` refers to the actual details of the panel.Refer the [Plotly site](https://plotly.com/javascript/) for formatting the `details` value.
-    Example: 
-    Input | Plot output
-    :-------------------------:|:-------------------------:
-    {"type": "scatter", "data": [{"x":[1, 2, 3, 4], "y":[10, 15, 16, 17], "mode":"markers", "name":"Temperature"}, {"x": [2, 3, 5, 9], "y": [15, 12, 18, 5], "mode":"markers", "name":"humidity"}]} | <img src="./images/scatterPlotEx.png" alt="drawing" height="270" width="1000"/>
-    {"type":"pie","data":[{"values":[19,26,55],"labels":["Residential","Non-Residential","Utility"],"type":"pie"}]} | <img src="./images/piePlotEx.png" alt="drawing" height="350" width="1000"/>
+
+    - Example 1: 
+
+        - Input: 
+
+        ```
+        {"type": "scatter", "data": [{"x": [1, 2, 3, 4], "y": [10, 15, 16, 17], "mode":"markers", "name":"Temperature"}, {"x": [2, 3, 5, 9], "y": [15, 12, 18, 5], "mode":"markers", "name":"humidity"}]}
+        ```
+
+        - Output: 
+
+        <p align="center">
+        <img src="./images/scatterPlotEx.png" alt="drawing" height="270" width="500"/>
+        </p>
+
+    - Example 2:
+    
+        - Input: 
+        ```
+        {"type":"pie","data":[{"values": [19,26,55], "labels": ["Residential","Non-Residential","Utility"], "type":"pie"}]}
+        ```
+
+        - Output:
+
+        <p align="center">
+        <img src="./images/piePlotEx.png" alt="drawing" height="300" width="400"/>
+        </p>
+
  - The `panel` can be resized to provide better visibility of the content of the panel to users.
 
 ### Toggle
@@ -277,10 +301,9 @@ The Average Component in use
 </p>
 
 <br>
-<center>
 
 Provided component | Usage
-:-------------------------:|:-------------------------:
+-------------------------|-------------------------
  Average   |   Calculate the average of an input list of numbers
  Add   |   Calculate the sum of an input list of numbers
  Min   |   Calculate the minimum of an input list of numbers
@@ -294,7 +317,6 @@ Provided component | Usage
  String to List | Converts a string-like list to a list
  Replace | Replaces all occurences of a string in a text with a new one
 
-</center>
 
 ---
 
@@ -422,7 +444,7 @@ In this example, two components called `Exponential` and `Cloud - Absolute` are 
 In `App.js`:
 ```js
 import React from 'react';
-import Canvas from 'data-viz';
+import { Canvas } from 'viz-vimuth';
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
