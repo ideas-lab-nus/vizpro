@@ -39,11 +39,11 @@ It can additionally be customized to a certain degree with user-defined function
 
  - Use `npm` to install the package to the project ;
 ```md
-npm install --save {PackageName}
+npm install --save data-viz
 ```
- - Import `ToolName` into the relevant file ;
+ - Import `Canvas` into the relevant file ;
 ```md
-import {ToolName} from '{PackageName}';
+import {Canvas} from 'data-viz';
 ```
 
 ### For users with no existing project
@@ -61,17 +61,17 @@ npm start
 
  - Use `npm` to install the package to the project ;
 ```
-npm install --save {PackageName}
+npm install --save data-viz
 ```
- - Render the ToolName in `my-app/src/App.js` as shown ;
+ - Render the Canvas in `my-app/src/App.js` as shown ;
 ```jsx
 import React from 'react'
 
-import ToolName from '{PackageName}';
+import {Canvas} from 'data-viz';
 
 function App() {
   return (
-    <ToolName />
+    <Canvas />
   );
 }
 
@@ -408,10 +408,10 @@ Format of function return value
 - `color` : Color (in hex)
 - `backgroundImage` : URL to the image
 
-To use these new components, pass it as the `udo` property to the `ToolName` component as follows, where `newComps` is the array of JSON objects ;
+To use these new components, pass it as the `udo` property to the `Canvas` component as follows, where `newComps` is the array of JSON objects ;
 
 ```jsx
-    <ToolName udo={newComps} />
+    <Canvas udo={newComps} />
 ```
 
 In this example, two components called `Exponential` and `Cloud - Absolute` are added to the tool.
