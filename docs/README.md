@@ -372,7 +372,7 @@ npm install --save child_process
 "proxy": "http://localhost:8080",
 ```
 
- - Create a new `server.js` file rooted at `my-app`. A template that can be followed is provided at [server.js](./server).
+ - Create a new `server.js` file rooted at `my-app`. A template that can be followed is provided at [server.js](server.md).
     - To prevent CORS issues, ensure it is configured as shown in `server.js`.
     - The template has set up a `/python` route that will run a python file given a valid filepath and any arguments necessary. Anything printed to stdout will be displayed.
     - The provided `/bat` and `/r` routes allows such files to be executed.
@@ -439,9 +439,9 @@ To use these new components, pass it as the `udo` property to the `Canvas` compo
     <Canvas udo={newComps} />
 ```
 
- - Refer [App.js](./app) to see how two components called `Exponential` and `Cloud - Absolute` are added to the tool.
+ - Refer [App.js](app.md) to see how two components called `Exponential` and `Cloud - Absolute` are added to the tool.
 
- - Refer [stockComponents](./stockComponents) for details of additional, more specific, components. 
+ - Refer [stockComponents](stockComponents.md) for details of additional, more specific, components. 
 
  - The new components will be found in the `User Definitions` tab of the `Left Container`.
 

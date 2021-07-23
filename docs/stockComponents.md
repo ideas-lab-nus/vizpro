@@ -1,7 +1,6 @@
 ---
 layout: page
 title: "Additional Components"
-permalink: /data-viz/stockComponents/
 ---
 
 ```js
