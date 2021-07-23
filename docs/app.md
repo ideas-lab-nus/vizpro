@@ -1,6 +1,7 @@
 ---
 layout: page
-title: "App example"
+title: "server"
+permalink: /data-viz/app/
 ---
 
 ```js

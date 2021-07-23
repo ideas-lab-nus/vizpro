@@ -366,19 +366,19 @@ npm install --save express
 npm install --save child_process
 ```
 
- - Add a defined proxy for requests to get routed to, inside `package.json` ;
+ - Add a defined proxy for requests to get routed to, inside `package.json`.
 
 ```
 "proxy": "http://localhost:8080",
 ```
 
- - Create a new `server.js` file rooted at `my-app`. A template that can be followed is provided at [server.js](server.md).
+ - Create a new `server.js` file rooted at `my-app`. A template that can be followed is provided at [server.js](./server).
     - To prevent CORS issues, ensure it is configured as shown in `server.js`.
     - The template has set up a `/python` route that will run a python file given a valid filepath and any arguments necessary. Anything printed to stdout will be displayed.
     - The provided `/bat` and `/r` routes allows such files to be executed.
     - The GET request sends the parameters as `p1`, `p2` ... `pn`. Therefore, request querying should be handled as such.
     - Additional routes can be added as necessary to run other files/functions as required.
- - Run the server simultaneously with `npm start` in a separate terminal ;
+ - Run the server simultaneously with `npm start` in a separate terminal.
 
 ```
 node server.js
@@ -433,15 +433,15 @@ Format of function return value
 - `color` : Color (in hex)
 - `backgroundImage` : URL to the image
 
-To use these new components, pass it as the `udo` property to the `Canvas` component as follows, where `newComps` is the array of JSON objects ;
+To use these new components, pass it as the `udo` property to the `Canvas` component as follows, where `newComps` is the array of JSON objects.
 
 ```jsx
     <Canvas udo={newComps} />
 ```
 
- - Refer [App.js](app.md) to see how two components called `Exponential` and `Cloud - Absolute` are added to the tool.
+ - Refer [App.js](./app) to see how two components called `Exponential` and `Cloud - Absolute` are added to the tool.
 
- - Refer [stockComponents](stockComponents.md) for details of additional, more specific, components. 
+ - Refer [stockComponents](./stockComponents) for details of additional, more specific, components. 
 
  - The new components will be found in the `User Definitions` tab of the `Left Container`.
 
