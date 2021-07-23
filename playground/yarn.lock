@@ -11095,7 +11095,7 @@
   "resolved" "https://registry.npmjs.org/vendors/-/vendors-1.0.4.tgz"
   "version" "1.0.4"
 
-"viz-vimuth@file:..":
+"data-viz@file:..":
   "resolved" "file:.."
   "version" "0.2.6"
   dependencies:

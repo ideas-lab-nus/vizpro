@@ -1,5 +1,10 @@
+layout: page
+title: "server"
+permalink: /data-viz/app/
+
+```js
 import React from 'react';
-import { Canvas } from 'data-viz';
+import Canvas from 'data-viz';
 
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
@@ -20,7 +25,7 @@ function exponential(args) {
     }
 }
 
-const newComps = [
+const comps = [
     {
         name: 'Exponential',
         shname: 'exp',
@@ -39,7 +44,7 @@ const newComps = [
         func: exponential,
     },
     {
-        name: 'Cloud - Absolute',
+        name: 'Cloud - Abs',
         shname: 'abs',
         type: 'deep',
         dftype: 'dp',
@@ -51,33 +56,15 @@ const newComps = [
         ],
         color: '#F23322',
         backgroundImage: '',
-        url: '{CloudFunctionURL}'
-    },    
-    {
-        name: 'Local .py',
-        shname: 'loc',
-        type: 'deep',
-        dftype: 'dp',
-        inputList: [
-            { name: 'py filepath', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
-            { name: 'n', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
-        ],
-        outputList: [
-            { name: 'output_', shortName: 'out_', desc: 'product' },
-            { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
-        ],
-        color: '#10C1D7',
-        backgroundImage: '',
-        url: 'http://localhost:8080/python'
-    },
+        url: 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute'
+    }
 ];
 
-class App extends React.Component {
-    render() {
-        return (
-            <Canvas udo={newComps}/>
-        );
-    }
+const App = ()  => {
+    return (
+        <Canvas udo={comps} />
+    );
 }
 
 export default App;
+```

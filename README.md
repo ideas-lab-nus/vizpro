@@ -1,13 +1,13 @@
 # Data Visualization
 > A React library that allows users to visualize data
 
-[![NPM](https://img.shields.io/npm/v/viz-vimuth.svg)](https://www.npmjs.com/package/viz-vimuth)
+[![NPM](https://img.shields.io/npm/v/data-viz.svg)](https://www.npmjs.com/package/data-viz)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Install
 
 ```bash
-npm install --save viz-vimuth
+npm install --save data-viz
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ In `App.js`:
 ```jsx
 import React, { Component } from 'react'
 
-import { Canvas } from 'viz-vimuth';
+import Canvas from 'data-viz';
 
 function App() {
   return (
@@ -78,7 +78,8 @@ In this example, two components called `Exponential` and `Multiply 2` are added 
 In `App.js`:
 ```js
 import React from 'react';
-import { Canvas } from 'viz-vimuth';
+import Canvas from 'data-viz';
+
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
@@ -158,7 +159,6 @@ const App = ()  => {
 }
 
 export default App;
-
 ```
 
 ## Development and Testing:
@@ -176,8 +176,3 @@ Run at root:
 2. `npm run i-all` (This runs `npm install` for both the base and playground)
 3. `npm run dev` (This builds the library to `dist` folder and starts the playground)
 4. `npm run test` to run all the test cases
-
-## Issues to address:
-
--   Factor out local title variables into constants file instead of state dictionary
--   Fix components that take a file upload as an input (need to create a new public URL using `URL.createObjectURL()` method)

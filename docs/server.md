@@ -1,3 +1,8 @@
+layout: page
+title: "server"
+permalink: /data-viz/server/
+
+```js
 const express = require('express');
 const bodyParser = require('body-parser')
 const path = require('path');
@@ -12,10 +17,12 @@ app.use((req, res, next) => {
     next();
 })
 
+// Testing route
 app.get('/ping', function (req, res) {
     return res.send('pong');
 });
 
+// Route to run python files
 app.get('/python', function (req, res) {
     var dataToSend;
 
@@ -38,6 +45,7 @@ app.get('/python', function (req, res) {
     // res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
+// Route to run bat files
 app.get('/bat', function (req, res) {
     var dataToSend;
 
@@ -68,6 +76,7 @@ app.get('/bat', function (req, res) {
     });
 });
 
+// Route to run R scripts
 app.get('/r', function (req, res) {
     var dataToSend;
 
@@ -93,3 +102,4 @@ app.get('/r', function (req, res) {
 });
 
 app.listen(8080);
+```

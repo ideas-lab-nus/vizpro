@@ -87,7 +87,7 @@ export default App;
 
 ## Definitions
 
-#### A definition refers to the current project workspace you have created on the canvas. It includes the state of the canvas (inputs, components, connections).
+A definition refers to the current project workspace you have created on the canvas. It includes the state of the canvas (inputs, components, connections).
 
 ### Creating a new definition
  - Simply rendering the component gives you the ability to work on the canvas as you require. Jump to [General Usage](#general-usage) to learn how to use this tool.
@@ -113,8 +113,7 @@ export default App;
  - The `Top Bar` gives you control over your definitions such as saving and clearing. The `Top Bar` can be hidden by clicking the button on the top right corner.
  - The `Components Tab` on the left holds all the in-house components as well as user-defined ones. Components are categorized, and the current category can be toggled through the column at the right edge of this tab.
  - The `Properties Tab` allows you to modify certain properties of select components, which can opened on double click of the specific component.
- - The `Canvas` is where your components will be added and input/output modified as required. The `Canvas` can be zoomed to different sizes.
- - Users can drag components to different positions in the Canvas. 
+ - The `Canvas` is where your components will be added and input/output modified as required. The `Canvas` supports zoom while components support drag on the Canvas. 
 
 <p align="center">
 <img src="./images/blankCanvas.png" alt="drawing" height="400" width="900"/>
@@ -234,7 +233,7 @@ Panel Component and its Properties Tab
 </p>
 
 <p align="center">
-The Toggle Component
+Toggle Component
 </p>
 
 ### Option List
@@ -246,8 +245,8 @@ The Toggle Component
 The Option List Component and its Properties Tab
 </p>
 
-- The `Option List` provides a dropdown of options of which one can be selected.
-- The dropdown can be specified as a list in a `panel` and connected to the `Option List` input.
+- The `option list` provides a dropdown of options of which one can be selected.
+- The dropdown can be specified as a list in a `panel` and connected to the `option list` input.
 
 ### List View
 <p align="center">
@@ -258,7 +257,7 @@ The Option List Component and its Properties Tab
 The List View Component
 </p>
 
-- The `List View` functions similar to the `Option List` but it allows multiple option selection and is rendered as a json tree view by default.
+- The `list view` functions similar to the `option list` but it allows multiple option selection and is rendered as a json tree view by default.
 
 ### File Upload
 <p align="center">
@@ -269,7 +268,7 @@ The List View Component
 The File Upload Component
 </p>
 
- - The `File Upload` component allows local files to be uploaded.
+ - The `file upload` component allows local files to be uploaded.
  - Uploaded files will saved in local storage until the project definition is cleared.
 
 ### Deep
@@ -330,7 +329,7 @@ After connecting all the inputs and outputs to a deep component, users need to c
  - Add the `Deep` component from the `Main Inputs`, and open its `Properties Tab`.
  - Set the name of each input parameter separated by a newline, and the url.
  - The component will render the input/output circles at this point, along with a run button.
- - Run the function after connecting inputs/outputs
+ - Run the function after connecting inputs/outputs.
  - The asynchronous request will be processed and the result/error set to the output.
 
 <p align="center">
@@ -343,8 +342,9 @@ The Deep Component after setting inputs and url
 
 ### Connecting to the cloud
 
- - A cloud function can be defined on any available platform such as Google Cloud Platform
- - Ensure the function allows Cross Origin Access (CORS) by setting necessary headers as shown below.
+ - A cloud function can be defined on any available platform such as Google Cloud Platform.
+ - Ensure your function is public.
+ - Handle preflight requests as shown below and detailed [here](https://cloud.google.com/functions/docs/writing/http#functions_http_cors-nodejs).
  - The GET request sends the parameters as `p1`, `p2` ... `pn`. Therefore, request querying should be handled as such.
 
 <p align="center">
@@ -372,12 +372,12 @@ npm install --save child_process
 "proxy": "http://localhost:8080",
 ```
 
- - Create a new `server.js` file rooted at `my-app`. A template that can be followed is provided at [server.js](playground\server.js).
-    - To prevent CORS issues, ensure it is configured inside `server.js` as shown below.
+ - Create a new `server.js` file rooted at `my-app`. A template that can be followed is provided at [server.js](./server).
+    - To prevent CORS issues, ensure it is configured as shown in `server.js`.
     - The template has set up a `/python` route that will run a python file given a valid filepath and any arguments necessary. Anything printed to stdout will be displayed.
-    - The provided `/bat` route allows .bat files to be executed.
+    - The provided `/bat` and `/r` routes allows such files to be executed.
     - The GET request sends the parameters as `p1`, `p2` ... `pn`. Therefore, request querying should be handled as such.
-    - Additional routes can be added as necessary to run other files.
+    - Additional routes can be added as necessary to run other files/functions as required.
  - Run the server simultaneously with `npm start` in a separate terminal ;
 
 ```
@@ -439,72 +439,12 @@ To use these new components, pass it as the `udo` property to the `Canvas` compo
     <Canvas udo={newComps} />
 ```
 
-In this example, two components called `Exponential` and `Cloud - Absolute` are added to the tool.
+ - Refer [App.js](./app) to see how two components called `Exponential` and `Cloud - Absolute` are added to the tool.
 
-In `App.js`:
-```js
-import React from 'react';
-import { Canvas } from 'viz-vimuth';
-function isNumeric(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-}
-function exponential(args) {
-    let input = args[0];
-    if (!isNumeric(input)) {
-        return {
-            type: ['text', 'text'],
-            value: [null, input + " is not a number"]
-        };
-    } else {
-        return {
-            type: ['text', 'text'],
-            value: [Math.E ** parseFloat(input), "Success"]
-        };
-    }
-}
-const comps = [
-    {
-        name: 'Exponential',
-        shname: 'exp',
-        desc: 'e raise to the power x',
-        type: 'component',
-        dftype: 'shlow',
-        inputList: [
-            { name: 'input', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
-        ],
-        outputList: [
-            { name: 'output_', shortName: 'out_', desc: 'product' },
-            { type: 'float', name: 'log_', shortName: 'log', desc: 'log output' }
-        ],
-        color: '#F23322',
-        backgroundImage: '',
-        func: exponential,
-    },
-    {
-        name: 'Cloud - Abs',
-        shname: 'abs',
-        type: 'deep',
-        dftype: 'dp',
-        inputList: [
-            { name: 'num', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
-        ],
-        outputList: [
-            { name: 'output_', shortName: 'out_', desc: 'product' },
-        ],
-        color: '#F23322',
-        backgroundImage: '',
-        url: 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute'
-    }
-];
-const App = ()  => {
-    return (
-        <Canvas udo={comps} />
-    );
-}
-export default App;
-```
+ - Refer [stockComponents](./stockComponents) for details of additional, more specific, components. 
 
-The new components will be found in the `User Definitions` tab of the `Left Container`.
+ - The new components will be found in the `User Definitions` tab of the `Left Container`.
+
 <p align="center">
 <img src="./images/userDefComps.png" alt="drawing" height="300" width="250"/>
 </p>
