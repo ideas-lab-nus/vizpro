@@ -52,7 +52,7 @@ import Canvas from 'data-viz';
 
  - The simplest and fastest way to get started is to use `create-react-app` with which you can set up a boilerplate React application.
 
- - You’ll need to have [Node >= 10.16 and npm >= 5.6](https://nodejs.org/en/) on your machine. To create a project, run ;
+ - You’ll need to have [Node >= 10.16 and npm >= 5.6](https://nodejs.org/en/) on your machine. To create a project, run
 
 ```
 npx create-react-app my-app
@@ -359,7 +359,7 @@ A Google Cloud Function using node.js runtime
 
  - This is useful when there are scripts in your local machine written in other languages like `python`.
  - A server is required to achieve this, so projects which already have a server/backend can use that, while other projects will need to incorporate one.
- - `express` is relatively easy to set up for a server and we will use the `child_process` node module to spawn new processes to run the external scripts ;
+ - `express` is relatively easy to set up for a server and we will use the `child_process` node module to spawn new processes to run the external scripts.
 
 ```
 npm install --save express

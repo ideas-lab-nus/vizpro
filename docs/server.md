@@ -1,8 +1,6 @@
----
 layout: page
 title: "server"
 permalink: /data-viz/server/
----
 
 ```js
 const express = require('express');
