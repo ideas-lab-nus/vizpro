@@ -1,6 +1,6 @@
 layout: page
 title: "server"
-permalink: /data-viz/server/
+permalink: /data-viz/server.html/
 
 ```js
 const express = require('express');

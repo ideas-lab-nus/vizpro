@@ -372,7 +372,7 @@ npm install --save child_process
 "proxy": "http://localhost:8080",
 ```
 
- - Create a new `server.js` file rooted at `my-app`. A template that can be followed is provided at [server.js](./server).
+ - Create a new `server.js` file rooted at `my-app`. A template that can be followed is provided at [server.js](./server.html).
     - To prevent CORS issues, ensure it is configured as shown in `server.js`.
     - The template has set up a `/python` route that will run a python file given a valid filepath and any arguments necessary. Anything printed to stdout will be displayed.
     - The provided `/bat` and `/r` routes allows such files to be executed.
