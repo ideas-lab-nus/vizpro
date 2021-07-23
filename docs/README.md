@@ -37,13 +37,15 @@ It can additionally be customized to a certain degree with user-defined function
 
 ### For users with an existing React-based project
 
- - Use `npm` to install the package to the project ;
+ - Use `npm` to install the package to the project
+
 ```md
 npm install --save data-viz
 ```
- - Import `Canvas` into the relevant file ;
+ - Import `Canvas` into the relevant file
+
 ```md
-import {Canvas} from 'data-viz';
+import Canvas from 'data-viz';
 ```
 
 ### For users with no existing project
@@ -59,15 +61,17 @@ npm start
 ```
  - In case you run into issues at this stage, you can read more about Create React App and React in depth [here](https://reactjs.org/docs/create-a-new-react-app.html).
 
- - Use `npm` to install the package to the project ;
+ - Use `npm` to install the package to the project
+
 ```
 npm install --save data-viz
 ```
- - Render the Canvas in `my-app/src/App.js` as shown ;
+ - Render the Canvas in `my-app/src/App.js` as shown
+ 
 ```jsx
 import React from 'react'
 
-import {Canvas} from 'data-viz';
+import Canvas from 'data-viz';
 
 function App() {
   return (
@@ -80,7 +84,6 @@ export default App;
 ```
  - The localhost will automatically render the component on saving.
 
----
 
 ## Definitions
 
@@ -419,7 +422,7 @@ In this example, two components called `Exponential` and `Cloud - Absolute` are 
 In `App.js`:
 ```js
 import React from 'react';
-import { Canvas } from 'viz-vimuth';
+import Canvas from 'data-viz';
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
