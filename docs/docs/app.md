@@ -1,6 +1,6 @@
 ```js
 import React from 'react';
-import Canvas from 'data-viz';
+import { Canvas } from 'data-viz';
 
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);

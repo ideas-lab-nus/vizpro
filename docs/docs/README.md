@@ -73,7 +73,7 @@ npm install --save data-viz
 ``` jsx
 import React from 'react'
 
-import {Canvas} from 'data-viz';
+import { Canvas } from 'data-viz';
 
 function App() {
   return (
