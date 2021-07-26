@@ -70,7 +70,7 @@ test('Error reports when a field is empty', () => {
     const saveBtn = screen.queryByTestId('save-changes');
     fireEvent.click(saveBtn);
     const errorLog = screen.queryByTestId('error');
-    expect(errorLog.textContent).toBe('Please enter all fields');
+    expect(errorLog.textContent).toBe('Please enter all fields.');
     expect(errorLog.id).toBe('error');
 });
 
@@ -91,7 +91,7 @@ test('Error reports when min value is greater than max value', () => {
     const saveBtn = screen.queryByTestId('save-changes');
     fireEvent.click(saveBtn);
     const errorLog = screen.queryByTestId('error');
-    expect(errorLog.textContent).toBe('The min value must be smaller than the max value');
+    expect(errorLog.textContent).toBe('The min value must be smaller than the max value.');
     expect(errorLog.id).toBe('error');
 });
 
@@ -106,7 +106,22 @@ test('Error reports when current value is not between min value and max value', 
     const saveBtn = screen.queryByTestId('save-changes');
     fireEvent.click(saveBtn);
     const errorLog = screen.queryByTestId('error');
-    expect(errorLog.textContent).toBe('The current value must be between the min value and the max value');
+    expect(errorLog.textContent).toBe('The current value must be between the min value and the max value.');
+    expect(errorLog.id).toBe('error');
+});
+
+test('Error reports when step value is negative', () => {
+    fireEvent.dblClick(addedSlider.childNodes[0]);
+    const currValField = screen.queryByTestId('step-input');
+    fireEvent.change(currValField, {
+        target: {
+            value: '-5'
+        }
+    });
+    const saveBtn = screen.queryByTestId('save-changes');
+    fireEvent.click(saveBtn);
+    const errorLog = screen.queryByTestId('error');
+    expect(errorLog.textContent).toBe('The step value must be a positive value.');
     expect(errorLog.id).toBe('error');
 });
 
