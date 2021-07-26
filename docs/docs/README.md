@@ -3,6 +3,8 @@
 This is a React Component that serves as a fully fledged visual programming interface, ideal for simulation. <br>
 It can additionally be customized to a certain degree with user-defined functions on top of the host of base components provided for general use cases.
 
+Have a look at the tool in the [playground](./playground/) :)
+
 ---
 
 ## Table of Contents
