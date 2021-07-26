@@ -9,7 +9,7 @@ import {
     CreateNewFileUpload,
     CreateNewListView,
     CreateNewDeep
-} from './mainComponents/mainComponents.js'
+} from './mainComponents/mainComponents.js';
 var d3 = require('d3');
 
 function getCurrentData(reactContext) {
@@ -64,6 +64,20 @@ function downloadData() {
 }
 
 function recreateSavedData(reactContext, data) {
+    //Clear the Canvas
+    var allContents = d3.select('#allCanvasContents');
+    allContents.html('');
+    allContents
+        .append('rect')
+        .attr('fill', 'url(#img122)')
+        .attr('x', -1000)
+        .attr('y', -1000)
+        .attr('width', 6000)
+        .attr('height', 6000)
+        .style('cursor', 'default');
+
+    allContents.append('g').attr('id', 'allPaths');
+
     var allData = JSON.parse(data);
     var allContents = d3.select('#allCanvasContents');
     var svgContainer = d3.select('svg');
@@ -79,15 +93,19 @@ function recreateSavedData(reactContext, data) {
             reactContext.setState({
                 allComp: allComponents
             });
+            var compSet = [];
             allComponents.forEach(element => {
-                if (element.type === 'component') CreateNewComponent(reactContext, element);
-                else if (element.type === 'slider') CreateNewSlider(reactContext, element);
-                else if (element.type === 'string') CreateNewPanel(reactContext, element);
-                else if (element.type === 'toggle') CreateNewToggle(reactContext, element);
-                else if (element.type === 'optionList') CreateNewOptionList(reactContext, element);
-                else if (element.type === 'fileUpload')  CreateNewFileUpload(reactContext, element);
-                else if (element.type === 'listView') CreateNewListView(reactContext, element);
-                else if (element.type === 'deep') CreateNewDeep(reactContext, element);
+                if (!compSet.includes(element.GUID)) {
+                    compSet.push(element.GUID);
+                    if (element.type === 'component') CreateNewComponent(reactContext, element);
+                    else if (element.type === 'slider') CreateNewSlider(reactContext, element);
+                    else if (element.type === 'string') CreateNewPanel(reactContext, element);
+                    else if (element.type === 'toggle') CreateNewToggle(reactContext, element);
+                    else if (element.type === 'optionList') CreateNewOptionList(reactContext, element);
+                    else if (element.type === 'fileUpload')  CreateNewFileUpload(reactContext, element);
+                    else if (element.type === 'listView') CreateNewListView(reactContext, element);
+                    else if (element.type === 'deep') CreateNewDeep(reactContext, element);
+                }
             });
         }
         if (allData.edges !== undefined && allData.edges !== null) {

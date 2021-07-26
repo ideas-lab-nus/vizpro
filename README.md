@@ -28,7 +28,7 @@ npm run i-all
 npm run dev
 ```
  - The main aspects and logic of the package are within the `src` folder and changes made to any file, will immediately be reflected in the `playground` on saving
- - Refer to the [Developer Guide](./docs/docs/dev.md`) to get an understanding of the codebase
+ - Refer to the [Developer Guide](./docs/docs/dev.md) to get an understanding of the codebase
  - Run `npm run test` at root to run all the test cases
  - Run `npm run coverage` at root to run all the test cases and receive a coverage report
  - Run `npm run deploy` at root to deploy changes to github pages

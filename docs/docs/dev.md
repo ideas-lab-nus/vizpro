@@ -4,7 +4,7 @@ This guide dives into how this package is constructed.
 
 While React is used to organize the structure of the application, d3.js is the main library working behind the scenes that allows the creation of components and handles all the visualization aspects.
 
-React was incorporated to allow this application to be packaged and served on npm easily.
+React is incorporated to allow this application to be packaged and served on npm easily.
 
 If you're here in pursuit of adding or modifying functionality of the visual programming interface, you can skip to [D3.js](#d3js) where the most of the logic sits. It is still recommended to read the [React](#react) segment as well to grasp a complete idea of how this tool works :)
 
@@ -20,9 +20,9 @@ The `Canvas` component is exported from the package within `src/index.js`
 
 ### `Canvas` Component
 
-> Location : `src/components.Canvas.js`
+> Location : `src/components/Canvas.js`
 
-This is the React Component that represents the tool. It comprises of 3 sub-components, namely `Grid`, `TopBar` and `LeftContainer` which are all defined and imported from the `./CanvasComponent` folder.
+This is the React Component that represents the tool. It comprises of 3 sub-components, namely `Grid`, `TopBar` and `LeftContainer` which are all defined and imported from the `./CanvasComponent` folder. The `LeftContainer` also has 2 sub-components, which are `ComponentTab` and `PropertyTab`.
 
 The entire state of the application is stored and bound to this component.
 
@@ -39,7 +39,7 @@ As the component is first mounted, initialization functions are run:
 
 Within the render function, functions that are to be re-run on state change are called and the component is rendered comprising of the aforementioned sub-components. 
 
-Note: Bound functions are passed as props into these sub-components. They cannot be directly imported from a sub-component as it will not have access to state.
+**Note:** Bound functions are passed as props into these sub-components. They cannot be directly imported from a sub-component as it will not have access to state.
 
 ---
 
@@ -52,6 +52,13 @@ Note: Bound functions are passed as props into these sub-components. They cannot
 ### `TopBar` Component
 
 > Location : `src/components/CanvasComponent/TopBar.js`
+
+The `TopBar` has 5 different buttons, which are
+- `Help`: Direct user to the User Guide page.
+- `Save`: Save a definition to the browser's local storage so that the definition is not deleted after the page is reloaded.
+- `Clear`: Clear all the data that is saved in the local storage and automatically reload the page with a blank canvas.
+- `Download`: Similar to `Save` but the data is stored in the user's local computer in JSON format.
+- `Upload`: Open a definition that is previously downloaded from a local computer.
 
 ---
 

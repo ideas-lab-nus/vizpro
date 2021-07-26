@@ -355,19 +355,19 @@ function submitSliderEdit(reactContext, compKey) {
 
         if (isNaN(minInput) || isNaN(maxInput) || isNaN(currValInput)) {
             $('div#propertiesBarLog').html(`
-                <div id="error" data-testid="error">Please enter all fields</div>
+                <div id="error" data-testid="error">Please enter all fields.</div>
             `)
         } else if (minInput >= maxInput) {
             $('div#propertiesBarLog').html(`
-                <div id="error" data-testid="error">The min value must be smaller than the max value</div>
+                <div id="error" data-testid="error">The min value must be smaller than the max value.</div>
             `)
         } else if (minInput > currValInput || maxInput < currValInput) {
             $('div#propertiesBarLog').html(`
-                <div id="error" data-testid="error">The current value must be between the min value and the max value</div>
+                <div id="error" data-testid="error">The current value must be between the min value and the max value.</div>
             `)
         } else if (stepInput <= 0) {
             $('div#propertiesBarLog').html(`
-                <div id="error" data-testid="error">The step value must be a positive value</div>
+                <div id="error" data-testid="error">The step value must be a positive value.</div>
             `)
         } else {
             slider_component.min = minInput;

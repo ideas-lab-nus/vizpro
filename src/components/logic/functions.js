@@ -702,7 +702,6 @@ function edit_move_mode(compId, mode) {
 }
 
 function updateListViewDrawing(comp) {
-    console.log("updating list view drawing")
     d3.select('foreignObject#listView-' + comp.GUID)
         .html(() => setListViewHTML(comp))
 
@@ -1072,10 +1071,7 @@ function deleteEdge(edge_to_be_deleted) {
             break;
         }
     }
-
-    console.log("updating to comp")
     updatShallowCompRender(toComp);
-    console.log("updating from comp")
     updatShallowCompRender(fromComp);
     redrawDependents(components_of_the_edge['to']);
 
