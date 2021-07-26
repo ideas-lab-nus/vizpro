@@ -37,7 +37,7 @@ test('Toolbar container successfully render initially', () => {
 test('Toolbar container successfully render when Basic button is clicked', () => {
     const basicNode = screen.getByText('Basic');
     fireEvent.click(basicNode);
-    const components = ['Average', 'Add', 'Max', 'Min', 'Difference 2', 'Json Navigator', '3dVisualizer',
+    const components = ['Average', 'Add', 'Max', 'Min', 'Difference 2', 'Json Navigator', '3d Visualizer',
                     'Image Display', 'YouTube Display', 'Plot Panel'];
     components.forEach(element => {
         const nodes = screen.getAllByText(element);

@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Prettier
 
 # Controls when the action will run. 
 on:
@@ -8,7 +8,6 @@ on:
   push:
     branches: 
       - main
-      - prettier
   pull_request:
     branches: 
       - main
@@ -32,4 +31,48 @@ jobs:
       - name: Run Prettier
         run: npx prettier --write .
 
-      # Runs a set of commands using the runners shell
+
+name: Tests
+
+on:
+  push:
+    branches: 
+      - main
+  pull_request:
+    branches: 
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run tests
+        run: npm run test
+
+
+name: Deploy to Github Pages
+
+on:
+  push:
+    branches: 
+      - main
+  pull_request:
+    branches: 
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Deploy
+        run: npm run deploy

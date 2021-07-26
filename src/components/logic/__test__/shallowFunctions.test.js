@@ -202,7 +202,7 @@ test('Difference 2 component with invalid inputs', () => {
     addInputToComponent(id, ["[1]", 20]);
     const output = calculateShallow(id);
     expect(equalArray(output.type, ['text', 'text'])).toBeTruthy();
-    expect(equalArray(output.value, [ NaN, 'NaN or 20 is not numeric' ]));
+    expect(equalArray(output.value, [ NaN, 'NaN or 20 is not numeric' ])).toBeTruthy();
 });
 
 test('Image Display component with no inputs', () => {
