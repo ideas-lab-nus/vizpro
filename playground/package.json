@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:8080",
-  "homepage": "https://vimuthm.github.io/data-viz/playground",
+  "homepage": "https://ideas-lab-nus.github.io/data-viz/playground",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
