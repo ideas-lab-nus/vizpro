@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/data-viz/playground/static/css/main.2ae47eeb.chunk.css",
+    "main.js": "/data-viz/playground/static/js/main.a14f3936.chunk.js",
+    "main.js.map": "/data-viz/playground/static/js/main.a14f3936.chunk.js.map",
+    "runtime-main.js": "/data-viz/playground/static/js/runtime-main.a3e43eaa.js",
+    "runtime-main.js.map": "/data-viz/playground/static/js/runtime-main.a3e43eaa.js.map",
+    "static/css/2.52954075.chunk.css": "/data-viz/playground/static/css/2.52954075.chunk.css",
+    "static/js/2.7881bf8b.chunk.js": "/data-viz/playground/static/js/2.7881bf8b.chunk.js",
+    "static/js/2.7881bf8b.chunk.js.map": "/data-viz/playground/static/js/2.7881bf8b.chunk.js.map",
+    "static/js/3.d194b347.chunk.js": "/data-viz/playground/static/js/3.d194b347.chunk.js",
+    "static/js/3.d194b347.chunk.js.map": "/data-viz/playground/static/js/3.d194b347.chunk.js.map",
+    "index.html": "/data-viz/playground/index.html",
+    "static/css/2.52954075.chunk.css.map": "/data-viz/playground/static/css/2.52954075.chunk.css.map",
+    "static/css/main.2ae47eeb.chunk.css.map": "/data-viz/playground/static/css/main.2ae47eeb.chunk.css.map",
+    "static/js/2.7881bf8b.chunk.js.LICENSE.txt": "/data-viz/playground/static/js/2.7881bf8b.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/data-viz/playground/static/media/ubuntu-mono-latin-ext-400-normal.bc798899.woff2"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a3e43eaa.js",
+    "static/css/2.52954075.chunk.css",
+    "static/js/2.7881bf8b.chunk.js",
+    "static/css/main.2ae47eeb.chunk.css",
+    "static/js/main.a14f3936.chunk.js"
+  ]
+}
