@@ -452,7 +452,7 @@ function handleDoubleClick() {
                         });
                     }
                     
-                    $('body').on('click', () => updateText(panelComp));
+                    $('#mainGrid').on('click', () => updateText(panelComp));
 
                     $('textarea.stringProperties').text(() =>
                         panelComp.inputs[0].value
