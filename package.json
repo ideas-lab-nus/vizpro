@@ -32,7 +32,7 @@
         "dev": "npm-run-all --parallel build-watch start-playground",
         "test": "react-scripts test",
         "coverage": "react-scripts test --collectCoverage --watchAll=false",
-        "predeploy": "cd ./playground && npm run build",
+        "predeploy": "npm run build && cd ./playground && npm run build",
         "deploy": "gh-pages -d docs"
     },
     "eslintConfig": {
