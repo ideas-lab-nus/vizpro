@@ -105,6 +105,7 @@ A definition refers to the current project workspace you have created on the can
 
 ### Opening a downloaded definition
  - Using the `Upload` button in the Top Bar, the definition can re-instated. The uploaded file must be a `json` file.
+ - When a valid `json` file is uploaded, all the previous components and edges will be deleted.
 
 ---
 
