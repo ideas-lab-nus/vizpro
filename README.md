@@ -39,13 +39,13 @@ npm run dev
 ## Contributors
 
 <div class="image-cropper">
-    <a href="https://github.com/VimuthM">
+    <a href="https://github.com/MahmoudAbdelRahman">
         <img src="https://github.com/MahmoudAbdelRahman.png" height="40" width="40" style="margin: 10px 10px 10px 10px; border-radius: 40%;"> 
     </a>
-    <a href="https://github.com/VimuthM">
+    <a href="https://github.com/adChong">
         <img src="https://github.com/adChong.png" height="40" width="40" style="margin: 10px 10px 10px 10px; border-radius: 40%;">
     </a>
-    <a href="https://github.com/VimuthM">
+    <a href="https://github.com/vuminhhieunus2019">
         <img src="https://github.com/vuminhhieunus2019.png" height="40" width="40" style="margin: 10px 10px 10px 10px; border-radius: 40%;">
     </a>
     <a href="https://github.com/VimuthM">
