@@ -1,5 +1,8 @@
 ## Introduction
 
+[![NPM](https://img.shields.io/npm/v/data-viz.svg)](https://www.npmjs.com/package/data-viz)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 This is a React Component that serves as a fully fledged visual programming interface, ideal for simulation. <br>
 It can additionally be customized to a certain degree with user-defined functions on top of the host of base components provided for general use cases.
 
@@ -54,7 +57,7 @@ import Canvas from 'data-viz';
 
  - The simplest and fastest way to get started is to use `create-react-app` with which you can set up a boilerplate React application.
 
- - You’ll need to have [Node >= 10.16 and npm >= 5.6](https://nodejs.org/en/) on your machine. To create a project, run
+ - You’ll need to have [Node >= 10.16 and npm >= 5.6](https://nodejs.org/en/) on your machine. To create a project, run the following commands via terminal in a directory where you want the project to be :
 
 ```
 npx create-react-app my-app
@@ -63,7 +66,7 @@ npm start
 ```
  - In case you run into issues at this stage, you can read more about Create React App and React in depth [here](https://reactjs.org/docs/create-a-new-react-app.html).
 
- - Use `npm` to install the package to the project
+ - Use `npm` to install the package to the project. Run the following command within the `my-app` folder :
 
 ```
 npm install --save data-viz

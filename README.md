@@ -1,15 +1,16 @@
-# Data Visualization
+# data-viz
 
-> A React component that serves as a fully fledged visual programming interface, ideal for simulation.
+> This npm package exports a React component that serves as a fully fledged visual programming interface, ideal for simulation.
 
 [![NPM](https://img.shields.io/npm/v/data-viz.svg)](https://www.npmjs.com/package/data-viz)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Installation and Usage
 
 Refer to the [User Guide](https://ideas-lab-nus.github.io/data-viz/) for details on how to use this package
 
-## Development and Testing:
+## Development and Testing
 
 `playground` is an internal CRA that can be used to test this React Component Package that currently exports the component `Canvas`.
         
@@ -33,3 +34,21 @@ npm run dev
  - Run `npm run coverage` at root to run all the test cases and receive a coverage report
  - Run `npm run deploy` at root to deploy changes to github pages
  - A new version can be published by signing into the npm account, incrementing the version number in `package.json` and running `npm publish`
+
+
+## Contributors
+
+<div class="image-cropper">
+    <a href="https://github.com/VimuthM">
+        <img src="https://github.com/MahmoudAbdelRahman.png" height="40" width="40" style="margin: 10px 10px 10px 10px; border-radius: 40%;"> 
+    </a>
+    <a href="https://github.com/VimuthM">
+        <img src="https://github.com/adChong.png" height="40" width="40" style="margin: 10px 10px 10px 10px; border-radius: 40%;">
+    </a>
+    <a href="https://github.com/VimuthM">
+        <img src="https://github.com/vuminhhieunus2019.png" height="40" width="40" style="margin: 10px 10px 10px 10px; border-radius: 40%;">
+    </a>
+    <a href="https://github.com/VimuthM">
+        <img src="https://github.com/VimuthM.png" height="40" width="40" style="margin: 10px 10px 10px 10px; border-radius: 40%;">
+    </a>
+</div>
