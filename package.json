@@ -1,6 +1,6 @@
 {
-    "name": "data-viz",
-    "version": "0.3.0",
+    "name": "@ideas-lab-nus/data-viz",
+    "version": "0.3.2",
     "main": "dist/index.cjs.js",
     "module": "dist/index.esm.js",
     "source": "src/index.js",

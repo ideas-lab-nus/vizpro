@@ -64,7 +64,6 @@ const globalVars = {
     optionlistRectid: '',
     justSelected: null,
     mouseInsideOption: false,
-
     //selected component variables.
     is_component_selected: false,
     selected_component_id: '',
