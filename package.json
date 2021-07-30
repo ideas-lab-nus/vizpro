@@ -1,14 +1,14 @@
 {
-<<<<<<< HEAD
-    "name": "@ideas-lab-nus/data-viz",
-    "version": "0.3.2",
-=======
     "name": "vizpro",
-    "version": "0.1.0",
->>>>>>> d093939e2c1d9a5bc209fd5ae5202f02fc6fa672
+    "version": "1.0.0",
     "main": "dist/index.cjs.js",
     "module": "dist/index.esm.js",
     "source": "src/index.js",
+    "keywords": [
+        "react",
+        "visualization",
+        "react-component"
+    ],
     "proxy": "http://localhost:8080",
     "dependencies": {
         "@fontsource/ubuntu": "^4.4.5",

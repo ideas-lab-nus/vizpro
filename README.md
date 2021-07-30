@@ -28,20 +28,12 @@ npm update && npm run build
 npm run i-all
 npm run dev
 ```
-<<<<<<< HEAD
  - The main aspects and logic of the package are within the `src` folder and changes made to any file, will immediately be reflected in the `playground` on saving.
  - Refer to the [Developer Guide](./docs/docs/dev.md) to get an understanding of the codebase.
  - Run `npm run test` at root to run all the test cases.
  - Run `npm run coverage` at root to run all the test cases and receive a coverage report.
  - Run `npm run deploy` at root to deploy changes to github pages.
  - A new version can be published by signing into the npm account, incrementing the version number in `package.json` and running `npm publish`.
-=======
- - The main aspects and logic of the package are within the `src` folder and changes made to any file, will immediately be reflected in the `playground` on saving
- - Refer to the [Developer Guide](./docs/docs/dev.md) to get an understanding of the codebase
- - Run `npm run test` at root to run all the test cases
- - Run `npm run coverage` at root to run all the test cases and receive a coverage report
- - Run `npm run deploy` at root to deploy changes to github pages
- - A new version can be published by signing into the npm account, incrementing the version number in `package.json` and running `npm publish`
 
 
 ## Contributors
@@ -60,4 +52,3 @@ npm run dev
         <img src="https://github.com/VimuthM.png" height="40" width="40" style="margin: 10px 10px 10px 10px; border-radius: 40%;">
     </a>
 </div>
->>>>>>> d093939e2c1d9a5bc209fd5ae5202f02fc6fa672
