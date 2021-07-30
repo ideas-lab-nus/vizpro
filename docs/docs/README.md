@@ -1,6 +1,6 @@
 ## Introduction
 
-[![NPM](https://img.shields.io/npm/v/data-viz.svg)](https://www.npmjs.com/package/data-viz)
+[![NPM](https://img.shields.io/npm/v/vizpro.svg)](https://www.npmjs.com/package/vizpro)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This is a React Component that serves as a fully fledged visual programming interface, ideal for simulation. <br>
@@ -45,12 +45,12 @@ Have a look at the tool in the [playground](./playground/) :)
  - Use `npm` to install the package to the project
 
 ```md
-npm install --save data-viz
+npm install --save vizpro
 ```
  - Import `Canvas` into the relevant file
 
 ```md
-import Canvas from 'data-viz';
+import Canvas from 'vizpro';
 ```
 
 ### For users with no existing project
@@ -69,14 +69,14 @@ npm start
  - Use `npm` to install the package to the project. Run the following command within the `my-app` folder :
 
 ```
-npm install --save data-viz
+npm install --save vizpro
 ```
  - Render the Canvas in `my-app/src/App.js` as shown
 
 ``` jsx
 import React from 'react'
 
-import { Canvas } from 'data-viz';
+import { Canvas } from 'vizpro';
 
 function App() {
   return (

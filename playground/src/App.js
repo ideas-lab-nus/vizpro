@@ -1,5 +1,5 @@
 import React from 'react';
-import { Canvas } from 'data-viz';
+import { Canvas } from 'vizpro';
 
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);

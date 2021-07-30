@@ -1,6 +1,6 @@
 {
-    "name": "@ideas-lab-nus/data-viz",
-    "version": "0.3.0",
+    "name": "vizpro",
+    "version": "0.1.0",
     "main": "dist/index.cjs.js",
     "module": "dist/index.esm.js",
     "source": "src/index.js",

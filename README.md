@@ -2,13 +2,13 @@
 
 > This npm package exports a React component that serves as a fully fledged visual programming interface, ideal for simulation.
 
-[![NPM](https://img.shields.io/npm/v/data-viz.svg)](https://www.npmjs.com/package/data-viz)
+[![NPM](https://img.shields.io/npm/v/vizpro.svg)](https://www.npmjs.com/package/vizpro)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Installation and Usage
 
-Refer to the [User Guide](https://ideas-lab-nus.github.io/data-viz/) for details on how to use this package
+Refer to the [User Guide](https://ideas-lab-nus.github.io/vizpro/) for details on how to use this package
 
 ## Development and Testing
 
@@ -17,8 +17,8 @@ Refer to the [User Guide](https://ideas-lab-nus.github.io/data-viz/) for details
  - Firstly clone this repo and change directory into the root of the project
 
 ```
-git clone https://github.com/ideas-lab-nus/data-viz.git
-cd data-viz
+git clone https://github.com/ideas-lab-nus/vizpro.git
+cd vizpro
 ```
 
  - Run the following at root of the repository to start the React app:
