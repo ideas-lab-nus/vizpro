@@ -20,9 +20,6 @@ jobs:
         
     steps:
       - uses: actions/checkout@v2
-      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
-        with:
-          token: '${{ secrets.GITHUB_TOKEN }}'
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
@@ -31,4 +28,11 @@ jobs:
       - run: cd playground && npm install vizpro
       # - run: git config --global user.email "vimuthmendis@gmail.com"
       # - run: git config --global user.name "VimuthM"
-      - run: npm run deploy
+      # - run: npm run deploy
+      - run: npm run predeploy
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
