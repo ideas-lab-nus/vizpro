@@ -25,5 +25,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm run i-all
-      - run: cd playground && npm install data-viz
+      - run: cd playground && npm install vizpro
+      - run: git config --global user.email "vimuthmendis@gmail.com"
+      - run: git config --global user.name "VimuthM"
       - run: npm run deploy

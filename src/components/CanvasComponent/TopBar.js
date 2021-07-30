@@ -13,7 +13,7 @@ export default class TopBar extends Component {
     render() {
         return (
             <div id="TopPropertiesBar">
-                <a data-testid='fileTheDef' id="fileTheDef" className="menubarButtons" href="https://ideas-lab-nus.github.io/data-viz/" target="_blank" rel="noreferrer">Help</a>
+                <a data-testid='fileTheDef' id="fileTheDef" className="menubarButtons" href="https://ideas-lab-nus.github.io/vizpro/" target="_blank" rel="noreferrer">Help</a>
                 <label data-testid='fileTheDef' id="saveTheDef" className="menubarButtons" onClick={() => this.saveData()}>Save</label>
                 <label data-testid='fileTheDef' id="fileTheDef" className="menubarButtons" onClick={() => clearData()}>Clear</label>
                 <label data-testid='fileTheDef' id="saveTheDef" className="menubarButtons" onClick={() => this.downloadData()}>Download</label>
