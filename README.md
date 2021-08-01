@@ -1,4 +1,5 @@
 # vizpro
+> Javascript visual programming library
 
 > This npm package exports a React component that serves as a fully fledged visual programming interface, ideal for simulation.
 
