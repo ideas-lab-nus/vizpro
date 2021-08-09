@@ -1,9 +1,9 @@
-import { 
+import {
     uuidv4,
-    selectComp, 
-    addcomponent, 
-    runDeepFunction, 
-    redrawDependents 
+    selectComp,
+    addcomponent,
+    runDeepFunction,
+    redrawDependents
 } from '../functions.js';
 import $ from 'jquery';
 
@@ -11,7 +11,7 @@ var d3 = require('d3');
 var addInputCirclesFunc;
 var addOutputCirclesFunc;
 
-function CreateNewDeep(reactContext, FromExisting = null,) {
+function CreateNewDeep(reactContext, FromExisting = null) {
     var IDLE_COLOR = reactContext.state.IDLE_COLOR;
     var COMPONENT_RADIUS = reactContext.state.COMPONENT_RADIUS;
 
@@ -23,12 +23,12 @@ function CreateNewDeep(reactContext, FromExisting = null,) {
         newcomp = FromExisting;
     } else {
         newcomp = addcomponent(uuidv4('C'), 0, 0, [], []);
-        
-        newcomp.dftype = "dp";
-        newcomp.ShortName = "deep";      
+
+        newcomp.dftype = 'dp';
+        newcomp.ShortName = 'deep';
         newcomp.fill = '#0031E7';
-        newcomp.type = "deep";
-        newcomp.Name = "Deep";
+        newcomp.type = 'deep';
+        newcomp.Name = 'Deep';
         newcomp.height = 80;
         newcomp.width = 100;
 
@@ -122,7 +122,7 @@ function CreateNewDeep(reactContext, FromExisting = null,) {
                     }
                 });
         }
-        
+
         InputGroup = node.append('g').lower();
         for (let index = 0; index < newcomp.inputs.length; index++) {
             inp = InputGroup.append('circle')
@@ -218,7 +218,11 @@ function CreateNewDeep(reactContext, FromExisting = null,) {
                 .attr(
                     'transform',
                     'translate(' +
-                        (newcomp.width - newcomp.outputs[index].ShortName.length * 8 - 5).toString() +
+                        (
+                            newcomp.width -
+                            newcomp.outputs[index].ShortName.length * 8 -
+                            5
+                        ).toString() +
                         ' , ' +
                         (index * padding + titleMargin + 5).toString() +
                         ')'
@@ -245,7 +249,7 @@ function CreateNewDeep(reactContext, FromExisting = null,) {
         }
     }
 
-    addOutputCirclesFunc = addOutputCircles;    
+    addOutputCirclesFunc = addOutputCircles;
 
     var Dummyrect = node
         .append('rect')
@@ -264,12 +268,11 @@ function CreateNewDeep(reactContext, FromExisting = null,) {
             });
         });
 
-    var cirGroup = node.append('g')
-        .attr('transform', () => {
-            var x = newcomp.width;
-            var y = newcomp.height;
-            return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
-        });
+    var cirGroup = node.append('g').attr('transform', () => {
+        var x = newcomp.width;
+        var y = newcomp.height;
+        return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
+    });
 
     var Titlegroup = node.append('g').attr('transform', () => {
         return 'translate(0, 15)';
@@ -292,7 +295,8 @@ function CreateNewDeep(reactContext, FromExisting = null,) {
         .attr('x', 1.0)
         .attr('y', -2);
 
-    var resize1 = node.append('rect')
+    var resize1 = node
+        .append('rect')
         .attr('width', newcomp.width - 2)
         .attr('height', newcomp.height - 2)
         .attr('x', 1.0)
@@ -376,7 +380,7 @@ function CreateNewDeep(reactContext, FromExisting = null,) {
         .on('click', function () {
             console.log('start calculation');
             runDeepFunction(newcomp.GUID);
-        });            
+        });
 
     newcomp.statusBar = statusBar;
     newcomp.Dummyrect = Dummyrect;
@@ -389,7 +393,7 @@ function CreateNewDeep(reactContext, FromExisting = null,) {
     newcomp.Titlegroup2 = Titlegroup2;
     newcomp.Titlegroup3 = Titlegroup3;
     newcomp.Title = Title;
-    
+
     addInputCirclesFunc(newcomp);
     addOutputCirclesFunc(newcomp);
 
@@ -434,28 +438,26 @@ function submitDeepEdit(reactContext, compKey) {
         var inputDict = createInputDict(inputs.split('\n'));
 
         if (url === '') {
-            $('div#propertiesBarLog').html(
-                '<div id="error">Please provide a valid URL</div>'
-            );
-        // // Empty input list check (confirm requirement)
-        // } else if (inputDict.length === 0) {
-        //     $('div#propertiesBarLog').html(
-        //         '<div id="error">The input list must not be empty</div>'
-        //     );
+            $('div#propertiesBarLog').html('<div id="error">Please provide a valid URL</div>');
+            // // Empty input list check (confirm requirement)
+            // } else if (inputDict.length === 0) {
+            //     $('div#propertiesBarLog').html(
+            //         '<div id="error">The input list must not be empty</div>'
+            //     );
         } else {
             deepComp.inputNames = inputs;
             deepComp.inputs = inputDict;
-            deepComp.outputs = createOutputDict(["out", "log"]);
+            deepComp.outputs = createOutputDict(['out', 'log']);
             deepComp.url = url;
             deepComp.Name = name;
-        
+
             d3.selectAll('circle.inputCirVisual.' + deepComp.GUID).remove();
             d3.selectAll('circle.inputCir.' + deepComp.GUID).remove();
             d3.selectAll('text.inputTxt.' + deepComp.GUID).remove();
             d3.selectAll('circle.outputCirVisual.' + deepComp.GUID).remove();
             d3.selectAll('circle.outputCir.' + deepComp.GUID).remove();
             d3.selectAll('text.outputTxt.' + deepComp.GUID).remove();
-            
+
             resize(deepComp);
             addInputCirclesFunc(deepComp);
             addOutputCirclesFunc(deepComp);
@@ -484,42 +486,33 @@ function resize(newcomp) {
         }
     }
 
-    var longestOutput = newcomp.outputs.reduce(
-        (a, b) => a.Name.length > b.Name.length ? a : b , {Name: ''}).Name;
-    
-    newcomp.height = Math.max(80,
-        titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding);
-    newcomp.width = Math.max(100,
-        (longestInput.length + longestOutput.length) * one_character_width + titleMarginLeft);
+    var longestOutput = newcomp.outputs.reduce((a, b) => (a.Name.length > b.Name.length ? a : b), {
+        Name: ''
+    }).Name;
 
-    newcomp.statusBar
-        .attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
-    newcomp.Dummyrect
-        .attr('height', newcomp.height)
-        .attr('width', newcomp.width);
-    newcomp.cirGroup
-        .attr('transform', () => {
-            var x = newcomp.width;
-            var y = newcomp.height;
-            return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
-        });
-    newcomp.resize1
-        .attr('height', newcomp.height - 2)
-        .attr('width', newcomp.width - 2);
-    newcomp.rect
-        .attr('height', newcomp.height)
-        .attr('width', newcomp.width);
-    newcomp.playrect2
-        .attr('y', newcomp.height - 10)
-        .attr('x', newcomp.width / 2.0 - 10);
-    newcomp.statusbar2
-        .attr('width', newcomp.width + 2)
-    newcomp.Titlegroup2
-        .attr('width', newcomp.width - 2) 
-    newcomp.Titlegroup3
-        .attr('width', newcomp.width - 2)
-    newcomp.Title
-        .attr('width', newcomp.width)
+    newcomp.height = Math.max(
+        80,
+        titleMargin + Math.max(newcomp.inputs.length, newcomp.outputs.length + 1) * padding
+    );
+    newcomp.width = Math.max(
+        100,
+        (longestInput.length + longestOutput.length) * one_character_width + titleMarginLeft
+    );
+
+    newcomp.statusBar.attr('transform', 'translate(0,' + (newcomp.height - 25) + ')');
+    newcomp.Dummyrect.attr('height', newcomp.height).attr('width', newcomp.width);
+    newcomp.cirGroup.attr('transform', () => {
+        var x = newcomp.width;
+        var y = newcomp.height;
+        return 'translate(' + x.toString() + ',' + (y - 10).toString() + ')';
+    });
+    newcomp.resize1.attr('height', newcomp.height - 2).attr('width', newcomp.width - 2);
+    newcomp.rect.attr('height', newcomp.height).attr('width', newcomp.width);
+    newcomp.playrect2.attr('y', newcomp.height - 10).attr('x', newcomp.width / 2.0 - 10);
+    newcomp.statusbar2.attr('width', newcomp.width + 2);
+    newcomp.Titlegroup2.attr('width', newcomp.width - 2);
+    newcomp.Titlegroup3.attr('width', newcomp.width - 2);
+    newcomp.Title.attr('width', newcomp.width);
 
     d3.select('svg.removableSVG' + newcomp.GUID).remove();
 
@@ -543,8 +536,7 @@ function resize(newcomp) {
         .on('click', function () {
             console.log('start calculation');
             runDeepFunction(newcomp.GUID);
-        });   
-
+        });
 }
 
 function createOutputDict(outputsIn) {
@@ -584,8 +576,7 @@ function createOutputDict(outputsIn) {
 function createInputDict(inputsIn) {
     var inputs = [];
     for (let index = 0; index < inputsIn.length; index++) {
-        if (inputsIn[index] === '') 
-            continue;
+        if (inputsIn[index] === '') continue;
         try {
             inputs.push({
                 id: index,

@@ -11,12 +11,12 @@ function exponential(args) {
     if (!isNumeric(input)) {
         return {
             type: ['text', 'text'],
-            value: [null, input + " is not a number"]
+            value: [null, input + ' is not a number']
         };
     } else {
         return {
             type: ['text', 'text'],
-            value: [Math.E ** parseFloat(input), "Success"]
+            value: [Math.E ** parseFloat(input), 'Success']
         };
     }
 }
@@ -29,7 +29,7 @@ const comps = [
         type: 'component',
         dftype: 'shlow',
         inputList: [
-            { name: 'input', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+            { name: 'input', shortName: 'in_01', desc: 'first input', default_value: '10.0' }
         ],
         outputList: [
             { name: 'output_', shortName: 'out_', desc: 'product' },
@@ -37,7 +37,7 @@ const comps = [
         ],
         color: '#F23322',
         backgroundImage: '',
-        func: exponential,
+        func: exponential
     },
     {
         name: 'Cloud - Abs',
@@ -45,22 +45,18 @@ const comps = [
         type: 'deep',
         dftype: 'dp',
         inputList: [
-            { name: 'num', shortName: 'in_01', desc: 'first input', default_value: '10.0' },
+            { name: 'num', shortName: 'in_01', desc: 'first input', default_value: '10.0' }
         ],
-        outputList: [
-            { name: 'output_', shortName: 'out_', desc: 'product' },
-        ],
+        outputList: [{ name: 'output_', shortName: 'out_', desc: 'product' }],
         color: '#F23322',
         backgroundImage: '',
         url: 'https://us-central1-golden-record-313910.cloudfunctions.net/absolute'
     }
 ];
 
-const App = ()  => {
-    return (
-        <Canvas udo={comps} />
-    );
-}
+const App = () => {
+    return <Canvas udo={comps} />;
+};
 
 export default App;
 ```

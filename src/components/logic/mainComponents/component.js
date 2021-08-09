@@ -1,8 +1,4 @@
-import { 
-    addcomponent, 
-    runDeepFunction, 
-    uuidv4 
-} from '../functions.js';
+import { addcomponent, runDeepFunction, uuidv4 } from '../functions.js';
 import $ from 'jquery';
 
 var d3 = require('d3');
@@ -123,7 +119,7 @@ function CreateNewComponent(
             } else {
                 return 'translate(' + FromExisting.X + ', ' + FromExisting.Y + ')';
             }
-        })
+        });
 
     var statusBar = node
         .append('g')

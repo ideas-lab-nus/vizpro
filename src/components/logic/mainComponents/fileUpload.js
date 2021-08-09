@@ -1,9 +1,4 @@
-import { 
-    addcomponent, 
-    redrawDependents, 
-    selectComp, 
-    uuidv4 
-} from '../functions.js';
+import { addcomponent, redrawDependents, selectComp, uuidv4 } from '../functions.js';
 import $ from 'jquery';
 var d3 = require('d3');
 
@@ -31,7 +26,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
     newcomp.dftype = 'shlow';
 
     // TODO : get the longest text in the component. and set the width based on this.
-    newcomp.width = 300; 
+    newcomp.width = 300;
 
     var allContents = d3.select('#allCanvasContents');
 
@@ -135,7 +130,7 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
                 return (
                     'File Size : ' +
                     (newcomp.outputs[0].Description.size / (1024 * 1024)).toString() +
-                    " MB " 
+                    ' MB '
                 );
             }
         })
@@ -195,27 +190,30 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
         .attr('y', '-1.1px')
         .html(() => {
             if (newcomp.outputs[0].value == null || newcomp.outputs[0].value === undefined) {
-                var form = 
+                var form =
                     `
                     <form method="post" enctype="multipart/form-data" id="form_` +
-                            newcomp.GUID +
-                            `">
+                    newcomp.GUID +
+                    `">
                     <input id="fileUploadFormToTheCloud" class="` +
-                            newcomp.GUID +
-                            `" type="file" name="myFile" data-testid="fileUploadForm">
+                    newcomp.GUID +
+                    `" type="file" name="myFile" data-testid="fileUploadForm">
                     </form>
                     `;
                 return form;
             } else {
-                let displayedName = newcomp.outputs[0].Description.Name.length < 25 ? 
-                            newcomp.outputs[0].Description.Name : 
-                            newcomp.outputs[0].Description.Name.substring(0, 25) + '...';
+                let displayedName =
+                    newcomp.outputs[0].Description.Name.length < 25
+                        ? newcomp.outputs[0].Description.Name
+                        : newcomp.outputs[0].Description.Name.substring(0, 25) + '...';
                 return (
-                     `
-                        <div id="TheContainedFile">` + displayedName + `</div>
-                        <div id="TheContainedFile">Size :` 
-                        + (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() 
-                        + ` MB</div>
+                    `
+                        <div id="TheContainedFile">` +
+                    displayedName +
+                    `</div>
+                        <div id="TheContainedFile">Size :` +
+                    (newcomp.outputs[0].Description.size / (1024 * 1024)).toFixed(4).toString() +
+                    ` MB</div>
                     `
                 );
             }
@@ -266,11 +264,11 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
         y1: newcomp.Y + newcomp.height
     };
     reactContext.setState({
-        components_selection_data: current_components_selection,
+        components_selection_data: current_components_selection
     });
     $('input#fileUploadFormToTheCloud').on('change', function (e) {
         var selectedFile = e.target.files[0];
-        var thisFormId = $(this).attr('class');     
+        var thisFormId = $(this).attr('class');
 
         var fileName = selectedFile.name;
         var fileSize = selectedFile.size;
@@ -278,33 +276,32 @@ function CreateNewFileUpload(reactContext, FromExisting = null, kwargs = null) {
         theCurrentComp.outputs[0].Name = fileName;
         theCurrentComp.outputs[0].Description = {
             Name: fileName,
-            size: fileSize,
+            size: fileSize
         };
         const reader = new FileReader();
-        reader.onload = function() {
+        reader.onload = function () {
             theCurrentComp.outputs[0].value = reader.result;
             d3.select('#fileUpload_status_' + thisFormId).html(
-                'File Size : ' +
-                (selectedFile.size / (1024 * 1024)).toString() +
-                " MB"
+                'File Size : ' + (selectedFile.size / (1024 * 1024)).toString() + ' MB'
             );
             d3.select('#foreignObject_fileUpload' + thisFormId).html(() => {
-                let displayedName = fileName.length < 25 ? fileName : fileName.substring(0, 25) + '...';
+                let displayedName =
+                    fileName.length < 25 ? fileName : fileName.substring(0, 25) + '...';
                 return (
                     `
                     <div id="TheContainedFile">` +
-                        displayedName +
-                        `</div>
+                    displayedName +
+                    `</div>
                     <div id="TheContainedFile">Size :` +
-                        (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
-                        ` MB</div>
+                    (selectedFile.size / (1024 * 1024)).toFixed(4).toString() +
+                    ` MB</div>
                     `
                 );
             });
             redrawDependents(thisFormId);
-        }
+        };
         reader.readAsDataURL(selectedFile);
-    })
+    });
 }
 
 export { CreateNewFileUpload };
