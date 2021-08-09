@@ -680,6 +680,6 @@ const stockComponentDetails = [
         ],
         color: '#2A2B4A',
         backgroundImage: ''
-    },
-]
+    }
+];
 ```

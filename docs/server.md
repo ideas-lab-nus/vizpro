@@ -1,17 +1,17 @@
 ```js
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
-const {spawn, exec} = require('child_process');
+const { spawn, exec } = require('child_process');
 
 // app.use(express.static(path.join(__dirname, 'build')));
 
 // Important for CORS configuration
-app.use((req, res, next) => {    
-    res.header("Access-Control-Allow-Origin", "*");
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
     next();
-})
+});
 
 // Testing route
 app.get('/ping', function (req, res) {
@@ -23,19 +23,22 @@ app.get('/python', function (req, res) {
     var dataToSend;
 
     // The parameters received are mapped to an array
-    const process = spawn('python', Object.keys(req.query).map(key => req.query[key]))
-      
+    const process = spawn(
+        'python',
+        Object.keys(req.query).map(key => req.query[key])
+    );
+
     process.stdout.on('data', function (data) {
         dataToSend = data.toString('utf8', 0, data.length);
-        console.log(dataToSend)
+        console.log(dataToSend);
         process.stdin.end();
         process.stdout.destroy();
         process.stderr.destroy();
     });
-    
-    process.on('close', (code) => {
+
+    process.on('close', code => {
         console.log(`child process close all stdio with code ${code}`);
-        res.send(dataToSend)
+        res.send(dataToSend);
     });
 
     // res.sendFile(path.join(__dirname, 'build', 'index.html'));
@@ -56,19 +59,19 @@ app.get('/bat', function (req, res) {
     //   });
 
     // Pass full path of bat file as parameter
-    const process = exec('start {fullPath}/foo.bat')
-      
+    const process = exec('start {fullPath}/foo.bat');
+
     process.stdout.on('data', function (data) {
         dataToSend = data.toString('utf8', 0, data.length);
-        console.log(dataToSend)
+        console.log(dataToSend);
         process.stdin.end();
         process.stdout.destroy();
         process.stderr.destroy();
     });
-    
-    process.on('close', (code) => {
+
+    process.on('close', code => {
         console.log(`child process close all stdio with code ${code}`);
-        res.send(dataToSend)
+        res.send(dataToSend);
     });
 });
 
@@ -77,23 +80,23 @@ app.get('/r', function (req, res) {
     var dataToSend;
 
     // Path to Rscript.exe
-    const rPath = "C:/Program Files/R/R-4.1.0/bin/Rscript.exe";
+    const rPath = 'C:/Program Files/R/R-4.1.0/bin/Rscript.exe';
 
     // Pass file path of R script via component
-    const process = spawn(rPath, ["{fullPath}sampleR.txt"])
+    const process = spawn(rPath, ['{fullPath}sampleR.txt']);
 
     process.stdout.on('data', function (data) {
         dataToSend = data.toString('utf8', 0, data.length);
-        console.log(dataToSend)
+        console.log(dataToSend);
         process.stdin.end();
         process.stdout.destroy();
         process.stderr.destroy();
     });
-    
-    process.on('close', (code) => {
+
+    process.on('close', code => {
         console.log(`child process close all stdio with code ${code}`);
-        console.log(dataToSend)
-        res.send(dataToSend)
+        console.log(dataToSend);
+        res.send(dataToSend);
     });
 });
 
